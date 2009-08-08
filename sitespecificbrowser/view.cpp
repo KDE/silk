@@ -30,9 +30,9 @@ View::View( QWidget *parent )
     QIcon icon = QWebSettings::iconForUrl( m_options->startUrl );
     //QIcon icon = m_page->mainFrame()->icon();
     qDebug() << "Is icon null: " << icon.isNull();
-    if ( !icon.isNull() )
-	setWindowIcon( icon );
-
+    if ( !icon.isNull() ) {
+        setWindowIcon( icon );
+    }
 }
 
 WebAppOptions *View::options() const

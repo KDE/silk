@@ -16,7 +16,7 @@ int main( int argc, char **argv )
     View tl(w);
     QAction *action;
     foreach( action, tl.actions() ) {
-	bar->addAction( action );
+        bar->addAction( action );
     }
 
     QVBoxLayout *box = new QVBoxLayout(w);
