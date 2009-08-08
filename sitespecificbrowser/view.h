@@ -1,11 +1,10 @@
-#ifndef TOPLEVEL_H
-#define TOPLEVEL_H
+#ifndef VIEW_H
+#define VIEW_H
 
 #include <qwebview.h>
-#include <qwebpage.h>
 #include <qmap.h>
 
-class TopLevel;
+class Page;
 
 /** Stuff that should be per-webapp */
 struct WebAppOptions
@@ -17,26 +16,12 @@ struct WebAppOptions
     QMap<QString, QString> jsActions;
 };
 
-class Page : public QWebPage
+class View : public QWebView
 {
     Q_OBJECT
 
 public:
-    Page( TopLevel *toplevel );
-
-protected:
-    bool acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &request, QWebPage::NavigationType type );
-
-private:
-    TopLevel *toplevel;
-};
-
-class TopLevel : public QWebView
-{
-    Q_OBJECT
-
-public:
-    TopLevel();
+    View();
 
     bool load( const QString &filename );
     bool save( const QString &filename );
@@ -47,8 +32,8 @@ protected slots:
     void iconLoaded();
 
 private:
-    struct WebAppOptions *m_options;
+    WebAppOptions *m_options;
     Page *m_page;
 };
 
-#endif // TOPLEVEL_H
+#endif // VIEW_H

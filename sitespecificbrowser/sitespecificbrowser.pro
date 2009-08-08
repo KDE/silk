@@ -10,5 +10,6 @@ INCLUDEPATH += /home/rich/src/qt-examples/sitespecificbrowser/. .
 QT += webkit
 
 # Input
-HEADERS += toplevel.h
-SOURCES += main.cpp toplevel.cpp
+HEADERS += view.h page.h
+SOURCES += main.cpp view.cpp page.cpp
+

@@ -1,41 +1,13 @@
 #include <qdebug.h>
-#include <QtNetwork/QNetworkRequest>
-#include <QtGui/QDesktopServices>
 #include <qwebsettings.h>
 #include <qwebframe.h>
 #include <qsettings.h>
 #include <qdir.h>
 
-#include "toplevel.h"
+#include "page.h"
+#include "view.h"
 
-Page::Page( TopLevel *toplevel )
-    : QWebPage( toplevel ) 
-{
-    this->toplevel = toplevel;
-}
-
-bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &request, QWebPage::NavigationType type )
-{
-    if ( type == QWebPage::NavigationTypeLinkClicked ) {
-	bool inScope = false;
-	QUrl base;
-	foreach( base, toplevel->options()->allowedBases ) {
-	    if ( base.isParentOf( request.url() ) ) {
-		inScope = true;
-	    }
-	}
-
-	if ( !inScope ) {
-	    QDesktopServices::openUrl( request.url() );
-	    return false;
-	}
-    }
-
-    return QWebPage::acceptNavigationRequest( frame, request, type );
-}
-
-
-TopLevel::TopLevel()
+View::View()
     : QWebView(0)
 {
     m_options = new WebAppOptions;
@@ -45,6 +17,9 @@ TopLevel::TopLevel()
     m_options->startUrl = QUrl("http://mail.google.com/");
     m_options->windowTitle = QString("GMail");
     m_options->allowedBases.append( QUrl("http://mail.google.com/") );
+
+    m_options->jsActions.insert( QString("Compose Mail"),
+				 QString("http://mail.google.com/mail/?view=cm&fs=1&tf=1") );
 
     save( QString("gmail.ini") ); // HACK
 #endif
@@ -67,12 +42,12 @@ TopLevel::TopLevel()
 
 }
 
-WebAppOptions *TopLevel::options() const
+WebAppOptions *View::options() const
 {
     return m_options;
 }
 
-bool TopLevel::load( const QString &filename )
+bool View::load( const QString &filename )
 {
     // TODO
     QSettings settings( filename, QSettings::IniFormat );
@@ -90,7 +65,7 @@ bool TopLevel::load( const QString &filename )
     return true;
 }
 
-bool TopLevel::save( const QString &filename )
+bool View::save( const QString &filename )
 {
     QSettings settings( filename, QSettings::IniFormat );
 
@@ -109,7 +84,7 @@ bool TopLevel::save( const QString &filename )
     return true;
 }
 
-void TopLevel::iconLoaded()
+void View::iconLoaded()
 {
     qDebug() << "Got icon";
     qDebug() << m_page->mainFrame()->icon().isNull();
