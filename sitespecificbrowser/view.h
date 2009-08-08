@@ -32,6 +32,9 @@ protected slots:
     void iconLoaded();
 
 private:
+    void setupApplication();
+
+private:
     WebAppOptions *m_options;
     Page *m_page;
 };

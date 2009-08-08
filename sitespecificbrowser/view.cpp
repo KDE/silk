@@ -11,6 +11,33 @@ View::View( QWidget *parent )
     : QWebView(parent)
 {
     m_options = new WebAppOptions;
+    setupApplication();
+
+    m_page = new Page( this );
+    connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
+    setPage( m_page );
+
+    QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
+    QWebSettings::setIconDatabasePath( QDir::currentPath() );
+
+    setWindowTitle( m_options->windowTitle );
+    setUrl( m_options->startUrl );
+
+    QIcon icon = QWebSettings::iconForUrl( m_options->startUrl );
+    //QIcon icon = m_page->mainFrame()->icon();
+    qDebug() << "Is icon null: " << icon.isNull();
+    if ( !icon.isNull() )
+	setWindowIcon( icon );
+
+}
+
+WebAppOptions *View::options() const
+{
+    return m_options;
+}
+
+void View::setupApplication()
+{
 #if 0
     load( QString("gmail.ini") );
 #else
@@ -23,28 +50,6 @@ View::View( QWidget *parent )
 
     save( QString("gmail.ini") ); // HACK
 #endif
-
-    m_page = new Page( this );
-    connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
-    setPage( m_page );
-
-    QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
-    QWebSettings::setIconDatabasePath( QDir::currentPath() );
-
-    setWindowTitle( m_options->windowTitle );
-    setUrl( m_options->startUrl );
-
-       QIcon icon = QWebSettings::iconForUrl( QUrl("http://mail.google.com/mail/") );
-    //QIcon icon = m_page->mainFrame()->icon();
-    qDebug() << "Is icon null: " << icon.isNull();
-    if ( !icon.isNull() )
-	setWindowIcon( icon );
-
-}
-
-WebAppOptions *View::options() const
-{
-    return m_options;
 }
 
 bool View::load( const QString &filename )
