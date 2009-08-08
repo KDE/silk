@@ -1,11 +1,11 @@
 #include <qapplication.h>
 
-#include "toplevel.h"
+#include "view.h"
 
 int main( int argc, char **argv )
 {
     QApplication app( argc, argv );
-    TopLevel tl;
+    View tl;
     tl.show();
     app.exec();
 };
