@@ -2,6 +2,7 @@
 #include <qwebsettings.h>
 #include <qwebframe.h>
 #include <qsettings.h>
+#include <qsignalmapper.h>
 #include <qdir.h>
 
 #include "page.h"
@@ -10,6 +11,9 @@
 View::View( QWidget *parent )
     : QWebView(parent)
 {
+    m_mapper = new QSignalMapper( this );
+    connect( m_mapper, SIGNAL( mapped(const QString &) ), SLOT(actionTriggered(const QString &)) );
+
     m_options = new WebAppOptions;
     setupApplication();
 
@@ -36,20 +40,28 @@ WebAppOptions *View::options() const
     return m_options;
 }
 
+QList<QAction *> View::actions() const
+{
+    return m_options->actions;
+}
+
 void View::setupApplication()
 {
-#if 0
-    load( QString("gmail.ini") );
-#else
     m_options->startUrl = QUrl("http://mail.google.com/");
     m_options->windowTitle = QString("GMail");
     m_options->allowedBases.append( QUrl("http://mail.google.com/") );
 
-    m_options->jsActions.insert( QString("Compose Mail"),
-				 QString("http://mail.google.com/mail/?view=cm&fs=1&tf=1") );
+    // Setup script actions
+    QAction *action;
+
+    action = new QAction(this);
+    action->setText( QString("Compose Mail") );
+    m_mapper->setMapping( action, QString("window.location = 'http://mail.google.com/mail/?view=cm&fs=1&tf=1'") );
+    connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
+
+    m_options->actions.append( action );
 
     save( QString("gmail.ini") ); // HACK
-#endif
 }
 
 bool View::load( const QString &filename )
@@ -87,6 +99,13 @@ bool View::save( const QString &filename )
     settings.sync();
 
     return true;
+}
+
+void View::actionTriggered( const QString &script )
+{
+    qDebug() << "actionTriggered: " << script;
+
+    page()->mainFrame()->evaluateJavaScript( script );
 }
 
 void View::iconLoaded()

@@ -3,7 +3,9 @@
 
 #include <qwebview.h>
 #include <qmap.h>
+#include <qaction.h>
 
+class QSignalMapper;
 class Page;
 
 /** Stuff that should be per-webapp */
@@ -13,7 +15,7 @@ struct WebAppOptions
     QList<QUrl> allowedBases;
     QIcon windowIcon;
     QString windowTitle;
-    QMap<QString, QString> jsActions;
+    QList<QAction *> actions;
 };
 
 class View : public QWebView
@@ -27,14 +29,17 @@ public:
     bool save( const QString &filename );
 
     WebAppOptions *options() const;
+    QList<QAction *> actions() const;
 
 protected slots:
+    void actionTriggered( const QString &script );
     void iconLoaded();
 
 private:
     void setupApplication();
 
 private:
+    QSignalMapper *m_mapper;
     WebAppOptions *m_options;
     Page *m_page;
 };
