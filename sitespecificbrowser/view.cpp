@@ -22,6 +22,7 @@ View::View( QWidget *parent )
     setPage( m_page );
 
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
+    QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
     QWebSettings::setIconDatabasePath( QDir::currentPath() );
 
     setWindowTitle( m_options->windowTitle );
@@ -58,8 +59,15 @@ void View::setupApplication()
     action->setText( QString("Compose Mail") );
     m_mapper->setMapping( action, QString("window.location = 'http://mail.google.com/mail/?view=cm&fs=1&tf=1'") );
     connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
-
     m_options->actions.append( action );
+
+/* doesn't work
+    action = new QAction(this);
+    action->setText( QString("Hide GBar") );
+    m_mapper->setMapping( action, QString("document.getElementById('gbar').style.display = 'none'") );
+    connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
+    m_options->actions.append( action );
+*/
 
     save( QString("gmail.ini") ); // HACK
 }
