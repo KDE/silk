@@ -7,8 +7,8 @@
 #include "page.h"
 #include "view.h"
 
-View::View()
-    : QWebView(0)
+View::View( QWidget *parent )
+    : QWebView(parent)
 {
     m_options = new WebAppOptions;
 #if 0
