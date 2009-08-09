@@ -17,7 +17,7 @@ View::View( QWidget *parent )
     : QWebView(parent)
 {
     m_mapper = new QSignalMapper( this );
-    connect( m_mapper, SIGNAL( mapped(const QString &) ), SLOT(actionTriggered(const QString &)) );
+    connect( m_mapper, SIGNAL( mapped(const QString &) ), SLOT(evaluateScript(const QString &)) );
 
     m_options = new WebAppOptions;
 
@@ -80,7 +80,7 @@ void View::setupApplication()
 }
 #endif 
 
-void View::actionTriggered( const QString &script )
+void View::evaluateScript( const QString &script )
 {
     kDebug() << "actionTriggered: " << script;
 

@@ -41,8 +41,10 @@ public:
 
     static KPluginInfo::List listWebApps();
 
+public slots:
+    void evaluateScript( const QString &script );
+
 protected slots:
-    void actionTriggered( const QString &script );
     void iconLoaded();
 
 private:
