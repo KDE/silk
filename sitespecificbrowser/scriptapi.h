@@ -3,8 +3,8 @@
 
 #include <QtCore/QObject>
 
-class QWebView;
 class QWebFrame;
+class View;
 
 class ScriptApi : public QObject
 {
@@ -13,7 +13,9 @@ class ScriptApi : public QObject
 public:
     ScriptApi( QObject *parent=0 );
 
-    void setWebView( QWebView *view );
+    void setWebView( View *view );
+
+    void setTrusted( bool yes=false );
 
 public slots:
     //
@@ -35,11 +37,19 @@ public slots:
     /** GM_xmlhttpRequest - make an arbitrary HTTP request */
     // Not sure if we want to implement this
 
+    //
+    // Methods for a fluid-like api
+    //
+
+    // Only works if trusted
+    void include( const QString &filename );
+
 private slots:
     void attachObject();
 
 private:
-    QWebFrame *frame;
+    View *m_view;
+    bool m_trusted;
 };
 
 #endif // SCRIPTAPI_H

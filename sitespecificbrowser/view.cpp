@@ -81,6 +81,12 @@ void View::setupApplication()
     connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
     m_options->actions.append( action );
 
+    action = new QAction(this);
+    action->setText( QString("Say Stuff") );
+    m_mapper->setMapping( action, QString("silk.GM_log('Stuff!')") );
+    connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
+    m_options->actions.append( action );
+
 /* doesn't work
     action = new QAction(this);
     action->setText( QString("Hide GBar") );
@@ -92,9 +98,10 @@ void View::setupApplication()
 
 void View::evaluateScript( const QString &script )
 {
-    kDebug() << "actionTriggered: " << script;
-
+    kDebug() << script;
+    m_scriptapi->setTrusted( true );
     page()->mainFrame()->evaluateJavaScript( script );
+    m_scriptapi->setTrusted( false );
 }
 
 void View::iconLoaded()
