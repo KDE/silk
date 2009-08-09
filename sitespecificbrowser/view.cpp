@@ -47,7 +47,7 @@ void View::startApplication()
 
     QIcon icon = QWebSettings::iconForUrl( m_options->startUrl );
     //QIcon icon = m_page->mainFrame()->icon();
-    qDebug() << "Is icon null: " << icon.isNull();
+    kDebug() << "Is icon null: " << icon.isNull();
     if ( !icon.isNull() ) {
         setWindowIcon( icon );
     }
@@ -82,19 +82,19 @@ void View::setupApplication()
 
 void View::actionTriggered( const QString &script )
 {
-    qDebug() << "actionTriggered: " << script;
+    kDebug() << "actionTriggered: " << script;
 
     page()->mainFrame()->evaluateJavaScript( script );
 }
 
 void View::iconLoaded()
 {
-    qDebug() << "Got icon";
-    qDebug() << m_page->mainFrame()->icon().isNull();
+    kDebug() << "Got icon";
+    kDebug() << m_page->mainFrame()->icon().isNull();
     setWindowIcon( m_page->mainFrame()->icon() );
 
 //    QIcon icon = QWebSettings::iconForUrl( QUrl("http://mail.google.com/") );
-//    qDebug() << icon;
+//    kDebug() << icon;
 }
 
 KPluginInfo::List View::listWebApps()
