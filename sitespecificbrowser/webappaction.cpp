@@ -27,7 +27,7 @@ KPluginInfo::List WebAppAction::listWebAppActions(const QString &name)
     return KPluginInfo::fromServices(offers);
 }
 
-bool WebAppAction::load(KPluginInfo info)
+bool WebAppAction::load(const KPluginInfo &info)
 {
     QString comment = info.comment();
 

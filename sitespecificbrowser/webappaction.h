@@ -33,7 +33,7 @@ public:
     static KPluginInfo::List listWebAppActions(const QString &name = QString());
 
 public slots:
-    bool load(KPluginInfo info);
+    bool load(const KPluginInfo &info);
 
 private:
     WebAppActionOptions *m_options;

@@ -24,7 +24,7 @@ static const char version[] = "0.1";
 int main(int argc, char **argv)
 {
     KAboutData about("sitespecificbrowser", 0, ki18n("sitespecificbrowser"), version, ki18n(description),
-                     KAboutData::License_GPL, ki18n("(C) 2007 Richard Moore"), KLocalizedString(), 0, "rich@kde.org");
+                     KAboutData::License_GPL, ki18n("(C) 2009 Richard Moore"), KLocalizedString(), 0, "rich@kde.org");
                      about.addAuthor( ki18n("Richard Moore"), KLocalizedString(), "rich@kde.org" );
     KCmdLineArgs::init(argc, argv, &about);
 
