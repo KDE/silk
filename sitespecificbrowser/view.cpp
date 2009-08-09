@@ -82,8 +82,8 @@ void View::setupApplication()
     m_options->actions.append( action );
 
     action = new QAction(this);
-    action->setText( QString("Say Stuff") );
-    m_mapper->setMapping( action, QString("silk.GM_log('Stuff!')") );
+    action->setText( QString("Notify") );
+    m_mapper->setMapping( action, QString("silk.showNotification('Pay Attention!')") );
     connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
     m_options->actions.append( action );
 

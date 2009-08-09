@@ -4,6 +4,7 @@
 #include <qtextstream.h>
 
 #include <kdebug.h>
+#include <knotification.h>
 
 #include "view.h"
 #include "scriptapi.h"
@@ -45,6 +46,11 @@ QVariant ScriptApi::GM_getValue( const QString &key, const QVariant &defaultVal 
 
 void ScriptApi::GM_setValue( const QString &key, const QVariant &value )
 {
+}
+
+void ScriptApi::showNotification( const QString &text )
+{
+    KNotification::event( QString("script_message"), text );
 }
 
 bool ScriptApi::include( const QString &filename )

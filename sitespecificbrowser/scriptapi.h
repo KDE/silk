@@ -41,6 +41,8 @@ public slots:
     // Methods for a fluid-like api
     //
 
+    void showNotification( const QString &text );
+
     // Only works if trusted
     bool include( const QString &filename );
 
