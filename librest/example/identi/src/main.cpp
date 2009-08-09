@@ -33,7 +33,7 @@ class identi: public QObject {
 int main(int argc, char **argv)
 {
     KAboutData about("identi", 0, ki18n("identi"), version, ki18n(description),
-                     KAboutData::License_GPL, ki18n("(C) 2007 Omat Holding B.V."), 
+                     KAboutData::License_GPL, ki18n("(C) 2009 Omat Holding B.V."), 
                      KLocalizedString(), 0, "info@omat.nl");
     about.addAuthor( ki18n("Omat Holding B.V."), KLocalizedString(), "info@omat.nl" );
     KCmdLineArgs::init(argc, argv, &about);
