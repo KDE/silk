@@ -68,13 +68,14 @@ void View::setupApplication()
     // Setup script actions
     QAction *action;
 
+    /*
     action = new QAction(this);
     action->setText( QString("Compose Mail") );
     action->setIcon( KIcon("mail-message-new") );
     m_mapper->setMapping( action, QString("window.location = 'http://mail.google.com/mail/?view=cm&fs=1&tf=1'") );
     connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
     m_options->actions.append( action );
-
+    */
     action = new QAction(this);
     action->setText( QString("Say Hello") );
     m_mapper->setMapping( action, QString("window.silk.GM_log('Hello!')") );
@@ -153,9 +154,15 @@ bool View::loadWebApp(const QString &name)
 
 bool View::loadWebAppActions()
 {
-    foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name))
-    {
+    kDebug() << "Searching for Actions ..." << m_options->name;
+    foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name)) {
         kDebug() << "ACTION:" << info.name();
+        WebAppAction *action = new WebAppAction(this);
+        action->load(info);
+        m_mapper->setMapping(action, action->options()->script);
+        connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
+        m_options->actions.append( action );
+
     }
     return true;
 }
