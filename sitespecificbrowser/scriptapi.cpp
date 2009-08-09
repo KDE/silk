@@ -1,5 +1,7 @@
 #include <qwebview.h>
 #include <qwebframe.h>
+#include <qfile.h>
+#include <qtextstream.h>
 
 #include <kdebug.h>
 
@@ -45,11 +47,20 @@ void ScriptApi::GM_setValue( const QString &key, const QVariant &value )
 {
 }
 
-void ScriptApi::include( const QString &filename )
+bool ScriptApi::include( const QString &filename )
 {
     if (!m_trusted)
-	return;
+	return false;
 
+    QFile f( filename );
+    if ( !f.open( QIODevice::ReadOnly ) ) {
+	kDebug() << "Unable to open file " << filename;
+	return false;
+    }
 
+    QTextStream ts( &f );
+    m_view->evaluateScript( ts.readAll() );
+
+    return true;
 }
 

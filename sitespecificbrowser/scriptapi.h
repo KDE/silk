@@ -42,7 +42,7 @@ public slots:
     //
 
     // Only works if trusted
-    void include( const QString &filename );
+    bool include( const QString &filename );
 
 private slots:
     void attachObject();
