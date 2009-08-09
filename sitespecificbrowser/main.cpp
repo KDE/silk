@@ -9,6 +9,7 @@
 #include <KApplication>
 #include <KAboutData>
 #include <KCmdLineArgs>
+#include <KDebug>
 #include <KDE/KLocale>
 #include <KToolBar>
 
@@ -28,7 +29,7 @@ int main(int argc, char **argv)
     KCmdLineArgs::init(argc, argv, &about);
 
     KCmdLineOptions options;
-    options.add("[pluginName]", ki18n( "Website to open" ));
+    options.add("+[plugin]", ki18n( "Web application to open" ), "gmail");
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
 
@@ -37,36 +38,41 @@ int main(int argc, char **argv)
     KToolBar *bar = new KToolBar(w);
     //bar->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
+    kDebug() << "ARGS:" << args << args->count();
     if (args->count() == 0)
     {
+        //KCmdLineArgs::usage(i18n("No file specified"));
         //void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
-	KPluginInfo::List apps = View::listWebApps();
-	if ( !apps.size() ) {
-	    std::cout << "No applications found" << std::endl;
-	    return 1;
-	}
+        KPluginInfo::List apps = View::listWebApps();
+        if ( !apps.size() ) {
+            std::cout << "No applications found" << std::endl;
+            return 1;
+        }
 
-	foreach (const KPluginInfo &info, apps) {
+        std::cout << "Usage: sitespecificbrowser [plugin]" << std::endl << std::endl;
+        std::cout << "  Available plugins:" << std::endl;
+        foreach (const KPluginInfo &info, apps) {
             QString name = info.pluginName();
             QString comment = info.comment();
-            QString applet("%1 - %2");
+            QString applet("      - %1 (%2)");
 
             applet = applet.arg(name).arg(comment);
             std::cout << applet.toLocal8Bit().data() << std::endl;
         }
-	return 1;
+        return 1;
         //sitespecificbrowser *widget = new sitespecificbrowser;
         //widget->show();
     } else {
         View tl(w);
+        //kDebug() << "ARGS:" << args << args->count() << args->getOption("plugin <pluginname>");
 
-	bool ok = tl.loadWebApp( args->arg(0) );
-	if (!ok) {
-	    std::cout << "Unable to load application" << args->arg(0).toLocal8Bit().data();
-	    return 1;
-	}
+        bool ok = tl.loadWebApp( args->arg(0) );
+        if (!ok) {
+            std::cout << "Could not find plugin: " << args->arg(0).toLocal8Bit().data() << std::endl;
+            return 1;
+        }
 
-	tl.setupApplication(); // HACK
+        tl.setupApplication(); // HACK
 
         QAction *action;
         foreach( action, tl.actions() ) {
@@ -77,7 +83,7 @@ int main(int argc, char **argv)
         box->addWidget(bar);
         box->addWidget(&tl);
 
-	tl.startApplication();
+        tl.startApplication();
 
         w->show();
 

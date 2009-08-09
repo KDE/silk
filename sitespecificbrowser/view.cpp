@@ -153,7 +153,7 @@ bool View::loadWebApp(const QString &name)
 
 bool View::loadWebAppActions()
 {
-    foreach (KPluginInfo info, WebAppAction::listWebAppActions())
+    foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name))
     {
         kDebug() << "ACTION:" << info.name();
     }
