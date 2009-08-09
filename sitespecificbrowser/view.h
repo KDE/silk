@@ -32,17 +32,13 @@ class View : public QWebView
 public:
     View( QWidget *parent=0 );
 
-    void startApplication();
-
-    // This method is a temporary hack to setup a hard-coded application.
-    void setupApplication();
-
     WebAppOptions *options() const;
     QList<QAction *> actions() const;
 
-    bool loadWebApp(const QString &name);
-
     static KPluginInfo::List listWebApps(const QString &name = QString());
+
+    bool loadWebApp(const QString &name);
+    void startApplication();
 
 public slots:
     void evaluateScript( const QString &script );

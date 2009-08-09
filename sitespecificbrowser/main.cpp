@@ -72,8 +72,6 @@ int main(int argc, char **argv)
             return 1;
         }
 
-        tl.setupApplication(); // HACK
-
         QAction *action;
         foreach( action, tl.actions() ) {
             bar->addAction( action );

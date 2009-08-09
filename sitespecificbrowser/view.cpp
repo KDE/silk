@@ -1,3 +1,28 @@
+
+/*
+ * Copyright 2009 Richard Moore <rich@kde.org>
+ * Copyright 2009 Omat Holding B.V. <info@omat.nl>
+ * Copyright 2009 Sebastian Kügler <sebas@kde.org>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) version 3, or any
+ * later version accepted by the membership of KDE e.V. (or its
+ * successor approved by the membership of KDE e.V.), which shall
+ * act as a proxy defined in Section 6 of version 3 of the license.
+
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library. If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ */
+
 #include <qdebug.h>
 #include <qwebsettings.h>
 #include <qwebframe.h>
@@ -38,10 +63,10 @@ View::View( QWidget *parent )
     m_progressTimer = new QTimer( this );
     m_progressTimer->setInterval( 500 );
     m_progressTimer->setSingleShot( true );
-    
+
     m_progressBar = new QProgressBar( this );
     m_progressBar->show(); // let's show it at startup.
-    
+
     connect( this, SIGNAL( loadStarted() ), m_progressTimer, SLOT( start() ) );
     connect( this, SIGNAL( loadProgress( int ) ), m_progressBar, SLOT( setValue( int ) ) );
     connect( this, SIGNAL( loadFinished( bool ) ), m_progressBar, SLOT( hide() ) );
@@ -70,46 +95,6 @@ void View::startApplication()
     if ( !icon.isNull() ) {
         setWindowIcon( icon );
     }
-}
-
-void View::setupApplication()
-{
-#if 0 // Hard coded app
-    m_options->startUrl = QUrl("http://mail.google.com/");
-    m_options->windowTitle = QString("GMail");
-    m_options->allowedBases.append( QUrl("http://mail.google.com/") );
-#endif
-
-    // Setup script actions
-    QAction *action;
-
-    /*
-    action = new QAction(this);
-    action->setText( QString("Compose Mail") );
-    action->setIcon( KIcon("mail-message-new") );
-    m_mapper->setMapping( action, QString("window.location = 'http://mail.google.com/mail/?view=cm&fs=1&tf=1'") );
-    connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
-    m_options->actions.append( action );
-    */
-    action = new QAction(this);
-    action->setText( QString("Say Hello") );
-    m_mapper->setMapping( action, QString("window.silk.GM_log('Hello!')") );
-    connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
-    m_options->actions.append( action );
-
-    action = new QAction(this);
-    action->setText( QString("Notify") );
-    m_mapper->setMapping( action, QString("silk.showNotification('Pay Attention!')") );
-    connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
-    m_options->actions.append( action );
-
-/* doesn't work
-    action = new QAction(this);
-    action->setText( QString("Hide GBar") );
-    m_mapper->setMapping( action, QString("document.getElementById('gbar').style.display = 'none'") );
-    connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
-    m_options->actions.append( action );
-*/
 }
 
 void View::evaluateScript( const QString &script )
