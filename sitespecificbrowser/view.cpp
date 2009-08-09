@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2009 Richard Moore <rich@kde.org>
  * Copyright 2009 Omat Holding B.V. <info@omat.nl>
