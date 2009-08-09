@@ -5,6 +5,8 @@
 #include <qsignalmapper.h>
 #include <qdir.h>
 
+#include <KIcon>
+
 #include "page.h"
 #include "view.h"
 
@@ -57,6 +59,7 @@ void View::setupApplication()
 
     action = new QAction(this);
     action->setText( QString("Compose Mail") );
+    action->setIcon( KIcon("mail-message-new") );
     m_mapper->setMapping( action, QString("window.location = 'http://mail.google.com/mail/?view=cm&fs=1&tf=1'") );
     connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
     m_options->actions.append( action );

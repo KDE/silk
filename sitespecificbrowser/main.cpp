@@ -1,14 +1,14 @@
 
 // Qt
-#include <qboxlayout.h>
-#include <qtoolbar.h>
-#include <qwidget.h>
+#include <QBoxLayout>
+#include <QWidget>
 
 // KDE
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#include <KApplication>
+#include <KAboutData>
+#include <KCmdLineArgs>
 #include <KDE/KLocale>
+#include <KToolBar>
 
 // Own
 #include "view.h"
@@ -37,8 +37,8 @@ int main(int argc, char **argv)
         //widget->show();
     }
     QWidget *w = new QWidget();
-    QToolBar *bar = new QToolBar(w);
-    bar->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
+    KToolBar *bar = new KToolBar(w);
+    //bar->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
     View tl(w);
     QAction *action;
