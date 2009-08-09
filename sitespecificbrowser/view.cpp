@@ -1,6 +1,4 @@
 #include <qdebug.h>
-#include <qprogressbar.h>
-#include <qtimer.h>
 #include <qwebsettings.h>
 #include <qwebframe.h>
 #include <qsettings.h>
@@ -34,19 +32,6 @@ View::View( QWidget *parent )
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
     QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
     QWebSettings::setIconDatabasePath( QDir::currentPath() );
-
-    m_progressTimer = new QTimer( this );
-    m_progressTimer->setInterval( 500 );
-    m_progressTimer->setSingleShot( true );
-
-    m_progressBar = new QProgressBar( this );
-    m_progressBar->show(); // let's show it at startup.
-
-    connect( this, SIGNAL( loadStarted() ), m_progressTimer, SLOT( start() ) );
-    connect( this, SIGNAL( loadProgress( int ) ), m_progressBar, SLOT( setValue( int ) ) );
-    connect( this, SIGNAL( loadFinished( bool ) ), m_progressBar, SLOT( hide() ) );
-    connect( this, SIGNAL( loadFinished( bool ) ), m_progressTimer, SLOT( stop() ) );
-    connect( m_progressTimer, SIGNAL( timeout() ), m_progressBar, SLOT( show() ) );
 }
 
 WebAppOptions *View::options() const
@@ -141,7 +126,7 @@ KPluginInfo::List View::listWebApps(const QString &name)
 
 bool View::loadWebApp(const QString &name)
 {
-    foreach (const KPluginInfo &info, listWebApps()) {
+    foreach (const KPluginInfo &info, listWebApps(name)) {
         QString comment = info.comment();
 
         if (comment.isEmpty()) {
@@ -150,6 +135,7 @@ bool View::loadWebApp(const QString &name)
 
         kDebug() << "Silk/WebApp:" << name << comment << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
         kDebug() << "Found plugin:" << name;
+        m_options->name = info.pluginName();
         m_options->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
 
         foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
@@ -157,9 +143,19 @@ bool View::loadWebApp(const QString &name)
         }
         m_options->windowIcon = KIcon(info.icon());
         m_options->windowTitle = info.property("Name").toString();
+
+        loadWebAppActions();
         return true;
     }
 
     return false;
 }
 
+bool View::loadWebAppActions()
+{
+    foreach (KPluginInfo info, WebAppAction::listWebAppActions())
+    {
+        kDebug() << "ACTION:" << info.name();
+    }
+    return true;
+}

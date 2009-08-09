@@ -9,6 +9,7 @@ set(sitespecificbrowser_SRCS
     main.cpp
     view.cpp
     page.cpp
+    webappaction.cpp
     scriptapi.cpp
 )
 

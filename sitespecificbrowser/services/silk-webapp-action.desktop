@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=Silk/WebApp/Action
+
+Name=Silk WebApp Action
+Comment=Silk Web Action ServiceType
+
+[PropertyDef::X-Silk-TriggerOnUrl]
+Type=QString
+
+[PropertyDef::X-Silk-ShowOnUrl]
+Type=QString
+
+[PropertyDef::X-Silk-ScriptFiles]
+Type=QStringList
+
+
+

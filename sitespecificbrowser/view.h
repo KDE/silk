@@ -7,14 +7,16 @@
 
 #include <KPluginInfo>
 
+#include "webappaction.h"
+
 class QSignalMapper;
-class QProgressBar;
 class Page;
 class ScriptApi;
 
 /** Stuff that should be per-webapp */
 struct WebAppOptions
 {
+    QString name;
     QUrl startUrl;
     QList<QUrl> allowedBases;
     QIcon windowIcon;
@@ -48,12 +50,11 @@ protected slots:
     void iconLoaded();
 
 private:
+    bool loadWebAppActions();
     QSignalMapper *m_mapper;
     WebAppOptions *m_options;
     Page *m_page;
     ScriptApi *m_scriptapi;
-    QProgressBar* m_progressBar;
-    QTimer* m_progressTimer;
 };
 
 #endif // VIEW_H

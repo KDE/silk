@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     KCmdLineArgs::init(argc, argv, &about);
 
     KCmdLineOptions options;
-    options.add("+[URL]", ki18n( "Website to open" ));
+    options.add("[pluginName]", ki18n( "Website to open" ));
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
 
