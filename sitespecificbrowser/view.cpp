@@ -4,6 +4,8 @@
 #include <qsettings.h>
 #include <qsignalmapper.h>
 #include <qdir.h>
+#include <qprogressbar.h>
+#include <qtimer.h>
 
 #include <KDebug>
 #include <KIcon>
@@ -32,6 +34,19 @@ View::View( QWidget *parent )
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
     QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
     QWebSettings::setIconDatabasePath( QDir::currentPath() );
+
+    m_progressTimer = new QTimer( this );
+    m_progressTimer->setInterval( 500 );
+    m_progressTimer->setSingleShot( true );
+    
+    m_progressBar = new QProgressBar( this );
+    m_progressBar->show(); // let's show it at startup.
+    
+    connect( this, SIGNAL( loadStarted() ), m_progressTimer, SLOT( start() ) );
+    connect( this, SIGNAL( loadProgress( int ) ), m_progressBar, SLOT( setValue( int ) ) );
+    connect( this, SIGNAL( loadFinished( bool ) ), m_progressBar, SLOT( hide() ) );
+    connect( this, SIGNAL( loadFinished( bool ) ), m_progressTimer, SLOT( stop() ) );
+    connect( m_progressTimer, SIGNAL( timeout() ), m_progressBar, SLOT( show() ) );
 }
 
 WebAppOptions *View::options() const
