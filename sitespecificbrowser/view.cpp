@@ -26,7 +26,9 @@ View::View( QString plugin, QWidget *parent )
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
     setPage( m_page );
 
+#ifdef WTF
     loadWebApp(plugin);
+#endif
 
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
     QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
@@ -55,11 +57,10 @@ QList<QAction *> View::actions() const
 
 void View::setupApplication()
 {
-    /*
     m_options->startUrl = QUrl("http://mail.google.com/");
     m_options->windowTitle = QString("GMail");
     m_options->allowedBases.append( QUrl("http://mail.google.com/") );
-    */
+
     // Setup script actions
     QAction *action;
 
@@ -134,6 +135,8 @@ void View::iconLoaded()
 //    QIcon icon = QWebSettings::iconForUrl( QUrl("http://mail.google.com/") );
 //    qDebug() << icon;
 }
+
+#ifdef WTF
 
 KPluginInfo::List View::listWebApps()
 {
@@ -221,3 +224,5 @@ void View::loadWebApp(const QString &name)
         }
     }
 }
+
+#endif // WTF

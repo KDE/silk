@@ -38,11 +38,26 @@ int main(int argc, char **argv)
     //bar->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
 
+#ifndef WTF
+    View tl(QString(), w); 
+
+    QAction *action;
+    foreach( action, tl.actions() ) {
+	bar->addAction( action );
+    }
+    
+    QVBoxLayout *box = new QVBoxLayout(w);
+    box->addWidget(bar);
+    box->addWidget(&tl);
+    
+    w->show();
+
+    return app.exec();
+#else
     if (args->count() == 0)
     {
         //void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
-        View tl(QString(), w);
-        foreach (const KPluginInfo &info, tl.listWebApps()) {
+       foreach (const KPluginInfo &info, tl.listWebApps()) {
             QString name = info.pluginName();
             QString comment = info.comment();
             QString applet("%1 - %2");
@@ -70,4 +85,5 @@ int main(int argc, char **argv)
 
         return app.exec();
     }
+#endif // WTF
 }
