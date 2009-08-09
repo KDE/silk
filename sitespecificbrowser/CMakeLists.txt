@@ -18,6 +18,5 @@ target_link_libraries(sitespecificbrowser
     ${KDE4_KDEUI_LIBS}
 )
 
-#install(TARGETS sitespecificbrowser DESTINATION ${SERVICES_INSTALL_DIR})
-#install(FILES plasma-applet-lionmail.desktop DESTINATION ${SERVICES_INSTALL_DIR})
-#install(FILES desktoptheme/akonadi.svg DESTINATION ${DATA_INSTALL_DIR}/desktoptheme/default/widgets)
+install( TARGETS sitespecificbrowser ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( FILES sitespecificbrowser.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )

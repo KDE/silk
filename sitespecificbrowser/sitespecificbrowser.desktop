@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=GMail
+Exec=sitespecificbrowser gmail
+Icon=mail-message
+Type=Application
+X-DocPath=sitespecificbrowser/index.html
+GenericName=A GMail Browser
+Terminal=false
