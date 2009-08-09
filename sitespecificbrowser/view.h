@@ -29,11 +29,10 @@ public:
 
     void startApplication();
 
+#if 0
     // This method is a temporary hack to setup a hard-coded application.
     void setupApplication();
-
-    bool load( const QString &filename );
-    bool save( const QString &filename );
+#endif 
 
     WebAppOptions *options() const;
     QList<QAction *> actions() const;

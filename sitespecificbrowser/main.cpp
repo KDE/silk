@@ -37,28 +37,6 @@ int main(int argc, char **argv)
     KToolBar *bar = new KToolBar(w);
     //bar->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
-
-#if 0
-    View tl(w); 
-
-    // TODO: Load the application. For now use the hard-coded one.
-    tl.setupApplication();
-
-    QAction *action;
-    foreach( action, tl.actions() ) {
-	bar->addAction( action );
-    }
-    
-    QVBoxLayout *box = new QVBoxLayout(w);
-    box->addWidget(bar);
-    box->addWidget(&tl);
-
-    tl.startApplication();
-    
-    w->show();
-
-    return app.exec();
-#else
     if (args->count() == 0)
     {
         //void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
@@ -105,5 +83,4 @@ int main(int argc, char **argv)
 
         return app.exec();
     }
-#endif
 }

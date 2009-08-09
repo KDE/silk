@@ -53,6 +53,7 @@ void View::startApplication()
     }
 }
 
+#if 0 // Hard coded app
 void View::setupApplication()
 {
     m_options->startUrl = QUrl("http://mail.google.com/");
@@ -76,46 +77,8 @@ void View::setupApplication()
     connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
     m_options->actions.append( action );
 */
-
-    save( QString("gmail.ini") ); // HACK
 }
-
-bool View::load( const QString &filename )
-{
-    // TODO
-    QSettings settings( filename, QSettings::IniFormat );
-
-    m_options->startUrl = QUrl( settings.value( QString("StartUrl") ).toString() );
-    m_options->windowTitle = settings.value( QString("WindowTitle") ).toString();
-
-    int size = settings.beginReadArray( QString("AllowedBases") );
-    for ( int i = 0; i < size; ++i ) {
-	settings.setArrayIndex( i );
-	m_options->allowedBases.append( QUrl( settings.value( QString("Url") ).toString() ) );
-    }
-    settings.endArray();
-
-    return true;
-}
-
-bool View::save( const QString &filename )
-{
-    QSettings settings( filename, QSettings::IniFormat );
-
-    settings.setValue( QString("StartUrl"), m_options->startUrl.toString() );
-    settings.setValue( QString("WindowTitle"), m_options->windowTitle );
-
-    settings.beginWriteArray( QString("AllowedBases") );
-    for ( int i = 0; i < m_options->allowedBases.size(); ++i ) {
-	settings.setArrayIndex( i );
-	settings.setValue( QString("Url"), m_options->allowedBases[i].toString() );
-    }
-    settings.endArray();
-
-    settings.sync();
-
-    return true;
-}
+#endif 
 
 void View::actionTriggered( const QString &script )
 {
