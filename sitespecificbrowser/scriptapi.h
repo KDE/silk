@@ -2,6 +2,7 @@
 #define SCRIPTAPI_H
 
 #include <QtCore/QObject>
+#include <QVariant>
 
 class QWebFrame;
 class View;
@@ -24,7 +25,7 @@ public slots:
 
     /** GM_log - log messages to the JavaScript Console */
     void GM_log( const QString &message );
-    
+
     /** GM_getValue - get script-specific configuration value */
     QVariant GM_getValue( const QString &key, const QVariant &defaultVal = QVariant() );
 
