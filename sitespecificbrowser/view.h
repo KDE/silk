@@ -29,6 +29,8 @@ public:
 
     void startApplication();
 
+    void setupApplication();
+
     bool load( const QString &filename );
     bool save( const QString &filename );
 
@@ -41,9 +43,6 @@ public:
 protected slots:
     void actionTriggered( const QString &script );
     void iconLoaded();
-
-private:
-    void setupApplication();
 
 private:
     QSignalMapper *m_mapper;
