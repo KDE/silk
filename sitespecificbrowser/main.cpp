@@ -62,15 +62,21 @@ int main(int argc, char **argv)
     if (args->count() == 0)
     {
         //void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
-	foreach (const KPluginInfo &info, View::listWebApps()) {
+	KPluginInfo::List apps = View::listWebApps();
+	if ( !apps.size() ) {
+	    std::cout << "No applications found" << std::endl;
+	    return 1;
+	}
+
+	foreach (const KPluginInfo &info, apps) {
             QString name = info.pluginName();
             QString comment = info.comment();
             QString applet("%1 - %2");
 
             applet = applet.arg(name).arg(comment);
             std::cout << applet.toLocal8Bit().data() << std::endl;
-            return 1;
         }
+	return 1;
         //sitespecificbrowser *widget = new sitespecificbrowser;
         //widget->show();
     } else {
@@ -91,7 +97,7 @@ int main(int argc, char **argv)
         box->addWidget(bar);
         box->addWidget(&tl);
 
-	tk.startApplication();
+	tl.startApplication();
 
         w->show();
 
