@@ -13,7 +13,7 @@
 #include "page.h"
 #include "view.h"
 
-View::View( QString plugin, QWidget *parent )
+View::View( QWidget *parent )
     : QWebView(parent)
 {
     m_mapper = new QSignalMapper( this );
@@ -26,23 +26,9 @@ View::View( QString plugin, QWidget *parent )
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
     setPage( m_page );
 
-#ifdef WTF
-    loadWebApp(plugin);
-#endif
-
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
     QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
     QWebSettings::setIconDatabasePath( QDir::currentPath() );
-
-    setWindowTitle( m_options->windowTitle );
-    setUrl( m_options->startUrl );
-
-    QIcon icon = QWebSettings::iconForUrl( m_options->startUrl );
-    //QIcon icon = m_page->mainFrame()->icon();
-    qDebug() << "Is icon null: " << icon.isNull();
-    if ( !icon.isNull() ) {
-        setWindowIcon( icon );
-    }
 }
 
 WebAppOptions *View::options() const
@@ -53,6 +39,19 @@ WebAppOptions *View::options() const
 QList<QAction *> View::actions() const
 {
     return m_options->actions;
+}
+
+void View::startApplication()
+{
+    setWindowTitle( m_options->windowTitle );
+    setUrl( m_options->startUrl );
+
+    QIcon icon = QWebSettings::iconForUrl( m_options->startUrl );
+    //QIcon icon = m_page->mainFrame()->icon();
+    qDebug() << "Is icon null: " << icon.isNull();
+    if ( !icon.isNull() ) {
+        setWindowIcon( icon );
+    }
 }
 
 void View::setupApplication()
@@ -136,8 +135,6 @@ void View::iconLoaded()
 //    qDebug() << icon;
 }
 
-#ifdef WTF
-
 KPluginInfo::List View::listWebApps()
 {
     QString constraint;
@@ -201,7 +198,7 @@ KPluginInfo::List View::listWebApps()
     return KPluginInfo::fromServices(offers);
 }
 
-void View::loadWebApp(const QString &name)
+bool View::loadWebApp(const QString &name)
 {
     foreach (const KPluginInfo &info, listWebApps()) {
         QString comment = info.comment();
@@ -221,8 +218,10 @@ void View::loadWebApp(const QString &name)
             m_options->windowIcon = KIcon(info.icon());
             m_options->windowTitle = info.property("Name").toString();
 
+	    return true;
         }
     }
+
+    return false;
 }
 
-#endif // WTF

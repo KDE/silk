@@ -39,7 +39,9 @@ int main(int argc, char **argv)
 
 
 #ifndef WTF
-    View tl(QString(), w); 
+    View tl(w); 
+
+    // TODO: Load the application
 
     QAction *action;
     foreach( action, tl.actions() ) {
@@ -49,6 +51,8 @@ int main(int argc, char **argv)
     QVBoxLayout *box = new QVBoxLayout(w);
     box->addWidget(bar);
     box->addWidget(&tl);
+
+    tl.startApplication();
     
     w->show();
 
@@ -69,7 +73,14 @@ int main(int argc, char **argv)
         //sitespecificbrowser *widget = new sitespecificbrowser;
         //widget->show();
     } else {
-        View tl(args->arg(0), w);
+        View tl(w);
+
+	bool ok = tl.loadWebApp( args->arg(0) );
+	if (!ok) {
+	    std::cout << "Unable to load application" << args->arg(0).toLocal8Bit().data();
+	    return 1;
+	}
+
         QAction *action;
         foreach( action, tl.actions() ) {
             bar->addAction( action );

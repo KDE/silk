@@ -25,15 +25,18 @@ class View : public QWebView
     Q_OBJECT
 
 public:
-    View( QString plugin, QWidget *parent=0 );
+    View( QWidget *parent=0 );
+
+    void startApplication();
 
     bool load( const QString &filename );
     bool save( const QString &filename );
 
     WebAppOptions *options() const;
     QList<QAction *> actions() const;
+
     KPluginInfo::List listWebApps();
-    void loadWebApp(const QString &name);
+    bool loadWebApp(const QString &name);
 
 protected slots:
     void actionTriggered( const QString &script );
