@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=ReviewBoard
+Comment=KDE's ReviewBoard Instance
+Exec=sitespecificbrowser reviewboard
+Icon=kstars
+Type=Application

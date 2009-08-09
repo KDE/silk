@@ -18,12 +18,6 @@ target_link_libraries(sitespecificbrowser
     ${KDE4_KDEUI_LIBS}
 )
 
-install(FILES silk-webapp.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
-
 install( TARGETS sitespecificbrowser ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install( FILES sitespecificbrowser.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
-install( FILES
-    sitespecificbrowser-gmail.desktop
-    sitespecificbrowser-reviewboard.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR})
 
+add_subdirectory(services)
