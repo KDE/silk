@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 // Qt
 #include <QBoxLayout>
 #include <QWidget>
@@ -31,28 +33,41 @@ int main(int argc, char **argv)
     KApplication app;
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if (args->count() == 0)
-    {
-        //sitespecificbrowser *widget = new sitespecificbrowser;
-        //widget->show();
-    }
     QWidget *w = new QWidget();
     KToolBar *bar = new KToolBar(w);
     //bar->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
-    View tl(w);
-    QAction *action;
-    foreach( action, tl.actions() ) {
-        bar->addAction( action );
+
+    if (args->count() == 0)
+    {
+        //void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
+        View tl(QString(), w);
+        foreach (const KPluginInfo &info, tl.listWebApps()) {
+            QString name = info.pluginName();
+            QString comment = info.comment();
+            QString applet("%1 - %2");
+
+            applet = applet.arg(name).arg(comment);
+            std::cout << applet.toLocal8Bit().data() << std::endl;
+            return 1;
+        }
+        //sitespecificbrowser *widget = new sitespecificbrowser;
+        //widget->show();
+    } else {
+        View tl(args->arg(0), w);
+        QAction *action;
+        foreach( action, tl.actions() ) {
+            bar->addAction( action );
+        }
+
+        QVBoxLayout *box = new QVBoxLayout(w);
+        box->addWidget(bar);
+        box->addWidget(&tl);
+
+        w->show();
+
+        args->clear();
+
+        return app.exec();
     }
-
-    QVBoxLayout *box = new QVBoxLayout(w);
-    box->addWidget(bar);
-    box->addWidget(&tl);
-
-    w->show();
-
-    args->clear();
-
-    return app.exec();
 }

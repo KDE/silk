@@ -13,7 +13,7 @@
 #include "page.h"
 #include "view.h"
 
-View::View( QWidget *parent )
+View::View( QString plugin, QWidget *parent )
     : QWebView(parent)
 {
     m_mapper = new QSignalMapper( this );
@@ -26,7 +26,7 @@ View::View( QWidget *parent )
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
     setPage( m_page );
 
-    loadWebApp(listWebApps());
+    loadWebApp(plugin);
 
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
     QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
@@ -198,10 +198,9 @@ KPluginInfo::List View::listWebApps()
     return KPluginInfo::fromServices(offers);
 }
 
-void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
+void View::loadWebApp(const QString &name)
 {
-    foreach (const KPluginInfo &info, plugins) {
-        QString name = info.pluginName();
+    foreach (const KPluginInfo &info, listWebApps()) {
         QString comment = info.comment();
 
         if (comment.isEmpty()) {
@@ -209,13 +208,16 @@ void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
         }
 
         kDebug() << "Silk/WebApp:" << name << comment << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
+        if (info.pluginName() == name) {
+            kDebug() << "Found plugin:" << name;
+            m_options->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
 
-        m_options->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
+            foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
+                m_options->allowedBases << QUrl(url);
+            }
+            m_options->windowIcon = KIcon(info.icon());
+            m_options->windowTitle = info.property("Name").toString();
 
-        foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
-            m_options->allowedBases << QUrl(url);
         }
-        m_options->windowIcon = KIcon(info.icon());
-        m_options->windowTitle = info.property("Name").toString();
     }
 }
