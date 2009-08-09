@@ -20,7 +20,6 @@ View::View( QWidget *parent )
     connect( m_mapper, SIGNAL( mapped(const QString &) ), SLOT(actionTriggered(const QString &)) );
 
     m_options = new WebAppOptions;
-    setupApplication();
 
     m_page = new Page( this );
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );

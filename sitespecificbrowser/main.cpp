@@ -41,7 +41,8 @@ int main(int argc, char **argv)
 #ifndef WTF
     View tl(w); 
 
-    // TODO: Load the application
+    // TODO: Load the application. For now use the hard-coded one.
+    tl.setupApplication();
 
     QAction *action;
     foreach( action, tl.actions() ) {
