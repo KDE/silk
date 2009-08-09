@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     if (args->count() == 0)
     {
         //void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
-       foreach (const KPluginInfo &info, tl.listWebApps()) {
+	foreach (const KPluginInfo &info, View::listWebApps()) {
             QString name = info.pluginName();
             QString comment = info.comment();
             QString applet("%1 - %2");
@@ -90,6 +90,8 @@ int main(int argc, char **argv)
         QVBoxLayout *box = new QVBoxLayout(w);
         box->addWidget(bar);
         box->addWidget(&tl);
+
+	tk.startApplication();
 
         w->show();
 

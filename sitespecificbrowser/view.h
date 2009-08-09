@@ -37,8 +37,9 @@ public:
     WebAppOptions *options() const;
     QList<QAction *> actions() const;
 
-    KPluginInfo::List listWebApps();
     bool loadWebApp(const QString &name);
+
+    static KPluginInfo::List listWebApps();
 
 protected slots:
     void actionTriggered( const QString &script );
