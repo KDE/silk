@@ -58,12 +58,12 @@ void ScriptApi::showNotification( const QString &text )
 bool ScriptApi::include( const QString &filename )
 {
     if (!m_trusted)
-	return false;
+        return false;
 
     QFile f( filename );
     if ( !f.open( QIODevice::ReadOnly ) ) {
-	kDebug() << "Unable to open file " << filename;
-	return false;
+        kDebug() << "Unable to open file " << filename;
+        return false;
     }
 
     QTextStream ts( &f );
