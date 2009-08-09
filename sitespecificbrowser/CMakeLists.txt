@@ -9,6 +9,7 @@ set(sitespecificbrowser_SRCS
     main.cpp
     view.cpp
     page.cpp
+    scriptapi.cpp
 )
 
 KDE4_ADD_EXECUTABLE(sitespecificbrowser ${sitespecificbrowser_SRCS})

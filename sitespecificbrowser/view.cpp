@@ -12,6 +12,7 @@
 
 #include "page.h"
 #include "view.h"
+#include "scriptapi.h"
 
 View::View( QWidget *parent )
     : QWebView(parent)
@@ -24,6 +25,9 @@ View::View( QWidget *parent )
     m_page = new Page( this );
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
     setPage( m_page );
+
+    m_scriptapi = new ScriptApi(this);
+    m_scriptapi->setWebView(this);
 
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
     QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
@@ -53,12 +57,13 @@ void View::startApplication()
     }
 }
 
-#if 0 // Hard coded app
 void View::setupApplication()
 {
+#if 0 // Hard coded app
     m_options->startUrl = QUrl("http://mail.google.com/");
     m_options->windowTitle = QString("GMail");
     m_options->allowedBases.append( QUrl("http://mail.google.com/") );
+#endif 
 
     // Setup script actions
     QAction *action;
@@ -70,6 +75,12 @@ void View::setupApplication()
     connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
     m_options->actions.append( action );
 
+    action = new QAction(this);
+    action->setText( QString("Say Hello") );
+    m_mapper->setMapping( action, QString("window.silk.GM_log('Hello!')") );
+    connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
+    m_options->actions.append( action );
+
 /* doesn't work
     action = new QAction(this);
     action->setText( QString("Hide GBar") );
@@ -78,7 +89,6 @@ void View::setupApplication()
     m_options->actions.append( action );
 */
 }
-#endif 
 
 void View::evaluateScript( const QString &script )
 {

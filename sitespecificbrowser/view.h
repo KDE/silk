@@ -9,6 +9,7 @@
 
 class QSignalMapper;
 class Page;
+class ScriptApi;
 
 /** Stuff that should be per-webapp */
 struct WebAppOptions
@@ -29,10 +30,8 @@ public:
 
     void startApplication();
 
-#if 0
     // This method is a temporary hack to setup a hard-coded application.
     void setupApplication();
-#endif 
 
     WebAppOptions *options() const;
     QList<QAction *> actions() const;
@@ -51,6 +50,7 @@ private:
     QSignalMapper *m_mapper;
     WebAppOptions *m_options;
     Page *m_page;
+    ScriptApi *m_scriptapi;
 };
 
 #endif // VIEW_H
