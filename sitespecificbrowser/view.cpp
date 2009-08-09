@@ -1,4 +1,6 @@
 #include <qdebug.h>
+#include <qprogressbar.h>
+#include <qtimer.h>
 #include <qwebsettings.h>
 #include <qwebframe.h>
 #include <qsettings.h>
@@ -32,6 +34,19 @@ View::View( QWidget *parent )
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
     QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
     QWebSettings::setIconDatabasePath( QDir::currentPath() );
+
+    m_progressTimer = new QTimer( this );
+    m_progressTimer->setInterval( 500 );
+    m_progressTimer->setSingleShot( true );
+
+    m_progressBar = new QProgressBar( this );
+    m_progressBar->show(); // let's show it at startup.
+
+    connect( this, SIGNAL( loadStarted() ), m_progressTimer, SLOT( start() ) );
+    connect( this, SIGNAL( loadProgress( int ) ), m_progressBar, SLOT( setValue( int ) ) );
+    connect( this, SIGNAL( loadFinished( bool ) ), m_progressBar, SLOT( hide() ) );
+    connect( this, SIGNAL( loadFinished( bool ) ), m_progressTimer, SLOT( stop() ) );
+    connect( m_progressTimer, SIGNAL( timeout() ), m_progressBar, SLOT( show() ) );
 }
 
 WebAppOptions *View::options() const
@@ -63,7 +78,7 @@ void View::setupApplication()
     m_options->startUrl = QUrl("http://mail.google.com/");
     m_options->windowTitle = QString("GMail");
     m_options->allowedBases.append( QUrl("http://mail.google.com/") );
-#endif 
+#endif
 
     // Setup script actions
     QAction *action;
@@ -197,7 +212,7 @@ bool View::loadWebApp(const QString &name)
             m_options->windowIcon = KIcon(info.icon());
             m_options->windowTitle = info.property("Name").toString();
 
-	    return true;
+        return true;
         }
     }
 

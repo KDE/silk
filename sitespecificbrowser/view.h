@@ -8,6 +8,7 @@
 #include <KPluginInfo>
 
 class QSignalMapper;
+class QProgressBar;
 class Page;
 class ScriptApi;
 
@@ -51,6 +52,8 @@ private:
     WebAppOptions *m_options;
     Page *m_page;
     ScriptApi *m_scriptapi;
+    QProgressBar* m_progressBar;
+    QTimer* m_progressTimer;
 };
 
 #endif // VIEW_H
