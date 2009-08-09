@@ -4,6 +4,7 @@
 #include <qtextstream.h>
 
 #include <kdebug.h>
+#include <kpassivepopup.h>
 #include <knotification.h>
 
 #include "view.h"
@@ -50,7 +51,8 @@ void ScriptApi::GM_setValue( const QString &key, const QVariant &value )
 
 void ScriptApi::showNotification( const QString &text )
 {
-    KNotification::event( QString("script_message"), text );
+    KPassivePopup::message( text, m_view );
+//    KNotification::event( QString("script_message"), text );
 }
 
 bool ScriptApi::include( const QString &filename )
