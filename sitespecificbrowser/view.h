@@ -38,7 +38,7 @@ public:
 
     bool loadWebApp(const QString &name);
 
-    static KPluginInfo::List listWebApps();
+    static KPluginInfo::List listWebApps(const QString &name = QString());
 
 public slots:
     void evaluateScript( const QString &script );

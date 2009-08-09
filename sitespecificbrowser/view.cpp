@@ -63,7 +63,7 @@ void View::setupApplication()
     m_options->startUrl = QUrl("http://mail.google.com/");
     m_options->windowTitle = QString("GMail");
     m_options->allowedBases.append( QUrl("http://mail.google.com/") );
-#endif 
+#endif
 
     // Setup script actions
     QAction *action;
@@ -114,66 +114,13 @@ void View::iconLoaded()
 //    kDebug() << icon;
 }
 
-KPluginInfo::List View::listWebApps()
+KPluginInfo::List View::listWebApps(const QString &name)
 {
     QString constraint;
-    /*
-    if (parentApp.isEmpty()) {
-        constraint.append("(not exist [X-KDE-ParentApp] or [X-KDE-ParentApp] == '')");
-    } else {
-        constraint.append("[X-KDE-ParentApp] == '").append(parentApp).append("'");
+    if (!name.isEmpty()) {
+        constraint.append(QString("[X-KDE-PluginInfo-Name] == '%1'").arg(name));
     }
-    //note: constraint guaranteed non-empty from here down
-
-    if (category.isEmpty()) { //use all but the excluded categories
-        KConfigGroup group(KGlobal::config(), "General");
-        QStringList excluded = group.readEntry("ExcludeCategories", QStringList());
-        foreach (const QString &category, excluded) {
-            constraint.append(" and [X-KDE-PluginInfo-Category] != '").append(category).append("'");
-        }
-    } else { //specific category (this could be an excluded one - is that bad?)
-        constraint.append(" and ");
-
-        constraint.append("[X-KDE-PluginInfo-Category] == '").append(category).append("'");
-        if (category == "Miscellaneous") {
-            constraint.append(" or (not exist [X-KDE-PluginInfo-Category] or [X-KDE-PluginInfo-Category] == '')");
-        }
-    }
-    */
-    KService::List offers = KServiceTypeTrader::self()->query("Silk/WebApp");
-/*
-    //now we have to do some manual filtering because the constraint can't handle everything
-    KConfigGroup constraintGroup(KGlobal::config(), "Constraints");
-    foreach (const QString &key, constraintGroup.keyList()) {
-        //kDebug() << "security constraint" << key;
-        if (constraintGroup.readEntry(key, true)) {
-            continue;
-        }
-        //ugh. a qlist of ksharedptr<kservice>
-        QMutableListIterator<KService::Ptr> it(offers);
-        while (it.hasNext()) {
-            KService::Ptr p = it.next();
-            QString prop = QString("X-Plasma-Requires-").append(key);
-            QVariant req = p->property(prop, QVariant::String);
-            //valid values: Required/Optional/Unused
-            QString reqValue;
-            if (req.isValid()) {
-                reqValue = req.toString();
-            } else {
-                //TODO if it's a scripted language default to not-required because the bindings disable it
-                //this isn't actually implemented in any bindings yet but should be possible for
-                //anything but c++
-            }
-
-            if (!(reqValue == "Optional" || reqValue == "Unused")) {
-            //if (reqValue == "Required") {
-                it.remove();
-            }
-        }
-    }
-*/
-    //kDebug() << "Applet::listAppletInfo constraint was '" << constraint
-    //         << "' which got us " << offers.count() << " matches";
+    KService::List offers = KServiceTypeTrader::self()->query("Silk/WebApp", constraint);
     return KPluginInfo::fromServices(offers);
 }
 
@@ -187,18 +134,15 @@ bool View::loadWebApp(const QString &name)
         }
 
         kDebug() << "Silk/WebApp:" << name << comment << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
-        if (info.pluginName() == name) {
-            kDebug() << "Found plugin:" << name;
-            m_options->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
+        kDebug() << "Found plugin:" << name;
+        m_options->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
 
-            foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
-                m_options->allowedBases << QUrl(url);
-            }
-            m_options->windowIcon = KIcon(info.icon());
-            m_options->windowTitle = info.property("Name").toString();
-
-	    return true;
+        foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
+            m_options->allowedBases << QUrl(url);
         }
+        m_options->windowIcon = KIcon(info.icon());
+        m_options->windowTitle = info.property("Name").toString();
+        return true;
     }
 
     return false;
