@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Gitorious Silk
+Comment=Project Silk on Gitorious
+Exec=sitespecificbrowser silk
+Icon=project-development
+Type=Application
+X-DocPath=sitespecificbrowser/index.html
+Terminal=false
