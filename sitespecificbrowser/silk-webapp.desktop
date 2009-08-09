@@ -12,9 +12,9 @@ Type=QString
 Type=QString
 
 
-[PropertyDef::X-Silk-AllowedBasesUrls]
+[PropertyDef::X-Silk-AllowedBases]
 Type=QStringList
 
-[PropertyDef::X-Silk-AllowedBasesUrls-Size]
+[PropertyDef::X-Silk-AllowedBases-Size]
 Type=int
 

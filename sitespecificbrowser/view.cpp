@@ -55,10 +55,11 @@ QList<QAction *> View::actions() const
 
 void View::setupApplication()
 {
+    /*
     m_options->startUrl = QUrl("http://mail.google.com/");
     m_options->windowTitle = QString("GMail");
     m_options->allowedBases.append( QUrl("http://mail.google.com/") );
-
+    */
     // Setup script actions
     QAction *action;
 
@@ -197,19 +198,9 @@ KPluginInfo::List View::listWebApps()
     return KPluginInfo::fromServices(offers);
 }
 
-void View::loadWebApp(KPluginInfo::List plugins)
+void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
 {
     foreach (const KPluginInfo &info, plugins) {
-        /*
-        if (info.property("NoDisplay").toBool()) {
-            continue;
-        }
-
-        int len = info.pluginName().length();
-        if (len > maxLen) {
-            maxLen = len;
-        }
-        */
         QString name = info.pluginName();
         QString comment = info.comment();
 
@@ -217,6 +208,14 @@ void View::loadWebApp(KPluginInfo::List plugins)
             comment = i18n("No description available");
         }
 
-        kDebug() << "Silk/WebApp:" << name << comment << info.author() << info.property("X-KDE-PluginInfo-StartUrl") <<  info.property("X-KDE-PluginInfo-StartUrl");
+        kDebug() << "Silk/WebApp:" << name << comment << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
+
+        m_options->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
+
+        foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
+            m_options->allowedBases << QUrl(url);
+        }
+        m_options->windowIcon = KIcon(info.icon());
+        m_options->windowTitle = info.property("Name").toString();
     }
 }
