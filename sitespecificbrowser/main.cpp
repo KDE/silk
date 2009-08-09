@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     //bar->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
 
-#ifndef WTF
+#if 0
     View tl(w); 
 
     // TODO: Load the application. For now use the hard-coded one.
@@ -105,5 +105,5 @@ int main(int argc, char **argv)
 
         return app.exec();
     }
-#endif // WTF
+#endif
 }
