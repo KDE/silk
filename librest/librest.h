@@ -45,7 +45,7 @@ public:
     /** Constructor **/
     LibRest();
 
-    /** Constructor **/
+    /** Destructor **/
     ~LibRest();
 
     /**
