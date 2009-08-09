@@ -5,6 +5,8 @@
 #include <qmap.h>
 #include <qaction.h>
 
+#include <KPluginInfo>
+
 class QSignalMapper;
 class Page;
 
@@ -30,6 +32,8 @@ public:
 
     WebAppOptions *options() const;
     QList<QAction *> actions() const;
+    KPluginInfo::List listWebApps();
+    void loadWebApp(KPluginInfo::List plugins);
 
 protected slots:
     void actionTriggered( const QString &script );
