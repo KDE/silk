@@ -1,14 +1,8 @@
 #ifndef WEBAPPACTION_H
 #define WEBAPPACTION_H
 
-
 #include <KAction>
 #include <KPluginInfo>
-
-class QSignalMapper;
-class QProgressBar;
-class Page;
-class ScriptApi;
 
 /** Stuff that should be per-webapp */
 struct WebAppActionOptions
