@@ -15,6 +15,7 @@ KDE4_ADD_EXECUTABLE(sitespecificbrowser ${sitespecificbrowser_SRCS})
 
 target_link_libraries(sitespecificbrowser
     ${QT_QTWEBKIT_LIBRARY}
+    ${KDE4_KDEUI_LIBS}
 )
 
 #install(TARGETS sitespecificbrowser DESTINATION ${SERVICES_INSTALL_DIR})
