@@ -1,0 +1,13 @@
+[Desktop Entry]
+Comment=Toggle the Chrome in Gitorious Interface
+Icon=view-sidetree
+Name=Toggle Chrome
+Type=Service
+
+X-KDE-PluginInfo-Name=silk-commitlog
+X-KDE-ServiceTypes=Silk/WebApp/Action
+
+X-Silk-ScriptFile=togglesidebar.js
+X-Silk-ShowOnUrl=http://gitorious.org/
+X-Silk-TriggerOnUrl=http://gitorious.org/
+X-Silk-WebApp=silk
