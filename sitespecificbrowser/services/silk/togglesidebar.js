@@ -1,20 +1,24 @@
-function show(id)
+/* ------------------------------------------------- *
+ * Show/Hide the header, footer and sidebar          *
+ *                                                   *
+ * Site:    Gitorious.org                            *
+ * Author:  Sebastian Kügler <sebas@kde.org>         *
+ * License: LGPL v2.1                                *
+ * ------------------------------------------------- */
+
+function toggleVisibility(id)
 {
     el = document.getElementById(id);
     if (el.style.display == 'none')
     {
         el.style.display = '';
-        //el = document.getElementById('more' + id);
-        //el.innerHTML = 'less...';
         window.silk.GM_log('showing');
     } else {
         el.style.display = 'none';
-        //el = document.getElementById('more' + id);
-        //el.innerHTML = 'more...';
         window.silk.GM_log('hiding');
     }
 }
 
-show('sidebar');
-show('header');
-show('footer');
+toggleVisibility('sidebar');
+toggleVisibility('header');
+toggleVisibility('footer');

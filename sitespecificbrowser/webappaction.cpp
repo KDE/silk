@@ -72,13 +72,15 @@ bool WebAppAction::load(const KPluginInfo &info)
     // Loading the JavaScript stuff
     QString script = info.property("X-Silk-Script").toString();
     QString scriptFile = info.property("X-Silk-ScriptFile").toString();
-    kDebug() << "==== script, scriptFile" << script << scriptFile;
+
     if (!script.isEmpty()) {
         m_options->script = script;
     } else if (!scriptFile.isEmpty()) {
         m_options->script = loadScript(scriptFile);
     }
-    if (scriptFile.isEmpty() && script.isEmpty()) {
+
+    // Output errors in the .desktop file in the console
+    if (!scriptFile.isEmpty() && !script.isEmpty()) {
         kWarning() << "Both, X-Silk-Script and X-Silk-ScriptFile have been defined in the .desktop file";
         kWarning() << "X-Silk-Script takes precedence.";
     }

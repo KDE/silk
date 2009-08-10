@@ -11,5 +11,5 @@ X-KDE-PluginInfo-Depends=reviewboard
 X-Silk-WebApp=reviewboard
 X-Silk-ShowOnUrl=http://reviewboard.kde.org/
 X-Silk-TriggerOnUrl=http://reviewboard.kde.org/
-X-Silk-ScriptFiles=noop-script.js
+X-Silk-ScriptFile=noop-script.js
 X-Silk-Script=window.print()
