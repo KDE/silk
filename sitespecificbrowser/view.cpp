@@ -156,7 +156,7 @@ bool View::loadWebAppActions()
     kDebug() << "Searching for Actions ..." << m_options->name;
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name)) {
         kDebug() << "ACTION:" << info.name();
-        WebAppAction *action = new WebAppAction(this);
+        WebAppAction *action = new WebAppAction(m_options->name, this);
         action->load(info);
         m_mapper->setMapping(action, action->options()->script);
         connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );

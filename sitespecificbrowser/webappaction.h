@@ -36,7 +36,6 @@ struct WebAppActionOptions
     QString triggerOnUrl;
     QString showOnUrl;
     QString script;
-    QStringList scriptFiles;
 };
 
 class WebAppAction: public KAction
@@ -44,7 +43,7 @@ class WebAppAction: public KAction
     Q_OBJECT
 
 public:
-    WebAppAction( QObject *parent=0 );
+    WebAppAction( QString webappPlugin, QObject *parent=0 );
     WebAppActionOptions* options() const;
     static KPluginInfo::List listWebAppActions(const QString &name = QString());
 
@@ -52,7 +51,9 @@ public slots:
     bool load(const KPluginInfo &info);
 
 private:
+    QString loadScript(const QString &jsfile);
     WebAppActionOptions *m_options;
+    QString m_webappPlugin;
 
 };
 

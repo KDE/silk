@@ -20,16 +20,19 @@
  *
  */
 
+#include <QFile>
 
 #include <KDebug>
 #include <KIcon>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
+#include <KStandardDirs>
 
 #include "webappaction.h"
 
-WebAppAction::WebAppAction( QObject *parent )
-    : KAction(parent)
+WebAppAction::WebAppAction( QString webappPlugin, QObject *parent )
+    : KAction(parent),
+    m_webappPlugin(webappPlugin)
 {
     m_options = new WebAppActionOptions;
 }
@@ -63,10 +66,26 @@ bool WebAppAction::load(const KPluginInfo &info)
     m_options->name = info.pluginName();
     m_options->showOnUrl = info.property("X-Silk-ShowOnUrl").toString();
     m_options->triggerOnUrl = info.property("X-Silk-TriggerOnUrl").toString();
-    m_options->script = info.property("X-Silk-Script").toString();
-    m_options->scriptFiles = info.property("X-Silk-TriggerOnUrl").toStringList();
     m_options->icon = KIcon(info.icon());
     m_options->text = info.name();
+
+    // Loading the JavaScript stuff
+    QString script = info.property("X-Silk-Script").toString();
+    QString scriptFile = info.property("X-Silk-ScriptFile").toString();
+    kDebug() << "==== script, scriptFile" << script << scriptFile;
+    if (!script.isEmpty()) {
+        m_options->script = script;
+    } else if (!scriptFile.isEmpty()) {
+        m_options->script = loadScript(scriptFile);
+    }
+    if (scriptFile.isEmpty() && script.isEmpty()) {
+        kWarning() << "Both, X-Silk-Script and X-Silk-ScriptFile have been defined in the .desktop file";
+        kWarning() << "X-Silk-Script takes precedence.";
+    }
+    if (scriptFile.isEmpty() && script.isEmpty()) {
+        kWarning() << "Neither X-Silk-Script, nor X-Silk-ScriptFile has been defined for this action";
+        kWarning() << "No action will be triggered.";
+    }
 
     setText(m_options->text);
     setIcon(m_options->icon);
@@ -74,3 +93,23 @@ bool WebAppAction::load(const KPluginInfo &info)
     return true;
 }
 
+QString WebAppAction::loadScript(const QString &jsfile)
+{
+    QString script;
+    QString scriptfile = "silk-webapp/" + m_webappPlugin + "/" + jsfile;
+    kDebug() << "Loading script file:" << scriptfile;
+    scriptfile = KGlobal::dirs()->findResource("data", scriptfile);
+    kDebug() << "Found:" << scriptfile;
+
+    QFile f(scriptfile);
+    if (f.open(QIODevice::ReadOnly)) {
+        QTextStream t(&f);
+        script = t.readAll();
+        f.close();
+        kDebug() << "Read Script" << endl << script;
+    } else {
+        kWarning() << "Could not read scriptfile" << scriptfile;
+    }
+    return script;
+
+}
