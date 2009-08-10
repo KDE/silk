@@ -29,6 +29,7 @@
 #include <qsignalmapper.h>
 #include <qdir.h>
 #include <qprogressbar.h>
+#include <qprintpreviewdialog.h>
 #include <qtimer.h>
 
 #include <KDebug>
@@ -71,6 +72,18 @@ View::View( QWidget *parent )
     connect( this, SIGNAL( loadFinished( bool ) ), m_progressBar, SLOT( hide() ) );
     connect( this, SIGNAL( loadFinished( bool ) ), m_progressTimer, SLOT( stop() ) );
     connect( m_progressTimer, SIGNAL( timeout() ), m_progressBar, SLOT( show() ) );
+
+    connect( this->page(), SIGNAL( printRequested ( QWebFrame*) ),
+             SLOT( slotPrint( QWebFrame* ) ) );
+}
+
+void View::slotPrint( QWebFrame* frame )
+{
+    QPointer<QPrintPreviewDialog> dlg = new QPrintPreviewDialog( this );
+    connect( dlg, SIGNAL( paintRequested( QPrinter * ) ),
+             frame, SLOT( print( QPrinter * ) ) );
+    dlg->exec();
+    delete dlg;
 }
 
 WebAppOptions *View::options() const
