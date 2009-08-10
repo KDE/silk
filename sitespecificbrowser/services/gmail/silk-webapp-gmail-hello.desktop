@@ -11,5 +11,4 @@ X-KDE-PluginInfo-Depends=gmail
 X-Silk-WebApp=gmail
 X-Silk-ShowOnUrl=http://mail.google.com
 X-Silk-TriggerOnUrl=http://mail.google.com/
-X-Silk-ScriptFiles=noop-script.js
-X-Silk-Script=window.silk.GM_log('Hello!')
+X-Silk-ScriptFile=hello.js

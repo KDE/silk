@@ -14,8 +14,8 @@ Type=QString
 [PropertyDef::X-Silk-ShowOnUrl]
 Type=QString
 
-[PropertyDef::X-Silk-ScriptFiles]
-Type=QStringList
+[PropertyDef::X-Silk-ScriptFile]
+Type=QString
 
 [PropertyDef::X-Silk-Script]
 Type=QString

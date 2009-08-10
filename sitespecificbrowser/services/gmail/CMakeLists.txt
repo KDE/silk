@@ -8,4 +8,6 @@ install( FILES silk-webapp-gmail.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 # Install gmail actions
 install( FILES silk-webapp-gmail-compose.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install( FILES silk-webapp-gmail-notify.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+
 install( FILES silk-webapp-gmail-hello.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(FILES hello.js DESTINATION ${DATA_INSTALL_DIR}/silk-webapp/gmail/)
