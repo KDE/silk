@@ -94,7 +94,7 @@ int main(int argc, char **argv)
             std::cout << "Could not find plugin: " << args->arg(0).toLocal8Bit().data() << std::endl;
             return 1;
         }
-
+        app.setWindowIcon(tl.options()->windowIcon);
         QAction *action;
         foreach( action, tl.actions() ) {
             bar->addAction( action );
