@@ -16,4 +16,4 @@ X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 
 X-Silk-StartUrl=http://gitorious.org/project-silk/
-X-Silk-AllowedBases=http://gitorious.org/
+X-Silk-AllowedBases=http://gitorious.org/,https://secure.gitorious.org/
