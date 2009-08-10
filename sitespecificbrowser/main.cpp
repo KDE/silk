@@ -73,11 +73,11 @@ int main(int argc, char **argv)
         }
 
         std::cout << "Usage: sitespecificbrowser [plugin]" << std::endl << std::endl;
-        std::cout << "  Available plugins:" << std::endl;
+        std::cout << "Available plugins:" << std::endl;
         foreach (const KPluginInfo &info, apps) {
             QString name = info.pluginName();
             QString comment = info.comment();
-            QString applet("      - %1 (%2)");
+            QString applet("    - %1 (%2)");
 
             applet = applet.arg(name).arg(comment);
             std::cout << applet.toLocal8Bit().data() << std::endl;
@@ -95,6 +95,8 @@ int main(int argc, char **argv)
             return 1;
         }
         app.setWindowIcon(tl.options()->windowIcon);
+        w->setWindowTitle(tl.options()->windowTitle);
+
         QAction *action;
         foreach( action, tl.actions() ) {
             bar->addAction( action );
