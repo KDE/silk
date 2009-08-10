@@ -67,6 +67,9 @@ public:
 public slots:
     void evaluateScript( const QString &script );
 
+private slots:
+    void slotPrint( QWebFrame* );
+
 protected slots:
     void iconLoaded();
 
