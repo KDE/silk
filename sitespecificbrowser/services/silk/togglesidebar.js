@@ -22,3 +22,5 @@ function toggleVisibility(id)
 toggleVisibility('sidebar');
 toggleVisibility('header');
 toggleVisibility('footer');
+
+var v = document.body.offsetHeight;
