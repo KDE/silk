@@ -37,7 +37,8 @@
 #include <KToolBar>
 
 // Own
-#include "view.h"
+#include "webapp.h"
+#include "view.h" // needed for listWebApps
 
 static const char description[] =
 I18N_NOOP("A KDE 4 Application");
@@ -57,8 +58,8 @@ int main(int argc, char **argv)
     KApplication app;
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    QWidget *w = new QWidget();
-    KToolBar *bar = new KToolBar(w);
+    //QWidget *w = new QWidget();
+    //KToolBar *bar = new KToolBar(w);
     //bar->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
     kDebug() << "ARGS:" << args << args->count();
@@ -66,7 +67,7 @@ int main(int argc, char **argv)
     {
         //KCmdLineArgs::usage(i18n("No file specified"));
         //void View::loadWebApp(const QString &name, KPluginInfo::List plugins)
-        KPluginInfo::List apps = View::listWebApps();
+        KPluginInfo::List apps = WebApp::listWebApps();
         if ( !apps.size() ) {
             std::cout << "No applications found" << std::endl;
             return 1;
@@ -86,7 +87,7 @@ int main(int argc, char **argv)
         //sitespecificbrowser *widget = new sitespecificbrowser;
         //widget->show();
     } else {
-        View tl(w);
+        WebApp tl;
         //kDebug() << "ARGS:" << args << args->count() << args->getOption("plugin <pluginname>");
 
         bool ok = tl.loadWebApp( args->arg(0) );
@@ -94,21 +95,17 @@ int main(int argc, char **argv)
             std::cout << "Could not find plugin: " << args->arg(0).toLocal8Bit().data() << std::endl;
             return 1;
         }
-        app.setWindowIcon(tl.options()->windowIcon);
-        w->setWindowTitle(tl.options()->windowTitle);
+        //app.setWindowIcon(tl.options()->windowIcon);
+        //w->setWindowTitle(tl.options()->windowTitle);
 
-        QAction *action;
-        foreach( action, tl.actions() ) {
-            bar->addAction( action );
-        }
-
+        /*
         QVBoxLayout *box = new QVBoxLayout(w);
         box->addWidget(bar);
         box->addWidget(&tl);
-
+        */
         tl.startApplication();
 
-        w->show();
+        tl.show();
 
         args->clear();
 

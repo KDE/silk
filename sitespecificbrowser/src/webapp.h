@@ -20,41 +20,54 @@
  *
  */
 
-#ifndef WEBAPPACTION_H
-#define WEBAPPACTION_H
+#ifndef WEBAPP_H
+#define WEBAPP_H
 
-#include <KAction>
+
+#include <kxmlguiwindow.h>
 #include <KPluginInfo>
 
-/** Stuff that should be per-webapp */
-struct WebAppActionOptions
-{
-    QString name;
-    QString text;
-    KIcon icon;
-    QString triggerOnUrl;
-    QString showOnUrl;
-    QString script;
-};
+#include "ui_prefs_base.h"
 
-class WebAppAction: public KAction
+class View;
+class QPrinter;
+class KToggleAction;
+class KUrl;
+
+/**
+ * This class serves as the main window for sitespecificbrowser.  It handles the
+ * menus, toolbars, and status bars.
+ *
+ * @short Main window class
+ * @author Sebastian Kügler <sebas@kde.org>
+ * @version 0.1
+ */
+class WebApp : public KXmlGuiWindow
 {
     Q_OBJECT
-
 public:
-    WebAppAction( QString webappPlugin, QObject *parent=0 );
-    WebAppActionOptions* options() const;
-    static KPluginInfo::List listWebAppActions(const QString &name = QString());
-    QString name() const;
+    WebApp();
+    virtual ~WebApp();
 
-public slots:
-    bool load(const KPluginInfo &info);
+    static KPluginInfo::List listWebApps(const QString &name = QString());
+
+    bool loadWebApp(const QString &name);
+    void startApplication();
+
+private slots:
+    void fileNew();
+    void optionsPreferences();
 
 private:
-    QString loadScript(const QString &jsfile);
-    WebAppActionOptions *m_options;
-    QString m_webappPlugin;
+    void setupActions();
 
+private:
+    Ui::prefs_base ui_prefs_base ;
+    View *m_view;
+
+    QPrinter   *m_printer;
+    KToggleAction *m_toolbarAction;
+    KToggleAction *m_statusbarAction;
 };
 
-#endif // WEBAPPACTION_H
+#endif // _SITESPECIFICBROWSER_H_

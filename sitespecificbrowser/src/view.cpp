@@ -96,17 +96,14 @@ QList<QAction *> View::actions() const
     return m_options->actions;
 }
 
-void View::startApplication()
+QString View::name() const
 {
-    setWindowTitle( m_options->windowTitle );
-    setUrl( m_options->startUrl );
+    return m_options->name;
+}
 
-    QIcon icon = QWebSettings::iconForUrl( m_options->startUrl );
-    //QIcon icon = m_page->mainFrame()->icon();
-    kDebug() << "Is icon null: " << icon.isNull();
-    if ( !icon.isNull() ) {
-        setWindowIcon( icon );
-    }
+QString View::plugin() const
+{
+    return m_options->plugin;
 }
 
 void View::evaluateScript( const QString &script )
@@ -127,54 +124,23 @@ void View::iconLoaded()
 //    kDebug() << icon;
 }
 
-KPluginInfo::List View::listWebApps(const QString &name)
+
+bool View::loadWebAppActions(KActionCollection *actionCollection, QObject *parent)
 {
-    QString constraint;
-    if (!name.isEmpty()) {
-        constraint.append(QString("[X-KDE-PluginInfo-Name] == '%1'").arg(name));
-    }
-    KService::List offers = KServiceTypeTrader::self()->query("Silk/WebApp", constraint);
-    return KPluginInfo::fromServices(offers);
-}
-
-bool View::loadWebApp(const QString &name)
-{
-    foreach (const KPluginInfo &info, listWebApps(name)) {
-        QString comment = info.comment();
-
-        if (comment.isEmpty()) {
-            comment = i18n("No description available");
-        }
-
-        kDebug() << "Silk/WebApp:" << name << comment << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
-        kDebug() << "Found plugin:" << name;
-        m_options->name = info.pluginName();
-        m_options->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
-
-        foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
-            m_options->allowedBases << QUrl(url);
-        }
-        m_options->windowIcon = KIcon(info.icon());
-        m_options->windowTitle = info.property("Name").toString();
-
-        loadWebAppActions();
-        return true;
-    }
-
-    return false;
-}
-
-bool View::loadWebAppActions()
-{
-    kDebug() << "Searching for Actions ..." << m_options->name;
+    kDebug() << "--------------- Searching for Actions ..." << m_options->name;
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name)) {
-        kDebug() << "ACTION:" << info.name();
-        WebAppAction *action = new WebAppAction(m_options->name, this);
+        kDebug() << "======== ACTION:" << info.name();
+        WebAppAction *action = new WebAppAction(m_options->name, parent);
         action->load(info);
         m_mapper->setMapping(action, action->options()->script);
         connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
         m_options->actions.append( action );
-
+        if (actionCollection) {
+            actionCollection->addAction(action->name(), action);
+            kDebug() << "ActionColleciton OK";
+        } else {
+            kDebug() << "ActionColleciton == 0";
+        }
     }
     return true;
 }

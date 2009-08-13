@@ -29,6 +29,8 @@
 #include <qmap.h>
 #include <qaction.h>
 
+
+#include <KActionCollection>
 #include <KPluginInfo>
 
 #include "webappaction.h"
@@ -42,6 +44,7 @@ class ScriptApi;
 struct WebAppOptions
 {
     QString name;
+    QString plugin;
     QUrl startUrl;
     QList<QUrl> allowedBases;
     QIcon windowIcon;
@@ -58,11 +61,9 @@ public:
 
     WebAppOptions *options() const;
     QList<QAction *> actions() const;
-
-    static KPluginInfo::List listWebApps(const QString &name = QString());
-
-    bool loadWebApp(const QString &name);
-    void startApplication();
+    bool loadWebAppActions(KActionCollection *actionCollection, QObject *parent);
+    QString name() const;
+    QString plugin() const;
 
 public slots:
     void evaluateScript( const QString &script );
@@ -74,7 +75,6 @@ protected slots:
     void iconLoaded();
 
 private:
-    bool loadWebAppActions();
     QSignalMapper *m_mapper;
     WebAppOptions *m_options;
     Page *m_page;

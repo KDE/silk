@@ -42,6 +42,11 @@ WebAppActionOptions *WebAppAction::options() const
     return m_options;
 }
 
+QString WebAppAction::name() const
+{
+    return m_options->name;
+}
+
 KPluginInfo::List WebAppAction::listWebAppActions(const QString &name)
 {
     QString constraint;
