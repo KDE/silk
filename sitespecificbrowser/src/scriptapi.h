@@ -40,6 +40,12 @@ public:
 
     void setTrusted( bool yes=false );
 
+    // Set the greasemonkey identifiers used for things like GM_setValue
+    // these can't be slots as they should not be modifiable by scripts.
+
+    void setGreaseMonkeyName( const QString &name );
+    void setGreaseMonkeyNameSpace( const QString &gmnamespace );
+
 public slots:
     //
     // Methods used to implement the greasemonkey api
@@ -69,12 +75,18 @@ public slots:
     // Only works if trusted
     bool include( const QString &filename );
 
+protected:
+    /** Installs forwarding functions for GM_ global methods. */
+    void installGlobals();
+
 private slots:
     void attachObject();
 
 private:
     View *m_view;
     bool m_trusted;
+    QString m_gmName;
+    QString m_gmNameSpace;
 };
 
 #endif // SCRIPTAPI_H

@@ -45,6 +45,7 @@ void ScriptApi::setWebView( View *view )
     m_view = view;
     attachObject();
     connect( m_view->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachObject()) );
+    installGlobals();
 }
 
 void ScriptApi::attachObject()
@@ -52,9 +53,30 @@ void ScriptApi::attachObject()
     m_view->page()->mainFrame()->addToJavaScriptWindowObject( QString("silk"), this );
 }
 
+void ScriptApi::installGlobals()
+{
+    QString script(
+	"function GM_log(message) {\n" \
+	"    window.silk.GM_log(message);\n" \
+	"};\n"
+	);
+
+    m_view->page()->mainFrame()->evaluateJavaScript( script );
+}
+
 void ScriptApi::setTrusted( bool yes )
 {
     m_trusted = yes;
+}
+
+void ScriptApi::setGreaseMonkeyName( const QString &name )
+{
+    m_gmName = name;
+}
+
+void ScriptApi::setGreaseMonkeyNameSpace( const QString &gmnamespace )
+{
+    m_gmNameSpace = gmnamespace;
 }
 
 void ScriptApi::GM_log( const QString &message )

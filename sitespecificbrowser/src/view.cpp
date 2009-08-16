@@ -34,8 +34,11 @@
 
 #include <KDebug>
 #include <KIcon>
+#include <KMainWindow>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
+#include <KToolBar>
+#include <kio/accessmanager.h>
 
 #include "page.h"
 #include "view.h"
@@ -59,6 +62,11 @@ View::View( QWidget *parent )
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
     QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
     QWebSettings::setIconDatabasePath( QDir::currentPath() );
+
+#ifndef NO_KIO
+    KIO::AccessManager *access = new KIO::AccessManager( this );
+    m_page->setNetworkAccessManager(access);
+#endif
 
     m_progressTimer = new QTimer( this );
     m_progressTimer->setInterval( 500 );
@@ -140,6 +148,10 @@ bool View::loadWebAppActions(KActionCollection *actionCollection, QObject *paren
             kDebug() << "ActionColleciton OK";
         } else {
             kDebug() << "ActionColleciton == 0";
+        }
+        KMainWindow* win = static_cast<KMainWindow*>(parent);
+        if (win) {
+            win->toolBar()->addAction(action);
         }
     }
     return true;

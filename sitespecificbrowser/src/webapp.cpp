@@ -77,7 +77,7 @@ void WebApp::setupActions()
         toolBar()->addAction( action );
     }
     */
-    KStandardAction::openNew(this, SLOT(fileNew()), actionCollection());
+    //KStandardAction::openNew(this, SLOT(fileNew()), actionCollection());
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
 
     KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
