@@ -11,6 +11,7 @@ set(sitespecificbrowser_SRCS
     page.cpp
     webappaction.cpp
     scriptapi.cpp
+    greasemonkeyscript.cpp
 )
 
 KDE4_ADD_EXECUTABLE(sitespecificbrowser ${sitespecificbrowser_SRCS})
