@@ -69,6 +69,10 @@ public slots:
     // Only works if trusted
     bool include( const QString &filename );
 
+protected:
+    /** Installs forwarding functions for GM_ global methods. */
+    void installGlobals();
+
 private slots:
     void attachObject();
 

@@ -45,11 +45,23 @@ void ScriptApi::setWebView( View *view )
     m_view = view;
     attachObject();
     connect( m_view->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachObject()) );
+    installGlobals();
 }
 
 void ScriptApi::attachObject()
 {
     m_view->page()->mainFrame()->addToJavaScriptWindowObject( QString("silk"), this );
+}
+
+void ScriptApi::installGlobals()
+{
+    QString script(
+	"function GM_log(message) {\n" \
+	"    window.silk.GM_log(message);\n" \
+	"};\n"
+	);
+
+    m_view->page()->mainFrame()->evaluateJavaScript( script );
 }
 
 void ScriptApi::setTrusted( bool yes )
