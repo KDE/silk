@@ -69,6 +69,16 @@ void ScriptApi::setTrusted( bool yes )
     m_trusted = yes;
 }
 
+void ScriptApi::setGreaseMonkeyName( const QString &name )
+{
+    m_gmName = name;
+}
+
+void ScriptApi::setGreaseMonkeyNameSpace( const QString &gmnamespace )
+{
+    m_gmNameSpace = gmnamespace;
+}
+
 void ScriptApi::GM_log( const QString &message )
 {
     kDebug() << message;
