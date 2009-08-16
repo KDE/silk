@@ -36,6 +36,7 @@
 #include <KIcon>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
+#include <kio/accessmanager.h>
 
 #include "page.h"
 #include "view.h"
@@ -59,6 +60,11 @@ View::View( QWidget *parent )
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled, true );
     QWebSettings::globalSettings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
     QWebSettings::setIconDatabasePath( QDir::currentPath() );
+
+#ifndef NO_KIO
+    KIO::AccessManager *access = new KIO::AccessManager( this );
+    m_page->setNetworkAccessManager(access);
+#endif
 
     m_progressTimer = new QTimer( this );
     m_progressTimer->setInterval( 500 );
