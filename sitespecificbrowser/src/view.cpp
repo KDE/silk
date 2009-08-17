@@ -42,6 +42,7 @@
 
 #include "page.h"
 #include "view.h"
+#include "webapp.h"
 #include "scriptapi.h"
 
 View::View( QWidget *parent )
@@ -138,12 +139,12 @@ void View::iconLoaded()
 }
 
 
-bool View::loadWebAppActions(KActionCollection *actionCollection, QObject *parent)
+bool View::loadWebAppActions(KActionCollection *actionCollection, WebApp *parent)
 {
     kDebug() << "--------------- Searching for Actions ..." << m_options->name;
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name)) {
         kDebug() << "======== ACTION:" << info.name();
-        WebAppAction *action = new WebAppAction(m_options->name, parent);
+        WebAppAction *action = new WebAppAction(parent);
         action->load(info);
         m_mapper->setMapping(action, action->options()->script);
         connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );

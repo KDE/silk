@@ -39,6 +39,7 @@ class QProgressBar;
 class QSignalMapper;
 class Page;
 class ScriptApi;
+class WebApp;
 
 /** Stuff that should be per-webapp */
 struct WebAppOptions
@@ -62,7 +63,7 @@ public:
 
     WebAppOptions *options() const;
     QList<QAction *> actions() const;
-    bool loadWebAppActions(KActionCollection *actionCollection, QObject *parent);
+    bool loadWebAppActions(KActionCollection *actionCollection, WebApp *parent);
     QString name() const;
     QString plugin() const;
 

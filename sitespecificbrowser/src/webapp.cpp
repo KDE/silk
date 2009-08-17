@@ -69,6 +69,11 @@ WebApp::~WebApp()
 {
 }
 
+QString WebApp::name()
+{
+    return m_view->options()->name;
+}
+
 void WebApp::setupActions()
 {
     /*

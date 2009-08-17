@@ -26,6 +26,8 @@
 #include <KAction>
 #include <KPluginInfo>
 
+class WebApp;
+
 /** Stuff that should be per-webapp */
 struct WebAppActionOptions
 {
@@ -42,7 +44,7 @@ class WebAppAction: public KAction
     Q_OBJECT
 
 public:
-    WebAppAction( const QString &webappPlugin, QObject *parent=0 );
+    WebAppAction(WebApp *parent=0 );
     ~WebAppAction();
 
     WebAppActionOptions* options() const;

@@ -28,12 +28,13 @@
 #include <KServiceTypeTrader>
 #include <KStandardDirs>
 
+#include "webapp.h"
 #include "webappaction.h"
 
-WebAppAction::WebAppAction( const QString &webappPlugin, QObject *parent )
-    : KAction(parent),
-    m_webappPlugin(webappPlugin)
+WebAppAction::WebAppAction(WebApp *parent )
+    : KAction(parent)
 {
+    m_webappPlugin = parent->name();
     m_options = new WebAppActionOptions;
 }
 

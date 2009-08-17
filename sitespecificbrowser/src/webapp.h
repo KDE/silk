@@ -53,6 +53,7 @@ public:
 
     bool loadWebApp(const QString &name);
     void startApplication();
+    QString name();
 
 private slots:
     void fileNew();
