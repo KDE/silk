@@ -1,6 +1,6 @@
 #include <qdebug.h>
 
-#include "../greasemonkeyscript.h"
+#include "../src/greasemonkeyscript.h"
 
 int main( int argc, char **argv )
 {

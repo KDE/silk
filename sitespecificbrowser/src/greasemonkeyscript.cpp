@@ -61,6 +61,8 @@ bool GreaseMonkeyScript::extractMetaData( QTextStream *ts )
 {
     bool ok = false;
 
+    // Note the trimmed() calls below should not be needed. There's either
+    // a QRegExp bug or I'm doing something daft.
     QRegExp name( "//\\s*@name\\s+(.*)$" );
     QRegExp nameSpace( "//\\s*@namespace\\s+(.*)$" );
     QRegExp description( "//\\s*@description\\s+(.*)$" );
@@ -70,22 +72,23 @@ bool GreaseMonkeyScript::extractMetaData( QTextStream *ts )
     QString line = ts->readLine();
     do {
 	if ( line == QString("// ==/UserScript==") ) {
+	    ok = true;
 	    break;
 	}
 	else if ( name.exactMatch(line) ) {
- 	    m_name = name.cap(1);
+ 	    m_name = name.cap(1).trimmed();
 	}
 	else if ( nameSpace.exactMatch(line) ) {
- 	    m_nameSpace = nameSpace.cap(1);
+ 	    m_nameSpace = nameSpace.cap(1).trimmed();
 	}
 	else if ( description.exactMatch(line) ) {
- 	    m_description = description.cap(1);
+ 	    m_description = description.cap(1).trimmed();
 	}
 	else if ( include.exactMatch(line) ) {
- 	    m_includeList += include.cap(1);
+ 	    m_includeList += include.cap(1).trimmed();
 	}
 	else if ( exclude.exactMatch(line) ) {
- 	    m_excludeList += exclude.cap(1);
+ 	    m_excludeList += exclude.cap(1).trimmed();
 	}
 	line = ts->readLine();
     } while( !line.isNull() );

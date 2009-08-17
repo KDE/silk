@@ -14,3 +14,7 @@ sitespecificbrowser
 sitespecificbrowser.shell
 sitespecificbrowser_automoc.cpp
 sitespecificbrowser_automoc.cpp.files
+testgreasemonkeyscript
+testgreasemonkeyscript.shell
+testgreasemonkeyscript_automoc.cpp
+testgreasemonkeyscript_automoc.cpp.files
