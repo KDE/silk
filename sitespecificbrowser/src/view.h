@@ -58,6 +58,7 @@ class View : public QWebView
 
 public:
     View( QWidget *parent=0 );
+    ~View();
 
     WebAppOptions *options() const;
     QList<QAction *> actions() const;

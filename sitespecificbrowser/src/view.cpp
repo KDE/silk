@@ -85,6 +85,11 @@ View::View( QWidget *parent )
              SLOT( slotPrint( QWebFrame* ) ) );
 }
 
+View::~View()
+{
+    delete m_options;
+}
+
 void View::slotPrint( QWebFrame* frame )
 {
     QPointer<QPrintPreviewDialog> dlg = new QPrintPreviewDialog( this );
