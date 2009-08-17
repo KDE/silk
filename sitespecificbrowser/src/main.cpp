@@ -87,10 +87,10 @@ int main(int argc, char **argv)
         //sitespecificbrowser *widget = new sitespecificbrowser;
         //widget->show();
     } else {
-        WebApp tl;
+        WebApp *tl = new WebApp();
         //kDebug() << "ARGS:" << args << args->count() << args->getOption("plugin <pluginname>");
 
-        bool ok = tl.loadWebApp( args->arg(0) );
+        bool ok = tl->loadWebApp( args->arg(0) );
         if (!ok) {
             std::cout << "Could not find plugin: " << args->arg(0).toLocal8Bit().data() << std::endl;
             return 1;
@@ -103,9 +103,9 @@ int main(int argc, char **argv)
         box->addWidget(bar);
         box->addWidget(&tl);
         */
-        tl.startApplication();
+        tl->startApplication();
 
-        tl.show();
+        tl->show();
 
         args->clear();
 
