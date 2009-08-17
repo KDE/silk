@@ -42,7 +42,9 @@ class WebAppAction: public KAction
     Q_OBJECT
 
 public:
-    WebAppAction( QString webappPlugin, QObject *parent=0 );
+    WebAppAction( const QString &webappPlugin, QObject *parent=0 );
+    ~WebAppAction();
+
     WebAppActionOptions* options() const;
     static KPluginInfo::List listWebAppActions(const QString &name = QString());
     QString name() const;

@@ -30,11 +30,16 @@
 
 #include "webappaction.h"
 
-WebAppAction::WebAppAction( QString webappPlugin, QObject *parent )
+WebAppAction::WebAppAction( const QString &webappPlugin, QObject *parent )
     : KAction(parent),
     m_webappPlugin(webappPlugin)
 {
     m_options = new WebAppActionOptions;
+}
+
+WebAppAction::~WebAppAction()
+{
+    delete m_options;
 }
 
 WebAppActionOptions *WebAppAction::options() const
