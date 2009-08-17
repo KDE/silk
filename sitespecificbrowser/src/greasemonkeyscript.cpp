@@ -36,8 +36,8 @@ bool GreaseMonkeyScript::load( const QString &filename )
 {
     QFile f( filename );
     if ( !f.open(QIODevice::ReadOnly) ) {
-	kDebug() << "Unable to load file " << filename;
-	return false;
+        kDebug() << "Unable to load file " << filename;
+        return false;
     }
 
     bool ok = false;
@@ -45,11 +45,11 @@ bool GreaseMonkeyScript::load( const QString &filename )
 
     QString line = ts.readLine();
     do {
-	if ( line == QString("// ==UserScript==") ) {
-	    ok = extractMetaData( &ts );
-	    break;
-	}
-	line = ts.readLine();
+        if ( line == QString("// ==UserScript==") ) {
+            ok = extractMetaData( &ts );
+            break;
+        }
+        line = ts.readLine();
     } while( !line.isNull() );
 
     return ok;
@@ -71,26 +71,26 @@ bool GreaseMonkeyScript::extractMetaData( QTextStream *ts )
 
     QString line = ts->readLine();
     do {
-	if ( line == QString("// ==/UserScript==") ) {
-	    ok = true;
-	    break;
-	}
-	else if ( name.exactMatch(line) ) {
- 	    m_name = name.cap(1).trimmed();
-	}
-	else if ( nameSpace.exactMatch(line) ) {
- 	    m_nameSpace = nameSpace.cap(1).trimmed();
-	}
-	else if ( description.exactMatch(line) ) {
- 	    m_description = description.cap(1).trimmed();
-	}
-	else if ( include.exactMatch(line) ) {
- 	    m_includeList += include.cap(1).trimmed();
-	}
-	else if ( exclude.exactMatch(line) ) {
- 	    m_excludeList += exclude.cap(1).trimmed();
-	}
-	line = ts->readLine();
+        if ( line == QString("// ==/UserScript==") ) {
+            ok = true;
+            break;
+        }
+        else if ( name.exactMatch(line) ) {
+            m_name = name.cap(1).trimmed();
+        }
+        else if ( nameSpace.exactMatch(line) ) {
+            m_nameSpace = nameSpace.cap(1).trimmed();
+        }
+        else if ( description.exactMatch(line) ) {
+            m_description = description.cap(1).trimmed();
+        }
+        else if ( include.exactMatch(line) ) {
+            m_includeList += include.cap(1).trimmed();
+        }
+        else if ( exclude.exactMatch(line) ) {
+            m_excludeList += exclude.cap(1).trimmed();
+        }
+        line = ts->readLine();
     } while( !line.isNull() );
 
     return ok;
