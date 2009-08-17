@@ -36,9 +36,10 @@ class KUrl;
 
 /**
  * This class serves as the main window for sitespecificbrowser.  It handles the
- * menus, toolbars, and status bars.
+ * toolbars. Plugins are loaded as actions into the toolbar, and triggered "on"
+ * the main View.
  *
- * @short Main window class
+ * @short Site-specific browser main window class
  * @author Sebastian Kügler <sebas@kde.org>
  * @version 0.1
  */

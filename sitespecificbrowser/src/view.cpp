@@ -133,17 +133,13 @@ void View::iconLoaded()
     kDebug() << "Got icon";
     kDebug() << m_page->mainFrame()->icon().isNull();
     setWindowIcon( m_page->mainFrame()->icon() );
-
-//    QIcon icon = QWebSettings::iconForUrl( QUrl("http://mail.google.com/") );
-//    kDebug() << icon;
 }
-
 
 bool View::loadWebAppActions(KActionCollection *actionCollection, WebApp *parent)
 {
-    kDebug() << "--------------- Searching for Actions ..." << m_options->name;
+    kDebug() << "Searching for Actions ..." << m_options->name;
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name)) {
-        kDebug() << "======== ACTION:" << info.name();
+        kDebug() << "New Action:" << info.name();
         WebAppAction *action = new WebAppAction(parent);
         action->load(info);
         m_mapper->setMapping(action, action->options()->script);
@@ -151,9 +147,6 @@ bool View::loadWebAppActions(KActionCollection *actionCollection, WebApp *parent
         m_options->actions.append( action );
         if (actionCollection) {
             actionCollection->addAction(action->name(), action);
-            kDebug() << "ActionColleciton OK";
-        } else {
-            kDebug() << "ActionColleciton == 0";
         }
         KMainWindow* win = static_cast<KMainWindow*>(parent);
         if (win) {

@@ -71,7 +71,7 @@ bool WebAppAction::load(const KPluginInfo &info)
         comment = i18n("No description available");
     }
 
-    kDebug() << "Silk/WebApp/Action:" << comment << info.pluginName() << info.property("X-Silk-ShowOnUrl") <<  info.property("X-Silk-TriggerOnUrl") << info.icon();
+    //kDebug() << "Silk/WebApp/Action:" << comment << info.pluginName() << info.property("X-Silk-ShowOnUrl") <<  info.property("X-Silk-TriggerOnUrl") << info.icon();
     kDebug() << "Found plugin:" << info.pluginName() << info.name() << info.icon();
 
     m_options->name = info.pluginName();
@@ -110,7 +110,6 @@ QString WebAppAction::loadScript(const QString &jsfile)
 {
     QString script;
     QString scriptfile = "silk-webapp/" + m_webappPlugin + "/" + jsfile;
-    kDebug() << "Loading script file:" << scriptfile;
     scriptfile = KGlobal::dirs()->findResource("data", scriptfile);
     kDebug() << "Found:" << scriptfile;
 
@@ -124,5 +123,4 @@ QString WebAppAction::loadScript(const QString &jsfile)
         kWarning() << "Could not read scriptfile" << scriptfile;
     }
     return script;
-
 }
