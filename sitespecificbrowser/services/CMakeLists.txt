@@ -5,3 +5,4 @@ install(FILES silk-webapp-action.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR}
 add_subdirectory(gmail)
 add_subdirectory(reviewboard)
 add_subdirectory(silk)
+add_subdirectory(buienradar)
