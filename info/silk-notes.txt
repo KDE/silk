@@ -1,0 +1,95 @@
+
+Project Silk
+
+ Freeing the Web from the Web Browser
+ 
+ 
+ The Web is Great
+ 
+ - easy deployment
+ - your data everywhere
+ 
+ 
+ 
+ The Web Sucks
+ 
+ - UI independance of the web (visual, input)
+ - Offline -> Computer == Brick
+ - JavaScript in Web Browser != Bling
+ - The web has little personal context
+ 
+ 
+ We want the Web's Data and Services, Not the Web's UI
+ 
+ 
+ 
+ How?
+ 
+ 
+ Building a New User Interface for the Web
+ 
+ - optimize content for the device (screen, input)
+ - Coherent Theming
+ - Improved development platform (not bound to JavaScript and AJAX, but FRIENDLY to those developers)
+ - libraries with script-based plugins (updatable via online-services)
+ - Geolocation and (more general) context
+
+
+
+ 
+ 
+ 
+ 
+  
+- a webkit-based Konqueror 
+
+
+
+
+- libweb 
+
+
+
+
+- Silk integration for existing technologies (digikam's 
+
+
+
+
+- applications and applets integrating web content 
+
+
+
+
+- new concepts of remixing content from the web
+
+
+
+
+Not Starting at Zero:
+
+- Wikipedia Runner
+- microblogging
+- Youtube dataengine
+- opendesktop (libocs, dataengine)
+- akonadi for personal data and caching
+- sitespecificbrowser
+
+
+
+
+Demos:
+
+- ssb
+- wikipedia runner
+
+
+Ideas: http://techbase.kde.org/Projects/Silk
+
+Code: http://gitorious.org/project-silk (and scattered all over KDE's SVN)
+
+
+
+
+Why Silk? 
+(Spider)webs are made of it.
