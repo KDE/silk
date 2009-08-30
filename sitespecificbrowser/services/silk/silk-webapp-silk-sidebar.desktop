@@ -8,6 +8,5 @@ X-KDE-PluginInfo-Name=silk-commitlog
 X-KDE-ServiceTypes=Silk/WebApp/Action
 
 X-Silk-ScriptFile=togglesidebar.js
-X-Silk-ShowOnUrl=http://gitorious.org/
-X-Silk-TriggerOnUrl=http://gitorious.org/
+X-Silk-ShowOnUrl=http://gitorious.org/foobarTODO
 X-Silk-WebApp=silk

@@ -39,6 +39,10 @@ protected:
 
 private:
     View *view;
+
+private Q_SLOTS:
+    void loadFinished(bool ok);
+
 };
 
 #endif // PAGE_H

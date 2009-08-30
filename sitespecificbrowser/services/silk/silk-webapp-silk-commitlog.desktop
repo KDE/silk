@@ -9,6 +9,5 @@ X-KDE-PluginInfo-Name=silk-commitlog
 
 X-Silk-WebApp=silk
 X-Silk-ShowOnUrl=http://gitorious.org/
-X-Silk-TriggerOnUrl=http://gitorious.org/
 X-Silk-ScriptFiles=noop-script.js
 X-Silk-Script=window.location = 'http://gitorious.org/project-silk/project-silk/commits'
