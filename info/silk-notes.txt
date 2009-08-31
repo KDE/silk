@@ -17,6 +17,7 @@ Project Silk
  - Offline -> Computer == Brick
  - JavaScript in Web Browser != Bling
  - The web has little personal context
+ - For every click on a link, 2MB of I/O are happening
  
  
  We want the Web's Data and Services, Not the Web's UI
