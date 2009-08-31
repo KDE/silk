@@ -43,7 +43,7 @@ class KUrl;
  * @author Sebastian Kügler <sebas@kde.org>
  * @version 0.1
  */
-class WebApp : public KXmlGuiWindow
+class WebApp : public KMainWindow
 {
     Q_OBJECT
 public:
@@ -56,20 +56,9 @@ public:
     void startApplication();
     QString name();
 
-private slots:
-    void fileNew();
-    void optionsPreferences();
-
 private:
-    void setupActions();
-
-private:
-    Ui::prefs_base ui_prefs_base ;
     View *m_view;
-
-    QPrinter   *m_printer;
-    KToggleAction *m_toolbarAction;
-    KToggleAction *m_statusbarAction;
+    KActionCollection *m_actionCollection;
 };
 
 #endif // _SITESPECIFICBROWSER_H_

@@ -28,6 +28,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
 
+#include <KActionCollection>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 #include <KToolBar>
@@ -41,28 +42,12 @@
 #include <KDE/KLocale>
 
 WebApp::WebApp()
-    : KXmlGuiWindow(),
-      m_view(new View(this)),
-      m_printer(0)
+    : KMainWindow(),
+      m_view(new View(this))
 {
-    // accept dnd
+    m_actionCollection = new KActionCollection(this);
     setAcceptDrops(true);
-
-    // tell the KXmlGuiWindow that this is indeed the main widget
     setCentralWidget(m_view);
-
-    // then, setup our actions
-    setupActions();
-
-    // add a status bar
-    statusBar()->show();
-
-    // a call to KXmlGuiWindow::setupGUI() populates the GUI
-    // with actions, using KXMLGUI.
-    // It also applies the saved mainwindow settings, if any, and ask the
-    // mainwindow to automatically save settings if changed: window size,
-    // toolbar position, icon size, etc.
-    setupGUI();
 }
 
 WebApp::~WebApp()
@@ -72,54 +57,6 @@ WebApp::~WebApp()
 QString WebApp::name()
 {
     return m_view->options()->name;
-}
-
-void WebApp::setupActions()
-{
-    /*
-    QAction *action;
-    foreach( action, m_view->actions() ) {
-        toolBar()->addAction( action );
-    }
-    */
-    //KStandardAction::openNew(this, SLOT(fileNew()), actionCollection());
-    KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
-
-    KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
-
-    // custom menu and menu item - the slot is in the class View
-    KAction *custom = new KAction(KIcon("colorize"), i18n("Swi&tch Colors"), this);
-    actionCollection()->addAction( QLatin1String("switch_action"), custom );
-    connect(custom, SIGNAL(triggered(bool)), m_view, SLOT(switchColors()));
-}
-
-void WebApp::fileNew()
-{
-    // this slot is called whenever the File->New menu is selected,
-    // the New shortcut is pressed (usually CTRL+N) or the New toolbar
-    // button is clicked
-
-    // create a new window
-    (new WebApp)->show();
-}
-
-void WebApp::optionsPreferences()
-{
-    // The preference dialog is derived from prefs_base.ui
-    //
-    // compare the names of the widgets in the .ui file
-    // to the names of the variables in the .kcfg file
-    //avoid to have 2 dialogs shown
-    if ( KConfigDialog::showDialog( "settings" ) )  {
-        return;
-    }
-    KConfigDialog *dialog = new KConfigDialog(this, "settings", Settings::self());
-    QWidget *generalSettingsDlg = new QWidget;
-    ui_prefs_base.setupUi(generalSettingsDlg);
-    dialog->addPage(generalSettingsDlg, i18n("General"), "package_setting");
-    connect(dialog, SIGNAL(settingsChanged(QString)), m_view, SLOT(settingsChanged()));
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
-    dialog->show();
 }
 
 void WebApp::startApplication()
@@ -166,7 +103,7 @@ bool WebApp::loadWebApp(const QString &name)
         m_view->options()->windowIcon = KIcon(info.icon());
         m_view->options()->windowTitle = info.property("Name").toString();
 
-        m_view->loadWebAppActions(actionCollection(), this);
+        m_view->loadWebAppActions(m_actionCollection, this);
         return true;
     }
 

@@ -44,7 +44,7 @@ Usually, a webapp will create on, two or more desktop files:
 Name=ReviewBoard
 GenericName=KDE's ReviewBoard
 Comment=KDE's ReviewBoard Instance
-Exec=sitespecificbrowser reviewboard
+Exec=selkie reviewboard
 Icon=kstars
 Type=Application
 
@@ -53,7 +53,7 @@ Type=Application
 (2) A .desktop file describing the plugin, holding site-specific settings:
     - Has to be of Type=Service
     - startUrl, AllowedBases
-    - KPluginInfo metadata, most importantly: X-KDE-PluginInfo-Name, which is used as parameter to sitespecificbrowser
+    - KPluginInfo metadata, most importantly: X-KDE-PluginInfo-Name, which is used as parameter to selkie
     - config options, starting with: X-Silk-
       (These config options are defined in services/silk-webapp.desktop, which is the ServiceType for Silk/Webapp
 
@@ -112,7 +112,7 @@ Actions in a nutshell:
 
 In CMakeLists.txt, you need to add the .desktop files.
 
-install( FILES sitespecificbrowser-silk.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
+install( FILES selkie-silk.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES silk-webapp-silk.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
 install( FILES silk-webapp-silk-commitlog.desktop DESTINATION ${SERVICES_INSTALL_DIR})

@@ -11,9 +11,9 @@ set(selkie_SRCS
     greasemonkeyscript.cpp
 )
 
-kde4_add_ui_files(selkie_SRCS  prefs_base.ui)
+#kde4_add_ui_files(selkie_SRCS  prefs_base.ui)
 
-kde4_add_kcfg_files(selkie_SRCS settings.kcfgc )
+#kde4_add_kcfg_files(selkie_SRCS settings.kcfgc )
 
 KDE4_ADD_EXECUTABLE(selkie ${selkie_SRCS})
 
@@ -24,6 +24,6 @@ target_link_libraries(selkie
 )
 
 install( TARGETS selkie ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install( FILES selkie.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
-install( FILES selkieui.rc  DESTINATION  ${DATA_INSTALL_DIR}/selkie )
+#install( FILES selkie.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
+#install( FILES selkieui.rc  DESTINATION  ${DATA_INSTALL_DIR}/selkie )
 
