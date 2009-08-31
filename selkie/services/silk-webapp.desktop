@@ -1,0 +1,20 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=Silk/WebApp
+
+Name=Silk WebApp
+Comment=Silk Web Application
+
+[PropertyDef::X-Silk-StartUrl]
+Type=QString
+
+[PropertyDef::X-Silk-WindowTitle]
+Type=QString
+
+
+[PropertyDef::X-Silk-AllowedBases]
+Type=QStringList
+
+[PropertyDef::X-Silk-AllowedBases-Size]
+Type=int
+

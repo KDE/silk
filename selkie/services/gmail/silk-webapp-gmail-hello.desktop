@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Hello
+Comment=Trigger a Notification saying Hello
+Icon=dialog-information
+
+Type=Service
+X-KDE-ServiceTypes=Silk/WebApp/Action
+X-KDE-PluginInfo-Name=gmail-hello
+X-KDE-PluginInfo-Depends=gmail
+
+X-Silk-WebApp=gmail
+X-Silk-ShowOnUrl=http://mail.google.com
+X-Silk-TriggerOnUrl=http://mail.google.com/
+X-Silk-ScriptFile=hello.js

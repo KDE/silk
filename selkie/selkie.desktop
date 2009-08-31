@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Selkie
+GenericName=Experimental site-specific Web Browser
+Exec=selkie silk
+Icon=webkit
+Type=Application

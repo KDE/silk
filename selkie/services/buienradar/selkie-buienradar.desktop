@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Buienradar
+Comment=Rain in The Netherlands?
+Exec=selkie buienradar
+Icon=kweather
+Type=Application

@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Notify
+Comment=Trigger a Notification
+Icon=dialog-information
+
+Type=Service
+X-KDE-ServiceTypes=Silk/WebApp/Action
+X-KDE-PluginInfo-Name=gmail-notify
+X-KDE-PluginInfo-Depends=gmail
+
+X-Silk-WebApp=gmail
+X-Silk-ShowOnUrl=http://mail.google.com
+X-Silk-TriggerOnUrl=http://mail.google.com/
+X-Silk-ScriptFiles=noop-script.js
+X-Silk-Script=silk.showNotification('Pay Attention!')
