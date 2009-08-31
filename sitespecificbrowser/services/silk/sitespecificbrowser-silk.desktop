@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Gitorious Silk
-GenericName=Project Silk's Repository on Gitorious
-Comment=Project Silk on Gitorious
-Exec=sitespecificbrowser silk
-Icon=project-development
-Type=Application

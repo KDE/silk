@@ -1,1 +1,1 @@
-add_subdirectory(sitespecificbrowser)
+add_subdirectory(selkie)

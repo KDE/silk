@@ -4,6 +4,33 @@ Project Silk
  Freeing the Web from the Web Browser
  
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  The Web is Great
  
  - easy deployment
@@ -89,8 +116,14 @@ Ideas: http://techbase.kde.org/Projects/Silk
 
 Code: http://gitorious.org/project-silk (and scattered all over KDE's SVN)
 
+IRC: #kde-silk on Freenode
+
 
 
 
 Why Silk? 
 (Spider)webs are made of it.
+
+
+- direct people to not talk to the media about it
+- spread inside the development community

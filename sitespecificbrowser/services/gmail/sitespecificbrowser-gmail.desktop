@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=GMail
-Comment=A GMail Browser
-Exec=sitespecificbrowser gmail
-Icon=mail-message
-Type=Application
