@@ -80,22 +80,15 @@ int main(int argc, char **argv)
         }
         return 1;
     } else {
-        WebApp *tl = new WebApp();
-
-        bool ok = tl->loadWebApp( args->arg(0) );
+        WebApp *webapp = new WebApp();
+        bool ok = webapp->loadWebApp( args->arg(0) );
         if (!ok) {
             std::cout << "Could not find plugin: " << args->arg(0).toLocal8Bit().data() << std::endl;
             return 1;
         }
-        //app.setWindowIcon(tl.options()->windowIcon);
-        //w->setWindowTitle(tl.options()->windowTitle);
-
-        tl->startApplication();
-
-        tl->show();
-
+        webapp->startApplication();
+        webapp->show();
         args->clear();
-
         return app.exec();
     }
 }

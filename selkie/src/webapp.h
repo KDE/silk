@@ -55,6 +55,7 @@ public:
     bool loadWebApp(const QString &name);
     void startApplication();
     QString name();
+    QIcon icon();
 
 private:
     View *m_view;

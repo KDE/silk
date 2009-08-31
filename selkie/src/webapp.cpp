@@ -59,10 +59,16 @@ QString WebApp::name()
     return m_view->options()->name;
 }
 
+QIcon WebApp::icon()
+{
+    return m_view->options()->windowIcon;
+}
+
 void WebApp::startApplication()
 {
     setWindowTitle( m_view->options()->windowTitle );
     m_view->setUrl( m_view->options()->startUrl );
+    setWindowIcon(icon());
 
     QIcon icon = QWebSettings::iconForUrl( m_view->options()->startUrl );
     //QIcon icon = m_page->mainFrame()->icon();
