@@ -155,6 +155,24 @@ bool View::loadWebAppActions(WebApp *parent)
     return true;
 }
 
+bool View::actionShown(WebAppAction *action)
+{
+    QStringList urls = action->options()->showOnUrl;
+    if (urls.isEmpty()) {
+        return true;
+    }
+    //if (url().isEmpty() || wa_action->options()->showOnUrl.isEmpty()
+    //    || m_page->url().toString().startsWith(wa_action->options()->showOnUrl)) {
+    foreach(QString u, urls) {
+        // Does the current URL start with the shown one?
+        if (m_page->url().toString().startsWith(u)) {
+            return true;
+        }
+    }
+    kDebug() << "NOT SHOWING:" << urls << m_page->url();
+    return false;
+}
+
 void View::resetToolbarActions()
 {
     KMainWindow* win = static_cast<KMainWindow*>(parent());
@@ -163,12 +181,11 @@ void View::resetToolbarActions()
     }
     foreach (QAction *action, m_actionCollection->actions()) {
         WebAppAction *wa_action = static_cast<WebAppAction*>(action);
-        if (win && wa_action) {
+        if (wa_action) {
             // This is a bit tricky since we don't know about the URL on startup. So if it's empty,
             // ignore this setting and just put them all in.
             // TODO: Will probably need some improvement.
-            if (url().isEmpty() || wa_action->options()->showOnUrl.isEmpty()
-                || m_page->url().toString().startsWith(wa_action->options()->showOnUrl)) {
+            if (actionShown(wa_action)) {
                 win->toolBar()->addAction(wa_action);
             }
         }

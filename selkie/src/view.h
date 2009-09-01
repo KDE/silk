@@ -78,6 +78,8 @@ private slots:
     void resetToolbarActions();
 
 private:
+    /** should the provided action currently be shown? */
+    bool actionShown(WebAppAction *action);
     KActionCollection *m_actionCollection;
     QSignalMapper *m_mapper;
     WebAppOptions *m_options;
