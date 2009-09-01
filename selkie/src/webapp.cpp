@@ -22,13 +22,13 @@
 
 #include "webapp.h"
 #include "view.h"
-#include "settings.h"
 
 #include <QtGui/QDropEvent>
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
 
 #include <KActionCollection>
+#include <KDebug>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 #include <KToolBar>
@@ -45,7 +45,6 @@ WebApp::WebApp()
     : KMainWindow(),
       m_view(new View(this))
 {
-    m_actionCollection = new KActionCollection(this);
     setAcceptDrops(true);
     setCentralWidget(m_view);
 }
@@ -71,7 +70,6 @@ void WebApp::startApplication()
     setWindowIcon(icon());
 
     QIcon icon = QWebSettings::iconForUrl( m_view->options()->startUrl );
-    //QIcon icon = m_page->mainFrame()->icon();
     kDebug() << "Is icon null: " << icon.isNull();
     if ( !icon.isNull() ) {
         setWindowIcon( icon );
@@ -109,7 +107,7 @@ bool WebApp::loadWebApp(const QString &name)
         m_view->options()->windowIcon = KIcon(info.icon());
         m_view->options()->windowTitle = info.property("Name").toString();
 
-        m_view->loadWebAppActions(m_actionCollection, this);
+        m_view->loadWebAppActions(this);
         return true;
     }
 

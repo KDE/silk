@@ -32,6 +32,7 @@
 #include <qprintpreviewdialog.h>
 #include <qtimer.h>
 
+#include <KActionCollection>
 #include <KDebug>
 #include <KIcon>
 #include <KMainWindow>
@@ -52,9 +53,11 @@ View::View( QWidget *parent )
     connect( m_mapper, SIGNAL( mapped(const QString &) ), SLOT(evaluateScript(const QString &)) );
 
     m_options = new WebAppOptions;
+    m_actionCollection = new KActionCollection(this);
 
     m_page = new Page( this );
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
+    connect( m_page, SIGNAL( urlChanged() ), this, SLOT( resetToolbarActions() ) );
     setPage( m_page );
 
     m_scriptapi = new ScriptApi(this);
@@ -135,7 +138,7 @@ void View::iconLoaded()
     setWindowIcon( m_page->mainFrame()->icon() );
 }
 
-bool View::loadWebAppActions(KActionCollection *actionCollection, WebApp *parent)
+bool View::loadWebAppActions(WebApp *parent)
 {
     kDebug() << "Searching for Actions ..." << m_options->name;
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name)) {
@@ -145,13 +148,29 @@ bool View::loadWebAppActions(KActionCollection *actionCollection, WebApp *parent
         m_mapper->setMapping(action, action->options()->script);
         connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
         m_options->actions.append( action );
-        if (actionCollection) {
-            actionCollection->addAction(action->name(), action);
-        }
-        KMainWindow* win = static_cast<KMainWindow*>(parent);
-        if (win) {
-            win->toolBar()->addAction(action);
+        if (m_actionCollection) {
+            m_actionCollection->addAction(action->name(), action);
         }
     }
     return true;
+}
+
+void View::resetToolbarActions()
+{
+    KMainWindow* win = static_cast<KMainWindow*>(parent());
+    if (win) {
+        win->toolBar()->clear();
+    }
+    foreach (QAction *action, m_actionCollection->actions()) {
+        WebAppAction *wa_action = static_cast<WebAppAction*>(action);
+        if (win && wa_action) {
+            // This is a bit tricky since we don't know about the URL on startup. So if it's empty,
+            // ignore this setting and just put them all in.
+            // TODO: Will probably need some improvement.
+            if (url().isEmpty() || wa_action->options()->showOnUrl.isEmpty()
+                || m_page->url().toString().startsWith(wa_action->options()->showOnUrl)) {
+                win->toolBar()->addAction(wa_action);
+            }
+        }
+    }
 }

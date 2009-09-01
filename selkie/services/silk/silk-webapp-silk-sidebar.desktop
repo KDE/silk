@@ -4,9 +4,9 @@ Icon=view-sidetree
 Name=Toggle Chrome
 Type=Service
 
-X-KDE-PluginInfo-Name=silk-commitlog
+X-KDE-PluginInfo-Name=silk-sidebar
 X-KDE-ServiceTypes=Silk/WebApp/Action
 
 X-Silk-ScriptFile=togglesidebar.js
-X-Silk-ShowOnUrl=http://gitorious.org/foobarTODO
+X-Silk-ShowOnUrl=http://gitorious.org/
 X-Silk-WebApp=silk

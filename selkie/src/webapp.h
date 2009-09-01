@@ -27,8 +27,6 @@
 #include <kxmlguiwindow.h>
 #include <KPluginInfo>
 
-#include "ui_prefs_base.h"
-
 class View;
 class QPrinter;
 class KToggleAction;

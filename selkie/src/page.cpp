@@ -24,15 +24,21 @@
 #include <QtGui/QDesktopServices>
 #include <QtWebKit/QWebFrame>
 
-#include <kdebug.h>
+#include <KDebug>
+
 #include "view.h"
 #include "page.h"
 
 Page::Page( View *view )
     : QWebPage( view )
 {
-    this->view = view;
+    m_view = view;
     connect(this, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
+}
+
+QUrl Page::url()
+{
+    return m_view->page()->mainFrame()->url();
 }
 
 bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &request, QWebPage::NavigationType type )
@@ -40,7 +46,7 @@ bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &req
     if ( type == QWebPage::NavigationTypeLinkClicked ) {
         bool inScope = false;
         QUrl base;
-        foreach( base, view->options()->allowedBases ) {
+        foreach( base, m_view->options()->allowedBases ) {
             if ( base.isParentOf( request.url() ) ) {
                 inScope = true;
             }
@@ -49,6 +55,7 @@ bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &req
         if ( !inScope ) {
             QDesktopServices::openUrl( request.url() );
             return false;
+        } else {
         }
     }
 
@@ -57,15 +64,13 @@ bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &req
 
 void Page::loadFinished(bool ok)
 {
-    QUrl currentUrl = this->view->page()->mainFrame()->url();
     QAction *action;
-    foreach (action, view->actions()) {
+    emit urlChanged();
+    foreach (action, m_view->actions()) {
         WebAppAction *wa = static_cast<WebAppAction*>(action);
         if (wa) {
             QUrl triggerUrl = QUrl(wa->options()->triggerOnUrl);
-            kDebug() << wa->name() << "======" << triggerUrl << currentUrl;
-            if (triggerUrl.isParentOf(currentUrl)) {
-                kDebug() << "triggering" << wa->name() << "(matching URL" << triggerUrl << ")";
+            if (triggerUrl.isParentOf(url())) {
                 wa->trigger();
             }
         }

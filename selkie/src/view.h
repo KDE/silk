@@ -63,20 +63,22 @@ public:
 
     WebAppOptions *options() const;
     QList<QAction *> actions() const;
-    bool loadWebAppActions(KActionCollection *actionCollection, WebApp *parent);
+    bool loadWebAppActions(WebApp *parent);
     QString name() const;
     QString plugin() const;
 
 public slots:
     void evaluateScript( const QString &script );
 
-private slots:
-    void slotPrint( QWebFrame* );
-
 protected slots:
     void iconLoaded();
 
+private slots:
+    void slotPrint( QWebFrame* );
+    void resetToolbarActions();
+
 private:
+    KActionCollection *m_actionCollection;
     QSignalMapper *m_mapper;
     WebAppOptions *m_options;
     Page *m_page;
