@@ -16,6 +16,8 @@
 #include <KDesktopFile>
 #include <KFileDialog>
 
+#include <KPushButton>
+
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
@@ -72,16 +74,28 @@ void WebAppEditor::setupMainWidget()
 
 
     m_layout->addWidget(showLabel, 1, 0, 1, 2);
-    m_layout->addWidget(m_showUrls, 2, 1);
+    m_layout->addWidget(m_showUrls, 2, 1, 1, 2);
 
-    m_layout->addWidget(m_showLine, 1, 1);
-    m_layout->addWidget(m_triggerLine, 4, 1);
+    m_layout->addWidget(m_showLine, 1, 1, 1, 2);
+    m_layout->addWidget(m_triggerLine, 4, 1, 1, 2);
 
     m_layout->addWidget(triggerLabel, 4, 0);
     m_layout->addWidget(m_triggerUrls, 5, 1, 1, 2);
 
+    m_saveButton = new KPushButton(m_widget);
+    //m_saveButton->setIcon("dialog-apply");
+
+    m_layout->addWidget(m_saveButton, 6, 2);
+
+
     connect(m_showLine, SIGNAL(returnPressed()), this, SLOT(addShowLine()));
     connect(m_triggerLine, SIGNAL(returnPressed()), this, SLOT(addTriggerLine()));
+
+    connect(m_saveButton, SIGNAL(clicked()), this, SLOT(save()));
+
+    // FIXME: temporary ...
+    m_actionFile = "/home/sebas/kdesvn/src/project-silk/selkie/services/silk/silk-webapp-silk-urltrigger.desktop";
+    showActionFile();
 }
 
 void WebAppEditor::addShowLine()
@@ -89,10 +103,9 @@ void WebAppEditor::addShowLine()
     QString text = m_showLine->text();
     QUrl url(text);
     if (url.isValid()) {
-        kDebug() << "Aaaaaaaalright.";
         m_showUrls->addItem(text);
     } else {
-        kWarning() << "url invalid, sorry.";
+        kWarning() << "Not a valid URL, won't save it:" << text;
     }
 }
 
@@ -101,11 +114,30 @@ void WebAppEditor::addTriggerLine()
     QString text = m_triggerLine->text();
     QUrl url(text);
     if (url.isValid()) {
-        kDebug() << "Aaaaaaaalright.";
         m_triggerUrls->addItem(text);
     } else {
-        kWarning() << "url invalid, sorry.";
+        kWarning() << "Not a valid URL, won't save it:" << text;
     }
+}
+
+QStringList WebAppEditor::getItems(QListWidget *listWidget)
+{
+    QStringList list;
+    int rows = listWidget->model()->rowCount();
+    for (int i = 0; i < rows; i++) {
+        QString text = listWidget->item(i)->text();
+        kDebug() << "Row:" << i << text;
+        list << text;
+    }
+    return list;
+}
+
+void WebAppEditor::save()
+{
+    // ...
+    kDebug() << "---> Saving here ...";
+    kDebug() << "shows:" << getItems(m_showUrls);
+    kDebug() << "triggers:" << getItems(m_triggerUrls);
 }
 
 void WebAppEditor::setupActions()
@@ -125,6 +157,7 @@ void WebAppEditor::openActionFile()
 void WebAppEditor::showActionFile()
 {
     m_fileNameLabel->setText(m_actionFile);
+    kDebug() << m_actionFile;
     m_desktopFile = new KDesktopFile(m_actionFile);
     kDebug() << "------------------------------____--";
     kDebug() << "Name" << m_desktopFile->readName();

@@ -13,6 +13,7 @@
 
 class QListWidget;
 class KDesktopFile;
+class KPushButton;
 class KToggleAction;
 class KUrl;
 
@@ -41,6 +42,7 @@ public:
 private Q_SLOTS:
     void openActionFile();
     void optionsPreferences();
+    void save();
 
     void addShowLine();
     void addTriggerLine();
@@ -51,6 +53,8 @@ private:
 private:
     void setupMainWidget();
     void showActionFile();
+    QStringList getItems(QListWidget *listWidget);
+
     Ui::prefs_base ui_prefs_base ;
 
     QString m_actionFile;
@@ -62,6 +66,8 @@ private:
 
     QLineEdit *m_showLine;
     QLineEdit *m_triggerLine;
+
+    KPushButton *m_saveButton;
 
     QLabel *m_fileNameLabel;
 
