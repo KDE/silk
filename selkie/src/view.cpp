@@ -157,7 +157,6 @@ bool View::loadWebAppActions(WebApp *parent)
 
 bool View::actionShown(WebAppAction *action)
 {
-#if 0
     QStringList urls = action->options()->showOnUrl;
     if (urls.isEmpty()) {
         return true;
@@ -166,12 +165,12 @@ bool View::actionShown(WebAppAction *action)
     //    || m_page->url().toString().startsWith(wa_action->options()->showOnUrl)) {
     foreach(QString u, urls) {
         // Does the current URL start with the shown one?
-        if (m_page->url().toString().startsWith(u)) {
+        if (url().toString().startsWith(u)) {
             return true;
         }
     }
-    kDebug() << "NOT SHOWING:" << urls << m_page->url();
-#endif
+    kDebug() << "NOT SHOWING:" << urls << url();
+
     return false;
 }
 
