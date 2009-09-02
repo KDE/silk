@@ -155,7 +155,7 @@ bool View::loadWebAppActions(WebApp *parent)
     return true;
 }
 
-bool View::actionShown(WebAppAction *action)
+bool View::isActionShown(WebAppAction *action)
 {
     QStringList urls = action->options()->showOnUrl;
     if (urls.isEmpty()) {
@@ -192,7 +192,7 @@ void View::resetToolbarActions()
             // This is a bit tricky since we don't know about the URL on startup. So if it's empty,
             // ignore this setting and just put them all in.
             // TODO: Will probably need some improvement.
-            if (actionShown(wa_action)) {
+            if (isActionShown(wa_action)) {
                 win->toolBar()->addAction(wa_action);
             }
         }
