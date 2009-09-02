@@ -76,7 +76,7 @@ bool WebAppAction::load(const KPluginInfo &info)
 
     m_options->name = info.pluginName();
     m_options->showOnUrl = info.property("X-Silk-ShowOnUrl").toStringList();
-    m_options->triggerOnUrl = info.property("X-Silk-TriggerOnUrl").toString();
+    m_options->triggerOnUrl = info.property("X-Silk-TriggerOnUrl").toStringList();
     m_options->icon = KIcon(info.icon());
     m_options->text = info.name();
     kDebug() << "=====> ShowOnUrl" << m_options->showOnUrl;

@@ -81,6 +81,7 @@ private:
     void resetToolbarActions();
     void triggerUrlActions();
     bool shouldActionBeShown(WebAppAction *action);
+    bool shouldActionBeTriggered(WebAppAction *action);
 
 private:
     /** should the provided action currently be shown? */
