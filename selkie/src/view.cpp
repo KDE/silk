@@ -180,7 +180,7 @@ void View::resetToolbarActions()
         win->toolBar()->clear();
     }
     foreach (QAction *action, m_actionCollection->actions()) {
-        WebAppAction *wa_action = static_cast<WebAppAction*>(action);
+        WebAppAction *wa_action = qobject_cast<WebAppAction*>(action);
         if (wa_action) {
             // This is a bit tricky since we don't know about the URL on startup. So if it's empty,
             // ignore this setting and just put them all in.
