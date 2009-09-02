@@ -138,6 +138,10 @@ void WebAppEditor::save()
     kDebug() << "---> Saving here ...";
     kDebug() << "shows:" << getItems(m_showUrls);
     kDebug() << "triggers:" << getItems(m_triggerUrls);
+    KConfigGroup group = m_desktopFile->group("Desktop Entry");
+    group.writeEntry("X-Silk-ShowOnUrl", getItems(m_showUrls));
+    group.writeEntry("X-Silk-TriggerOnUrl", getItems(m_triggerUrls));
+    m_desktopFile->sync();
 }
 
 void WebAppEditor::setupActions()
