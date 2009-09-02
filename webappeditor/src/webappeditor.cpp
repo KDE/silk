@@ -79,6 +79,19 @@ void WebAppEditor::setupMainWidget()
 
     m_layout->addWidget(triggerLabel, 4, 0);
     m_layout->addWidget(m_triggerUrls, 5, 1, 1, 2);
+
+    connect(m_showLine, SIGNAL(returnPressed()), this, SLOT(addShowLine()));
+    connect(m_triggerLine, SIGNAL(returnPressed()), this, SLOT(addTriggerLine()));
+}
+
+void WebAppEditor::addShowLine()
+{
+    m_showUrls->addItem(m_showLine->text());
+}
+
+void WebAppEditor::addTriggerLine()
+{
+    m_triggerUrls->addItem(m_triggerLine->text());
 }
 
 void WebAppEditor::setupActions()
@@ -103,6 +116,22 @@ void WebAppEditor::showActionFile()
     kDebug() << "Name" << m_desktopFile->readName();
     kDebug() << "Icon" << m_desktopFile->readIcon();
     kDebug() << "Type" << m_desktopFile->readType();
+    KConfigGroup group = m_desktopFile->group("Desktop Entry");
+
+    kDebug() << "showUrl" << group.readEntry("X-Silk-ShowOnUrl");
+    QStringList shows = group.readEntry("X-Silk-ShowOnUrl", QStringList());
+    foreach (const QString u, shows) {
+        m_showUrls->addItem(u);
+    }
+
+    kDebug() << "triggerUrl" << group.readEntry("X-Silk-TriggerOnUrl");
+    QStringList triggers = group.readEntry("X-Silk-TriggerOnUrl", QStringList());
+    foreach (const QString u, triggers) {
+        m_triggerUrls->addItem(u);
+    }
+
+
+
 }
 
 void WebAppEditor::optionsPreferences()

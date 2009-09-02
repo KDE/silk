@@ -38,9 +38,12 @@ public:
      */
     virtual ~WebAppEditor();
 
-private slots:
+private Q_SLOTS:
     void openActionFile();
     void optionsPreferences();
+
+    void addShowLine();
+    void addTriggerLine();
 
 private:
     void setupActions();
