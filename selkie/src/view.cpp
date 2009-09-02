@@ -96,11 +96,10 @@ View::~View()
 
 void View::slotPrint( QWebFrame* frame )
 {
-    QPointer<QPrintPreviewDialog> dlg = new QPrintPreviewDialog( this );
-    connect( dlg, SIGNAL( paintRequested( QPrinter * ) ),
+    QPrintPreviewDialog dlg( this );
+    connect( &dlg, SIGNAL( paintRequested( QPrinter * ) ),
              frame, SLOT( print( QPrinter * ) ) );
-    dlg->exec();
-    delete dlg;
+    dlg.exec();
 }
 
 WebAppOptions *View::options() const
