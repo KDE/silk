@@ -9,10 +9,10 @@ Comment=Silk Web Action ServiceType
 Type=QString
 
 [PropertyDef::X-Silk-TriggerOnUrl]
-Type=QString
+Type=QStringList
 
 [PropertyDef::X-Silk-ShowOnUrl]
-Type=QString
+Type=QStringList
 
 [PropertyDef::X-Silk-ScriptFile]
 Type=QString

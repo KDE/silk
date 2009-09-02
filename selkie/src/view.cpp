@@ -174,6 +174,21 @@ bool View::shouldActionBeShown(WebAppAction *action)
     return false;
 }
 
+bool View::shouldActionBeTriggered(WebAppAction *action)
+{
+    QStringList urls = action->options()->triggerOnUrl;
+    if (urls.isEmpty()) {
+        return true;
+    }
+    foreach(QString u, urls) {
+        // Does the current URL start with the shown one?
+        if (url().toString().startsWith(u)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void View::updateActions()
 {
     resetToolbarActions();
@@ -184,8 +199,8 @@ void View::resetToolbarActions()
 {
     KMainWindow* win = qobject_cast<KMainWindow*>(parent());
     if (!win) {
-	kWarning() << "Our parent is not a KMainWindow, be afraid";
-	return;
+        kWarning() << "Our parent is not a KMainWindow, be afraid";
+        return;
     }
 
     win->toolBar()->clear();
@@ -208,8 +223,7 @@ void View::triggerUrlActions()
     foreach (action, actions()) {
         WebAppAction *wa = qobject_cast<WebAppAction*>(action);
         if (wa) {
-            QUrl triggerUrl = QUrl(wa->options()->triggerOnUrl);
-            if (triggerUrl.isParentOf(url())) {
+            if (shouldActionBeTriggered(wa)) {
                 wa->trigger();
             }
         }
