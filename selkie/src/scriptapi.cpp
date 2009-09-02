@@ -59,6 +59,12 @@ void ScriptApi::installGlobals()
     QString script(
 	"function GM_log(message) {\n" \
 	"    window.silk.GM_log(message);\n" \
+	"};\n" \
+	"function GM_getValue(key, default) {\n" \
+	"    return window.silk.GM_getValue(key, default);\n" \
+	"};\n" \
+	"function GM_setValue(key, value) {\n" \
+	"    window.silk.GM_setValue(key, value);\n" \
 	"};\n"
 	);
 
