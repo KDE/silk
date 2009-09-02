@@ -60,17 +60,13 @@ void ScriptApi::installGlobals()
 	"function GM_log(message) {\n" \
 	"    window.silk.GM_log(message);\n" \
 	"};\n" \
+	"function GM_getValue(key, default) {\n"			\
+	"    return window.silk.GM_getValue(key, default);\n"		\
+	"};\n"								\
 	"function GM_setValue(key, value) {\n" \
 	"    window.silk.GM_setValue(key, value);\n" \
 	"};\n"
 	);
-
-    /*
-      This crashes for reasons i don't understand.
-	"function GM_getValue(key, default) {\n"			\
-	"    return window.silk.GM_getValue(key, default);\n"		\
-	"};\n"								\
-    */
 
     m_view->page()->mainFrame()->evaluateJavaScript( script );
 }
