@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=webappeditor
+Exec=webappeditor %i -caption "%c"
+Icon=webappeditor
+Type=Application
+X-DocPath=webappeditor/index.html
+GenericName=An Application to create Selkie Applications
+Terminal=false
