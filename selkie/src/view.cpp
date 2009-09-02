@@ -177,7 +177,7 @@ bool View::shouldActionBeTriggered(WebAppAction *action)
 {
     QStringList urls = action->options()->triggerOnUrl;
     if (urls.isEmpty()) {
-        return true;
+        return false;
     }
     foreach(QString u, urls) {
         // Does the current URL start with the shown one?
