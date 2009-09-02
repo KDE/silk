@@ -183,9 +183,12 @@ void View::updateActions()
 void View::resetToolbarActions()
 {
     KMainWindow* win = qobject_cast<KMainWindow*>(parent());
-    if (win) {
-        win->toolBar()->clear();
+    if (!win) {
+	kWarning() << "Our parent is not a KMainWindow, be afraid";
+	return;
     }
+
+    win->toolBar()->clear();
     foreach (QAction *action, m_actionCollection->actions()) {
         WebAppAction *wa_action = qobject_cast<WebAppAction*>(action);
         if (wa_action) {
