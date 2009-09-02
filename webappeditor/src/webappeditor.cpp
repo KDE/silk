@@ -86,12 +86,26 @@ void WebAppEditor::setupMainWidget()
 
 void WebAppEditor::addShowLine()
 {
-    m_showUrls->addItem(m_showLine->text());
+    QString text = m_showLine->text();
+    QUrl url(text);
+    if (url.isValid()) {
+        kDebug() << "Aaaaaaaalright.";
+        m_showUrls->addItem(text);
+    } else {
+        kWarning() << "url invalid, sorry.";
+    }
 }
 
 void WebAppEditor::addTriggerLine()
 {
-    m_triggerUrls->addItem(m_triggerLine->text());
+    QString text = m_triggerLine->text();
+    QUrl url(text);
+    if (url.isValid()) {
+        kDebug() << "Aaaaaaaalright.";
+        m_triggerUrls->addItem(text);
+    } else {
+        kWarning() << "url invalid, sorry.";
+    }
 }
 
 void WebAppEditor::setupActions()
