@@ -125,10 +125,9 @@ QString View::plugin() const
 
 void View::evaluateScript( const QString &script )
 {
-    kDebug() << kBacktrace();
     kDebug() << script;
     m_scriptapi->setTrusted( true );
-    //    page()->mainFrame()->evaluateJavaScript( script );
+    page()->mainFrame()->evaluateJavaScript( script );
     m_scriptapi->setTrusted( false );
 }
 

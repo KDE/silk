@@ -10,6 +10,5 @@ X-KDE-PluginInfo-Depends=gmail
 
 X-Silk-WebApp=gmail
 X-Silk-ShowOnUrl=http://mail.google.com
-X-Silk-TriggerOnUrl=http://mail.google.com/
 X-Silk-ScriptFiles=noop-script.js
 X-Silk-Script=silk.showNotification('Pay Attention!')
