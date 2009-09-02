@@ -2,3 +2,7 @@ settings.cpp
 settings.h
 ui_prefs_base.h
 webapp.moc
+selkie
+selkie.shell
+selkie_automoc.cpp
+selkie_automoc.cpp.files

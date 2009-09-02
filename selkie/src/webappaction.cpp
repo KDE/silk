@@ -115,13 +115,15 @@ QString WebAppAction::loadScript(const QString &jsfile)
     kDebug() << "Found:" << scriptfile;
 
     QFile f(scriptfile);
-    if (f.open(QIODevice::ReadOnly)) {
-        QTextStream t(&f);
-        script = t.readAll();
-        f.close();
-        kDebug() << "Read Script" << endl << script;
-    } else {
+    if (!f.open(QIODevice::ReadOnly)) {
         kWarning() << "Could not read scriptfile" << scriptfile;
+	return QString();
     }
+
+    QTextStream t(&f);
+    script = t.readAll();
+    f.close();
+    kDebug() << "Read Script" << endl << script;
+
     return script;
 }
