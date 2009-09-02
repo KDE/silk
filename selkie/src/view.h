@@ -80,7 +80,7 @@ private slots:
 private:
     void resetToolbarActions();
     void triggerUrlActions();
-    bool isActionShown(WebAppAction *action);
+    bool shouldActionBeShown(WebAppAction *action);
 
 private:
     /** should the provided action currently be shown? */
