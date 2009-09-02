@@ -7,11 +7,13 @@
 #include "settings.h"
 
 #include <QtGui/QDropEvent>
+#include <QtGui/QLineEdit>
+#include <QtGui/QListWidget>
 #include <QtGui/QPainter>
-#include <QtGui/QPrinter>
 
 #include <kconfigdialog.h>
 #include <kstatusbar.h>
+#include <KDesktopFile>
 #include <KFileDialog>
 
 #include <kaction.h>
@@ -54,8 +56,29 @@ void WebAppEditor::setupMainWidget()
     m_layout = new QGridLayout(m_widget);
 
     m_widget->setLayout(m_layout);
-    m_fileNameLabel = new QLabel(this);
-    m_layout->addWidget(m_fileNameLabel, 0, 0);
+    m_fileNameLabel = new QLabel(m_widget);
+    m_layout->addWidget(m_fileNameLabel, 0, 0, 1, 3);
+
+    QLabel *showLabel = new QLabel(m_widget);
+    showLabel->setText(i18n("Show on URLs"));
+    m_showLine = new QLineEdit(m_widget);
+    m_showUrls = new QListWidget(m_widget);
+
+
+    QLabel *triggerLabel = new QLabel(m_widget);
+    triggerLabel->setText(i18n("URL Triggers"));
+    m_triggerLine = new QLineEdit(m_widget);
+    m_triggerUrls = new QListWidget(m_widget);
+
+
+    m_layout->addWidget(showLabel, 1, 0, 1, 2);
+    m_layout->addWidget(m_showUrls, 2, 1);
+
+    m_layout->addWidget(m_showLine, 1, 1);
+    m_layout->addWidget(m_triggerLine, 4, 1);
+
+    m_layout->addWidget(triggerLabel, 4, 0);
+    m_layout->addWidget(m_triggerUrls, 5, 1, 1, 2);
 }
 
 void WebAppEditor::setupActions()
@@ -75,6 +98,11 @@ void WebAppEditor::openActionFile()
 void WebAppEditor::showActionFile()
 {
     m_fileNameLabel->setText(m_actionFile);
+    m_desktopFile = new KDesktopFile(m_actionFile);
+    kDebug() << "------------------------------____--";
+    kDebug() << "Name" << m_desktopFile->readName();
+    kDebug() << "Icon" << m_desktopFile->readIcon();
+    kDebug() << "Type" << m_desktopFile->readType();
 }
 
 void WebAppEditor::optionsPreferences()

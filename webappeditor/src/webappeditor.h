@@ -11,6 +11,8 @@
 
 #include "ui_prefs_base.h"
 
+class QListWidget;
+class KDesktopFile;
 class KToggleAction;
 class KUrl;
 
@@ -51,7 +53,16 @@ private:
     QString m_actionFile;
     QGridLayout *m_layout;
     QWidget *m_widget;
+
+    QListWidget *m_triggerUrls;
+    QListWidget *m_showUrls;
+
+    QLineEdit *m_showLine;
+    QLineEdit *m_triggerLine;
+
     QLabel *m_fileNameLabel;
+
+    KDesktopFile *m_desktopFile;
     KToggleAction *m_toolbarAction;
     KToggleAction *m_statusbarAction;
 };
