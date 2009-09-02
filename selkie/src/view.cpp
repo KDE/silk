@@ -57,7 +57,7 @@ View::View( QWidget *parent )
 
     m_page = new Page( this );
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
-    connect( m_page, SIGNAL( urlChanged() ), this, SLOT( resetToolbarActions() ) );
+    connect( this, SIGNAL( urlChanged(const QUrl &) ), this, SLOT( updateActions() ) );
     setPage( m_page );
 
     m_scriptapi = new ScriptApi(this);
@@ -125,9 +125,10 @@ QString View::plugin() const
 
 void View::evaluateScript( const QString &script )
 {
+    kDebug() << kBacktrace();
     kDebug() << script;
     m_scriptapi->setTrusted( true );
-    page()->mainFrame()->evaluateJavaScript( script );
+    //    page()->mainFrame()->evaluateJavaScript( script );
     m_scriptapi->setTrusted( false );
 }
 
@@ -157,6 +158,7 @@ bool View::loadWebAppActions(WebApp *parent)
 
 bool View::actionShown(WebAppAction *action)
 {
+#if 0
     QStringList urls = action->options()->showOnUrl;
     if (urls.isEmpty()) {
         return true;
@@ -170,12 +172,19 @@ bool View::actionShown(WebAppAction *action)
         }
     }
     kDebug() << "NOT SHOWING:" << urls << m_page->url();
+#endif
     return false;
+}
+
+void View::updateActions()
+{
+    resetToolbarActions();
+    triggerUrlActions();
 }
 
 void View::resetToolbarActions()
 {
-    KMainWindow* win = static_cast<KMainWindow*>(parent());
+    KMainWindow* win = qobject_cast<KMainWindow*>(parent());
     if (win) {
         win->toolBar()->clear();
     }
@@ -187,6 +196,20 @@ void View::resetToolbarActions()
             // TODO: Will probably need some improvement.
             if (actionShown(wa_action)) {
                 win->toolBar()->addAction(wa_action);
+            }
+        }
+    }
+}
+
+void View::triggerUrlActions()
+{
+    QAction *action;
+    foreach (action, actions()) {
+        WebAppAction *wa = qobject_cast<WebAppAction*>(action);
+        if (wa) {
+            QUrl triggerUrl = QUrl(wa->options()->triggerOnUrl);
+            if (triggerUrl.isParentOf(url())) {
+                wa->trigger();
             }
         }
     }

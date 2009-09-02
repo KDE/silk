@@ -33,20 +33,12 @@ class Page : public QWebPage
 
 public:
     Page( View *view );
-    QUrl url();
-
-Q_SIGNALS:
-    void urlChanged();
 
 protected:
     bool acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &request, QWebPage::NavigationType type );
 
 private:
     View *m_view;
-
-private Q_SLOTS:
-    void loadFinished(bool ok);
-
 };
 
 #endif // PAGE_H

@@ -75,7 +75,11 @@ protected slots:
 
 private slots:
     void slotPrint( QWebFrame* );
+    void updateActions();
+
+private:
     void resetToolbarActions();
+    void triggerUrlActions();
 
 private:
     /** should the provided action currently be shown? */

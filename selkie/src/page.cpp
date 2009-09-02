@@ -33,12 +33,6 @@ Page::Page( View *view )
     : QWebPage( view )
 {
     m_view = view;
-    connect(this, SIGNAL(loadFinished(bool)), this, SLOT(loadFinished(bool)));
-}
-
-QUrl Page::url()
-{
-    return m_view->page()->mainFrame()->url();
 }
 
 bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &request, QWebPage::NavigationType type )
@@ -62,17 +56,3 @@ bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &req
     return QWebPage::acceptNavigationRequest( frame, request, type );
 }
 
-void Page::loadFinished(bool ok)
-{
-    QAction *action;
-    emit urlChanged();
-    foreach (action, m_view->actions()) {
-        WebAppAction *wa = static_cast<WebAppAction*>(action);
-        if (wa) {
-            QUrl triggerUrl = QUrl(wa->options()->triggerOnUrl);
-            if (triggerUrl.isParentOf(url())) {
-                wa->trigger();
-            }
-        }
-    }
-}
