@@ -26,6 +26,8 @@
 #include <QtCore/QObject>
 #include <QVariant>
 
+#include <kconfiggroup.h>
+
 class QWebFrame;
 class View;
 
@@ -78,6 +80,8 @@ public slots:
 protected:
     /** Installs forwarding functions for GM_ global methods. */
     void installGlobals();
+
+    KConfigGroup config() const;
 
 private slots:
     void attachObject();

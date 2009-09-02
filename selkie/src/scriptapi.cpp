@@ -28,6 +28,7 @@
 #include <kdebug.h>
 #include <kpassivepopup.h>
 #include <knotification.h>
+#include <kglobal.h>
 
 #include "view.h"
 #include "scriptapi.h"
@@ -64,6 +65,14 @@ void ScriptApi::installGlobals()
     m_view->page()->mainFrame()->evaluateJavaScript( script );
 }
 
+KConfigGroup ScriptApi::config() const
+{
+    QString groupName("Silk-Script-Api-%1-%2-%3");
+    groupName = groupName.arg( m_view->name() ).arg( m_gmNameSpace ).arg( m_gmName );
+
+    return KGlobal::config()->group( groupName );
+}
+
 void ScriptApi::setTrusted( bool yes )
 {
     m_trusted = yes;
@@ -86,11 +95,12 @@ void ScriptApi::GM_log( const QString &message )
 
 QVariant ScriptApi::GM_getValue( const QString &key, const QVariant &defaultVal )
 {
-    return defaultVal;
+    return config().readEntry( key, defaultVal );
 }
 
 void ScriptApi::GM_setValue( const QString &key, const QVariant &value )
 {
+    config().writeEntry( key, value );
 }
 
 void ScriptApi::showNotification( const QString &text )
