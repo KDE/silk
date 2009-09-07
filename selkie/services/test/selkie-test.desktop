@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Selkie Test
+GenericName=Test Web Application
+Comment=Local Test Webpage Application for Selkie
+Exec=selkie test
+Icon=flag
+Type=Application

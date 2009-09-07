@@ -1,0 +1,12 @@
+[Desktop Entry]
+Comment=Triggers an action on a URL
+Icon=flag-yellow
+Name=Trigger
+Type=Service
+X-KDE-PluginInfo-Name=silk-test-trigger
+X-KDE-ServiceTypes=Silk/WebApp/Action
+X-Silk-ScriptFile=triggeraction.js
+X-Silk-ShowOnUrl=file:///
+X-Silk-TriggerOnUrl=index.html
+X-Silk-WebApp=test
+
