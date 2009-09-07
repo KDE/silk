@@ -27,19 +27,18 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
 
+#include <KAction>
 #include <KActionCollection>
+#include <KConfigDialog>
 #include <KDebug>
+#include <KDE/KLocale>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 #include <KToolBar>
-#include <kconfigdialog.h>
-#include <kstatusbar.h>
+#include <KStandardAction>
+#include <KStandardDirs>
+#include <KStatusBar>
 
-#include <kaction.h>
-#include <kactioncollection.h>
-#include <kstandardaction.h>
-
-#include <KDE/KLocale>
 
 WebApp::WebApp()
     : KMainWindow(),
@@ -90,22 +89,47 @@ KPluginInfo::List WebApp::listWebApps(const QString &name)
 bool WebApp::loadWebApp(const QString &name)
 {
     foreach (const KPluginInfo &info, listWebApps(name)) {
+
+        kDebug() << "Silk/WebApp:" << name << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
+        kDebug() << "Found plugin:" << name;
+        m_view->options()->name = info.pluginName();
+        m_view->options()->windowIcon = KIcon(info.icon());
+        m_view->options()->windowTitle = info.property("Name").toString();
+
+        QUrl startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
+        kDebug() << startUrl;
+        QString dataUrl = "silk-webapp/" + info.pluginName() + "/";
+        if (startUrl.isRelative()) {
+            QString startFile = dataUrl + startUrl.toString();
+            kDebug() << "StartUrl is relative, search KStandardDirs for" << dataUrl << startUrl << startFile;
+            QUrl url = KGlobal::dirs()->findResource("data", startFile);
+            kDebug() << "Found:" << url;
+            //KGlobal::dirs()->findResource("data", startUrl);
+            m_view->options()->startUrl = url;
+        } else {
+            m_view->options()->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
+
+        }
+        foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
+            kDebug() << "========= Allowed bases ====" << url;
+            if (QUrl(url).isRelative()) {
+                //QUrl url = KGlobal::dirs()->findResource("data", startFile);
+                QStringList u = KGlobal::dirs()->findDirs("data", dataUrl + url);
+                kDebug() << "relative allowed:" << KGlobal::dirs()->findDirs("data", url) << u << dataUrl;
+                foreach (const QString &allowedUrl, u) {
+                    m_view->options()->allowedBases << QUrl(allowedUrl);
+                }
+            } else {
+                m_view->options()->allowedBases << QUrl(url);
+            }
+        }
+        kDebug() << "AllowedBases:" << m_view->options()->allowedBases;
         QString comment = info.comment();
 
         if (comment.isEmpty()) {
             comment = i18n("No description available");
         }
 
-        kDebug() << "Silk/WebApp:" << name << comment << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
-        kDebug() << "Found plugin:" << name;
-        m_view->options()->name = info.pluginName();
-        m_view->options()->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
-
-        foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
-            m_view->options()->allowedBases << QUrl(url);
-        }
-        m_view->options()->windowIcon = KIcon(info.icon());
-        m_view->options()->windowTitle = info.property("Name").toString();
 
         m_view->loadWebAppActions(this);
         return true;
