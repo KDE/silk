@@ -6,22 +6,6 @@
  * License: LGPL v2.1                                *
  * ------------------------------------------------- */
 
-function toggleVisibility(id)
-{
-    el = document.getElementById(id);
-    if (el.style.display == 'none')
-    {
-        el.style.display = '';
-        window.silk.showNotification('Toolbar: Showing ...');
-        window.silk.GM_log("showing from toolbar" + id);
-    } else {
-        el.style.display = 'none';
-        window.silk.showNotification('Toolbar: Hiding ...');
-        window.silk.GM_log("hiding from toolbar" + id);
-    }
-}
-
-
 /* USAGE:
  * objId    = element id.
  * style    = the style to be changed.
@@ -32,21 +16,20 @@ function setStyle(objId, style, value) {
 }
 
 function scaleUp() {
-    id = "mountains";
+    id = "content";
     document.getElementById(id).style.webkitTransform='scale(1)';
-    window.silk.GM_log("scaling up" + id);
+    window.silk.GM_log("scaling up " + id);
 
 }
 
-setStyle("mountains", "-webkit-transition", "-webkit-transform 0.2s ease-in");
-//document.getElementById("mountains").style.webkitTransform='rotate(10000deg)'
-//document.getElementById("mountains").style.webkitTransform='scale(4)'
+setStyle("content", "-webkit-transition", "-webkit-transform 1s ease-in");
+//document.getElementById("mountains").style.webkitTransform='rotate(1080deg)'
 
-document.getElementById("mountains").style.webkitTransform='scale(.25)'
+document.getElementById("content").style.webkitTransform='scale(.25)'
 //document.getElementById("mountains").style.webkitTransform='skewY(50)'
 //toggleVisibility('mountains');
 
-setTimeout("scaleUp()", 200);
+setTimeout("scaleUp()", 1000);
 
 // Evil hack to force a reflow since Qt 4.5.1 doesn't do it
 var v = document.body.offsetHeight;
