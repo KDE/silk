@@ -41,6 +41,7 @@ bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &req
         bool inScope = false;
         QUrl base;
         foreach( base, m_view->options()->allowedBases ) {
+            kDebug() << "Check::base::request::parentOf?" << base << request.url() << base.isParentOf( request.url() );
             if ( base.isParentOf( request.url() ) ) {
                 inScope = true;
             }

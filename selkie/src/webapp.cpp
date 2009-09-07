@@ -111,13 +111,12 @@ bool WebApp::loadWebApp(const QString &name)
 
         }
         foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
-            kDebug() << "========= Allowed bases ====" << url;
             if (QUrl(url).isRelative()) {
-                //QUrl url = KGlobal::dirs()->findResource("data", startFile);
                 QStringList u = KGlobal::dirs()->findDirs("data", dataUrl + url);
-                kDebug() << "relative allowed:" << KGlobal::dirs()->findDirs("data", url) << u << dataUrl;
                 foreach (const QString &allowedUrl, u) {
-                    m_view->options()->allowedBases << QUrl(allowedUrl);
+                    // We need to append file:// as protocol, otherwise the
+                    // parent matching with allowed bases won't work
+                    m_view->options()->allowedBases << QUrl("file://" + allowedUrl);
                 }
             } else {
                 m_view->options()->allowedBases << QUrl(url);

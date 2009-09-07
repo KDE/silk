@@ -1,7 +1,7 @@
 [Desktop Entry]
 Comment=An action in the Toolbar
 Icon=flag-green
-Name=Toolbar
+Name=Scale Content
 Type=Service
 X-KDE-PluginInfo-Name=silk-test-toolbar
 X-KDE-ServiceTypes=Silk/WebApp/Action

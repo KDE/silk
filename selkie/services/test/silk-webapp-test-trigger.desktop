@@ -1,7 +1,7 @@
 [Desktop Entry]
 Comment=Triggers an action on a URL
 Icon=flag-yellow
-Name=Trigger
+Name=Toggle Header
 Type=Service
 X-KDE-PluginInfo-Name=silk-test-trigger
 X-KDE-ServiceTypes=Silk/WebApp/Action
