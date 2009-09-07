@@ -1,9 +1,11 @@
 
-#header {width: 90%; height: 40px; font-size: 20px; background-color: #146C17; color: white; }
+#header {width: 90%; height: 40px; font-size: 14px; font-weight: bold; background-color: #146C17; color: white; }
 
-#content {width: 90%; min-height: 200px; font-size: 20px; color: purple; }
+#content {width: 90%; min-height: 200px; font-size: 12px; color: #146C17; }
 
-#footer {width: 90%; height: 20px; font-size: 20px; background-color: #146C17;  color: white; }
+#picture {vertical-align: text-top;}
+
+#footer {width: 90%; height: 20px; font-size: 11px; background-color: #146C17;  color: white; }
 
 
 /*#mountains { -webkit-transition: -webkit-transform 3s ease-in; }*/

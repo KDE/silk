@@ -23,7 +23,7 @@ function scaleUp() {
 }
 
 setStyle("content", "-webkit-transition", "-webkit-transform .2s ease");
-//document.getElementById("mountains").style.webkitTransform='rotate(1080deg)'
+//document.getElementById("picture").style.webkitTransform='rotate(1080deg)'
 
 document.getElementById("content").style.webkitTransform='scale(.8)';
 
