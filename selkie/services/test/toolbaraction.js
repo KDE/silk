@@ -22,14 +22,12 @@ function scaleUp() {
 
 }
 
-setStyle("content", "-webkit-transition", "-webkit-transform 1s ease-in");
+setStyle("content", "-webkit-transition", "-webkit-transform .2s ease");
 //document.getElementById("mountains").style.webkitTransform='rotate(1080deg)'
 
-document.getElementById("content").style.webkitTransform='scale(.25)'
-//document.getElementById("mountains").style.webkitTransform='skewY(50)'
-//toggleVisibility('mountains');
+document.getElementById("content").style.webkitTransform='scale(.8)';
 
-setTimeout("scaleUp()", 1000);
+setTimeout("scaleUp()", 200);
 
 // Evil hack to force a reflow since Qt 4.5.1 doesn't do it
 var v = document.body.offsetHeight;
