@@ -15,5 +15,5 @@ X-KDE-PluginInfo-Category=Development
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 
-X-Silk-StartUrl=testsite/index.html
+X-Silk-StartUrl=testsite/selkie.html
 X-Silk-AllowedBases=testsite/

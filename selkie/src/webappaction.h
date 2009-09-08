@@ -36,6 +36,8 @@ struct WebAppActionOptions
     KIcon icon;
     QStringList triggerOnUrl;
     QStringList showOnUrl;
+    QStringList triggerOnGlob;
+    QStringList showOnGlob;
     QString script;
 };
 

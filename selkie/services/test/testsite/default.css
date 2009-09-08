@@ -1,11 +1,10 @@
+/* A simple stylesheet for Selkie's test page */
 
 #header {width: 90%; height: 40px; font-size: 14px; font-weight: bold; background-color: #146C17; color: white; }
 
-#content {width: 90%; min-height: 200px; font-size: 12px; color: #146C17; }
+#content {width: 90%; min-height: 200px; font-size: 12px; text-align: justify; color: #146C17; }
 
-#picture {vertical-align: text-top;}
+#picture {vertical-align: text-top; margin: 10px;}
 
 #footer {width: 90%; height: 20px; font-size: 11px; background-color: #146C17;  color: white; }
 
-
-/*#mountains { -webkit-transition: -webkit-transform 3s ease-in; }*/

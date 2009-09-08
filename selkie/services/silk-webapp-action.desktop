@@ -14,11 +14,11 @@ Type=QStringList
 [PropertyDef::X-Silk-ShowOnUrl]
 Type=QStringList
 
-[PropertyDef::X-Silk-TriggerOnRegexp]
-Type=QString
+[PropertyDef::X-Silk-TriggerOnGlob]
+Type=QStringList
 
-[PropertyDef::X-Silk-ShowOnRegexp]
-Type=QString
+[PropertyDef::X-Silk-ShowOnGlob]
+Type=QStringList
 
 [PropertyDef::X-Silk-ScriptFile]
 Type=QString

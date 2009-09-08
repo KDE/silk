@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>Selkie Test Page :: Index</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <meta content="Sebastian K&uuml;gler" name="Author" />
+    <meta content="selkie silk kde webkit" name="Keywords" />
+    <meta content="Test pages for Selkie" name="Description" />
+    <link rel="alternate" title="vizZzion.org :: RSS" href="http://vizZzion.org/rss.php" type="application/rss+xml" />
+    <link rel="shortcut icon" href="http://vizZzion.org/favicon.ico" type="image/x-icon" />
+    <link rel="icon" type="image/x-icon" href="http://vizZzion.org/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="default.css" />
+
+</head>
+<body>
+<div id="header">
+Selkie Test page (id = header)
+</div>
+
+<div id="content">
+<h1>Selkie - Standalone Web Application</h1>
+<h2>What?</h2>
+<img id="picture" src="randa-view.jpg" align="right" />
+<p>
+Selkie is a standalone web application shell. With Selkie, you can use Web Applications as first-class citizens on your desktop. Selkie WebApps appear as full applications in your desktop. Entries of these web applications are added to the start menu, then can be found in KRunner on the KDE desktop, they appear as their own entry in the taskbar and window-switching machinery.
+</p><p>
+Selkie allows you to create customized web application. You can add actions to Selkie applications that can be triggered from the toolbar, or on loading webpages. With these actions, you can "inject" Javascript and run them in the context of the website. This allows you to manipulate the contents and behavior of your web application at runtime. Selkie plugins do not contain any "compiled" or native code. The plugins are simple .desktop files that contain the information about a specific webapp. Likewise, actions are .desktop Files as well. They either contain a JavaScript one-liner or point to a Javascript file which is then executed "inside" your web application. From these scripts, you can also access functions Silk offers you, such as triggering notifications on the desktop, or logging to the console.
+</p><p>
+Selkie is built using WebKit and makes use of KDE's plugin system and Toolbar / Action system. Selkie can load and execute greasemonkey scripts as well, so there are literally hundreds of actions available.
+</p>
+
+<h2>How does Selkie work?</h2>
+Selkie has four main components. Selkie itself is the application that can run a number of web applications ("WebApps"). Those WebApps are plugins that can be loaded into Silk. The WebApp plugins contain meta information about the web application (icon, name, comment, plugin name). The plugins also contain information about the WebApp itself, such as at which page to start, or which URLs should be opened in the WebApp itself. This allows for sand-boxing the web application and opening external URLs in the default web browser.
+
+<h2>Creating Web Applications</h2>
+
+<h3>Setting up the Selkie Web Application</h3>
+
+
+
+
+Let's go to the <a href="beach.html">beach</a>.
+or the <a href="mountain.html">mountain</a>.
+</div>
+
+<div id="footer" background="blue">
+(c) 2009 sebas (div id = footer)
+</div>
+</body>
+</html>
