@@ -90,6 +90,9 @@ bool WebAppAction::load(const KPluginInfo &info)
     } else if (!scriptFile.isEmpty()) {
         m_options->script = loadScript(scriptFile);
     }
+    // FIXME: append X-Silk-Script to the contents of X-Silk-ScriptFile
+    // should make it possible to first include a javascript lib, and
+    // then executing parts of it.
 
     // Output errors in the .desktop file in the console
     if (!scriptFile.isEmpty() && !script.isEmpty()) {
