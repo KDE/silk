@@ -62,17 +62,7 @@ private:
     QString m_actionFile;
     QGridLayout *m_layout;
     QWidget *m_widget;
-/*
-    QListWidget *m_triggerUrls;
-    QListWidget *m_showUrls;
 
-    QLineEdit *m_showLine;
-    QLineEdit *m_triggerLine;
-
-    KPushButton *m_saveButton;
-
-    QLabel *m_fileNameLabel;
-*/
     KDesktopFile *m_desktopFile;
     KToggleAction *m_toolbarAction;
     KToggleAction *m_statusbarAction;
