@@ -188,7 +188,7 @@ bool View::match(QStringList wildcards, QStringList urls)
         return false;
     } else if (urls.isEmpty()) {
         // no wildcards, no URLs to pay attention to
-        return true;
+        return false;
     }
 
     foreach(QString u, urls) {

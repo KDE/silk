@@ -8,5 +8,6 @@ X-KDE-ServiceTypes=Silk/WebApp/Action
 X-KDE-PluginInfo-Name=silk-commitlog
 
 X-Silk-WebApp=silk
+X-Silk-ShowOnWildcard=*
 X-Silk-ScriptFiles=noop-script.js
 X-Silk-Script=window.location = 'http://gitorious.org/project-silk/project-silk/commits'
