@@ -24,8 +24,9 @@ function scaleUp() {
 
 setStyle("content", "-webkit-transition", "-webkit-transform .2s ease");
 //document.getElementById("picture").style.webkitTransform='rotate(1080deg)'
+window.silk.GM_log("scaling down content");
 
-document.getElementById("content").style.webkitTransform='scale(.8)';
+document.getElementById("content").style.webkitTransform='scale(.7)';
 
 setTimeout("scaleUp()", 200);
 

@@ -1,10 +1,12 @@
 /* A simple stylesheet for Selkie's test page */
 
-#header {width: 90%; height: 40px; font-size: 14px; font-weight: bold; background-color: #146C17; color: white; }
+body {background: #eeeeee; }
 
-#content {width: 90%; min-height: 200px; font-size: 12px; text-align: justify; color: #146C17; }
+#header {width: 90%; height: 40px; font-size: 14px; font-weight: bold; background-color: #124576; color: white; }
+
+#content {width: 90%; min-height: 200px; font-size: 12px; text-align: justify; color: #124576; }
 
 #picture {vertical-align: text-top; margin: 10px;}
 
-#footer {width: 90%; height: 20px; font-size: 11px; background-color: #146C17;  color: white; }
+#footer {width: 90%; height: 20px; font-size: 11px; background-color: #124576;  color: white; }
 

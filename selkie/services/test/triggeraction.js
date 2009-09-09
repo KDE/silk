@@ -6,11 +6,11 @@
  * License: LGPL v2.1                                *
  * ------------------------------------------------- */
 
-duration = 2000;
+duration = 1000;
 
 function toggleVisibility(id)
 {
-    duration = 2000;
+    duration = 1000;
     setStyle(id, "-webkit-transition", "-webkit-transform " + duration + "ms ease");
     el = document.getElementById(id);
     if (el.style.display == 'none')
