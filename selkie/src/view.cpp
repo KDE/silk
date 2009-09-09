@@ -154,10 +154,8 @@ bool View::loadWebAppActions(WebApp *parent)
     return true;
 }
 
-bool View::shouldActionBeShown(WebAppAction *action)
+bool View::match(QStringList wildcards, QStringList urls)
 {
-
-    QStringList wildcards = action->options()->showOnWildcard;
     if (!wildcards.isEmpty()) {
         kDebug() << "+++++++ Wildcards" << wildcards;
         foreach(QString w, wildcards) {
@@ -183,7 +181,6 @@ bool View::shouldActionBeShown(WebAppAction *action)
     }
 
     // No pattern matched, let's see if we match a URL
-    QStringList urls = action->options()->showOnUrl;
     if (urls.isEmpty() && !wildcards.isEmpty()) {
         // neither wildcard nor url is specified. Let's show the action
         // as there are no restrictions specified
@@ -205,21 +202,6 @@ bool View::shouldActionBeShown(WebAppAction *action)
     return false;
 }
 
-bool View::shouldActionBeTriggered(WebAppAction *action)
-{
-    QStringList urls = action->options()->triggerOnUrl;
-    if (urls.isEmpty()) {
-        return false;
-    }
-    foreach(QString u, urls) {
-        // Does the current URL start with the shown one?
-        if (url().toString().startsWith(u)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void View::updateActions()
 {
     resetToolbarActions();
@@ -238,10 +220,8 @@ void View::resetToolbarActions()
     foreach (QAction *action, m_actionCollection->actions()) {
         WebAppAction *wa_action = qobject_cast<WebAppAction*>(action);
         if (wa_action) {
-            // This is a bit tricky since we don't know about the URL on startup. So if it's empty,
-            // ignore this setting and just put them all in.
-            // TODO: Will probably need some improvement.
-            if (shouldActionBeShown(wa_action)) {
+            if (match(wa_action->options()->showOnWildcard, wa_action->options()->showOnUrl)) {
+                kDebug() << "Showing" << wa_action->options()->name;
                 win->toolBar()->addAction(wa_action);
             }
         }
@@ -254,7 +234,8 @@ void View::triggerUrlActions()
     foreach (action, actions()) {
         WebAppAction *wa = qobject_cast<WebAppAction*>(action);
         if (wa) {
-            if (shouldActionBeTriggered(wa)) {
+            if (match(wa->options()->triggerOnWildcard, wa->options()->triggerOnUrl)) {
+                kDebug() << "Triggering" << wa->options()->name;
                 wa->trigger();
             }
         }

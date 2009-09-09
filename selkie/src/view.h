@@ -80,8 +80,7 @@ private slots:
 private:
     void resetToolbarActions();
     void triggerUrlActions();
-    bool shouldActionBeShown(WebAppAction *action);
-    bool shouldActionBeTriggered(WebAppAction *action);
+    bool match (QStringList wildcards, QStringList urls);
 
 private:
     /** should the provided action currently be shown? */
