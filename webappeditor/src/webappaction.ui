@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>475</width>
+    <height>667</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>&lt;b&gt;Meta Information&lt;/b&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Label</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="name"/>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Plugin name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="pluginName"/>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Author</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QLineEdit" name="author"/>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_9">
+     <property name="text">
+      <string>&lt;b&gt;Action Configuration&lt;/b&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Show On URL</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1">
+    <widget class="KLineEdit" name="showOnUrlLine"/>
+   </item>
+   <item row="13" column="1">
+    <widget class="KListWidget" name="showOnUrl"/>
+   </item>
+   <item row="15" column="1">
+    <widget class="KListWidget" name="showOnWildcard"/>
+   </item>
+   <item row="18" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Trigger on Wildcard</string>
+     </property>
+    </widget>
+   </item>
+   <item row="18" column="1">
+    <widget class="KLineEdit" name="triggerOnWildcardLine"/>
+   </item>
+   <item row="22" column="1">
+    <widget class="KListWidget" name="triggerOnWildcard"/>
+   </item>
+   <item row="14" column="1">
+    <widget class="KLineEdit" name="showOnWildcardLine"/>
+   </item>
+   <item row="14" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Show on Wildcard</string>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="0">
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>Trigger on URL</string>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="1">
+    <widget class="KLineEdit" name="triggerOnUrlLine"/>
+   </item>
+   <item row="17" column="1">
+    <widget class="KListWidget" name="triggerOnUrl"/>
+   </item>
+   <item row="4" column="1">
+    <widget class="KIconButton" name="kiconbutton"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_10">
+     <property name="text">
+      <string>Icon</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="KTitleWidget" name="titlewidget">
+     <property name="text">
+      <string>WebApp Action Configuration</string>
+     </property>
+    </widget>
+   </item>
+   <item row="23" column="1">
+    <widget class="KPushButton" name="savebutton"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KIconButton</class>
+   <extends>QPushButton</extends>
+   <header>kicondialog.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KListWidget</class>
+   <extends>QListWidget</extends>
+   <header>klistwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTitleWidget</class>
+   <extends>QWidget</extends>
+   <header>ktitlewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

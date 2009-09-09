@@ -10,6 +10,7 @@ duration = 1000;
 
 function toggleVisibility(id)
 {
+    window.silk.GM_log("toggleVisibility");
     duration = 1000;
     setStyle(id, "-webkit-transition", "-webkit-transform " + duration + "ms ease");
     el = document.getElementById(id);
@@ -32,6 +33,7 @@ function setStyle(objId, style, value) {
 }
 
 function toggle(id) {
+    window.silk.GM_log("toggle" + id);
     el = document.getElementById(id);
     duration = 2000;
     setStyle(id, "-webkit-transition", "-webkit-transform " + duration + "ms ease");
@@ -47,6 +49,7 @@ function toggle(id) {
     }
 }
 
+window.silk.showNotification('Triggered!!!!!!...');
 toggle("header");
 toggle("footer");
 

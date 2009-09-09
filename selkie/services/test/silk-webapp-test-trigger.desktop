@@ -7,6 +7,6 @@ X-KDE-PluginInfo-Name=silk-test-trigger
 X-KDE-ServiceTypes=Silk/WebApp/Action
 X-Silk-ScriptFile=triggeraction.js
 X-Silk-ShowOnUrl=file:///
-X-Silk-TriggerOnUrl=file:///
+X-Silk-TriggerOnWildcard=*mountain.html
 X-Silk-WebApp=test
 

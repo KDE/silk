@@ -3,7 +3,7 @@ set(webappeditor_SRCS
    main.cpp
  )
 
-kde4_add_ui_files(webappeditor_SRCS webappeditorview_base.ui prefs_base.ui)
+kde4_add_ui_files(webappeditor_SRCS webapp.ui webappaction.ui)
 
 kde4_add_kcfg_files(webappeditor_SRCS settings.kcfgc )
 
