@@ -170,11 +170,14 @@ bool View::shouldActionBeShown(WebAppAction *action)
             }
             QRegExp rx(w);
             rx.setPatternSyntax(QRegExp::Wildcard);
-            if (rx.exactMatch(url().toString())) {
-                kDebug() << "showing?" << wildcards << url() << !inverted;
-                return !inverted;
+            if (!inverted && rx.exactMatch(url().toString())) {
+                kDebug() << "showing (match) ..." << wildcards << url() << !inverted;
+                return true;
+            } else if (inverted && !rx.exactMatch(url().toString())) {
+                kDebug() << "showing (no match, inverted) ..." << wildcards << url() << !inverted;
+                return true;
             } else {
-                kDebug() << "no match:" << wildcards << url();
+                kDebug() << "wildcard" << w << "not matching";
             }
         }
     }
