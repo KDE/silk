@@ -7,6 +7,7 @@
 #include "settings.h"
 
 #include <QtGui/QDropEvent>
+#include <QtGui/QBoxLayout>
 #include <QtGui/QLineEdit>
 #include <QtGui/QListWidget>
 #include <QtGui/QPainter>
@@ -31,8 +32,8 @@ WebAppEditor::WebAppEditor()
     setAcceptDrops(true);
 
     // tell the KXmlGuiWindow that this is indeed the main widget
-    m_widget = new QWidget(this);
-    setCentralWidget(m_widget);
+    //m_widget = new QWidget(this);
+    //setCentralWidget(m_widget);
 
     // then, setup our actions
     setupActions();
@@ -55,6 +56,7 @@ WebAppEditor::~WebAppEditor()
 
 void WebAppEditor::setupMainWidget()
 {
+    /*
     m_layout = new QGridLayout(m_widget);
 
     m_widget->setLayout(m_layout);
@@ -87,34 +89,53 @@ void WebAppEditor::setupMainWidget()
 
     m_layout->addWidget(m_saveButton, 6, 2);
 
+    */
 
-    connect(m_showLine, SIGNAL(returnPressed()), this, SLOT(addShowLine()));
-    connect(m_triggerLine, SIGNAL(returnPressed()), this, SLOT(addTriggerLine()));
+    //QWidget
+    //m_widget = new QWidget(this);
+    //QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, m_widget);
+    //m_widget->setLayout(layout);
+    //actionUi = new Ui::WebAppActionEditor();
 
-    connect(m_saveButton, SIGNAL(clicked()), this, SLOT(save()));
+    m_widget = new QWidget(this);
+    actionUi.setupUi(m_widget);
+
+    setCentralWidget(m_widget);
+    //layout->addWidget(actionEditor);
+    //QWidget *generalSettingsDlg = new QWidget;
+    //actionUi.setupUi(m_widget);
+    //dialog->addPage(generalSettingsDlg, i18n("General"), "package_setting");
+    //connect(dialog, SIGNAL(settingsChanged(QString)), m_view, SLOT(settingsChanged()));
+    //dialog->setAttribute( Qt::WA_DeleteOnClose );
+    //dialog->show();
+
+    connect(actionUi.showOnUrlLine, SIGNAL(returnPressed()), this, SLOT(addShowOnUrlLine()));
+    connect(actionUi.triggerOnUrlLine, SIGNAL(returnPressed()), this, SLOT(addTriggerOnUrlLine()));
+
+    connect(actionUi.saveButton, SIGNAL(clicked()), this, SLOT(save()));
 
     // FIXME: temporary ...
     m_actionFile = "/home/sebas/kdesvn/src/project-silk/selkie/services/silk/silk-webapp-silk-urltrigger.desktop";
     showActionFile();
 }
 
-void WebAppEditor::addShowLine()
+void WebAppEditor::addShowOnUrlLine()
 {
-    QString text = m_showLine->text();
+    QString text = actionUi.showOnUrlLine->text();
     QUrl url(text);
     if (url.isValid()) {
-        m_showUrls->addItem(text);
+        actionUi.showOnUrl->addItem(text);
     } else {
         kWarning() << "Not a valid URL, won't save it:" << text;
     }
 }
 
-void WebAppEditor::addTriggerLine()
+void WebAppEditor::addTriggerOnUrlLine()
 {
-    QString text = m_triggerLine->text();
+    QString text = actionUi.triggerOnUrlLine->text();
     QUrl url(text);
     if (url.isValid()) {
-        m_triggerUrls->addItem(text);
+        actionUi.triggerOnUrl->addItem(text);
     } else {
         kWarning() << "Not a valid URL, won't save it:" << text;
     }
@@ -136,11 +157,11 @@ void WebAppEditor::save()
 {
     // ...
     kDebug() << "---> Saving here ...";
-    kDebug() << "shows:" << getItems(m_showUrls);
-    kDebug() << "triggers:" << getItems(m_triggerUrls);
+    kDebug() << "shows:" << getItems(actionUi.showOnUrl);
+    kDebug() << "triggers:" << getItems(actionUi.triggerOnUrl);
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
-    group.writeEntry("X-Silk-ShowOnUrl", getItems(m_showUrls));
-    group.writeEntry("X-Silk-TriggerOnUrl", getItems(m_triggerUrls));
+    group.writeEntry("X-Silk-ShowOnUrl", getItems(actionUi.showOnUrl));
+    group.writeEntry("X-Silk-TriggerOnUrl", getItems(actionUi.triggerOnUrl));
     m_desktopFile->sync();
 }
 
@@ -160,7 +181,7 @@ void WebAppEditor::openActionFile()
 
 void WebAppEditor::showActionFile()
 {
-    m_fileNameLabel->setText(m_actionFile);
+    //m_fileNameLabel->setText(m_actionFile);
     kDebug() << m_actionFile;
     m_desktopFile = new KDesktopFile(m_actionFile);
     kDebug() << "------------------------------____--";
@@ -171,20 +192,20 @@ void WebAppEditor::showActionFile()
 
     kDebug() << "showUrl" << group.readEntry("X-Silk-ShowOnUrl");
     QStringList shows = group.readEntry("X-Silk-ShowOnUrl", QStringList());
-    foreach (const QString u, shows) {
-        m_showUrls->addItem(u);
+    foreach (const QString &u, shows) {
+        actionUi.showOnUrl->addItem(u);
     }
 
     kDebug() << "triggerUrl" << group.readEntry("X-Silk-TriggerOnUrl");
     QStringList triggers = group.readEntry("X-Silk-TriggerOnUrl", QStringList());
-    foreach (const QString u, triggers) {
-        m_triggerUrls->addItem(u);
+    foreach (const QString &u, triggers) {
+        actionUi.triggerOnUrl->addItem(u);
     }
 
 
 
 }
-
+/*
 void WebAppEditor::optionsPreferences()
 {
     // The preference dialog is derived from prefs_base.ui
@@ -203,5 +224,7 @@ void WebAppEditor::optionsPreferences()
     dialog->setAttribute( Qt::WA_DeleteOnClose );
     dialog->show();
 }
+*/
+
 
 #include "webappeditor.moc"

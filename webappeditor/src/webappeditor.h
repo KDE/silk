@@ -9,7 +9,8 @@
 
 #include <kxmlguiwindow.h>
 
-#include "ui_prefs_base.h"
+//#include "ui_prefs_base.h"
+#include "ui_webappaction.h"
 
 class QListWidget;
 class KDesktopFile;
@@ -41,11 +42,11 @@ public:
 
 private Q_SLOTS:
     void openActionFile();
-    void optionsPreferences();
+    //void optionsPreferences();
     void save();
 
-    void addShowLine();
-    void addTriggerLine();
+    void addShowOnUrlLine();
+    void addTriggerOnUrlLine();
 
 private:
     void setupActions();
@@ -55,12 +56,13 @@ private:
     void showActionFile();
     QStringList getItems(QListWidget *listWidget);
 
-    Ui::prefs_base ui_prefs_base ;
+    //Ui::prefs_base ui_prefs_base ;
+    Ui::WebAppActionEditor actionUi;
 
     QString m_actionFile;
     QGridLayout *m_layout;
     QWidget *m_widget;
-
+/*
     QListWidget *m_triggerUrls;
     QListWidget *m_showUrls;
 
@@ -70,7 +72,7 @@ private:
     KPushButton *m_saveButton;
 
     QLabel *m_fileNameLabel;
-
+*/
     KDesktopFile *m_desktopFile;
     KToggleAction *m_toolbarAction;
     KToggleAction *m_statusbarAction;
