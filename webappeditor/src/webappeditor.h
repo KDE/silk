@@ -47,6 +47,8 @@ private Q_SLOTS:
 
     void addShowOnUrlLine();
     void addTriggerOnUrlLine();
+    void addShowOnWildcardLine();
+    void addTriggerOnWildcardLine();
 
 private:
     void setupActions();
@@ -55,8 +57,8 @@ private:
     void setupMainWidget();
     void showActionFile();
     QStringList getItems(QListWidget *listWidget);
-
-    //Ui::prefs_base ui_prefs_base ;
+    void setItems(QListWidget *listWidget, const QStringList &list);
+    void dump();
     Ui::WebAppActionEditor actionUi;
 
     QString m_actionFile;

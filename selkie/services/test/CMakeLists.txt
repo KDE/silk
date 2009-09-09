@@ -8,6 +8,7 @@ install( FILES silk-webapp-test-trigger.desktop DESTINATION ${SERVICES_INSTALL_D
 install(FILES triggeraction.js DESTINATION ${DATA_INSTALL_DIR}/silk-webapp/test/)
 
 install( FILES silk-webapp-test-wildcard.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install( FILES silk-webapp-test-editor.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
 
 # Install the test sites files
