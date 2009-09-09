@@ -1,0 +1,11 @@
+[Desktop Entry]
+Comment=An action triggered by a Wildcard
+Icon=flag-blue
+Name=Wildcard Match
+Type=Service
+X-KDE-PluginInfo-Name=silk-test-wildcard
+X-KDE-ServiceTypes=Silk/WebApp/Action
+X-Silk-Script=window.silk.showNotification('Wildcard *beach.* triggered ...');
+X-Silk-ShowOnWildcard=*beach.*
+X-Silk-TriggerOnWildcard=*beach.*
+X-Silk-WebApp=test

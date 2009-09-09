@@ -14,10 +14,10 @@ Type=QStringList
 [PropertyDef::X-Silk-ShowOnUrl]
 Type=QStringList
 
-[PropertyDef::X-Silk-TriggerOnGlob]
+[PropertyDef::X-Silk-TriggerOnWildcard]
 Type=QStringList
 
-[PropertyDef::X-Silk-ShowOnGlob]
+[PropertyDef::X-Silk-ShowOnWildcard]
 Type=QStringList
 
 [PropertyDef::X-Silk-ScriptFile]

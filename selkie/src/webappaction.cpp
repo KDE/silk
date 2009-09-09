@@ -77,10 +77,15 @@ bool WebAppAction::load(const KPluginInfo &info)
     m_options->name = info.pluginName();
     m_options->showOnUrl = info.property("X-Silk-ShowOnUrl").toStringList();
     m_options->triggerOnUrl = info.property("X-Silk-TriggerOnUrl").toStringList();
+    m_options->showOnWildcard = info.property("X-Silk-ShowOnWildcard").toStringList();
+    m_options->triggerOnWildcard = info.property("X-Silk-TriggerOnWildcard").toStringList();
     m_options->icon = KIcon(info.icon());
     m_options->text = info.name();
-    kDebug() << "=====> ShowOnUrl" << m_options->showOnUrl;
-
+    if (!m_options->showOnUrl.isEmpty()) {
+        kDebug() << "=====> ShowOnUrl" << m_options->showOnUrl;
+    } else if (!m_options->showOnWildcard.isEmpty()){
+        kDebug() << "=====> ShowOnWildcard" << m_options->showOnWildcard;
+    }
     // Loading the JavaScript stuff
     QString script = info.property("X-Silk-Script").toString();
     QString scriptFile = info.property("X-Silk-ScriptFile").toString();
@@ -92,7 +97,7 @@ bool WebAppAction::load(const KPluginInfo &info)
     }
     // FIXME: append X-Silk-Script to the contents of X-Silk-ScriptFile
     // should make it possible to first include a javascript lib, and
-    // then executing parts of it.
+    // then executing parts of it as a one-liner.
 
     // Output errors in the .desktop file in the console
     if (!scriptFile.isEmpty() && !script.isEmpty()) {
@@ -126,7 +131,7 @@ QString WebAppAction::loadScript(const QString &jsfile)
     QTextStream t(&f);
     script = t.readAll();
     f.close();
-    kDebug() << "Read Script" << endl << script;
+    //kDebug() << "Read Script" << endl << script;
 
     return script;
 }

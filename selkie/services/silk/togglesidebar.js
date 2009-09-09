@@ -23,7 +23,7 @@ toggleVisibility('sidebar');
 toggleVisibility('header');
 toggleVisibility('footer');
 
-getElementById('content').style.width = "100%";
+//getElementById('content').style.width = "100%";
 
 // Evil hack to force a reflow since Qt 4.5.1 doesn't do it
 var v = document.body.offsetHeight;

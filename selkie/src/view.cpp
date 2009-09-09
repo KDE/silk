@@ -124,7 +124,7 @@ QString View::plugin() const
 
 void View::evaluateScript( const QString &script )
 {
-    kDebug() << script;
+    //kDebug() << script;
     m_scriptapi->setTrusted( true );
     page()->mainFrame()->evaluateJavaScript( script );
     m_scriptapi->setTrusted( false );
@@ -156,20 +156,49 @@ bool View::loadWebAppActions(WebApp *parent)
 
 bool View::shouldActionBeShown(WebAppAction *action)
 {
+
+    QStringList wildcards = action->options()->showOnWildcard;
+    if (!wildcards.isEmpty()) {
+        kDebug() << "+++++++ Wildcards" << wildcards;
+        foreach(QString w, wildcards) {
+            // Pattern matching
+            bool inverted = false;
+            if (w.startsWith('!')) {
+                w.remove(0, 1);
+                inverted = true;
+                kDebug() << "inverting wildcard" << w;
+            }
+            QRegExp rx(w);
+            rx.setPatternSyntax(QRegExp::Wildcard);
+            if (rx.exactMatch(url().toString())) {
+                kDebug() << "showing?" << wildcards << url() << !inverted;
+                return !inverted;
+            } else {
+                kDebug() << "no match:" << wildcards << url();
+            }
+        }
+    }
+
+    // No pattern matched, let's see if we match a URL
     QStringList urls = action->options()->showOnUrl;
-    if (urls.isEmpty()) {
+    if (urls.isEmpty() && !wildcards.isEmpty()) {
+        // neither wildcard nor url is specified. Let's show the action
+        // as there are no restrictions specified
+        kDebug() << "not showing:" << wildcards << url();
+        return false;
+    } else if (urls.isEmpty()) {
+        // no wildcards, no URLs to pay attention to
         return true;
     }
-    //if (url().isEmpty() || wa_action->options()->showOnUrl.isEmpty()
-    //    || m_page->url().toString().startsWith(wa_action->options()->showOnUrl)) {
+
     foreach(QString u, urls) {
         // Does the current URL start with the shown one?
         if (url().toString().startsWith(u)) {
             return true;
         }
     }
-    kDebug() << "NOT SHOWING:" << urls << url();
 
+    // No URL matched, no wildcard matched, but filters do apply
     return false;
 }
 
