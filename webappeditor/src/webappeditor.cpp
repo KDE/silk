@@ -160,7 +160,7 @@ void WebAppEditor::openActionFile()
 
 void WebAppEditor::showActionFile()
 {
-    //m_fileNameLabel->setText(m_actionFile);
+    actionUi.title->setText(i18nc("title widget", "WebApp Action Editor (%1)", KUrl(m_actionFile).fileName()));
     kDebug() << m_actionFile;
     m_desktopFile = new KDesktopFile(m_actionFile);
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
