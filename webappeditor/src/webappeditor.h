@@ -50,6 +50,9 @@ private Q_SLOTS:
     void addShowOnWildcardLine();
     void addTriggerOnWildcardLine();
 
+    void removeItem(QListWidgetItem *item);
+    void removeShowOnUrlItem(QListWidgetItem *item);
+
 private:
     void setupActions();
 
