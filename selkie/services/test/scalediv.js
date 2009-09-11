@@ -26,7 +26,8 @@ setStyle("content", "-webkit-transition", "-webkit-transform .2s ease");
 //document.getElementById("picture").style.webkitTransform='rotate(1080deg)'
 window.silk.GM_log("scaling down content");
 
-document.getElementById("content").style.webkitTransform='scale(.7)';
+document.getElementById("content").style.webkitTransform='scale(5)';
+//document.getElementById("mountain").style.webkitTransform='rotate(360deg)';
 
 setTimeout("scaleUp()", 200);
 

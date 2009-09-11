@@ -1,13 +1,13 @@
 [Desktop Entry]
 Author=Sebastian Kügler <sebasje@kde.org>
 Comment=Triggers an action on a URL
-Icon=akregator
+Icon=internet-web-browser
 Name=Toggle Header
 Type=Service
 X-KDE-PluginInfo-Name=silk-test-trigger
 X-KDE-ServiceTypes=Silk/WebApp/Action
-X-Silk-ScriptFile=triggeraction.js
-X-Silk-ShowOnUrl=file:///,testsite,testsites
+X-Silk-ScriptFile=togglechrome.js
+X-Silk-ShowOnUrl=file:///
 X-Silk-ShowOnWildcard=*html
 X-Silk-TriggerOnUrl=google.com
 X-Silk-TriggerOnWildcard=*mountain.html

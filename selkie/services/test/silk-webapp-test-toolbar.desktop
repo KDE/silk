@@ -5,7 +5,7 @@ Name=Scale Content
 Type=Service
 X-KDE-PluginInfo-Name=silk-test-toolbar
 X-KDE-ServiceTypes=Silk/WebApp/Action
-X-Silk-ScriptFile=toolbaraction.js
+X-Silk-ScriptFile=scalediv.js
 X-Silk-ShowOnUrl=file:///
 X-Silk-WebApp=test
 
