@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Formula 1 Live Timing
+Comment=Formula 1 Live Timing during training, qualifing and racing
+Icon=kstars
+Type=Service
+
+X-KDE-ServiceTypes=Silk/WebApp
+
+X-KDE-PluginInfo-Author=Tom Albers
+X-KDE-PluginInfo-Email=toma@kde.org
+X-KDE-PluginInfo-Name=formula1timing
+X-KDE-PluginInfo-Version=0.01
+X-KDE-PluginInfo-Website=http://kde.org/
+X-KDE-PluginInfo-Category=Sports
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+
+X-Silk-StartUrl=http://www.formula1.com/services/live_timing/live_timing_popup.html
+X-Silk-AllowedBases=http://formula1.com
+X-Silk-AllowedBases-Size=1

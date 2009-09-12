@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Formula1Timing
+Comment=Formula 1 Live Timing
+Exec=selkie formula1timing
+Icon=kstars
+Type=Application
