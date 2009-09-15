@@ -1,7 +1,7 @@
 [Desktop Entry]
-Author=Sebastian Kügler <sebasje@kde.org>
+Author=Sebastian Kügler <sebas@kde.org>
 Comment=Triggers an action on a URL
-Icon=akregator
+Icon=internet-web-browser
 Name=Toggle Header
 Type=Service
 X-KDE-PluginInfo-Name=silk-test-trigger
