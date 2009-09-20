@@ -39,11 +39,9 @@ GoogleSearch::GoogleSearch( QObject *parent )
     : QObject( parent )
 {
     d = new GoogleSearchPrivate;
-    d->manager = new QNetworkAccessManager( this );
+    d->manager = 0;
     d->timeout = 30 * 1000; // 30 second
     d->reply = 0;
-
-    connect( d->manager, SIGNAL(finished(QNetworkReply*)), SLOT(finished(QNetworkReply *)) );
 }
 
 GoogleSearch::~GoogleSearch()
@@ -61,6 +59,10 @@ void GoogleSearch::search( const QString &terms )
     QUrl url("http://ajax.googleapis.com/ajax/services/search/web");
     url.addQueryItem( QString("v"), QString("1.0") );
     url.addQueryItem( QString("q"), terms );
+
+    if ( !d->manager ) {
+	setNetworkAccessManager( new QNetworkAccessManager( this ) );
+    }
 
     d->reply = d->manager->get( QNetworkRequest(url) );
     QTimer::singleShot( d->timeout, this, SLOT( abort() ) );
@@ -113,4 +115,16 @@ void GoogleSearch::abort()
 
     d->reply->abort();
     d->reply = 0;
+}
+
+void GoogleSearch::setNetworkAccessManager( QNetworkAccessManager *manager )
+{
+    delete d->manager;
+    d->manager = manager;
+    connect( d->manager, SIGNAL(finished(QNetworkReply*)), SLOT(finished(QNetworkReply *)) );
+}
+
+QNetworkAccessManager *GoogleSearch::networkAccessManager() const
+{
+    return d->manager;
 }

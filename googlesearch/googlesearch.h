@@ -4,6 +4,7 @@
 #include <qobject.h>
 #include <qurl.h>
 
+class QNetworkAccessManager;
 class QNetworkReply;
 class QIODevice;
 
@@ -45,6 +46,9 @@ public:
      * Returns a list of matches.
      */
     QList<GoogleSearch::Result> results() const;
+
+    void setNetworkAccessManager( QNetworkAccessManager *manager );
+    QNetworkAccessManager *networkAccessManager() const;
 
 public slots:
     void search( const QString &terms );
