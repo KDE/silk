@@ -57,8 +57,8 @@ QList<GoogleSearch::Result> GoogleSearch::results() const
 void GoogleSearch::search( const QString &terms )
 {
     QUrl url("http://ajax.googleapis.com/ajax/services/search/web");
-    url.addQueryItem( QString("v"), QString("1.0") );
-    url.addQueryItem( QString("q"), terms );
+    url.addQueryItem( QLatin1String("v"), QLatin1String("1.0") );
+    url.addQueryItem( QLatin1String("q"), terms );
 
     if ( !d->manager ) {
 	setNetworkAccessManager( new QNetworkAccessManager( this ) );
@@ -93,14 +93,14 @@ bool GoogleSearch::processSearchResult( QIODevice *source )
     bool ok;
 
     QVariantMap result = parser.parse( source, &ok ).toMap();
-    QVariantMap responseData = result[QString("responseData")].toMap();
+    QVariantMap responseData = result[QLatin1String("responseData")].toMap();
 
-    foreach (QVariant hit, responseData[QString("results")].toList()) {
+    foreach (QVariant hit, responseData[QLatin1String("results")].toList()) {
 	QVariantMap hitMap = hit.toMap();
-	//	qDebug() << hitMap[QString("url")].toString();
+	//	qDebug() << hitMap[QLatin1String("url")].toString();
 	Result r;
-	r.url = hitMap[QString("url")].toString();
-	r.title = hitMap[QString("titleNoFormatting")].toString();
+	r.url = hitMap[QLatin1String("url")].toString();
+	r.title = hitMap[QLatin1String("titleNoFormatting")].toString();
 
 	d->results.append( r );
     }
