@@ -64,7 +64,11 @@ void GoogleSearch::search( const QString &terms )
 	setNetworkAccessManager( new QNetworkAccessManager( this ) );
     }
 
-    d->reply = d->manager->get( QNetworkRequest(url) );
+    QNetworkRequest req( url );
+    QString agent("KDE Silk Google Search API (Version 0.1)");
+    req.setRawHeader( "User-Agent", agent.toUtf8() );
+
+    d->reply = d->manager->get( req );
     QTimer::singleShot( d->timeout, this, SLOT( abort() ) );
 }
 
