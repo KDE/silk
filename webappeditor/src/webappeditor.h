@@ -8,7 +8,7 @@
 
 
 #include <kxmlguiwindow.h>
-
+#include <KPageDialog>
 //#include "ui_prefs_base.h"
 #include "ui_webappaction.h"
 
@@ -26,7 +26,7 @@ class KUrl;
  * @author Sebastian Kügler <sebas@kde.org>
  * @version 0.1
  */
-class WebAppEditor : public KXmlGuiWindow
+class WebAppEditor : public KPageDialog
 {
     Q_OBJECT
 public:
@@ -54,7 +54,7 @@ private Q_SLOTS:
     void removeShowOnUrlItem(QListWidgetItem *item);
 
 private:
-    void setupActions();
+    //void setupActions();
 
 private:
     void setupMainWidget();

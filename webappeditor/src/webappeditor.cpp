@@ -26,12 +26,12 @@
 #include <KDE/KLocale>
 
 WebAppEditor::WebAppEditor()
-    : KXmlGuiWindow()
+    : KPageDialog()
 {
     // accept dnd
     setAcceptDrops(true);
 
-    setupActions();
+    //setupActions();
 
     // add a status bar
     //statusBar()->show();
@@ -41,7 +41,7 @@ WebAppEditor::WebAppEditor()
     // It also applies the saved mainwindow settings, if any, and ask the
     // mainwindow to automatically save settings if changed: window size,
     // toolbar position, icon size, etc.
-    setupGUI();
+    //setupGUI();
     setupMainWidget();
 }
 
@@ -146,12 +146,13 @@ void WebAppEditor::setItems(QListWidget *listWidget, const QStringList &list)
     }
 }
 
+/*
 void WebAppEditor::setupActions()
 {
     KStandardAction::open(this, SLOT(openActionFile()), actionCollection());
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
 }
-
+*/
 void WebAppEditor::openActionFile()
 {
     m_actionFile = KFileDialog::getOpenFileName(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), QString("*.desktop"));
