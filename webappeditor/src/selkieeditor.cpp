@@ -43,7 +43,8 @@ SelkieEditor::~SelkieEditor()
 
 void SelkieEditor::addAction()
 {
-    WebAppActionEditor *editor = new WebAppActionEditor();
+    KDesktopFile *f = new KDesktopFile("/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test-editor.desktop");
+    WebAppActionEditor *editor = new WebAppActionEditor(f);
     m_actionEditors << editor;
     addPage(editor);
 }

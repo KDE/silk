@@ -29,7 +29,7 @@ class WebAppActionEditor : public KPageWidgetItem
 {
     Q_OBJECT
 public:
-    WebAppActionEditor();
+    WebAppActionEditor(KDesktopFile *file);
     virtual ~WebAppActionEditor();
 
 private Q_SLOTS:
@@ -45,19 +45,13 @@ private Q_SLOTS:
 
 private:
     void setupMainWidget();
-    void showActionFile();
+    void showActionFile(KDesktopFile *file);
     QStringList getItems(QListWidget *listWidget);
     void setItems(QListWidget *listWidget, const QStringList &list);
     void dump();
     Ui::WebAppActionEditor actionUi;
 
-    QString m_actionFile;
-    QGridLayout *m_layout;
-    QWidget *m_widget;
-
     KDesktopFile *m_desktopFile;
-    KToggleAction *m_toolbarAction;
-    KToggleAction *m_statusbarAction;
 };
 
 #endif // WEBAPPACTIONEDITOR_H_
