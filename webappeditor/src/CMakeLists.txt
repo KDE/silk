@@ -1,5 +1,7 @@
 set(webappeditor_SRCS
+   selkieeditor.cpp
    webappeditor.cpp
+   webappactioneditor.cpp
    main.cpp
  )
 
