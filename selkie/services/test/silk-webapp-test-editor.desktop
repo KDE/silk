@@ -1,14 +1,12 @@
 [Desktop Entry]
-Author=Sebastian Kügler <sebasje@kde.org>
-Comment=Triggers an action on a URL
-Icon=internet-web-browser
-Name=Toggle Header
+Author=Sebastian Kügler <sebas@kde.org>
+Comment=Rotate the content of a web page
+Icon=draw-spiral
+Name=Rotate Content
 Type=Service
 X-KDE-PluginInfo-Name=silk-test-trigger
 X-KDE-ServiceTypes=Silk/WebApp/Action
 X-Silk-ScriptFile=togglechrome.js
-X-Silk-ShowOnUrl=file:///
-X-Silk-ShowOnWildcard=*html
-X-Silk-TriggerOnUrl=google.com
-X-Silk-TriggerOnWildcard=*mountain.html
+X-Silk-ShowOnWildcard=*
+X-Silk-TriggerOnWildcard=*beach.html
 X-Silk-WebApp=test
