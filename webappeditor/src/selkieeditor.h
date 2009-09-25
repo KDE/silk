@@ -1,6 +1,7 @@
 #ifndef SELKIEEDITOR_H
 #define SELKIEEDITOR_H
 
+#include <KDesktopFile>
 #include <KPageDialog>
 #include <QDir>
 
@@ -33,9 +34,12 @@ private Q_SLOTS:
 
 private:
     void loadWebApp();
-    void addAction();
+    void addAction(KDesktopFile *file);
     WebAppEditor *m_webAppEditor;
     QList<WebAppActionEditor*> m_actionEditors;
+    QList<KDesktopFile*> m_actionFiles;
+    KDesktopFile *m_webAppPlugin;
+    KDesktopFile *m_app;
 
     QDir m_dir;
 };
