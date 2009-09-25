@@ -1,7 +1,7 @@
 /*
  * webappeditor.h
  *
- * Copyright (C) 2008 Sebastian Kügler <sebas@kde.org>
+ * Copyright (C) 2008 Sebastian Kuegler <sebas@kde.org>
  */
 #ifndef WEBAPPEDITOR_H
 #define WEBAPPEDITOR_H
@@ -14,6 +14,7 @@
 
 class QListWidget;
 class KDesktopFile;
+class KPageDialog;
 class KPushButton;
 class KToggleAction;
 class KUrl;
@@ -23,7 +24,7 @@ class KUrl;
  * menus, toolbars, and status bars.
  *
  * @short Main window class
- * @author Sebastian Kügler <sebas@kde.org>
+ * @author Sebastian K?gler <sebas@kde.org>
  * @version 0.1
  */
 class WebAppEditor : public KPageDialog
@@ -63,6 +64,8 @@ private:
     void setItems(QListWidget *listWidget, const QStringList &list);
     void dump();
     Ui::WebAppActionEditor actionUi;
+
+    //KPageDialog *m_pageDialog;
 
     QString m_actionFile;
     QGridLayout *m_layout;

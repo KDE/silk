@@ -1,7 +1,7 @@
 /*
  * WebAppEditor.cpp
  *
- * Copyright (C) 2008 Sebastian Kügler <sebas@kde.org>
+ * Copyright (C) 2008 Sebastian Kuegler <sebas@kde.org>
  */
 #include "webappeditor.h"
 #include "settings.h"
@@ -16,7 +16,7 @@
 #include <kstatusbar.h>
 #include <KDesktopFile>
 #include <KFileDialog>
-
+#include <KPageDialog>
 #include <KPushButton>
 
 #include <kaction.h>
@@ -51,10 +51,11 @@ WebAppEditor::~WebAppEditor()
 
 void WebAppEditor::setupMainWidget()
 {
-    m_widget = new QWidget(this);
+
+
+    m_widget = new QWidget(this); // will be reparented to the pagedialog
     actionUi.setupUi(m_widget);
 
-    setCentralWidget(m_widget);
 
     connect(actionUi.showOnUrlLine, SIGNAL(returnPressed()), this, SLOT(addShowOnUrlLine()));
     connect(actionUi.triggerOnUrlLine, SIGNAL(returnPressed()), this, SLOT(addTriggerOnUrlLine()));
@@ -71,6 +72,14 @@ void WebAppEditor::setupMainWidget()
     // FIXME: temporary ...
     m_actionFile = "/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test-editor.desktop";
     showActionFile();
+    kDebug() << "actionFile" << m_actionFile;
+
+    KPageWidgetItem *actionItem = new KPageWidgetItem(m_widget, "My Action");
+
+    //KPageDialog *m_pageDialog = new KPageDialog(this);
+    setFaceType(KPageDialog::List);
+    addPage(actionItem);
+    //setCentralWidget(m_pageDialog->mainWidget());
 }
 
 void WebAppEditor::removeShowOnUrlItem(QListWidgetItem *item)
