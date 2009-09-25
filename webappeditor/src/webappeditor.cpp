@@ -25,24 +25,11 @@
 
 #include <KDE/KLocale>
 
-WebAppEditor::WebAppEditor(QWidget *widget, const QString &name )
-    : KPageWidgetItem(widget, name)
+WebAppEditor::WebAppEditor(const QString &filename)
+    : KPageWidgetItem(new QWidget(), QString())
 {
-    // accept dnd
-    //setAcceptDrops(true);
-
-    //setupActions();
-
-    // add a status bar
-    //statusBar()->show();
-
-    // a call to KXmlGuiWindow::setupGUI() populates the GUI
-    // with actions, using KXMLGUI.
-    // It also applies the saved mainwindow settings, if any, and ask the
-    // mainwindow to automatically save settings if changed: window size,
-    // toolbar position, icon size, etc.
-    //setupGUI();
     setupMainWidget();
+    showActionFile(filename);
 }
 
 WebAppEditor::~WebAppEditor()
@@ -59,24 +46,17 @@ void WebAppEditor::setupMainWidget()
     connect(webAppUi.allowedBasesLine, SIGNAL(returnPressed()), this, SLOT(addAllowedBase()));
 
     connect(webAppUi.allowedBases, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
-
-    // FIXME: temporary ...
-    m_actionFile = "/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test.desktop";
-    showActionFile();
-    kDebug() << "actionFile" << m_actionFile;
 }
 
 void WebAppEditor::openActionFile()
 {
-    m_actionFile = KFileDialog::getOpenFileName(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), QString("*.desktop"));
-    showActionFile();
+    QString filename = KFileDialog::getOpenFileName(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), QString("*.desktop"));
+    showActionFile(filename);
 }
 
-void WebAppEditor::showActionFile()
+void WebAppEditor::showActionFile(const QString &filename)
 {
-    //webAppUi.title->setText(i18nc("title widget", "WebApp Action Editor (%1)", KUrl(m_actionFile).fileName()));
-    kDebug() << m_actionFile;
-    m_desktopFile = new KDesktopFile(m_actionFile);
+    m_desktopFile = new KDesktopFile(filename);
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
 
     webAppUi.name->setText(group.readEntry("Name", QString()));
@@ -87,6 +67,7 @@ void WebAppEditor::showActionFile()
     webAppUi.startUrl->setText(group.readEntry("X-Silk-StartUrl", QString()));
     setItems(webAppUi.allowedBases, group.readEntry("X-Silk-AllowedBases", QStringList()));
     setIcon(KIcon(webAppUi.icon->icon()));
+    setName(webAppUi.name->text());
     webAppUi.saveButton->setIcon(KIcon("document-save"));
 
     dump();
@@ -100,7 +81,7 @@ void WebAppEditor::save()
     group.writeEntry("X-KDE-PluginInfo-Author", webAppUi.author->text());
     //X-KDE-ServiceType=Silk/WebApp
     group.writeEntry("X-KDE-ServiceType", "Silk/WebApp");
-    group.writeEntry("Name", webAppUi.label->text());
+    group.writeEntry("Name", webAppUi.name->text());
     group.writeEntry("Comment", webAppUi.description->text());
     group.writeEntry("X-KDE-PluginInfo-Name", webAppUi.pluginName->text());
     group.writeEntry("X-Silk-StartUrl", webAppUi.startUrl->text());

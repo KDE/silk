@@ -16,11 +16,23 @@ SelkieEditor::SelkieEditor()
 
     setFaceType(KPageDialog::List);
 
-    QWidget *widget = new QWidget(this);
-    m_webAppEditor = new WebAppEditor(widget, "WebApp Settings");
-    //KPageWidgetItem *editorItem = new KPageWidgetItem(m_webAppEditor, "WebApp Settings");
-    addPage(m_webAppEditor);
+    loadWebApp();
+}
 
+void SelkieEditor::loadWebApp()
+{
+    m_dir = QDir("/home/sebas/kdesvn/src/project-silk/selkie/services/test/");
+    QStringList files;
+    const QString fileName = "*.desktop";
+    files = m_dir.entryList(QStringList(fileName), QDir::Files | QDir::NoSymLinks);
+    kDebug() << "Directory:" << m_dir;
+    foreach (const QString &fname, files) {
+        kDebug() << "Found file:" << fname;
+    }
+
+    //return;
+    m_webAppEditor = new WebAppEditor("/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test.desktop");
+    addPage(m_webAppEditor);
     addAction();
 }
 
@@ -31,15 +43,12 @@ SelkieEditor::~SelkieEditor()
 void SelkieEditor::addAction()
 {
     WebAppActionEditor *editor = new WebAppActionEditor();
-    //KPageWidgetItem *actionItem = new KPageWidgetItem(editor, "My Action");
     m_actionEditors << editor;
     addPage(editor);
 }
 
-
 void SelkieEditor::save()
 {
-    // ...
     kDebug() << "---> Saving here ...";
 }
 

@@ -28,11 +28,7 @@ class WebAppEditor : public KPageWidgetItem
 {
     Q_OBJECT
 public:
-    WebAppEditor(QWidget *widget, const QString &name);
-
-    /**
-     * Default Destructor
-     */
+    WebAppEditor(const QString &filename);
     virtual ~WebAppEditor();
 
 private Q_SLOTS:
@@ -43,17 +39,16 @@ private Q_SLOTS:
 
 private:
     void setupMainWidget();
-    void showActionFile();
+    void showActionFile(const QString &filename);
     void dump();
     QStringList getItems(QListWidget *listWidget);
     void setItems(QListWidget *listWidget, const QStringList &list);
 
     Ui::WebAppEditor webAppUi;
 
-    QString m_actionFile;
-    QGridLayout *m_layout;
     QWidget *m_widget;
 
+    QString m_desktopFileName;
     KDesktopFile *m_desktopFile;
 };
 

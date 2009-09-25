@@ -2,6 +2,7 @@
 #define SELKIEEDITOR_H
 
 #include <KPageDialog>
+#include <QDir>
 
 class WebAppEditor;
 class WebAppActionEditor;
@@ -31,9 +32,12 @@ private Q_SLOTS:
     void save();
 
 private:
+    void loadWebApp();
     void addAction();
     WebAppEditor *m_webAppEditor;
     QList<WebAppActionEditor*> m_actionEditors;
+
+    QDir m_dir;
 };
 
 #endif // SELKIEEDITOR_H
