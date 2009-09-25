@@ -16,9 +16,10 @@ SelkieEditor::SelkieEditor()
 
     setFaceType(KPageDialog::List);
 
-    m_webAppEditor = new WebAppEditor();
-    KPageWidgetItem *editorItem = new KPageWidgetItem(m_webAppEditor, "WebApp Settings");
-    addPage(editorItem);
+    QWidget *widget = new QWidget(this);
+    m_webAppEditor = new WebAppEditor(widget, "WebApp Settings");
+    //KPageWidgetItem *editorItem = new KPageWidgetItem(m_webAppEditor, "WebApp Settings");
+    addPage(m_webAppEditor);
 
     addAction();
 }
@@ -29,10 +30,10 @@ SelkieEditor::~SelkieEditor()
 
 void SelkieEditor::addAction()
 {
-    WebAppActionEditor *editor = new WebAppActionEditor(this);
-    KPageWidgetItem *actionItem = new KPageWidgetItem(editor, "My Action");
+    WebAppActionEditor *editor = new WebAppActionEditor();
+    //KPageWidgetItem *actionItem = new KPageWidgetItem(editor, "My Action");
     m_actionEditors << editor;
-    addPage(actionItem);
+    addPage(editor);
 }
 
 

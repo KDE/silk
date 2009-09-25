@@ -27,14 +27,14 @@ class KUrl;
  * @author Sebastian K?gler <sebas@kde.org>
  * @version 0.1
  */
-class WebAppActionEditor : public QWidget
+class WebAppActionEditor : public KPageWidgetItem
 {
     Q_OBJECT
 public:
     /**
      * Default Constructor
      */
-    WebAppActionEditor(QWidget *parent = 0);
+    WebAppActionEditor();
 
     /**
      * Default Destructor

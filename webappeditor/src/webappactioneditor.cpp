@@ -25,11 +25,11 @@
 
 #include <KDE/KLocale>
 
-WebAppActionEditor::WebAppActionEditor(QWidget *parent)
-    : QWidget(parent)
+WebAppActionEditor::WebAppActionEditor()
+    : KPageWidgetItem(new QWidget(), QString())
 {
     // accept dnd
-    setAcceptDrops(true);
+    //setAcceptDrops(true);
 
     setupMainWidget();
 }
@@ -40,7 +40,7 @@ WebAppActionEditor::~WebAppActionEditor()
 
 void WebAppActionEditor::setupMainWidget()
 {
-    actionUi.setupUi(this);
+    actionUi.setupUi(widget());
 
 
     connect(actionUi.showOnUrlLine, SIGNAL(returnPressed()), this, SLOT(addShowOnUrlLine()));
@@ -149,7 +149,6 @@ void WebAppActionEditor::openActionFile()
 
 void WebAppActionEditor::showActionFile()
 {
-    actionUi.title->setText(i18nc("title widget", "WebApp Action Editor (%1)", KUrl(m_actionFile).fileName()));
     kDebug() << m_actionFile;
     m_desktopFile = new KDesktopFile(m_actionFile);
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
@@ -162,8 +161,10 @@ void WebAppActionEditor::showActionFile()
     setItems(actionUi.triggerOnUrl, group.readEntry("X-Silk-TriggerOnUrl", QStringList()));
     setItems(actionUi.showOnWildcard, group.readEntry("X-Silk-ShowOnWildcard", QStringList()));
     setItems(actionUi.triggerOnWildcard, group.readEntry("X-Silk-TriggerOnWildcard", QStringList()));
-    actionUi.title->setPixmap(KIcon(actionUi.icon->icon()));
     actionUi.saveButton->setIcon(KIcon("document-save"));
+
+    setIcon(KIcon(actionUi.icon->icon()));
+    setName(actionUi.label->text());
 
     dump();
 }
@@ -182,7 +183,7 @@ void WebAppActionEditor::save()
     group.writeEntry("X-Silk-ShowOnWildcard", getItems(actionUi.showOnWildcard));
     group.writeEntry("X-Silk-TriggerOnWildcard", getItems(actionUi.triggerOnWildcard));
     m_desktopFile->sync();
-    actionUi.title->setPixmap(KIcon(actionUi.icon->icon()));
+    setIcon(KIcon(actionUi.icon->icon()));
     dump();
 }
 

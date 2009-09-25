@@ -25,11 +25,11 @@
 
 #include <KDE/KLocale>
 
-WebAppEditor::WebAppEditor(QWidget *parent)
-    : QWidget(parent)
+WebAppEditor::WebAppEditor(QWidget *widget, const QString &name )
+    : KPageWidgetItem(widget, name)
 {
     // accept dnd
-    setAcceptDrops(true);
+    //setAcceptDrops(true);
 
     //setupActions();
 
@@ -53,7 +53,7 @@ void WebAppEditor::setupMainWidget()
 {
 
 
-    webAppUi.setupUi(this);
+    webAppUi.setupUi(widget());
 
     connect(webAppUi.saveButton, SIGNAL(clicked()), this, SLOT(save()));
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>361</width>
-    <height>731</height>
+    <height>648</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,38 +17,31 @@
    <property name="fieldGrowthPolicy">
     <enum>QFormLayout::ExpandingFieldsGrow</enum>
    </property>
-   <item row="0" column="0" colspan="2">
-    <widget class="KTitleWidget" name="title">
-     <property name="text">
-      <string>WebApp Action Configuration</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
+   <item row="0" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
       <string>&lt;b&gt;Meta Information&lt;/b&gt;</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="2" column="0">
     <widget class="QLabel" name="labellabel">
      <property name="text">
       <string>Label</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="2" column="1">
     <widget class="QLineEdit" name="label"/>
    </item>
-   <item row="5" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="label_10">
      <property name="text">
       <string>Icon</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="4" column="1">
     <widget class="KIconButton" name="icon">
      <property name="icon">
       <string>internet-web-browser</string>
@@ -58,86 +51,86 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>Plugin name</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
+   <item row="6" column="1">
     <widget class="QLineEdit" name="pluginName"/>
    </item>
-   <item row="9" column="0">
+   <item row="8" column="0">
     <widget class="QLabel" name="label_4">
      <property name="text">
       <string>Author</string>
      </property>
     </widget>
    </item>
-   <item row="9" column="1">
+   <item row="8" column="1">
     <widget class="QLineEdit" name="author"/>
    </item>
-   <item row="11" column="0">
+   <item row="10" column="0">
     <widget class="QLabel" name="label_9">
      <property name="text">
       <string>&lt;b&gt;Action Configuration&lt;/b&gt;</string>
      </property>
     </widget>
    </item>
-   <item row="14" column="0">
+   <item row="13" column="0">
     <widget class="QLabel" name="label_14">
      <property name="text">
       <string>Show On URL</string>
      </property>
     </widget>
    </item>
-   <item row="14" column="1">
+   <item row="13" column="1">
     <widget class="KLineEdit" name="showOnUrlLine"/>
    </item>
-   <item row="15" column="1">
+   <item row="14" column="1">
     <widget class="KListWidget" name="showOnUrl"/>
    </item>
-   <item row="16" column="0">
+   <item row="15" column="0">
     <widget class="QLabel" name="label_7">
      <property name="text">
       <string>Show on Wildcard</string>
      </property>
     </widget>
    </item>
-   <item row="16" column="1">
+   <item row="15" column="1">
     <widget class="KLineEdit" name="showOnWildcardLine"/>
    </item>
-   <item row="17" column="1">
+   <item row="16" column="1">
     <widget class="KListWidget" name="showOnWildcard"/>
    </item>
-   <item row="18" column="0">
+   <item row="17" column="0">
     <widget class="QLabel" name="label_8">
      <property name="text">
       <string>Trigger on URL</string>
      </property>
     </widget>
    </item>
-   <item row="18" column="1">
+   <item row="17" column="1">
     <widget class="KLineEdit" name="triggerOnUrlLine"/>
    </item>
-   <item row="19" column="1">
+   <item row="18" column="1">
     <widget class="KListWidget" name="triggerOnUrl"/>
    </item>
-   <item row="20" column="0">
+   <item row="19" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>Trigger on Wildcard</string>
      </property>
     </widget>
    </item>
-   <item row="20" column="1">
+   <item row="19" column="1">
     <widget class="KLineEdit" name="triggerOnWildcardLine"/>
    </item>
-   <item row="24" column="1">
+   <item row="23" column="1">
     <widget class="KListWidget" name="triggerOnWildcard"/>
    </item>
-   <item row="25" column="1">
+   <item row="24" column="1">
     <widget class="KPushButton" name="saveButton">
      <property name="text">
       <string>Save Action</string>
@@ -156,11 +149,6 @@
    <class>KListWidget</class>
    <extends>QListWidget</extends>
    <header>klistwidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KTitleWidget</class>
-   <extends>QWidget</extends>
-   <header>ktitlewidget.h</header>
   </customwidget>
   <customwidget>
    <class>KPushButton</class>
