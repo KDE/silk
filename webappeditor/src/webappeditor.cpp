@@ -79,10 +79,12 @@ void WebAppEditor::showActionFile()
     m_desktopFile = new KDesktopFile(m_actionFile);
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
 
-    webAppUi.label->setText(group.readEntry("Name", QString()));
+    webAppUi.name->setText(group.readEntry("Name", QString()));
+    webAppUi.description->setText(group.readEntry("Comment", QString()));
+    webAppUi.author->setText(group.readEntry("X-KDE-PluginInfo-Author", QString()));
     webAppUi.pluginName->setText(group.readEntry("X-KDE-PluginInfo-Name", QString()));
     webAppUi.icon->setIcon(group.readEntry("Icon", QString()));
-    webAppUi.author->setText(group.readEntry("Author", QString()));
+    webAppUi.startUrl->setText(group.readEntry("X-Silk-StartUrl", QString()));
     setItems(webAppUi.allowedBases, group.readEntry("X-Silk-AllowedBases", QStringList()));
     setIcon(KIcon(webAppUi.icon->icon()));
     webAppUi.saveButton->setIcon(KIcon("document-save"));
@@ -92,16 +94,19 @@ void WebAppEditor::showActionFile()
 
 void WebAppEditor::save()
 {
-    // ...
     kDebug() << "---> Saving here ...";
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
     group.writeEntry("Icon", webAppUi.icon->icon());
-    group.writeEntry("Author", webAppUi.author->text());
+    group.writeEntry("X-KDE-PluginInfo-Author", webAppUi.author->text());
+    //X-KDE-ServiceType=Silk/WebApp
+    group.writeEntry("X-KDE-ServiceType", "Silk/WebApp");
     group.writeEntry("Name", webAppUi.label->text());
+    group.writeEntry("Comment", webAppUi.description->text());
     group.writeEntry("X-KDE-PluginInfo-Name", webAppUi.pluginName->text());
+    group.writeEntry("X-Silk-StartUrl", webAppUi.startUrl->text());
+    group.writeEntry("X-Silk-AllowedBases", getItems(webAppUi.allowedBases));
+
     m_desktopFile->sync();
-    //webAppUi.title->setPixmap(KIcon(webAppUi.icon->icon()));
-    //*/
     dump();
 }
 
@@ -111,7 +116,7 @@ void WebAppEditor::dump()
     kDebug() << "Name" << m_desktopFile->readName() << webAppUi.label->text();
     kDebug() << "Icon" << m_desktopFile->readIcon() << webAppUi.icon->icon();
     kDebug() << "Type" << m_desktopFile->readType();
-    kDebug() << "Author" << m_desktopFile->group("Desktop Entry").readEntry("Author", "empty author");
+    kDebug() << "Author" << webAppUi.author->text();
 }
 
 QStringList WebAppEditor::getItems(QListWidget *listWidget)

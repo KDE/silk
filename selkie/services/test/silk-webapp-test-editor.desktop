@@ -1,12 +1,14 @@
 [Desktop Entry]
-Author=Sebastian K?gler <sebas@kde.org>
 Comment=Rotate the content of a web page
 Icon=draw-spiral
 Name=Rotate Content
 Type=Service
+X-KDE-PluginInfo-Author=Sebastian
 X-KDE-PluginInfo-Name=silk-test-trigger
 X-KDE-ServiceTypes=Silk/WebApp/Action
 X-Silk-ScriptFile=togglechrome.js
+X-Silk-ShowOnUrl=
 X-Silk-ShowOnWildcard=*
+X-Silk-TriggerOnUrl=
 X-Silk-TriggerOnWildcard=*beach.html
 X-Silk-WebApp=test

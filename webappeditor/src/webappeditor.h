@@ -6,18 +6,14 @@
 #ifndef WEBAPPEDITOR_H
 #define WEBAPPEDITOR_H
 
-
-#include <kxmlguiwindow.h>
 #include <KPageDialog>
-//#include "ui_prefs_base.h"
+
 #include "ui_webapp.h"
 
 class QListWidget;
 class KDesktopFile;
 class KPageDialog;
 class KPushButton;
-class KToggleAction;
-class KUrl;
 
 /**
  * This class serves as the main window for WebAppEditor.  It handles the
@@ -32,9 +28,6 @@ class WebAppEditor : public KPageWidgetItem
 {
     Q_OBJECT
 public:
-    /**
-     * Default Constructor
-     */
     WebAppEditor(QWidget *widget, const QString &name);
 
     /**
@@ -47,9 +40,6 @@ private Q_SLOTS:
     void save();
     void removeItem(QListWidgetItem *item);
     void addAllowedBase();
-
-private:
-    //void setupActions();
 
 private:
     void setupMainWidget();

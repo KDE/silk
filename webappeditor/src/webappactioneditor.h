@@ -6,10 +6,8 @@
 #ifndef WEBAPPACTIONEDITOR_H
 #define WEBAPPACTIONEDITOR_H
 
-
-#include <kxmlguiwindow.h>
 #include <KPageDialog>
-//#include "ui_prefs_base.h"
+
 #include "ui_webappaction.h"
 
 class QListWidget;
@@ -24,26 +22,18 @@ class KUrl;
  * menus, toolbars, and status bars.
  *
  * @short Main window class
- * @author Sebastian K?gler <sebas@kde.org>
+ * @author Sebastian Kügler <sebas@kde.org>
  * @version 0.1
  */
 class WebAppActionEditor : public KPageWidgetItem
 {
     Q_OBJECT
 public:
-    /**
-     * Default Constructor
-     */
     WebAppActionEditor();
-
-    /**
-     * Default Destructor
-     */
     virtual ~WebAppActionEditor();
 
 private Q_SLOTS:
     void openActionFile();
-    //void optionsPreferences();
     void save();
 
     void addShowOnUrlLine();
@@ -52,9 +42,6 @@ private Q_SLOTS:
     void addTriggerOnWildcardLine();
 
     void removeItem(QListWidgetItem *item);
-
-private:
-    //void setupActions();
 
 private:
     void setupMainWidget();

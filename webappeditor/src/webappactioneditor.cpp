@@ -149,7 +149,7 @@ void WebAppActionEditor::showActionFile()
     actionUi.label->setText(group.readEntry("Name", QString()));
     actionUi.pluginName->setText(group.readEntry("X-KDE-PluginInfo-Name", QString()));
     actionUi.icon->setIcon(group.readEntry("Icon", QString()));
-    actionUi.author->setText(group.readEntry("Author", QString()));
+    actionUi.author->setText(group.readEntry("X-KDE-PluginInfo-Author", QString()));
     setItems(actionUi.showOnUrl, group.readEntry("X-Silk-ShowOnUrl", QStringList()));
     setItems(actionUi.triggerOnUrl, group.readEntry("X-Silk-TriggerOnUrl", QStringList()));
     setItems(actionUi.showOnWildcard, group.readEntry("X-Silk-ShowOnWildcard", QStringList()));
@@ -168,8 +168,8 @@ void WebAppActionEditor::save()
     kDebug() << "---> Saving here ...";
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
     group.writeEntry("Icon", actionUi.icon->icon());
-    group.writeEntry("Author", actionUi.author->text());
     group.writeEntry("Name", actionUi.label->text());
+    group.writeEntry("X-KDE-PluginInfo-Author", actionUi.author->text());
     group.writeEntry("X-KDE-PluginInfo-Name", actionUi.pluginName->text());
     group.writeEntry("X-Silk-ShowOnUrl", getItems(actionUi.showOnUrl));
     group.writeEntry("X-Silk-TriggerOnUrl", getItems(actionUi.triggerOnUrl));
@@ -186,6 +186,7 @@ void WebAppActionEditor::dump()
     kDebug() << "Name" << m_desktopFile->readName() << actionUi.label->text();
     kDebug() << "Icon" << m_desktopFile->readIcon() << actionUi.icon->icon();
     kDebug() << "Type" << m_desktopFile->readType();
+    kDebug() << "Author" << actionUi.author->text();
     kDebug() << "shows:" << getItems(actionUi.showOnUrl);
     kDebug() << "triggers:" << getItems(actionUi.triggerOnUrl);
     kDebug() << "shows (wildcards):" << getItems(actionUi.showOnWildcard);

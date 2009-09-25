@@ -1,4 +1,4 @@
-[Desktop Entry]
+b[Desktop Entry]
 Type=ServiceType
 X-KDE-ServiceType=Silk/WebApp
 
@@ -14,7 +14,4 @@ Type=QString
 
 [PropertyDef::X-Silk-AllowedBases]
 Type=QStringList
-
-[PropertyDef::X-Silk-AllowedBases-Size]
-Type=int
 
