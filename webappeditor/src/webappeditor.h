@@ -44,8 +44,9 @@ public:
 
 private Q_SLOTS:
     void openActionFile();
-    //void optionsPreferences();
     void save();
+    void removeItem(QListWidgetItem *item);
+    void addAllowedBase();
 
 private:
     //void setupActions();
@@ -54,9 +55,10 @@ private:
     void setupMainWidget();
     void showActionFile();
     void dump();
-    Ui::WebAppEditor webAppUi;
+    QStringList getItems(QListWidget *listWidget);
+    void setItems(QListWidget *listWidget, const QStringList &list);
 
-    //KPageDialog *m_pageDialog;
+    Ui::WebAppEditor webAppUi;
 
     QString m_actionFile;
     QGridLayout *m_layout;

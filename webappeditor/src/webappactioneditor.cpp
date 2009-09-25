@@ -48,7 +48,7 @@ void WebAppActionEditor::setupMainWidget()
     connect(actionUi.showOnWildcardLine, SIGNAL(returnPressed()), this, SLOT(addShowOnWildcardLine()));
     connect(actionUi.triggerOnWildcardLine, SIGNAL(returnPressed()), this, SLOT(addTriggerOnWildcardLine()));
 
-    connect(actionUi.showOnUrl, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeShowOnUrlItem(QListWidgetItem*)));
+    connect(actionUi.showOnUrl, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
     connect(actionUi.triggerOnUrl, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
     connect(actionUi.showOnWildcard, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
     connect(actionUi.triggerOnWildcard, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
@@ -59,13 +59,6 @@ void WebAppActionEditor::setupMainWidget()
     m_actionFile = "/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test-editor.desktop";
     showActionFile();
     kDebug() << "actionFile" << m_actionFile;
-}
-
-void WebAppActionEditor::removeShowOnUrlItem(QListWidgetItem *item)
-{
-    kDebug() << "removing item" << item->text();
-    actionUi.showOnUrl->removeItemWidget(item);
-    actionUi.showOnUrl->removeItemWidget(actionUi.showOnUrl->currentItem());
 }
 
 void WebAppActionEditor::removeItem(QListWidgetItem *item)

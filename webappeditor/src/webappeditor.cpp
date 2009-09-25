@@ -56,6 +56,9 @@ void WebAppEditor::setupMainWidget()
     webAppUi.setupUi(widget());
 
     connect(webAppUi.saveButton, SIGNAL(clicked()), this, SLOT(save()));
+    connect(webAppUi.allowedBasesLine, SIGNAL(returnPressed()), this, SLOT(addAllowedBase()));
+
+    connect(webAppUi.allowedBases, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
 
     // FIXME: temporary ...
     m_actionFile = "/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test.desktop";
@@ -76,18 +79,14 @@ void WebAppEditor::showActionFile()
     m_desktopFile = new KDesktopFile(m_actionFile);
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
 
-    /*
     webAppUi.label->setText(group.readEntry("Name", QString()));
     webAppUi.pluginName->setText(group.readEntry("X-KDE-PluginInfo-Name", QString()));
     webAppUi.icon->setIcon(group.readEntry("Icon", QString()));
     webAppUi.author->setText(group.readEntry("Author", QString()));
-    setItems(webAppUi.showOnUrl, group.readEntry("X-Silk-ShowOnUrl", QStringList()));
-    setItems(webAppUi.triggerOnUrl, group.readEntry("X-Silk-TriggerOnUrl", QStringList()));
-    setItems(webAppUi.showOnWildcard, group.readEntry("X-Silk-ShowOnWildcard", QStringList()));
-    setItems(webAppUi.triggerOnWildcard, group.readEntry("X-Silk-TriggerOnWildcard", QStringList()));
-    webAppUi.title->setPixmap(KIcon(webAppUi.icon->icon()));
+    setItems(webAppUi.allowedBases, group.readEntry("X-Silk-AllowedBases", QStringList()));
+    setIcon(KIcon(webAppUi.icon->icon()));
     webAppUi.saveButton->setIcon(KIcon("document-save"));
-    */
+
     dump();
 }
 
@@ -112,8 +111,45 @@ void WebAppEditor::dump()
     kDebug() << "Name" << m_desktopFile->readName() << webAppUi.label->text();
     kDebug() << "Icon" << m_desktopFile->readIcon() << webAppUi.icon->icon();
     kDebug() << "Type" << m_desktopFile->readType();
-    kDebug() << "Type" << m_desktopFile->group("Desktop Entry").readEntry("Author", "empty author");
+    kDebug() << "Author" << m_desktopFile->group("Desktop Entry").readEntry("Author", "empty author");
 }
 
+QStringList WebAppEditor::getItems(QListWidget *listWidget)
+{
+    QStringList list;
+    int rows = listWidget->model()->rowCount();
+    for (int i = 0; i < rows; i++) {
+        QString text = listWidget->item(i)->text();
+        kDebug() << "Row:" << i << text;
+        list << text;
+    }
+    return list;
+}
+
+void WebAppEditor::setItems(QListWidget *listWidget, const QStringList &list)
+{
+    foreach (const QString &u, list) {
+        listWidget->addItem(u);
+    }
+}
+
+void WebAppEditor::removeItem(QListWidgetItem *item)
+{
+    KListWidget *lw = qobject_cast<KListWidget*>(sender());
+    if (lw) {
+        webAppUi.allowedBases->removeItemWidget(item);
+    }
+}
+
+void WebAppEditor::addAllowedBase()
+{
+    QString text = webAppUi.allowedBasesLine->text();
+    QUrl url(text);
+    if (url.isValid() && !getItems(webAppUi.allowedBases).contains(text)) {
+        webAppUi.allowedBases->addItem(text);
+    } else {
+        kWarning() << "Not a valid URL, won't save it:" << text;
+    }
+}
 
 #include "webappeditor.moc"
