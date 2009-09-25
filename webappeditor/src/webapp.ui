@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>WebAppEditor</class>
+ <widget class="QWidget" name="WebAppEditor">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>475</width>
-    <height>566</height>
+    <width>386</width>
+    <height>414</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,12 +27,22 @@
    <item row="2" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Label</string>
+      <string>Window Title</string>
      </property>
     </widget>
    </item>
    <item row="2" column="1">
     <widget class="QLineEdit" name="name"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_10">
+     <property name="text">
+      <string>Icon</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="KIconButton" name="icon"/>
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="label_5">
@@ -57,69 +67,37 @@
    <item row="8" column="0">
     <widget class="QLabel" name="label_9">
      <property name="text">
-      <string>&lt;b&gt;Action Configuration&lt;/b&gt;</string>
+      <string>&lt;b&gt;Configuration&lt;/b&gt;</string>
      </property>
     </widget>
    </item>
    <item row="11" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Show On URL</string>
+      <string>Start URL</string>
      </property>
     </widget>
    </item>
    <item row="11" column="1">
-    <widget class="KLineEdit" name="baseLine"/>
+    <widget class="KLineEdit" name="startUrl_4"/>
    </item>
-   <item row="12" column="1">
-    <widget class="KListWidget" name="baseUrls"/>
-   </item>
-   <item row="14" column="1">
-    <widget class="KListWidget" name="baseUrls_3"/>
-   </item>
-   <item row="17" column="0">
+   <item row="12" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Trigger on Wildcard</string>
+      <string>Allowed Bases</string>
      </property>
     </widget>
    </item>
-   <item row="17" column="1">
-    <widget class="KLineEdit" name="startUrl"/>
-   </item>
-   <item row="21" column="1">
-    <widget class="KListWidget" name="baseUrls_2"/>
-   </item>
-   <item row="13" column="1">
-    <widget class="KLineEdit" name="startUrl_2"/>
-   </item>
-   <item row="13" column="0">
-    <widget class="QLabel" name="label_7">
-     <property name="text">
-      <string>Show on Wildcard</string>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="0">
-    <widget class="QLabel" name="label_8">
-     <property name="text">
-      <string>Trigger on URL</string>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="1">
-    <widget class="KLineEdit" name="startUrl_3"/>
+   <item row="12" column="1">
+    <widget class="KLineEdit" name="allowedBasesLine"/>
    </item>
    <item row="16" column="1">
-    <widget class="KListWidget" name="baseUrls_4"/>
+    <widget class="KListWidget" name="allowedBases"/>
    </item>
-   <item row="3" column="1">
-    <widget class="KIconButton" name="kiconbutton"/>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_10">
+   <item row="17" column="1">
+    <widget class="KPushButton" name="saveButton">
      <property name="text">
-      <string>Icon</string>
+      <string>Save Action</string>
      </property>
     </widget>
    </item>
@@ -135,6 +113,11 @@
    <class>KListWidget</class>
    <extends>QListWidget</extends>
    <header>klistwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>

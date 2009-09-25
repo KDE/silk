@@ -10,7 +10,7 @@
 #include <kxmlguiwindow.h>
 #include <KPageDialog>
 //#include "ui_prefs_base.h"
-#include "ui_webappaction.h"
+#include "ui_webapp.h"
 
 class QListWidget;
 class KDesktopFile;
@@ -27,14 +27,14 @@ class KUrl;
  * @author Sebastian K?gler <sebas@kde.org>
  * @version 0.1
  */
-class WebAppEditor : public KPageDialog
+class WebAppEditor : public QWidget
 {
     Q_OBJECT
 public:
     /**
      * Default Constructor
      */
-    WebAppEditor();
+    WebAppEditor(QWidget *parent = 0);
 
     /**
      * Default Destructor
@@ -46,24 +46,14 @@ private Q_SLOTS:
     //void optionsPreferences();
     void save();
 
-    void addShowOnUrlLine();
-    void addTriggerOnUrlLine();
-    void addShowOnWildcardLine();
-    void addTriggerOnWildcardLine();
-
-    void removeItem(QListWidgetItem *item);
-    void removeShowOnUrlItem(QListWidgetItem *item);
-
 private:
     //void setupActions();
 
 private:
     void setupMainWidget();
     void showActionFile();
-    QStringList getItems(QListWidget *listWidget);
-    void setItems(QListWidget *listWidget, const QStringList &list);
     void dump();
-    Ui::WebAppActionEditor actionUi;
+    Ui::WebAppEditor webAppUi;
 
     //KPageDialog *m_pageDialog;
 
@@ -72,8 +62,6 @@ private:
     QWidget *m_widget;
 
     KDesktopFile *m_desktopFile;
-    KToggleAction *m_toolbarAction;
-    KToggleAction *m_statusbarAction;
 };
 
-#endif // _WebAppEditor_H_
+#endif // WEBAPPEDITOR_H

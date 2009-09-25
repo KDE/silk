@@ -25,8 +25,8 @@
 
 #include <KDE/KLocale>
 
-WebAppEditor::WebAppEditor()
-    : KPageDialog()
+WebAppEditor::WebAppEditor(QWidget *parent)
+    : QWidget(parent)
 {
     // accept dnd
     setAcceptDrops(true);
@@ -53,115 +53,16 @@ void WebAppEditor::setupMainWidget()
 {
 
 
-    m_widget = new QWidget(this); // will be reparented to the pagedialog
-    actionUi.setupUi(m_widget);
+    webAppUi.setupUi(this);
 
-
-    connect(actionUi.showOnUrlLine, SIGNAL(returnPressed()), this, SLOT(addShowOnUrlLine()));
-    connect(actionUi.triggerOnUrlLine, SIGNAL(returnPressed()), this, SLOT(addTriggerOnUrlLine()));
-    connect(actionUi.showOnWildcardLine, SIGNAL(returnPressed()), this, SLOT(addShowOnWildcardLine()));
-    connect(actionUi.triggerOnWildcardLine, SIGNAL(returnPressed()), this, SLOT(addTriggerOnWildcardLine()));
-
-    connect(actionUi.showOnUrl, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeShowOnUrlItem(QListWidgetItem*)));
-    connect(actionUi.triggerOnUrl, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
-    connect(actionUi.showOnWildcard, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
-    connect(actionUi.triggerOnWildcard, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
-
-    connect(actionUi.saveButton, SIGNAL(clicked()), this, SLOT(save()));
+    connect(webAppUi.saveButton, SIGNAL(clicked()), this, SLOT(save()));
 
     // FIXME: temporary ...
-    m_actionFile = "/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test-editor.desktop";
+    m_actionFile = "/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test.desktop";
     showActionFile();
     kDebug() << "actionFile" << m_actionFile;
-
-    KPageWidgetItem *actionItem = new KPageWidgetItem(m_widget, "My Action");
-
-    //KPageDialog *m_pageDialog = new KPageDialog(this);
-    setFaceType(KPageDialog::List);
-    addPage(actionItem);
-    //setCentralWidget(m_pageDialog->mainWidget());
 }
 
-void WebAppEditor::removeShowOnUrlItem(QListWidgetItem *item)
-{
-    kDebug() << "removing item" << item->text();
-    actionUi.showOnUrl->removeItemWidget(item);
-    actionUi.showOnUrl->removeItemWidget(actionUi.showOnUrl->currentItem());
-}
-
-void WebAppEditor::removeItem(QListWidgetItem *item)
-{
-    KListWidget *lw = qobject_cast<KListWidget*>(sender());
-    if (lw) {
-        actionUi.showOnUrl->removeItemWidget(item);
-    }
-}
-
-void WebAppEditor::addShowOnUrlLine()
-{
-    QString text = actionUi.showOnUrlLine->text();
-    QUrl url(text);
-    if (url.isValid() && !getItems(actionUi.showOnUrl).contains(text)) {
-        actionUi.showOnUrl->addItem(text);
-    } else {
-        kWarning() << "Not a valid URL, won't save it:" << text;
-    }
-}
-
-void WebAppEditor::addTriggerOnUrlLine()
-{
-    QString text = actionUi.triggerOnUrlLine->text();
-    QUrl url(text);
-    if (url.isValid() && !getItems(actionUi.triggerOnUrl).contains(text)) {
-        actionUi.triggerOnUrl->addItem(text);
-    } else {
-        kWarning() << "Not a valid URL, won't save it:" << text;
-    }
-}
-
-void WebAppEditor::addShowOnWildcardLine()
-{
-    QString text = actionUi.showOnWildcardLine->text();
-    if (!text.isEmpty() && !getItems(actionUi.showOnWildcard).contains(text)) {
-        actionUi.showOnWildcard->addItem(text);
-    }
-}
-
-void WebAppEditor::addTriggerOnWildcardLine()
-{
-    QString text = actionUi.triggerOnWildcardLine->text();
-    if (!text.isEmpty() && !getItems(actionUi.triggerOnWildcard).contains(text)) {
-        actionUi.triggerOnWildcard->addItem(text);
-    }
-}
-
-
-QStringList WebAppEditor::getItems(QListWidget *listWidget)
-{
-    QStringList list;
-    int rows = listWidget->model()->rowCount();
-    for (int i = 0; i < rows; i++) {
-        QString text = listWidget->item(i)->text();
-        kDebug() << "Row:" << i << text;
-        list << text;
-    }
-    return list;
-}
-
-void WebAppEditor::setItems(QListWidget *listWidget, const QStringList &list)
-{
-    foreach (const QString &u, list) {
-        listWidget->addItem(u);
-    }
-}
-
-/*
-void WebAppEditor::setupActions()
-{
-    KStandardAction::open(this, SLOT(openActionFile()), actionCollection());
-    KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
-}
-*/
 void WebAppEditor::openActionFile()
 {
     m_actionFile = KFileDialog::getOpenFileName(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), QString("*.desktop"));
@@ -170,22 +71,23 @@ void WebAppEditor::openActionFile()
 
 void WebAppEditor::showActionFile()
 {
-    actionUi.title->setText(i18nc("title widget", "WebApp Action Editor (%1)", KUrl(m_actionFile).fileName()));
+    //webAppUi.title->setText(i18nc("title widget", "WebApp Action Editor (%1)", KUrl(m_actionFile).fileName()));
     kDebug() << m_actionFile;
     m_desktopFile = new KDesktopFile(m_actionFile);
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
 
-    actionUi.label->setText(group.readEntry("Name", QString()));
-    actionUi.pluginName->setText(group.readEntry("X-KDE-PluginInfo-Name", QString()));
-    actionUi.icon->setIcon(group.readEntry("Icon", QString()));
-    actionUi.author->setText(group.readEntry("Author", QString()));
-    setItems(actionUi.showOnUrl, group.readEntry("X-Silk-ShowOnUrl", QStringList()));
-    setItems(actionUi.triggerOnUrl, group.readEntry("X-Silk-TriggerOnUrl", QStringList()));
-    setItems(actionUi.showOnWildcard, group.readEntry("X-Silk-ShowOnWildcard", QStringList()));
-    setItems(actionUi.triggerOnWildcard, group.readEntry("X-Silk-TriggerOnWildcard", QStringList()));
-    actionUi.title->setPixmap(KIcon(actionUi.icon->icon()));
-    actionUi.saveButton->setIcon(KIcon("document-save"));
-
+    /*
+    webAppUi.label->setText(group.readEntry("Name", QString()));
+    webAppUi.pluginName->setText(group.readEntry("X-KDE-PluginInfo-Name", QString()));
+    webAppUi.icon->setIcon(group.readEntry("Icon", QString()));
+    webAppUi.author->setText(group.readEntry("Author", QString()));
+    setItems(webAppUi.showOnUrl, group.readEntry("X-Silk-ShowOnUrl", QStringList()));
+    setItems(webAppUi.triggerOnUrl, group.readEntry("X-Silk-TriggerOnUrl", QStringList()));
+    setItems(webAppUi.showOnWildcard, group.readEntry("X-Silk-ShowOnWildcard", QStringList()));
+    setItems(webAppUi.triggerOnWildcard, group.readEntry("X-Silk-TriggerOnWildcard", QStringList()));
+    webAppUi.title->setPixmap(KIcon(webAppUi.icon->icon()));
+    webAppUi.saveButton->setIcon(KIcon("document-save"));
+    */
     dump();
 }
 
@@ -194,29 +96,23 @@ void WebAppEditor::save()
     // ...
     kDebug() << "---> Saving here ...";
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
-    group.writeEntry("Icon", actionUi.icon->icon());
-    group.writeEntry("Author", actionUi.author->text());
-    group.writeEntry("Name", actionUi.label->text());
-    group.writeEntry("X-KDE-PluginInfo-Name", actionUi.pluginName->text());
-    group.writeEntry("X-Silk-ShowOnUrl", getItems(actionUi.showOnUrl));
-    group.writeEntry("X-Silk-TriggerOnUrl", getItems(actionUi.triggerOnUrl));
-    group.writeEntry("X-Silk-ShowOnWildcard", getItems(actionUi.showOnWildcard));
-    group.writeEntry("X-Silk-TriggerOnWildcard", getItems(actionUi.triggerOnWildcard));
+    group.writeEntry("Icon", webAppUi.icon->icon());
+    group.writeEntry("Author", webAppUi.author->text());
+    group.writeEntry("Name", webAppUi.label->text());
+    group.writeEntry("X-KDE-PluginInfo-Name", webAppUi.pluginName->text());
     m_desktopFile->sync();
-    actionUi.title->setPixmap(KIcon(actionUi.icon->icon()));
+    //webAppUi.title->setPixmap(KIcon(webAppUi.icon->icon()));
+    //*/
     dump();
 }
 
 void WebAppEditor::dump()
 {
     kDebug() << "------------------------------";
-    kDebug() << "Name" << m_desktopFile->readName() << actionUi.label->text();
-    kDebug() << "Icon" << m_desktopFile->readIcon() << actionUi.icon->icon();
+    kDebug() << "Name" << m_desktopFile->readName() << webAppUi.label->text();
+    kDebug() << "Icon" << m_desktopFile->readIcon() << webAppUi.icon->icon();
     kDebug() << "Type" << m_desktopFile->readType();
-    kDebug() << "shows:" << getItems(actionUi.showOnUrl);
-    kDebug() << "triggers:" << getItems(actionUi.triggerOnUrl);
-    kDebug() << "shows (wildcards):" << getItems(actionUi.showOnWildcard);
-    kDebug() << "triggers (wildcards):" << getItems(actionUi.triggerOnWildcard);
+    kDebug() << "Type" << m_desktopFile->group("Desktop Entry").readEntry("Author", "empty author");
 }
 
 
