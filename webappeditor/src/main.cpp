@@ -1,4 +1,4 @@
-#include "webappeditor.h"
+#include "selkieeditor.h"
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -12,7 +12,7 @@ static const char version[] = "0.1";
 int main(int argc, char **argv)
 {
     KAboutData about("webappeditor", 0, ki18n("webappeditor"), version, ki18n(description),
-                     KAboutData::License_GPL, ki18n("(C) 2007 Sebastian Kügler"), KLocalizedString(), 0, "sebas@kde.org");
+                     KAboutData::License_GPL, ki18n("(C) 2009 Sebastian K?gler"), KLocalizedString(), 0, "sebas@kde.org");
     about.addAuthor( ki18n("Sebastian Kügler"), KLocalizedString(), "sebas@kde.org" );
     KCmdLineArgs::init(argc, argv, &about);
 
@@ -21,7 +21,7 @@ int main(int argc, char **argv)
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
 
-    WebAppEditor *widget = new WebAppEditor;
+    SelkieEditor *widget = new SelkieEditor;
 
     // see if we are starting with session management
     if (app.isSessionRestored())
