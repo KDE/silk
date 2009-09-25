@@ -16,7 +16,7 @@ SelkieEditor::SelkieEditor()
     // accept dnd
     setAcceptDrops(true);
 
-    setFaceType(KPageDialog::Tree);
+    setFaceType(KPageDialog::List);
 
     loadWebApp();
 }
