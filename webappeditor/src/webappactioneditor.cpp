@@ -28,9 +28,8 @@
 WebAppActionEditor::WebAppActionEditor(KDesktopFile *file)
     : KPageWidgetItem(new QWidget(), QString())
 {
-
     setupMainWidget();
-    showActionFile(file);
+    loadDesktopFile(file);
 }
 
 WebAppActionEditor::~WebAppActionEditor()
@@ -131,12 +130,11 @@ void WebAppActionEditor::setupActions()
 void WebAppActionEditor::openActionFile()
 {
     QString filename = KFileDialog::getOpenFileName(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), QString("*.desktop"));
-    showActionFile(new KDesktopFile(filename));
+    loadDesktopFile(new KDesktopFile(filename));
 }
 
-void WebAppActionEditor::showActionFile(KDesktopFile *file)
+void WebAppActionEditor::loadDesktopFile(KDesktopFile *file)
 {
-    //kDebug() << m_actionFile;
     m_desktopFile = file;
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
 

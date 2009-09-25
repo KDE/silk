@@ -45,7 +45,7 @@ private Q_SLOTS:
 
 private:
     void setupMainWidget();
-    void showActionFile(KDesktopFile *file);
+    void loadDesktopFile(KDesktopFile *file);
     QStringList getItems(QListWidget *listWidget);
     void setItems(QListWidget *listWidget, const QStringList &list);
     void dump();
