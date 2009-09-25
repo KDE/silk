@@ -4,6 +4,7 @@
 #include "webappactioneditor.h"
 
 #include <KDebug>
+#include <KDesktopFile>
 #include <KPageDialog>
 #include <KPageWidgetItem>
 #include <KPushButton>
@@ -31,7 +32,7 @@ void SelkieEditor::loadWebApp()
     }
 
     //return;
-    m_webAppEditor = new WebAppEditor("/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test.desktop");
+    m_webAppEditor = new WebAppEditor(new KDesktopFile("/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test.desktop"));
     addPage(m_webAppEditor);
     addAction();
 }

@@ -25,21 +25,20 @@
 
 #include <KDE/KLocale>
 
-WebAppEditor::WebAppEditor(const QString &filename)
+WebAppEditor::WebAppEditor(KDesktopFile *file)
     : KPageWidgetItem(new QWidget(), QString())
 {
     setupMainWidget();
-    showActionFile(filename);
+    loadDesktopFile(file);
 }
 
 WebAppEditor::~WebAppEditor()
 {
+    delete m_desktopFile;
 }
 
 void WebAppEditor::setupMainWidget()
 {
-
-
     webAppUi.setupUi(widget());
 
     connect(webAppUi.saveButton, SIGNAL(clicked()), this, SLOT(save()));
@@ -51,12 +50,12 @@ void WebAppEditor::setupMainWidget()
 void WebAppEditor::openActionFile()
 {
     QString filename = KFileDialog::getOpenFileName(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), QString("*.desktop"));
-    showActionFile(filename);
+    loadDesktopFile(new KDesktopFile(filename));
 }
 
-void WebAppEditor::showActionFile(const QString &filename)
+void WebAppEditor::loadDesktopFile(KDesktopFile *file)
 {
-    m_desktopFile = new KDesktopFile(filename);
+    m_desktopFile = file;
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
 
     webAppUi.name->setText(group.readEntry("Name", QString()));

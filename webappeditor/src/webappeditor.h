@@ -16,11 +16,10 @@ class KPageDialog;
 class KPushButton;
 
 /**
- * This class serves as the main window for WebAppEditor.  It handles the
- * menus, toolbars, and status bars.
+ * This class represents the edit webapp page.
  *
- * @short Main window class
- * @author Sebastian K?gler <sebas@kde.org>
+ * @short WebApp Editor class
+ * @author Sebastian Kuegler <sebas@kde.org>
  * @version 0.1
  */
 class WebAppEditor : public KPageWidgetItem
@@ -28,7 +27,7 @@ class WebAppEditor : public KPageWidgetItem
 {
     Q_OBJECT
 public:
-    WebAppEditor(const QString &filename);
+    WebAppEditor(KDesktopFile *file);
     virtual ~WebAppEditor();
 
 private Q_SLOTS:
@@ -39,7 +38,7 @@ private Q_SLOTS:
 
 private:
     void setupMainWidget();
-    void showActionFile(const QString &filename);
+    void loadDesktopFile(KDesktopFile *file);
     void dump();
     QStringList getItems(QListWidget *listWidget);
     void setItems(QListWidget *listWidget, const QStringList &list);
