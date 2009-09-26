@@ -1,0 +1,25 @@
+[Global]
+IconName=internet-web-browser
+Comment=Selkie
+Name=Web Application
+
+[Context/group]
+Name=Selkie Notifications
+Comment=Notifications from the Selkie Browser
+
+[Context/folder]
+Name=Selkie Notifications
+
+
+[Event/popup]
+Name=Selkie Popup
+Comment=Selkie has triggered a notification
+Contexts=folder,group
+Action=Popup
+
+[Event/soundpopup]
+Name=SoundPopup
+Comment=Notification with highlight sound
+Contexts=folder,group
+Sound=KDE-Im-Highlight-Msg.ogg
+Action=Sound|Popup
