@@ -26,4 +26,5 @@ target_link_libraries(selkie
 install( TARGETS selkie ${INSTALL_TARGETS_DEFAULT_ARGS} )
 #install( FILES selkie.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 #install( FILES selkieui.rc  DESTINATION  ${DATA_INSTALL_DIR}/selkie )
+install( FILES selkie.notifyrc DESTINATION ${DATA_INSTALL_DIR}/selkie )
 

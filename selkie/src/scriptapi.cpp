@@ -111,8 +111,11 @@ void ScriptApi::GM_setValue( const QString &key, const QVariant &value )
 
 void ScriptApi::showNotification( const QString &text )
 {
-    KPassivePopup::message( text, m_view );
-//    KNotification::event( QString("script_message"), text );
+    kDebug() << "notification:" << text;
+    int s = KIconLoader::SizeMedium;
+    KNotification::event(QString("popup"),
+                         text,
+                         KIcon("internet-web-browser").pixmap(QSize(s, s)));
 }
 
 bool ScriptApi::include( const QString &filename )
