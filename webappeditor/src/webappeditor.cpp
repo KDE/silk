@@ -69,7 +69,7 @@ void WebAppEditor::loadDesktopFile(KDesktopFile *file)
     setName(webAppUi.name->text());
     webAppUi.saveButton->setIcon(KIcon("document-save"));
 
-    dump();
+    //dump();
 }
 
 void WebAppEditor::save()
@@ -87,7 +87,7 @@ void WebAppEditor::save()
     group.writeEntry("X-Silk-AllowedBases", getItems(webAppUi.allowedBases));
 
     m_desktopFile->sync();
-    dump();
+    //dump();
 }
 
 void WebAppEditor::dump()

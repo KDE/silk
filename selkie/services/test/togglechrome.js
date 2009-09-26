@@ -50,7 +50,8 @@ function toggle(id) {
 }
 
 //window.silk.showNotification('Triggered!!!!!!...');
-window.silk.showFancyNotification('<i>Triggered!!!!!!...</i><br />Meer text komt hier te staan', 'bookmarks');
+window.silk.showNotification('<strong>Test Web Application</strong><br />Using the bookmarks icon as example', 'bookmarks');
+window.silk.showNotification('<strong>Test Web Application</strong><br />This one has the default (web-browser) icon');
 toggle("header");
 toggle("footer");
 

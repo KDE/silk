@@ -107,7 +107,7 @@ QStringList WebAppActionEditor::getItems(QListWidget *listWidget)
     int rows = listWidget->model()->rowCount();
     for (int i = 0; i < rows; i++) {
         QString text = listWidget->item(i)->text();
-        kDebug() << "Row:" << i << text;
+        //kDebug() << "Row:" << i << text;
         list << text;
     }
     return list;
@@ -151,7 +151,7 @@ void WebAppActionEditor::loadDesktopFile(KDesktopFile *file)
     setIcon(KIcon(actionUi.icon->icon()));
     setName(actionUi.label->text());
 
-    dump();
+    //dump();
 }
 
 void WebAppActionEditor::save()
@@ -169,7 +169,7 @@ void WebAppActionEditor::save()
     group.writeEntry("X-Silk-TriggerOnWildcard", getItems(actionUi.triggerOnWildcard));
     m_desktopFile->sync();
     setIcon(KIcon(actionUi.icon->icon()));
-    dump();
+    //dump();
 }
 
 void WebAppActionEditor::dump()

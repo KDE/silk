@@ -72,8 +72,7 @@ public slots:
     // Methods for a fluid-like api
     //
 
-    void showNotification( const QString &text );
-    void showFancyNotification( const QString &text, const QString &icon );
+    void showNotification( const QString &text, QString icon = QString("internet-web-browser") );
 
     // Only works if trusted
     bool include( const QString &filename );

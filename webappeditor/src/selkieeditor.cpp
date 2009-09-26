@@ -3,38 +3,67 @@
 #include "webappeditor.h"
 #include "webappactioneditor.h"
 
+#include <KActionCollection>
 #include <KApplication>
 #include <KDebug>
 #include <KDesktopFile>
 #include <KPageDialog>
 #include <KPageWidgetItem>
 #include <KPushButton>
+#include <KStandardAction>
+
+#include <QLabel>
 
 SelkieEditor::SelkieEditor()
-    : KPageDialog()
+    : KXmlGuiWindow()
 {
     // accept dnd
     setAcceptDrops(true);
 
-    setFaceType(KPageDialog::List);
+    m_pages = new KPageWidget(this);
+    m_pages->setFaceType(KPageWidget::List);
+    loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/test/");
 
-    loadWebApp();
+    QLabel *lbl = new QLabel("This works.");
+    //setCentralWidget(lbl);
+    setCentralWidget(m_pages);
+    kDebug() << "set central widget";
+    setupGUI();
+    setupActions();
 }
 
-void SelkieEditor::loadWebApp()
+
+void SelkieEditor::setupActions()
 {
-    m_dir = QDir("/home/sebas/kdesvn/src/project-silk/selkie/services/test/");
+    KStandardAction::open(qApp, SLOT(open()), actionCollection());
+    KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
+
+    //KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
+}
+
+void SelkieEditor::open()
+{
+    // this slot is called whenever the File->New menu is selected,
+    // the New shortcut is pressed (usually CTRL+N) or the New toolbar
+    // button is clicked
+
+    // create a new window
+}
+
+void SelkieEditor::loadWebApp(const QString &path)
+{
+    m_dir = QDir(path);
     QStringList files;
     const QString fileName = "*.desktop";
     files = m_dir.entryList(QStringList(fileName), QDir::Files | QDir::NoSymLinks);
-    kDebug() << "Directory:" << m_dir;
+    //kDebug() << "Directory:" << m_dir;
 
-    // FIXME: leak.
+    // FIXME: leaks.
     m_actionFiles.clear();
 
     foreach (const QString &f, files) {
         QString fname = m_dir.absolutePath().append("/").append(f);
-        kDebug() << "Found file:" << fname;
+        //kDebug() << "Found file:" << fname;
         KDesktopFile *df = new KDesktopFile(fname);
 
         KConfigGroup group = df->group("Desktop Entry");
@@ -43,8 +72,7 @@ void SelkieEditor::loadWebApp()
         QString servicetype = group.readEntry("X-KDE-ServiceTypes", QString());
         QString pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
 
-        kDebug() << type << servicetype << pname;
-
+        //kDebug() << type << servicetype << pname;
 
         if (type == "Service") {
             if (servicetype == "Silk/WebApp") {
@@ -69,13 +97,11 @@ void SelkieEditor::loadWebApp()
 
     }
 
-
-    //return;
-
-
+    // Web App page on top
     m_webAppEditor = new WebAppEditor(m_webAppPlugin);
-    addPage(m_webAppEditor);
+    m_pages->addPage(m_webAppEditor);
 
+    // Now our actions
     foreach (KDesktopFile *f, m_actionFiles) {
         addAction(f);
     }
@@ -87,15 +113,14 @@ SelkieEditor::~SelkieEditor()
 
 void SelkieEditor::addAction(KDesktopFile *file)
 {
-    //KDesktopFile *f = new KDesktopFile("/home/sebas/kdesvn/src/project-silk/selkie/services/test/silk-webapp-test-editor.desktop");
     WebAppActionEditor *editor = new WebAppActionEditor(file);
     m_actionEditors << editor;
-    addPage(editor);
+    m_pages->addPage(editor);
 }
 
 void SelkieEditor::save()
 {
-    kDebug() << "---> Saving here ...";
+    kDebug() << "TODO: implement saving here ...";
 }
 
 

@@ -109,18 +109,9 @@ void ScriptApi::GM_setValue( const QString &key, const QVariant &value )
     config().writeEntry( key, value );
 }
 
-void ScriptApi::showNotification( const QString &text )
+void ScriptApi::showNotification( const QString &text, QString icon )
 {
-    kDebug() << "notification:" << text;
-    int s = KIconLoader::SizeMedium;
-    KNotification::event(QString("popup"),
-                         text,
-                         KIcon("internet-web-browser").pixmap(QSize(s, s)));
-}
-
-void ScriptApi::showFancyNotification( const QString &text, const QString &icon )
-{
-    kDebug() << "fancy notification:" << text << icon;
+    kDebug() << "notification:" << text << icon;
     int s = KIconLoader::SizeMedium;
     KNotification::event(QString("popup"),
                          text,

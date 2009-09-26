@@ -3,6 +3,8 @@
 
 #include <KDesktopFile>
 #include <KPageDialog>
+#include <KXmlGuiWindow>
+
 #include <QDir>
 
 class WebAppEditor;
@@ -15,7 +17,7 @@ class WebAppActionEditor;
  * @author Sebastian Kügler <sebas@kde.org>
  * @version 0.1
  */
-class SelkieEditor : public KPageDialog
+class SelkieEditor : public KXmlGuiWindow
 {
     Q_OBJECT
 public:
@@ -31,10 +33,14 @@ public:
 
 private Q_SLOTS:
     void save();
+    void open();
 
 private:
-    void loadWebApp();
+    void setupActions();
+    void loadWebApp(const QString &path);
     void addAction(KDesktopFile *file);
+
+    KPageWidget *m_pages;
     WebAppEditor *m_webAppEditor;
     QList<WebAppActionEditor*> m_actionEditors;
     QList<KDesktopFile*> m_actionFiles;
