@@ -73,6 +73,7 @@ public slots:
     //
 
     void showNotification( const QString &text );
+    void showFancyNotification( const QString &text, const QString &icon );
 
     // Only works if trusted
     bool include( const QString &filename );

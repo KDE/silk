@@ -2,7 +2,7 @@
  * Show/Hide the header, footer                      *
  *                                                   *
  * Site:    Selkie Test Site                         *
- * Author:  Sebastian Kügler <sebas@kde.org>         *
+ * Author:  Sebastian K?gler <sebas@kde.org>         *
  * License: LGPL v2.1                                *
  * ------------------------------------------------- */
 
@@ -17,12 +17,12 @@ function toggleVisibility(id)
     if (el.style.display == 'none')
     {
         el.style.display = '';
-        window.silk.showNotification('Trigger Showing ...');
+        //window.silk.showNotification('Trigger Showing ...');
         window.silk.GM_log("trigger showing");
         return 1;
     } else {
         el.style.display = 'none';
-        window.silk.showNotification('Trigger Hiding ...');
+        //window.silk.showNotification('Trigger Hiding ...');
         window.silk.GM_log("trigger hiding");
         return 0;
     }
@@ -49,7 +49,8 @@ function toggle(id) {
     }
 }
 
-window.silk.showNotification('Triggered!!!!!!...');
+//window.silk.showNotification('Triggered!!!!!!...');
+window.silk.showFancyNotification('<i>Triggered!!!!!!...</i><br />Meer text komt hier te staan', 'bookmarks');
 toggle("header");
 toggle("footer");
 

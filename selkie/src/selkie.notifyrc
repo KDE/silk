@@ -17,8 +17,8 @@ Comment=Selkie has triggered a notification
 Contexts=folder,group
 Action=Popup
 
-[Event/soundpopup]
-Name=SoundPopup
+[Event/fancynotification]
+Name=FancyNotification
 Comment=Notification with highlight sound
 Contexts=folder,group
 Sound=KDE-Im-Highlight-Msg.ogg

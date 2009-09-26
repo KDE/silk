@@ -118,6 +118,15 @@ void ScriptApi::showNotification( const QString &text )
                          KIcon("internet-web-browser").pixmap(QSize(s, s)));
 }
 
+void ScriptApi::showFancyNotification( const QString &text, const QString &icon )
+{
+    kDebug() << "fancy notification:" << text << icon;
+    int s = KIconLoader::SizeMedium;
+    KNotification::event(QString("popup"),
+                         text,
+                         KIcon(icon).pixmap(QSize(s, s)));
+}
+
 bool ScriptApi::include( const QString &filename )
 {
     if (!m_trusted)
