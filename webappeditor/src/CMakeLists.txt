@@ -11,7 +11,10 @@ kde4_add_kcfg_files(webappeditor_SRCS settings.kcfgc )
 
 kde4_add_executable(webappeditor ${webappeditor_SRCS})
 
-target_link_libraries(webappeditor ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} )
+target_link_libraries(webappeditor
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
+    ${KDE4_KTEXTEDITOR_LIBS})
 
 install(TARGETS webappeditor ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

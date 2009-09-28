@@ -17,12 +17,17 @@ class KPushButton;
 class KToggleAction;
 class KUrl;
 
+namespace KTextEditor
+{
+    class Document;
+}
+
 /**
  * This class serves as the main window for WebAppActionEditor.  It handles the
  * menus, toolbars, and status bars.
  *
  * @short Main window class
- * @author Sebastian Kügler <sebas@kde.org>
+ * @author Sebastian K?gler <sebas@kde.org>
  * @version 0.1
  */
 class WebAppActionEditor : public KPageWidgetItem
@@ -50,6 +55,7 @@ private:
     void setItems(QListWidget *listWidget, const QStringList &list);
     void dump();
     Ui::WebAppActionEditor actionUi;
+    KTextEditor::Document *m_editorPart;
 
     KDesktopFile *m_desktopFile;
 };

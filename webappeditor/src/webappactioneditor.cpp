@@ -17,7 +17,12 @@
 #include <KDesktopFile>
 #include <KFileDialog>
 #include <KPageDialog>
+#include <KService>
+#include <KServiceTypeTrader>
 #include <KPushButton>
+#include <KTextEditor/ConfigInterface>
+#include <KTextEditor/Document>
+#include <KTextEditor/View>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -41,6 +46,29 @@ void WebAppActionEditor::setupMainWidget()
     actionUi.setupUi(widget());
 
 
+    KService::List offers = KServiceTypeTrader::self()->query("KTextEditor/Document");
+    QWidget *w = new QWidget();
+    foreach (const KService::Ptr service, offers) {
+        m_editorPart = service->createInstance<KTextEditor::Document>(w);
+        if (m_editorPart) {
+            m_editorPart->setHighlightingMode("JavaScript");
+
+            KTextEditor::View * view = m_editorPart->createView(w);
+            view->setContextMenu(view->defaultContextMenu());
+
+            KTextEditor::ConfigInterface *config = qobject_cast<KTextEditor::ConfigInterface*>(view);
+            if (config) {
+                config->setConfigValue("line-numbers", true);
+                config->setConfigValue("dynamic-word-wrap", true);
+            }
+
+            actionUi.scriptsTab->layout()->addWidget(view);
+            connect(m_editorPart, SIGNAL(textChanged(KTextEditor::Document*)),
+                    this, SLOT(scriptTextChanged()));
+            break;
+        }
+    }
+
     connect(actionUi.showOnUrlLine, SIGNAL(returnPressed()), this, SLOT(addShowOnUrlLine()));
     connect(actionUi.triggerOnUrlLine, SIGNAL(returnPressed()), this, SLOT(addTriggerOnUrlLine()));
     connect(actionUi.showOnWildcardLine, SIGNAL(returnPressed()), this, SLOT(addShowOnWildcardLine()));
@@ -52,6 +80,7 @@ void WebAppActionEditor::setupMainWidget()
     connect(actionUi.triggerOnWildcard, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(removeItem(QListWidgetItem*)));
 
     connect(actionUi.saveButton, SIGNAL(clicked()), this, SLOT(save()));
+
 }
 
 void WebAppActionEditor::removeItem(QListWidgetItem *item)
