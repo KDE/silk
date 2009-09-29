@@ -7,6 +7,7 @@
 #include <KApplication>
 #include <KDebug>
 #include <KDesktopFile>
+#include <KFileDialog>
 #include <KPageDialog>
 #include <KPageWidgetItem>
 #include <KPushButton>
@@ -21,19 +22,20 @@ SelkieEditor::SelkieEditor()
     setAcceptDrops(true);
 
     m_pages = new KPageWidget(this);
-    m_pages->setFaceType(KPageWidget::List);
+    m_pages->setFaceType(KPageWidget::Auto);
     loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/test/");
+    //loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/silk/");
+    setupActions();
 
     setCentralWidget(m_pages);
     kDebug() << "set central widget";
     setupGUI();
-    setupActions();
 }
 
 
 void SelkieEditor::setupActions()
 {
-    KStandardAction::open(qApp, SLOT(open()), actionCollection());
+    KStandardAction::open(this, SLOT(open()), actionCollection());
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
 
     //KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
@@ -41,11 +43,8 @@ void SelkieEditor::setupActions()
 
 void SelkieEditor::open()
 {
-    // this slot is called whenever the File->New menu is selected,
-    // the New shortcut is pressed (usually CTRL+N) or the New toolbar
-    // button is clicked
-
-    // create a new window
+    QString path = KFileDialog::getExistingDirectory(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), this, i18nc("the directory selection dialogue for the webapp", "Open Web Application Directory"));
+    loadWebApp(path);
 }
 
 void SelkieEditor::loadWebApp(const QString &path)
@@ -54,10 +53,16 @@ void SelkieEditor::loadWebApp(const QString &path)
     QStringList files;
     const QString fileName = "*.desktop";
     files = m_dir.entryList(QStringList(fileName), QDir::Files | QDir::NoSymLinks);
-    //kDebug() << "Directory:" << m_dir;
 
-    // FIXME: leaks.
+    // Clean up
     m_actionFiles.clear();
+    // FIXME: clearing the pagewidget doesn't work :/
+    QAbstractItemModel *model = m_pages->model();
+    int rows = model->rowCount();
+    for (int i = 0; i < rows; i++) {
+        model->removeRow(i);
+    }
+    kDebug() << "m_pages flushed rows:" << rows;
 
     foreach (const QString &f, files) {
         QString fname = m_dir.absolutePath().append("/").append(f);
@@ -113,7 +118,7 @@ void SelkieEditor::addAction(KDesktopFile *file)
 {
     WebAppActionEditor *editor = new WebAppActionEditor(file, m_dir);
     m_actionEditors << editor;
-    m_pages->addPage(editor);
+    m_pages->addSubPage(m_webAppEditor, editor);
 }
 
 void SelkieEditor::save()

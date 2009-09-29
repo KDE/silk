@@ -48,12 +48,13 @@ private Q_SLOTS:
     void addTriggerOnUrlLine();
     void addShowOnWildcardLine();
     void addTriggerOnWildcardLine();
-
+    void loadScriptFile();
     void removeItem(QListWidgetItem *item);
 
 private:
     void setupMainWidget();
     void loadDesktopFile(KDesktopFile *file);
+    KUrl scriptUrl();
     QStringList getItems(QListWidget *listWidget);
     void setItems(QListWidget *listWidget, const QStringList &list);
     void dump();
