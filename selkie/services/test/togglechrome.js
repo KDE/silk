@@ -6,12 +6,12 @@
  * License: LGPL v2.1                                *
  * ------------------------------------------------- */
 
-duration = 1000;
+duration = 300;
 
 function toggleVisibility(id)
 {
     window.silk.GM_log("toggleVisibility");
-    duration = 1000;
+    duration = 300;
     setStyle(id, "-webkit-transition", "-webkit-transform " + duration + "ms ease");
     el = document.getElementById(id);
     if (el.style.display == 'none')
@@ -35,7 +35,7 @@ function setStyle(objId, style, value) {
 function toggle(id) {
     window.silk.GM_log("toggle" + id);
     el = document.getElementById(id);
-    duration = 2000;
+    duration = 300;
     setStyle(id, "-webkit-transition", "-webkit-transform " + duration + "ms ease");
     if (el.style.display == 'none')
     {
@@ -49,13 +49,9 @@ function toggle(id) {
     }
 }
 
-//window.silk.showNotification('Triggered!!!!!!...');
-window.silk.showNotification('<strong>Test Web Application</strong><br />Using the bookmarks icon as example', 'bookmarks');
-window.silk.showNotification('<strong>Test Web Application</strong><br />This one has the default (web-browser) icon');
 toggle("header");
 toggle("footer");
-
-
+window.silk.showNotification('<strong>... Chrome toggled</strong><br />');
 
 // Evil hack to force a reflow since Qt 4.5.1 doesn't do it
 var v = document.body.offsetHeight;
