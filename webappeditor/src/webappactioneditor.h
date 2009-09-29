@@ -6,6 +6,7 @@
 #ifndef WEBAPPACTIONEDITOR_H
 #define WEBAPPACTIONEDITOR_H
 
+#include <QDir>
 #include <KPageDialog>
 
 #include "ui_webappaction.h"
@@ -34,8 +35,10 @@ class WebAppActionEditor : public KPageWidgetItem
 {
     Q_OBJECT
 public:
-    WebAppActionEditor(KDesktopFile *file);
+    WebAppActionEditor(KDesktopFile *file, QDir dir);
     virtual ~WebAppActionEditor();
+
+    void setDir(QDir dir);
 
 private Q_SLOTS:
     void openActionFile();
@@ -56,6 +59,7 @@ private:
     void dump();
     Ui::WebAppActionEditor actionUi;
     KTextEditor::Document *m_editorPart;
+    QDir m_dir;
 
     KDesktopFile *m_desktopFile;
 };

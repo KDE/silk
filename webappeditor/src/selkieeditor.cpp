@@ -24,8 +24,6 @@ SelkieEditor::SelkieEditor()
     m_pages->setFaceType(KPageWidget::List);
     loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/test/");
 
-    QLabel *lbl = new QLabel("This works.");
-    //setCentralWidget(lbl);
     setCentralWidget(m_pages);
     kDebug() << "set central widget";
     setupGUI();
@@ -113,7 +111,7 @@ SelkieEditor::~SelkieEditor()
 
 void SelkieEditor::addAction(KDesktopFile *file)
 {
-    WebAppActionEditor *editor = new WebAppActionEditor(file);
+    WebAppActionEditor *editor = new WebAppActionEditor(file, m_dir);
     m_actionEditors << editor;
     m_pages->addPage(editor);
 }

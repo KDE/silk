@@ -30,8 +30,9 @@
 
 #include <KDE/KLocale>
 
-WebAppActionEditor::WebAppActionEditor(KDesktopFile *file)
-    : KPageWidgetItem(new QWidget(), QString())
+WebAppActionEditor::WebAppActionEditor(KDesktopFile *file, QDir dir)
+    : KPageWidgetItem(new QWidget(), QString()),
+        m_dir(dir)
 {
     setupMainWidget();
     loadDesktopFile(file);
@@ -39,6 +40,11 @@ WebAppActionEditor::WebAppActionEditor(KDesktopFile *file)
 
 WebAppActionEditor::~WebAppActionEditor()
 {
+}
+
+void WebAppActionEditor::setDir(QDir dir)
+{
+    m_dir = dir;
 }
 
 void WebAppActionEditor::setupMainWidget()
@@ -177,6 +183,17 @@ void WebAppActionEditor::loadDesktopFile(KDesktopFile *file)
     setItems(actionUi.triggerOnWildcard, group.readEntry("X-Silk-TriggerOnWildcard", QStringList()));
     actionUi.saveButton->setIcon(KIcon("document-save"));
 
+    // Load the JavaScript
+    QString script = group.readEntry("X-Silk-Script", QString());
+    QString scriptfile = group.readEntry("X-Silk-ScriptFile", QString());
+
+    kDebug() << "Script:" << script;
+
+    if (!scriptfile.isEmpty()) {
+        kDebug() << "ScriptFile:" << scriptfile;
+        KUrl scripturl = KUrl(QString("%1/%2").arg(m_dir.absolutePath(), scriptfile));
+        m_editorPart->openUrl(scripturl);
+    }
     setIcon(KIcon(actionUi.icon->icon()));
     setName(actionUi.label->text());
 
