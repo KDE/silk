@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>379</width>
-    <height>415</height>
+    <width>523</width>
+    <height>531</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,149 +27,177 @@
      </property>
      <widget class="QWidget" name="metaTab">
       <attribute name="title">
-       <string>Meta Information</string>
+       <string>Appearance and Meta Information</string>
       </attribute>
-      <layout class="QFormLayout" name="formLayout_2">
-       <property name="fieldGrowthPolicy">
-        <enum>QFormLayout::ExpandingFieldsGrow</enum>
-       </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_6">
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QLabel" name="label_25">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>200</height>
+          </size>
+         </property>
          <property name="text">
-          <string>&lt;b&gt;Meta Information&lt;/b&gt;</string>
+          <string>&lt;b&gt;How it works&lt;/b&gt;
+&lt;p&gt;
+On this &lt;b&gt;Appearance and Meta Information&lt;/b&gt; page, you set up the label and icon for a button in the toolbar. The plugin name is used internally. Make sure it's unique within this web application.
+&lt;/p&gt;
+&lt;p&gt;
+On the &lt;b&gt;Triggers and Conditions&lt;/b&gt; page, you can set up conditions under which the action is shown and triggered automatically. This way, you can apply scripts only to certain pages.
+&lt;/p&gt;
+&lt;p&gt;
+The &lt;b&gt;Scripts&lt;/b&gt; page lets you run a script when the action is triggered. You can load a JavaScript file there. If you include a file which does not actually run any changes, but just provides certain functions, you can additionally run a one-liner after the script is included.
+&lt;/p&gt;</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="labellabel">
-         <property name="text">
-          <string>Label</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="label"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Icon</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="KIconButton" name="icon">
-         <property name="icon">
-          <string>internet-web-browser</string>
-         </property>
-         <property name="iconSize">
-          <number>32</number>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Plugin name</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="pluginName"/>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Author</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="author"/>
+       <item>
+        <layout class="QFormLayout" name="formLayout_3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>&lt;b&gt;Meta Information&lt;/b&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="labellabel">
+           <property name="text">
+            <string>Label</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="label"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Icon</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="KIconButton" name="icon">
+           <property name="icon">
+            <string>internet-web-browser</string>
+           </property>
+           <property name="iconSize">
+            <number>32</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Plugin name</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="pluginName"/>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Author</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="author"/>
+         </item>
+         <item row="5" column="0">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="triggerTab">
       <attribute name="title">
-       <string>Actions and Triggers</string>
+       <string>Triggers and Conditions</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
        <property name="fieldGrowthPolicy">
         <enum>QFormLayout::ExpandingFieldsGrow</enum>
        </property>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>&lt;b&gt;Action Configuration&lt;/b&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
         <widget class="QLabel" name="label_14">
          <property name="text">
           <string>Show On URL</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="0" column="1">
         <widget class="KLineEdit" name="showOnUrlLine"/>
        </item>
-       <item row="2" column="1">
+       <item row="1" column="1">
         <widget class="KListWidget" name="showOnUrl"/>
        </item>
-       <item row="3" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="label_7">
          <property name="text">
           <string>Show on Wildcard</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="2" column="1">
         <widget class="KLineEdit" name="showOnWildcardLine"/>
        </item>
-       <item row="4" column="1">
+       <item row="3" column="1">
         <widget class="KListWidget" name="showOnWildcard"/>
        </item>
-       <item row="5" column="0">
+       <item row="4" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>Trigger on URL</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="4" column="1">
         <widget class="KLineEdit" name="triggerOnUrlLine"/>
        </item>
-       <item row="6" column="1">
+       <item row="5" column="1">
         <widget class="KListWidget" name="triggerOnUrl"/>
        </item>
-       <item row="7" column="0">
+       <item row="6" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
           <string>Trigger on Wildcard</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
+       <item row="6" column="1">
         <widget class="KLineEdit" name="triggerOnWildcardLine"/>
        </item>
-       <item row="8" column="1">
+       <item row="7" column="1">
         <widget class="KListWidget" name="triggerOnWildcard"/>
        </item>
       </layout>
-      <zorder>showOnUrl</zorder>
-      <zorder>label_7</zorder>
-      <zorder>showOnWildcard</zorder>
-      <zorder>label_14</zorder>
-      <zorder>triggerOnWildcardLine</zorder>
-      <zorder>triggerOnWildcard</zorder>
-      <zorder>showOnUrlLine</zorder>
-      <zorder>triggerOnUrlLine</zorder>
-      <zorder>label_9</zorder>
-      <zorder>triggerOnUrl</zorder>
-      <zorder>label_8</zorder>
-      <zorder>showOnWildcardLine</zorder>
-      <zorder>label_2</zorder>
       <zorder>label_7</zorder>
       <zorder>showOnUrl</zorder>
       <zorder>showOnWildcard</zorder>
@@ -179,7 +207,6 @@
       <zorder>showOnUrlLine</zorder>
       <zorder>triggerOnUrlLine</zorder>
       <zorder>triggerOnUrl</zorder>
-      <zorder>label_9</zorder>
       <zorder>label_8</zorder>
       <zorder>label_2</zorder>
       <zorder>showOnWildcardLine</zorder>
@@ -188,18 +215,32 @@
       <attribute name="title">
        <string>Scripts</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QVBoxLayout" name="scriptLayout">
          <item>
-          <widget class="QLineEdit" name="lineEdit"/>
-         </item>
-         <item>
-          <widget class="KPushButton" name="kpushbutton">
+          <widget class="QLabel" name="label_11">
            <property name="text">
-            <string>Save Script</string>
+            <string>JavaScript File to run (can just include functions)</string>
            </property>
           </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="scriptFile"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>JavaScript one-liner to run after script is executed</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="scriptLine"/>
          </item>
         </layout>
        </item>

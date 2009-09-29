@@ -52,6 +52,7 @@ void WebAppActionEditor::setupMainWidget()
     actionUi.setupUi(widget());
 
 
+    QBoxLayout *l = qobject_cast<QBoxLayout*>(actionUi.scriptFile->layout());
     KService::List offers = KServiceTypeTrader::self()->query("KTextEditor/Document");
     QWidget *w = new QWidget();
     foreach (const KService::Ptr service, offers) {
@@ -67,8 +68,10 @@ void WebAppActionEditor::setupMainWidget()
                 config->setConfigValue("line-numbers", true);
                 config->setConfigValue("dynamic-word-wrap", true);
             }
-
-            actionUi.scriptsTab->layout()->addWidget(view);
+            QBoxLayout *l = static_cast<QBoxLayout*>(actionUi.scriptsTab->layout());
+            if (l) {
+                l->insertWidget(1, view);
+            }
             connect(m_editorPart, SIGNAL(textChanged(KTextEditor::Document*)),
                     this, SLOT(scriptTextChanged()));
             break;
@@ -188,6 +191,8 @@ void WebAppActionEditor::loadDesktopFile(KDesktopFile *file)
     QString scriptfile = group.readEntry("X-Silk-ScriptFile", QString());
 
     kDebug() << "Script:" << script;
+    actionUi.scriptLine->setText(script);
+    actionUi.scriptFile->setText(scriptfile);
 
     if (!scriptfile.isEmpty()) {
         kDebug() << "ScriptFile:" << scriptfile;
@@ -213,6 +218,10 @@ void WebAppActionEditor::save()
     group.writeEntry("X-Silk-TriggerOnUrl", getItems(actionUi.triggerOnUrl));
     group.writeEntry("X-Silk-ShowOnWildcard", getItems(actionUi.showOnWildcard));
     group.writeEntry("X-Silk-TriggerOnWildcard", getItems(actionUi.triggerOnWildcard));
+    group.writeEntry("X-Silk-TriggerOnWildcard", getItems(actionUi.triggerOnWildcard));
+    group.writeEntry("X-Silk-Script", actionUi.scriptLine->text());
+    group.writeEntry("X-Silk-ScriptFile", actionUi.scriptFile->text());
+    // TODO: correct filename magic here
     m_desktopFile->sync();
     setIcon(KIcon(actionUi.icon->icon()));
     //dump();
