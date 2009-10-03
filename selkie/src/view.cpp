@@ -58,6 +58,7 @@ View::View( QWidget *parent )
     m_page = new Page( this );
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
     connect( this, SIGNAL( urlChanged(const QUrl &) ), this, SLOT( updateActions() ) );
+    connect( this, SIGNAL( loadFinished(bool) ), this, SLOT( loadFinished(bool) ) );
     setPage( m_page );
 
     m_scriptapi = new ScriptApi(this);
@@ -205,7 +206,14 @@ bool View::match(QStringList wildcards, QStringList urls)
 void View::updateActions()
 {
     resetToolbarActions();
-    triggerUrlActions();
+    //triggerUrlActions();
+}
+
+void View::loadFinished(bool ok)
+{
+    if (ok) {
+        triggerUrlActions();
+    }
 }
 
 void View::resetToolbarActions()

@@ -74,8 +74,9 @@ protected slots:
     void iconLoaded();
 
 private slots:
-    void slotPrint( QWebFrame* );
+    void slotPrint(QWebFrame*);
     void updateActions();
+    void loadFinished(bool ok);
 
 private:
     void resetToolbarActions();
