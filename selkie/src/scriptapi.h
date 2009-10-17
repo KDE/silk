@@ -78,6 +78,7 @@ public slots:
     bool include( const QString &filename );
 
     bool loadStyleSheet( const QString &filename );
+    bool loadLocalStyleSheet( const QString &filename );
 
 protected:
     /** Installs forwarding functions for GM_ global methods. */

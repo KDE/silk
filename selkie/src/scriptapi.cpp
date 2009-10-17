@@ -142,12 +142,49 @@ bool ScriptApi::loadStyleSheet( const QString &filename )
         kWarning() << "Not trusted: Not including the stylesheet:" << filename;
         return false;
     }
+    kDebug() << "loading filename:" << filename;
+    m_view->settings()->setUserStyleSheetUrl(KUrl(filename));
+    kDebug() << "user css url:" << m_view->settings()->userStyleSheetUrl ();
+    /*
     QString script( "var fileref=document.createElement(\"link\");\n" \
                     "fileref.setAttribute(\"rel\", \"stylesheet\");\n" \
                     "fileref.setAttribute(\"type\", \"text/css\");\n" \
                     "fileref.setAttribute(\"href\", \"" + filename + "\");\n" \
                     "document.getElementsByTagName(\"head\")[0].appendChild(fileref);\n" \
                   );
+    QFile f( filename );
+    if ( !f.open( QIODevice::ReadOnly ) ) {
+        kDebug() << "Unable to open file " << filename;
+        return false;
+    }
+
+    / *
+    script = QString("<style type=\"text/css\">\n");
+    QTextStream ts( &f );
+    script.append(ts.readAll());
+    script.append("\n</style>");
+    m_view->evaluateScript( ts.readAll() );
+    * /
+
+    kDebug() << script;
+    m_view->evaluateScript( script );
+    */
+    return true;
+}
+
+bool ScriptApi::loadLocalStyleSheet( const QString &filename )
+{
+    if ( !m_trusted ) {
+        kWarning() << "Not trusted: Not including the stylesheet:" << filename;
+        return false;
+    }
+    QString script( "var fileref=document.createElement(\"link\");\n" \
+                    "fileref.setAttribute(\"rel\", \"stylesheet\");\n" \
+                    "fileref.setAttribute(\"type\", \"text/css\");\n" \
+                    "fileref.setAttribute(\"href\", \"" + filename + "\");\n" \
+                    "document.getElementsByTagName(\"head\")[0].appendChild(fileref);\n" \
+                  );
+    kDebug() << script;
     m_view->evaluateScript( script );
     return true;
 }
