@@ -34,10 +34,12 @@
 
 #include <KActionCollection>
 #include <KDebug>
+#include <KGlobal>
 #include <KIcon>
 #include <KMainWindow>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
+#include <KStandardDirs>
 #include <KToolBar>
 #include <kio/accessmanager.h>
 
@@ -134,8 +136,14 @@ void View::evaluateScript( const QString &script )
 void View::loadStyleSheets()
 {
     foreach (const QString &css, m_options->styleSheets) {
-        kDebug() << css;
-        m_scriptapi->loadStyleSheet(css);
+        QString scriptfile = "silk-webapp/" + m_options->name + "/" + css;
+        kDebug() << css << scriptfile;
+        scriptfile = KGlobal::dirs()->findResource("data", scriptfile);
+        kDebug() << "____________ Found:" << scriptfile;
+
+        m_scriptapi->setTrusted( true );
+        m_scriptapi->loadStyleSheet(scriptfile);
+        m_scriptapi->setTrusted( false );
     }
 }
 

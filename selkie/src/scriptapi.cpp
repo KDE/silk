@@ -140,10 +140,12 @@ bool ScriptApi::loadStyleSheet( const QString &filename )
 {
     if ( !m_trusted ) {
         kDebug() << "Not trusted: Not including the stylesheet:" << filename;
-        //return false;
+        return false;
     }
     // TODO: validation of the filename
     //QString script("document.write('<link href=\"" + filename + "\" type=\"text/css\" rel=\"stylesheet\">');");
+
+
     QString script( "var fileref=document.createElement(\"link\");\n" \
                     "fileref.setAttribute(\"rel\", \"stylesheet\");\n" \
                     "fileref.setAttribute(\"type\", \"text/css\");\n" \
