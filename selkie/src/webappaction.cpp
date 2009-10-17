@@ -72,7 +72,7 @@ bool WebAppAction::load(const KPluginInfo &info)
     }
 
     //kDebug() << "Silk/WebApp/Action:" << comment << info.pluginName() << info.property("X-Silk-ShowOnUrl") <<  info.property("X-Silk-TriggerOnUrl") << info.icon();
-    kDebug() << "Found plugin:" << info.pluginName() << info.name() << info.icon();
+    //kDebug() << "Found plugin:" << info.pluginName() << info.name() << info.icon();
 
     m_options->name = info.pluginName();
     m_options->showOnUrl = info.property("X-Silk-ShowOnUrl").toStringList();
@@ -82,9 +82,9 @@ bool WebAppAction::load(const KPluginInfo &info)
     m_options->icon = KIcon(info.icon());
     m_options->text = info.name();
     if (!m_options->showOnUrl.isEmpty()) {
-        kDebug() << "=====> ShowOnUrl" << m_options->showOnUrl;
+        //kDebug() << "=====> ShowOnUrl" << m_options->showOnUrl;
     } else if (!m_options->showOnWildcard.isEmpty()){
-        kDebug() << "=====> ShowOnWildcard" << m_options->showOnWildcard;
+        //kDebug() << "=====> ShowOnWildcard" << m_options->showOnWildcard;
     }
     // Loading the JavaScript stuff
     QString script = info.property("X-Silk-Script").toString();
@@ -120,12 +120,12 @@ QString WebAppAction::loadScript(const QString &jsfile)
     QString script;
     QString scriptfile = "silk-webapp/" + m_webappPlugin + "/" + jsfile;
     scriptfile = KGlobal::dirs()->findResource("data", scriptfile);
-    kDebug() << "Found:" << scriptfile;
+    //kDebug() << "Found:" << scriptfile;
 
     QFile f(scriptfile);
     if (!f.open(QIODevice::ReadOnly)) {
         kWarning() << "Could not read scriptfile" << scriptfile;
-	return QString();
+        return QString();
     }
 
     QTextStream t(&f);

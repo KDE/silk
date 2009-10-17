@@ -91,19 +91,19 @@ bool WebApp::loadWebApp(const QString &name)
     foreach (const KPluginInfo &info, listWebApps(name)) {
 
         kDebug() << "Silk/WebApp:" << name << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
-        kDebug() << "Found plugin:" << name;
+        //kDebug() << "Found plugin:" << name;
         m_view->options()->name = info.pluginName();
         m_view->options()->windowIcon = KIcon(info.icon());
         m_view->options()->windowTitle = info.property("Name").toString();
 
         QUrl startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
-        kDebug() << startUrl;
+        //kDebug() << startUrl;
         QString dataUrl = "silk-webapp/" + info.pluginName() + "/";
         if (startUrl.isRelative()) {
             QString startFile = dataUrl + startUrl.toString();
-            kDebug() << "StartUrl is relative, search KStandardDirs for" << dataUrl << startUrl << startFile;
+            //kDebug() << "StartUrl is relative, search KStandardDirs for" << dataUrl << startUrl << startFile;
             QUrl url = KGlobal::dirs()->findResource("data", startFile);
-            kDebug() << "Found:" << url;
+            //kDebug() << "Found:" << url;
             //KGlobal::dirs()->findResource("data", startUrl);
             m_view->options()->startUrl = url;
         } else {
@@ -125,7 +125,7 @@ bool WebApp::loadWebApp(const QString &name)
         m_view->options()->styleSheets = info.property("X-Silk-StyleSheets").toStringList();
         kDebug() << "Stylesheets: ++" << m_view->options()->styleSheets;
 
-        kDebug() << "AllowedBases:" << m_view->options()->allowedBases;
+        //kDebug() << "AllowedBases:" << m_view->options()->allowedBases;
         QString comment = info.comment();
 
         if (comment.isEmpty()) {

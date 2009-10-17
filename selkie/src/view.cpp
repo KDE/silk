@@ -61,6 +61,7 @@ View::View( QWidget *parent )
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
     connect( this, SIGNAL( urlChanged(const QUrl &) ), this, SLOT( updateActions() ) );
     connect( this, SIGNAL( loadFinished(bool) ), this, SLOT( loadFinished(bool) ) );
+    connect( this, SIGNAL( loadFinished(bool) ), this, SLOT( loadStyleSheets() ) );
     setPage( m_page );
 
     m_scriptapi = new ScriptApi(this);
@@ -149,16 +150,16 @@ void View::loadStyleSheets()
 
 void View::iconLoaded()
 {
-    kDebug() << "Got icon";
+    //kDebug() << "Got icon";
     kDebug() << m_page->mainFrame()->icon().isNull();
     setWindowIcon( m_page->mainFrame()->icon() );
 }
 
 bool View::loadWebAppActions(WebApp *parent)
 {
-    kDebug() << "Searching for Actions ..." << m_options->name;
+    //kDebug() << "Searching for Actions ..." << m_options->name;
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name)) {
-        kDebug() << "New Action:" << info.name();
+        //kDebug() << "New Action:" << info.name();
         WebAppAction *action = new WebAppAction(parent);
         action->load(info);
         m_mapper->setMapping(action, action->options()->script);
@@ -174,25 +175,25 @@ bool View::loadWebAppActions(WebApp *parent)
 bool View::match(QStringList wildcards, QStringList urls)
 {
     if (!wildcards.isEmpty()) {
-        kDebug() << "+++++++ Wildcards" << wildcards;
+        //kDebug() << "+++++++ Wildcards" << wildcards;
         foreach(QString w, wildcards) {
             // Pattern matching
             bool inverted = false;
             if (w.startsWith('!')) {
                 w.remove(0, 1);
                 inverted = true;
-                kDebug() << "inverting wildcard" << w;
+                //kDebug() << "inverting wildcard" << w;
             }
             QRegExp rx(w);
             rx.setPatternSyntax(QRegExp::Wildcard);
             if (!inverted && rx.exactMatch(url().toString())) {
-                kDebug() << "showing (match) ..." << wildcards << url() << !inverted;
+                //kDebug() << "showing (match) ..." << wildcards << url() << !inverted;
                 return true;
             } else if (inverted && !rx.exactMatch(url().toString())) {
-                kDebug() << "showing (no match, inverted) ..." << wildcards << url() << !inverted;
+                //kDebug() << "showing (no match, inverted) ..." << wildcards << url() << !inverted;
                 return true;
             } else {
-                kDebug() << "wildcard" << w << "not matching";
+                //kDebug() << "wildcard" << w << "not matching";
             }
         }
     }
@@ -201,7 +202,7 @@ bool View::match(QStringList wildcards, QStringList urls)
     if (urls.isEmpty() && !wildcards.isEmpty()) {
         // neither wildcard nor url is specified. Let's show the action
         // as there are no restrictions specified
-        kDebug() << "not showing:" << wildcards << url();
+        //kDebug() << "not showing:" << wildcards << url();
         return false;
     } else if (urls.isEmpty()) {
         // no wildcards, no URLs to pay attention to
@@ -228,7 +229,7 @@ void View::updateActions()
 void View::loadFinished(bool ok)
 {
     if (ok) {
-        loadStyleSheets();
+        //loadStyleSheets();
         triggerUrlActions();
     }
 }
@@ -246,7 +247,7 @@ void View::resetToolbarActions()
         WebAppAction *wa_action = qobject_cast<WebAppAction*>(action);
         if (wa_action) {
             if (match(wa_action->options()->showOnWildcard, wa_action->options()->showOnUrl)) {
-                kDebug() << "Showing" << wa_action->options()->name;
+                //kDebug() << "Showing" << wa_action->options()->name;
                 win->toolBar()->addAction(wa_action);
             }
         }

@@ -78,12 +78,12 @@ private slots:
     void slotPrint(QWebFrame*);
     void updateActions();
     void loadFinished(bool ok);
+    void loadStyleSheets();
 
 private:
     void resetToolbarActions();
     void triggerUrlActions();
     bool match (QStringList wildcards, QStringList urls);
-    void loadStyleSheets();
 
 private:
     /** should the provided action currently be shown? */

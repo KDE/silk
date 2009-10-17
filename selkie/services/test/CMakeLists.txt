@@ -13,7 +13,7 @@ install(FILES togglechrome.js DESTINATION ${DATA_INSTALL_DIR}/silk-webapp/test/)
 install(FILES silk-webapp-test-wildcard.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install(FILES silk-webapp-test-editor.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install(FILES rotateelement.js DESTINATION ${DATA_INSTALL_DIR}/silk-webapp/test/)
-install(FILES testsite/alternative.css DESTINATION ${DATA_INSTALL_DIR}/silk-webapp/test/)
+install(FILES alternative.css DESTINATION ${DATA_INSTALL_DIR}/silk-webapp/test/)
 
 
 # Install the test sites files
