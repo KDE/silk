@@ -1,0 +1,11 @@
+h1, h2 {
+    color: red;
+    background: green;
+    font-size: 5pt;
+}
+
+p { font-size: 29px !important; }
+
+#header, #headerright, #footer, #footerright {
+    display: none !important;
+}

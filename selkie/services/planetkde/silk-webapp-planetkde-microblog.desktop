@@ -1,0 +1,12 @@
+[Desktop Entry]
+Comment=Compose a New Email
+Icon=im-status-message-edit
+Name=Compose
+Type=Service
+X-KDE-PluginInfo-Depends=gmail
+X-KDE-PluginInfo-Name=im-status-message-edit
+X-KDE-ServiceTypes=Silk/WebApp/Action
+X-Silk-ScriptFile=pko-functions.js
+X-Silk-Script=showTwitter();
+X-Silk-ShowOnWildcard=http://planetkde.org/*
+X-Silk-WebApp=planetkde

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Planet KDE
+Comment=Developer Blogs
+Exec=selkie planetkde
+Icon=kde
+StartupNotify=true
+Type=Application
