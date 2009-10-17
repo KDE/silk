@@ -135,3 +135,33 @@ bool ScriptApi::include( const QString &filename )
     return true;
 }
 
+
+bool ScriptApi::loadStyleSheet( const QString &filename )
+{
+    if ( !m_trusted ) {
+        kDebug() << "Not trusted: Not including the stylesheet:" << filename;
+        //return false;
+    }
+    // TODO: validation of the filename
+    //QString script("document.write('<link href=\"" + filename + "\" type=\"text/css\" rel=\"stylesheet\">');");
+    QString script( "var fileref=document.createElement(\"link\");\n" \
+                    "fileref.setAttribute(\"rel\", \"stylesheet\");\n" \
+                    "fileref.setAttribute(\"type\", \"text/css\");\n" \
+                    "fileref.setAttribute(\"href\", \"" + filename + "\");\n" \
+                    "document.getElementsByTagName(\"head\")[0].appendChild(fileref);\n" \
+                  );
+    m_view->evaluateScript( script );
+    kDebug() << "=============>>>>> included stylesheet" << script;
+
+/*
+    else if (filetype=="css"){ //if filename is an external CSS file
+  var fileref=document.createElement("link")
+  fileref.setAttribute("rel", "stylesheet")
+  fileref.setAttribute("type", "text/css")
+  fileref.setAttribute("href", filename)
+ }
+ if (typeof fileref!="undefined")
+  document.getElementsByTagName("head")[0].appendChild(fileref)
+*/
+    return true;
+}

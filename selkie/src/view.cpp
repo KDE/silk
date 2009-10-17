@@ -78,7 +78,7 @@ View::View( QWidget *parent )
     m_progressTimer->setSingleShot( true );
 
     m_progressBar = new QProgressBar( this );
-    m_progressBar->show(); // let's show it at startup.
+    m_progressBar->show(); // let's show it on startup.
 
     connect( this, SIGNAL( loadStarted() ), m_progressTimer, SLOT( start() ) );
     connect( this, SIGNAL( loadProgress( int ) ), m_progressBar, SLOT( setValue( int ) ) );
@@ -129,6 +129,14 @@ void View::evaluateScript( const QString &script )
     m_scriptapi->setTrusted( true );
     page()->mainFrame()->evaluateJavaScript( script );
     m_scriptapi->setTrusted( false );
+}
+
+void View::loadStyleSheets()
+{
+    foreach (const QString &css, m_options->styleSheets) {
+        kDebug() << css;
+        m_scriptapi->loadStyleSheet(css);
+    }
 }
 
 void View::iconLoaded()
@@ -212,6 +220,7 @@ void View::updateActions()
 void View::loadFinished(bool ok)
 {
     if (ok) {
+        loadStyleSheets();
         triggerUrlActions();
     }
 }

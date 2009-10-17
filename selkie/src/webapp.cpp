@@ -122,6 +122,9 @@ bool WebApp::loadWebApp(const QString &name)
                 m_view->options()->allowedBases << QUrl(url);
             }
         }
+        m_view->options()->styleSheets = info.property("X-Silk-StyleSheets").toStringList();
+        kDebug() << "Stylesheets: ++" << m_view->options()->styleSheets;
+
         kDebug() << "AllowedBases:" << m_view->options()->allowedBases;
         QString comment = info.comment();
 

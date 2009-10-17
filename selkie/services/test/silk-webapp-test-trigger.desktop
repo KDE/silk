@@ -10,5 +10,5 @@ X-Silk-ScriptFile=togglechrome.js
 X-Silk-ShowOnUrl=file:///
 X-Silk-ShowOnWildcard=
 X-Silk-TriggerOnUrl=
-X-Silk-TriggerOnWildcard=*mountain.html
+X-Silk-TriggerOnWildcard=*mountain.html,*
 X-Silk-WebApp=test

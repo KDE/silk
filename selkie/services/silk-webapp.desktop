@@ -11,7 +11,9 @@ Type=QString
 [PropertyDef::X-Silk-WindowTitle]
 Type=QString
 
-
 [PropertyDef::X-Silk-AllowedBases]
+Type=QStringList
+
+[PropertyDef::X-Silk-StyleSheets]
 Type=QStringList
 

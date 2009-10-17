@@ -1,12 +1,14 @@
 [Desktop Entry]
 Comment=Toggle the Chrome in Gitorious Interface
-Icon=view-sidetree
+Icon=view-fullscreen
 Name=Toggle Chrome
 Type=Service
-
 X-KDE-PluginInfo-Name=silk-sidebar
 X-KDE-ServiceTypes=Silk/WebApp/Action
-
+X-Silk-Script=
 X-Silk-ScriptFile=togglesidebar.js
 X-Silk-ShowOnUrl=http://gitorious.org/
+X-Silk-ShowOnWildcard=
+X-Silk-TriggerOnUrl=
+X-Silk-TriggerOnWildcard=
 X-Silk-WebApp=silk

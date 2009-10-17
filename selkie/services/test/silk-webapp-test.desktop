@@ -15,3 +15,4 @@ X-KDE-ServiceType=Silk/WebApp
 X-KDE-ServiceTypes=Silk/WebApp
 X-Silk-AllowedBases=testsite/
 X-Silk-StartUrl=testsite/selkie.html
+X-Silk-StyleSheets=alternative.css

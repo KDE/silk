@@ -2,7 +2,7 @@
  * Show/Hide the header, footer and sidebar          *
  *                                                   *
  * Site:    Gitorious.org                            *
- * Author:  Sebastian Kügler <sebas@kde.org>         *
+ * Author:  Sebastian K?gler <sebas@kde.org>         *
  * License: LGPL v2.1                                *
  * ------------------------------------------------- */
 

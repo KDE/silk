@@ -48,6 +48,7 @@ struct WebAppOptions
     QString plugin;
     QUrl startUrl;
     QList<QUrl> allowedBases;
+    QStringList styleSheets;
     QIcon windowIcon;
     QString windowTitle;
     QList<QAction *> actions;
@@ -82,6 +83,7 @@ private:
     void resetToolbarActions();
     void triggerUrlActions();
     bool match (QStringList wildcards, QStringList urls);
+    void loadStyleSheets();
 
 private:
     /** should the provided action currently be shown? */

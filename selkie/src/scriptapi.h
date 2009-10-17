@@ -74,8 +74,10 @@ public slots:
 
     void showNotification( const QString &text, QString icon = QString("internet-web-browser") );
 
-    // Only works if trusted
+    // The following methods only work if trusted
     bool include( const QString &filename );
+
+    bool loadStyleSheet( const QString &filename );
 
 protected:
     /** Installs forwarding functions for GM_ global methods. */
