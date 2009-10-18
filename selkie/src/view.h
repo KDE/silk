@@ -35,6 +35,7 @@
 
 #include "webappaction.h"
 
+class KMainWindow;
 class QProgressBar;
 class QSignalMapper;
 class Page;
@@ -59,7 +60,7 @@ class View : public QGraphicsWebView
     Q_OBJECT
 
 public:
-    View( QGraphicsItem * parent = 0 );
+    View( KMainWindow *win, QGraphicsItem *parent = 0 );
     ~View();
 
     WebAppOptions *options() const;
@@ -77,12 +78,12 @@ protected slots:
 private slots:
     void slotPrint(QWebFrame*);
     void updateActions();
-    void loadFinished(bool ok);
+    void triggerUrlActions();
     void loadStyleSheets();
+    void updateProgress(qreal progress);
 
 private:
     void resetToolbarActions();
-    void triggerUrlActions();
     bool match (QStringList wildcards, QStringList urls);
 
 private:
@@ -95,6 +96,7 @@ private:
     ScriptApi *m_scriptapi;
     QProgressBar* m_progressBar;
     QTimer* m_progressTimer;
+    KMainWindow* m_win;
 };
 
 #endif // VIEW_H

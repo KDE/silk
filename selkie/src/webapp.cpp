@@ -32,7 +32,9 @@
 #include <KConfigDialog>
 #include <KDebug>
 #include <KDE/KLocale>
+#include <QGraphicsLinearLayout>
 #include <QGraphicsView>
+#include <QGraphicsWidget>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 #include <KToolBar>
@@ -42,16 +44,35 @@
 
 
 WebApp::WebApp()
-    : KMainWindow(),
-      m_view(new View(0)),
-      m_qgs(0)
+    : KMainWindow()
 {
     setAcceptDrops(true);
-    m_qgs = new QGraphicsScene(this);
-    m_qgs->addItem(m_view);
 
-    QGraphicsView *gv = new QGraphicsView(m_qgs);
+    m_qgs = new QGraphicsScene(this);
+    //m_qgs->addText("Selkie on QGV...");
+
+    QGraphicsView *gv = new QGraphicsView(m_qgs, this);
+    kDebug() << "qgs" << m_qgs->sceneRect() << gv->geometry();
+
+    QGraphicsLinearLayout *l = new QGraphicsLinearLayout;
+
+    QGraphicsWidget *w = new QGraphicsWidget;
+    m_view = new View(this, w);
+    l->addItem(m_view);
+    l->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    w->setLayout(l);
+    l->setSpacing(0);
+    m_qgs->addItem(w);
+    QRectF rect = QRectF(0,0, 400, 400);
+    rect = gv->viewport()->geometry();
+    kDebug() << rect;
+    m_qgs->setSceneRect(rect);
+    w->setGeometry(rect);
+    gv->setGeometry(rect.toRect());
     setCentralWidget(gv);
+    gv->show();
+    kDebug() << "qgs" << m_qgs->sceneRect() << gv->geometry();
 }
 
 WebApp::~WebApp()
