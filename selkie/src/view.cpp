@@ -49,8 +49,9 @@
 #include "webapp.h"
 #include "scriptapi.h"
 
-View::View( QGraphicsItem *parent )
-    : QGraphicsWebView(parent)
+View::View( KMainWindow *win, QGraphicsItem *parent)
+    : QGraphicsWebView(parent),
+    m_win(win)
 {
     m_mapper = new QSignalMapper( this );
     connect( m_mapper, SIGNAL( mapped(const QString &) ), SLOT(evaluateScript(const QString &)) );
@@ -61,8 +62,8 @@ View::View( QGraphicsItem *parent )
     m_page = new Page( this );
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
     connect( this, SIGNAL( urlChanged(const QUrl &) ), this, SLOT( updateActions() ) );
-    connect( this, SIGNAL( loadFinished(bool) ), this, SLOT( loadFinished(bool) ) );
-    connect( this, SIGNAL( loadFinished(bool) ), this, SLOT( loadStyleSheets() ) );
+    connect( this, SIGNAL( loadFinished() ), this, SLOT( loadStyleSheets() ) );
+    connect( this, SIGNAL( loadFinished() ), this, SLOT( triggerUrlActions() ) );
     setPage( m_page );
 
     m_scriptapi = new ScriptApi(this);
@@ -85,9 +86,9 @@ View::View( QGraphicsItem *parent )
     m_progressBar->show(); // let's show it on startup.
 
     connect( this, SIGNAL( loadStarted() ), m_progressTimer, SLOT( start() ) );
-    connect( this, SIGNAL( loadProgress( int ) ), m_progressBar, SLOT( setValue( int ) ) );
-    connect( this, SIGNAL( loadFinished( bool ) ), m_progressBar, SLOT( hide() ) );
-    connect( this, SIGNAL( loadFinished( bool ) ), m_progressTimer, SLOT( stop() ) );
+    connect( this, SIGNAL( progressChanged( qreal ) ), this, SLOT( updateProgress( qreal ) ) );
+    connect( this, SIGNAL( loadFinished() ), m_progressBar, SLOT( hide() ) );
+    connect( this, SIGNAL( loadFinished() ), m_progressTimer, SLOT( stop() ) );
     connect( m_progressTimer, SIGNAL( timeout() ), m_progressBar, SLOT( show() ) );
 
     connect( this->page(), SIGNAL( printRequested ( QWebFrame*) ),
@@ -97,6 +98,11 @@ View::View( QGraphicsItem *parent )
 View::~View()
 {
     delete m_options;
+}
+
+void View::updateProgress(qreal progress)
+{
+    m_progressBar->setValue((int)(progress*100));
 }
 
 void View::slotPrint( QWebFrame* frame )
@@ -230,29 +236,21 @@ void View::updateActions()
     //triggerUrlActions();
 }
 
-void View::loadFinished(bool ok)
-{
-    if (ok) {
-        //loadStyleSheets();
-        triggerUrlActions();
-    }
-}
-
 void View::resetToolbarActions()
 {
-    KMainWindow* win = qobject_cast<KMainWindow*>(parent());
-    if (!win) {
+    //KMainWindow* win = qobject_cast<KMainWindow*>(parent());
+    if (!m_win) {
         kWarning() << "Our parent is not a KMainWindow, be afraid";
         return;
     }
 
-    win->toolBar()->clear();
+    m_win->toolBar()->clear();
     foreach (QAction *action, m_actionCollection->actions()) {
         WebAppAction *wa_action = qobject_cast<WebAppAction*>(action);
         if (wa_action) {
             if (match(wa_action->options()->showOnWildcard, wa_action->options()->showOnUrl)) {
                 //kDebug() << "Showing" << wa_action->options()->name;
-                win->toolBar()->addAction(wa_action);
+                m_win->toolBar()->addAction(wa_action);
             }
         }
     }
