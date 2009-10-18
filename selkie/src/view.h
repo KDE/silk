@@ -24,7 +24,7 @@
 
 #ifndef VIEW_H
 #define VIEW_H
-
+#include <QGraphicsWebView>
 #include <qwebview.h>
 #include <qmap.h>
 #include <qaction.h>
@@ -54,12 +54,12 @@ struct WebAppOptions
     QList<QAction *> actions;
 };
 
-class View : public QWebView
+class View : public QGraphicsWebView
 {
     Q_OBJECT
 
 public:
-    View( QWidget *parent=0 );
+    View( QGraphicsItem * parent = 0 );
     ~View();
 
     WebAppOptions *options() const;
