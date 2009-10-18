@@ -32,6 +32,7 @@
 #include <KConfigDialog>
 #include <KDebug>
 #include <KDE/KLocale>
+#include <QGraphicsView>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 #include <KToolBar>
@@ -42,10 +43,15 @@
 
 WebApp::WebApp()
     : KMainWindow(),
-      m_view(new View(this))
+      m_view(new View(0)),
+      m_qgs(0)
 {
     setAcceptDrops(true);
-    setCentralWidget(m_view);
+    m_qgs = new QGraphicsScene(this);
+    m_qgs->addItem(m_view);
+
+    QGraphicsView *gv = new QGraphicsView(m_qgs);
+    setCentralWidget(gv);
 }
 
 WebApp::~WebApp()

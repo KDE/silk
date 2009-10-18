@@ -23,6 +23,7 @@
  */
 
 #include <qdebug.h>
+#include <QGraphicsWebView>
 #include <qwebsettings.h>
 #include <qwebframe.h>
 #include <qsettings.h>
@@ -48,8 +49,8 @@
 #include "webapp.h"
 #include "scriptapi.h"
 
-View::View( QWidget *parent )
-    : QWebView(parent)
+View::View( QGraphicsItem *parent )
+    : QGraphicsWebView(parent)
 {
     m_mapper = new QSignalMapper( this );
     connect( m_mapper, SIGNAL( mapped(const QString &) ), SLOT(evaluateScript(const QString &)) );
@@ -80,7 +81,7 @@ View::View( QWidget *parent )
     m_progressTimer->setInterval( 500 );
     m_progressTimer->setSingleShot( true );
 
-    m_progressBar = new QProgressBar( this );
+    m_progressBar = new QProgressBar();
     m_progressBar->show(); // let's show it on startup.
 
     connect( this, SIGNAL( loadStarted() ), m_progressTimer, SLOT( start() ) );
@@ -100,10 +101,13 @@ View::~View()
 
 void View::slotPrint( QWebFrame* frame )
 {
-    QPrintPreviewDialog dlg( this );
+    /*
+    FIXME
+    QPrintPreviewDialog dlg( 0 );
     connect( &dlg, SIGNAL( paintRequested( QPrinter * ) ),
              frame, SLOT( print( QPrinter * ) ) );
     dlg.exec();
+    */
 }
 
 WebAppOptions *View::options() const
@@ -152,7 +156,7 @@ void View::iconLoaded()
 {
     //kDebug() << "Got icon";
     kDebug() << m_page->mainFrame()->icon().isNull();
-    setWindowIcon( m_page->mainFrame()->icon() );
+    //FIXME: setWindowIcon( m_page->mainFrame()->icon() );
 }
 
 bool View::loadWebAppActions(WebApp *parent)

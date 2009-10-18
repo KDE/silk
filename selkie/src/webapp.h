@@ -28,6 +28,8 @@
 #include <KPluginInfo>
 
 class View;
+
+class QGraphicsScene;
 class QPrinter;
 class KToggleAction;
 class KUrl;
@@ -58,6 +60,8 @@ public:
 private:
     View *m_view;
     KActionCollection *m_actionCollection;
+
+    QGraphicsScene *m_qgs;
 };
 
 #endif // _SITESPECIFICBROWSER_H_
