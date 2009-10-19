@@ -19,7 +19,7 @@ SliceGraphicsWidget::SliceGraphicsWidget( QGraphicsWidget *parent )
 {
     d = new SliceGraphicsWidgetPrivate;
     d->view = new QWebGraphicsItem( this );
-    connect( d->view, SIGNAL( loadFinished(bool) ), this, SLOT( createSlice(bool) ) );
+    connect( d->view, SIGNAL( loadFinished() ), this, SLOT( createSlice() ) );
     /*
     QLabel *label = new QLabel( this );
     label->setText("loading...");
@@ -46,16 +46,23 @@ void SliceGraphicsWidget::setUrl( const QUrl &url )
     d->view->load( url );
 }
 
+QUrl SliceGraphicsWidget::url()
+{
+    return d->view->url();
+}
+
+QString SliceGraphicsWidget::element()
+{
+    return d->selector;
+}
+
 void SliceGraphicsWidget::setElement( const QString &selector )
 {
     d->selector = selector;
 }
 
-void SliceGraphicsWidget::createSlice( bool ok )
+void SliceGraphicsWidget::createSlice()
 {
-    if ( !ok )
-        return;
-
     QWebFrame *frame = d->view->page()->mainFrame();
     QWebElement element = frame->findFirstElement( d->selector );
     if ( element.isNull() ) {

@@ -16,8 +16,11 @@ public:
     void setUrl( const QUrl &url );
     void setElement( const QString &selector );
 
+    QUrl url();
+    QString element();
+
 protected slots:
-    void createSlice( bool );
+    void createSlice();
     void resizeEvent ( QResizeEvent * event );
 
 private:

@@ -1,11 +1,11 @@
 #ifndef SLICEWIDGET_H
 #define SLICEWIDGET_H
 
-#include <qstackedwidget.h>
+#include <qgraphicsview.h>
 
 class QUrl;
 
-class SliceWidget : public QStackedWidget
+class SliceWidget : public QGraphicsView
 {
     Q_OBJECT
 
@@ -17,7 +17,6 @@ public:
     void setElement( const QString &selector );
 
 protected slots:
-    void createSlice( bool );
     void resizeEvent ( QResizeEvent * event );
 
 private:
