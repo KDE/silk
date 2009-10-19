@@ -3,11 +3,11 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = 
+TARGET =
 DEPENDPATH += .
 INCLUDEPATH += /home/rich/src/project-silk/webslicer2/. .
 QT += webkit
 
 # Input
-HEADERS += slicewidget.h
-SOURCES += main.cpp slicewidget.cpp
+HEADERS += slicewidget.h slicegraphicswidget.h
+SOURCES += main.cpp slicewidget.cpp slicegraphicswidget.cpp
