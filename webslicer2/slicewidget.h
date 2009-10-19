@@ -1,11 +1,11 @@
 #ifndef SLICEWIDGET_H
 #define SLICEWIDGET_H
 
-#include <qwidget.h>
+#include <qstackedwidget.h>
 
 class QUrl;
 
-class SliceWidget : public QWidget
+class SliceWidget : public QStackedWidget
 {
     Q_OBJECT
 

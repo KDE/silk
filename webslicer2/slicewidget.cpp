@@ -1,4 +1,5 @@
 #include <qdebug.h>
+#include <qlabel.h>
 #include <qwebview.h>
 #include <qwebelement.h>
 #include <qwebpage.h>
@@ -14,19 +15,25 @@ struct SliceWidgetPrivate
 };
 
 SliceWidget::SliceWidget( QWidget *parent )
-    : QWidget( parent )
+    : QStackedWidget( parent )
 {
     d = new SliceWidgetPrivate;
     d->view = new QWebView( this );
-    d->view->hide();
     connect( d->view, SIGNAL( loadFinished(bool) ), this, SLOT( createSlice(bool) ) );
+
+    QLabel *label = new QLabel( this );
+    label->setText("loading...");
+    label->setAlignment(Qt::AlignCenter);
+    addWidget(label);
 
     QWebFrame *frame = d->view->page()->mainFrame();
     frame->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
     frame->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
 
-    QVBoxLayout *box = new QVBoxLayout(this);
-    box->addWidget(d->view);
+    addWidget(d->view);
+    setCurrentIndex(0);
+    setMinimumSize(20,20);
+    //setPreferedSize(20,80);
 }
 
 SliceWidget::~SliceWidget()
@@ -51,21 +58,24 @@ void SliceWidget::createSlice( bool ok )
 
     QWebFrame *frame = d->view->page()->mainFrame();
     QWebElement element = frame->findFirstElement( d->selector );
-    if ( element.isNull() )
+    if ( element.isNull() ) {
+        qobject_cast<QLabel*>(widget(0))->setText("Loading failed. :(");
         return;
-
+    }
     d->view->resize( element.geometry().size() );
     frame->setScrollPosition( element.geometry().topLeft() );
     setGeometry(element.geometry());
-    d->view->show();
+    setCurrentIndex(1);
 }
 
 void SliceWidget::resizeEvent ( QResizeEvent * event )
 {
     QWebFrame *frame = d->view->page()->mainFrame();
     QWebElement element = frame->findFirstElement( d->selector );
-    if ( element.isNull() )
+    if ( element.isNull() ) {
         return;
+    }
+
     d->view->resize( element.geometry().size() );
     frame->setScrollPosition( element.geometry().topLeft() );
 }
