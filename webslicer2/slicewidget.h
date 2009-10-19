@@ -17,7 +17,8 @@ public:
     void setElement( const QString &selector );
 
 protected slots:
-    void createSlice(bool);
+    void createSlice( bool );
+    void resizeEvent ( QResizeEvent * event );
 
 private:
     struct SliceWidgetPrivate *d;

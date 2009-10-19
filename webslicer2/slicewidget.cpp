@@ -1,3 +1,4 @@
+#include <qdebug.h>
 #include <qwebview.h>
 #include <qwebelement.h>
 #include <qwebpage.h>
@@ -17,6 +18,7 @@ SliceWidget::SliceWidget( QWidget *parent )
 {
     d = new SliceWidgetPrivate;
     d->view = new QWebView( this );
+    d->view->hide();
     connect( d->view, SIGNAL( loadFinished(bool) ), this, SLOT( createSlice(bool) ) );
 
     QWebFrame *frame = d->view->page()->mainFrame();
@@ -45,13 +47,25 @@ void SliceWidget::setElement( const QString &selector )
 void SliceWidget::createSlice( bool ok )
 {
     if ( !ok )
-	return;
+        return;
 
     QWebFrame *frame = d->view->page()->mainFrame();
     QWebElement element = frame->findFirstElement( d->selector );
     if ( element.isNull() )
-	return;
+        return;
 
+    d->view->resize( element.geometry().size() );
+    frame->setScrollPosition( element.geometry().topLeft() );
+    setGeometry(element.geometry());
+    d->view->show();
+}
+
+void SliceWidget::resizeEvent ( QResizeEvent * event )
+{
+    QWebFrame *frame = d->view->page()->mainFrame();
+    QWebElement element = frame->findFirstElement( d->selector );
+    if ( element.isNull() )
+        return;
     d->view->resize( element.geometry().size() );
     frame->setScrollPosition( element.geometry().topLeft() );
 }
