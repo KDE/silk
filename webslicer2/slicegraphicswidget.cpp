@@ -1,6 +1,6 @@
 #include <qdebug.h>
 #include <qlabel.h>
-#include <qwebgraphicsitem.h>
+#include <qgraphicswebview.h>
 #include <qwebelement.h>
 #include <qwebpage.h>
 #include <qwebframe.h>
@@ -10,7 +10,7 @@
 
 struct SliceGraphicsWidgetPrivate
 {
-    QWebGraphicsItem *view;
+    QGraphicsWebView *view;
     QString selector;
 };
 
@@ -18,7 +18,7 @@ SliceGraphicsWidget::SliceGraphicsWidget( QGraphicsWidget *parent )
     : QGraphicsWidget( parent )
 {
     d = new SliceGraphicsWidgetPrivate;
-    d->view = new QWebGraphicsItem( this );
+    d->view = new QGraphicsWebView( this );
     connect( d->view, SIGNAL( loadFinished() ), this, SLOT( createSlice() ) );
     /*
     QLabel *label = new QLabel( this );
