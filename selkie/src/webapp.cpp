@@ -21,6 +21,7 @@
  */
 
 #include "webapp.h"
+#include "webappwidget.h"
 #include "view.h"
 
 #include <QtGui/QDropEvent>
@@ -48,7 +49,9 @@ WebApp::WebApp()
     : KMainWindow()
 {
     setAcceptDrops(true);
-
+    m_widget = new WebAppWidget(this);
+    setCentralWidget(m_widget);
+    /*
     m_qgs = new QGraphicsScene(this);
     //m_qgs->addText("Selkie on QGV...");
 
@@ -56,31 +59,23 @@ WebApp::WebApp()
     gv->setMinimumSize(400, 400);
     kDebug() << "qgs" << m_qgs->sceneRect() << gv->geometry();
 
-    QGraphicsLinearLayout *l = new QGraphicsLinearLayout;
+    m_widget->view() = new View(this);
+    m_widget->view()->setGeometry(gv->geometry());
 
-    QGraphicsWidget *w = new QGraphicsWidget;
-    m_view = new View(this, w);
-    m_view->setGeometry(gv->geometry());
-    l->addItem(m_view);
-    l->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    w->setLayout(l);
-    l->setSpacing(0);
-    l->setContentsMargins(0,0,0,0);
-    m_qgs->addItem(w);
-    QRectF rect = QRectF(0,0, 400, 400);
-    rect = gv->geometry();
+    m_qgs->addItem(m_widget->view());
+    QRectF rect = gv->geometry();
     kDebug() << "viewport" << rect;
     m_qgs->setSceneRect(rect);
-    w->setGeometry(rect);
+    m_widget->view()->setGeometry(rect);
     gv->setGeometry(rect.toRect());
-    setCentralWidget(gv);
     gv->show();
     kDebug() << "qgs" << m_qgs->sceneRect() << gv->geometry();
-    m_view->resize( gv->geometry().size() );
+    //m_widget->view()->resize( gv->geometry().size() );
 
     gv->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     gv->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+
+    */
 }
 
 WebApp::~WebApp()
@@ -89,21 +84,21 @@ WebApp::~WebApp()
 
 QString WebApp::name()
 {
-    return m_view->options()->name;
+    return m_widget->view()->options()->name;
 }
 
 QIcon WebApp::icon()
 {
-    return m_view->options()->windowIcon;
+    return m_widget->view()->options()->windowIcon;
 }
 
 void WebApp::startApplication()
 {
-    setWindowTitle( m_view->options()->windowTitle );
-    m_view->setUrl( m_view->options()->startUrl );
+    setWindowTitle( m_widget->view()->options()->windowTitle );
+    m_widget->view()->setUrl( m_widget->view()->options()->startUrl );
     setWindowIcon(icon());
 
-    QIcon icon = QWebSettings::iconForUrl( m_view->options()->startUrl );
+    QIcon icon = QWebSettings::iconForUrl( m_widget->view()->options()->startUrl );
     kDebug() << "Is icon null: " << icon.isNull();
     if ( !icon.isNull() ) {
         setWindowIcon( icon );
@@ -127,9 +122,9 @@ bool WebApp::loadWebApp(const QString &name)
 
         kDebug() << "Silk/WebApp:" << name << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
         //kDebug() << "Found plugin:" << name;
-        m_view->options()->name = info.pluginName();
-        m_view->options()->windowIcon = KIcon(info.icon());
-        m_view->options()->windowTitle = info.property("Name").toString();
+        m_widget->view()->options()->name = info.pluginName();
+        m_widget->view()->options()->windowIcon = KIcon(info.icon());
+        m_widget->view()->options()->windowTitle = info.property("Name").toString();
 
         QUrl startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
         //kDebug() << startUrl;
@@ -140,9 +135,9 @@ bool WebApp::loadWebApp(const QString &name)
             QUrl url = KGlobal::dirs()->findResource("data", startFile);
             //kDebug() << "Found:" << url;
             //KGlobal::dirs()->findResource("data", startUrl);
-            m_view->options()->startUrl = url;
+            m_widget->view()->options()->startUrl = url;
         } else {
-            m_view->options()->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
+            m_widget->view()->options()->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
 
         }
         foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
@@ -151,16 +146,16 @@ bool WebApp::loadWebApp(const QString &name)
                 foreach (const QString &allowedUrl, u) {
                     // We need to append file:// as protocol, otherwise the
                     // parent matching with allowed bases won't work
-                    m_view->options()->allowedBases << QUrl("file://" + allowedUrl);
+                    m_widget->view()->options()->allowedBases << QUrl("file://" + allowedUrl);
                 }
             } else {
-                m_view->options()->allowedBases << QUrl(url);
+                m_widget->view()->options()->allowedBases << QUrl(url);
             }
         }
-        m_view->options()->styleSheets = info.property("X-Silk-StyleSheets").toStringList();
-        kDebug() << "Stylesheets: ++" << m_view->options()->styleSheets;
+        m_widget->view()->options()->styleSheets = info.property("X-Silk-StyleSheets").toStringList();
+        kDebug() << "Stylesheets: ++" << m_widget->view()->options()->styleSheets;
 
-        //kDebug() << "AllowedBases:" << m_view->options()->allowedBases;
+        //kDebug() << "AllowedBases:" << m_widget->view()->options()->allowedBases;
         QString comment = info.comment();
 
         if (comment.isEmpty()) {
@@ -168,7 +163,7 @@ bool WebApp::loadWebApp(const QString &name)
         }
 
 
-        m_view->loadWebAppActions(this);
+        m_widget->view()->loadWebAppActions(this);
         return true;
     }
 

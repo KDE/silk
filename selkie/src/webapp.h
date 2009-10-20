@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sebastian Kügler <sebas@kde.org>
+ * Copyright 2009 Sebastian K?gler <sebas@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,7 @@
 #include <kxmlguiwindow.h>
 #include <KPluginInfo>
 
-class View;
+class WebAppWidget;
 
 class QGraphicsScene;
 class QPrinter;
@@ -40,7 +40,7 @@ class KUrl;
  * the main View.
  *
  * @short Selkie browser main window class
- * @author Sebastian Kügler <sebas@kde.org>
+ * @author Sebastian K?gler <sebas@kde.org>
  * @version 0.1
  */
 class WebApp : public KMainWindow
@@ -58,10 +58,10 @@ public:
     QIcon icon();
 
 private:
-    View *m_view;
+    WebAppWidget *m_widget;
     KActionCollection *m_actionCollection;
 
-    QGraphicsScene *m_qgs;
+    //QGraphicsScene *m_qgs;
 };
 
 #endif // _SITESPECIFICBROWSER_H_

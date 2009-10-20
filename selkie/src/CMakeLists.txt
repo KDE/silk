@@ -6,6 +6,7 @@ set(selkie_SRCS
     view.cpp
     page.cpp
     webapp.cpp
+    webappwidget.cpp
     webappaction.cpp
     scriptapi.cpp
     greasemonkeyscript.cpp
