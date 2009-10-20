@@ -26,6 +26,7 @@
 #include <QtGui/QDropEvent>
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
+#include <QWebFrame>
 
 #include <KAction>
 #include <KActionCollection>
@@ -52,27 +53,34 @@ WebApp::WebApp()
     //m_qgs->addText("Selkie on QGV...");
 
     QGraphicsView *gv = new QGraphicsView(m_qgs, this);
+    gv->setMinimumSize(400, 400);
     kDebug() << "qgs" << m_qgs->sceneRect() << gv->geometry();
 
     QGraphicsLinearLayout *l = new QGraphicsLinearLayout;
 
     QGraphicsWidget *w = new QGraphicsWidget;
     m_view = new View(this, w);
+    m_view->setGeometry(gv->geometry());
     l->addItem(m_view);
     l->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     w->setLayout(l);
     l->setSpacing(0);
+    l->setContentsMargins(0,0,0,0);
     m_qgs->addItem(w);
     QRectF rect = QRectF(0,0, 400, 400);
-    rect = gv->viewport()->geometry();
-    kDebug() << rect;
+    rect = gv->geometry();
+    kDebug() << "viewport" << rect;
     m_qgs->setSceneRect(rect);
     w->setGeometry(rect);
     gv->setGeometry(rect.toRect());
     setCentralWidget(gv);
     gv->show();
     kDebug() << "qgs" << m_qgs->sceneRect() << gv->geometry();
+    m_view->resize( gv->geometry().size() );
+
+    gv->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    gv->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 }
 
 WebApp::~WebApp()

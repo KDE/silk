@@ -1,7 +1,7 @@
 /*
  * WebAppEditor.cpp
  *
- * Copyright (C) 2008 Sebastian Kuegler <sebas@kde.org>
+ * Copyright (C) 2008 Sebastian Kügler <sebas@kde.org>
  */
 #include "webappeditor.h"
 #include "settings.h"
