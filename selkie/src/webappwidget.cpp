@@ -37,6 +37,7 @@ WebAppWidget::WebAppWidget( KMainWindow *parent )
     d = new WebAppWidgetPrivate;
     d->view = new View(parent, 0);
     d->view->setGeometry(geometry());
+    setFrameShape(QFrame::NoFrame);
 
     QGraphicsScene *theScene = new QGraphicsScene(this);
     //theScene->addText("Selkie on QGV...");
@@ -89,7 +90,7 @@ void WebAppWidget::sizeChanged(QRectF geometry)
 
 void WebAppWidget::resizeEvent ( QResizeEvent * event )
 {
-    kDebug() << "resize" << geometry();
-    d->view->setGeometry(geometry());
+    kDebug() << "resize" << frameRect();
+    d->view->setGeometry(frameRect());
 
 }
