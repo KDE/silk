@@ -19,6 +19,9 @@ public:
     QUrl url();
     QString element();
 
+signals:
+    void newSize(QRectF);
+
 protected slots:
     void createSlice();
     void resizeEvent ( QResizeEvent * event );

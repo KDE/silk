@@ -63,6 +63,7 @@ void SliceGraphicsWidget::setElement( const QString &selector )
 
 void SliceGraphicsWidget::createSlice()
 {
+    qDebug() << "loading finished";
     QWebFrame *frame = d->view->page()->mainFrame();
     QWebElement element = frame->findFirstElement( d->selector );
     if ( element.isNull() ) {
@@ -72,6 +73,8 @@ void SliceGraphicsWidget::createSlice()
     d->view->resize( element.geometry().size() );
     frame->setScrollPosition( element.geometry().topLeft() );
     setGeometry(element.geometry());
+    qDebug() << element.geometry();
+    emit newSize(element.geometry());
     //setCurrentIndex(1);
 }
 
