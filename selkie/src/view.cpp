@@ -161,16 +161,16 @@ void View::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, 
     painter->setBrush(b);
     painter->translate(.5, .5);
 
-    QColor p("#223F5B");
-    p.setAlphaF(1-(.5*m_progress));
+    QColor p("#FFFFFF");
+    p.setAlphaF(.4);
     QPen pen(p);
     pen.setWidth(1);
     painter->setPen(p);
     int margin = 2;
     int w = (geometry().width()-(margin*2)) * m_progress;
-    int h = 10;
+    int h = 8;
     QRectF progress_rect(margin, margin, w, h);
-    painter->drawRect(progress_rect);
+    painter->drawRoundedRect(progress_rect, margin, margin);
     painter->restore();
 }
 
