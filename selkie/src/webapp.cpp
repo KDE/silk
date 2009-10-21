@@ -51,31 +51,6 @@ WebApp::WebApp()
     setAcceptDrops(true);
     m_widget = new WebAppWidget(this);
     setCentralWidget(m_widget);
-    /*
-    m_qgs = new QGraphicsScene(this);
-    //m_qgs->addText("Selkie on QGV...");
-
-    QGraphicsView *gv = new QGraphicsView(m_qgs, this);
-    gv->setMinimumSize(400, 400);
-    kDebug() << "qgs" << m_qgs->sceneRect() << gv->geometry();
-
-    m_widget->view() = new View(this);
-    m_widget->view()->setGeometry(gv->geometry());
-
-    m_qgs->addItem(m_widget->view());
-    QRectF rect = gv->geometry();
-    kDebug() << "viewport" << rect;
-    m_qgs->setSceneRect(rect);
-    m_widget->view()->setGeometry(rect);
-    gv->setGeometry(rect.toRect());
-    gv->show();
-    kDebug() << "qgs" << m_qgs->sceneRect() << gv->geometry();
-    //m_widget->view()->resize( gv->geometry().size() );
-
-    gv->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    gv->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-
-    */
 }
 
 WebApp::~WebApp()

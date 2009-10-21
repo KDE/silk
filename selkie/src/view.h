@@ -68,7 +68,7 @@ public:
     bool loadWebAppActions(WebApp *parent);
     QString name() const;
     QString plugin() const;
-
+    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget );
 public slots:
     void evaluateScript( const QString &script );
 
@@ -81,6 +81,10 @@ private slots:
     void triggerUrlActions();
     void loadStyleSheets();
     void updateProgress(qreal progress);
+    void showProgressBar();
+    void hideProgressBar();
+    void toggleProgressBar();
+    void startTimer();
 
 private:
     void resetToolbarActions();
@@ -94,9 +98,10 @@ private:
     WebAppOptions *m_options;
     Page *m_page;
     ScriptApi *m_scriptapi;
-    QProgressBar* m_progressBar;
     QTimer* m_progressTimer;
     KMainWindow* m_win;
+    qreal m_progress;
+    bool m_showProgressBar;
 };
 
 #endif // VIEW_H

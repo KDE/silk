@@ -53,6 +53,7 @@ View::View( KMainWindow *win, QGraphicsItem *parent)
     : QGraphicsWebView(parent),
     m_win(win)
 {
+    m_showProgressBar = false;
     m_mapper = new QSignalMapper( this );
     connect( m_mapper, SIGNAL( mapped(const QString &) ), SLOT(evaluateScript(const QString &)) );
 
@@ -82,14 +83,12 @@ View::View( KMainWindow *win, QGraphicsItem *parent)
     m_progressTimer->setInterval( 500 );
     m_progressTimer->setSingleShot( true );
 
-    m_progressBar = new QProgressBar();
-    m_progressBar->show(); // let's show it on startup.
-
     connect( this, SIGNAL( loadStarted() ), m_progressTimer, SLOT( start() ) );
     connect( this, SIGNAL( progressChanged( qreal ) ), this, SLOT( updateProgress( qreal ) ) );
-    connect( this, SIGNAL( loadFinished() ), m_progressBar, SLOT( hide() ) );
     connect( this, SIGNAL( loadFinished() ), m_progressTimer, SLOT( stop() ) );
-    connect( m_progressTimer, SIGNAL( timeout() ), m_progressBar, SLOT( show() ) );
+
+    connect( m_progressTimer, SIGNAL( timeout() ), this, SLOT( toggleProgressBar() ) );
+    connect( this, SIGNAL( loadFinished() ), this, SLOT( startTimer() ) );
 
     connect( this->page(), SIGNAL( printRequested ( QWebFrame*) ),
              SLOT( slotPrint( QWebFrame* ) ) );
@@ -102,18 +101,77 @@ View::~View()
 
 void View::updateProgress(qreal progress)
 {
-    m_progressBar->setValue((int)(progress*100));
+    m_progress = progress;
 }
 
 void View::slotPrint( QWebFrame* frame )
 {
+    //FIXME: should probably move to the mainwindow
     /*
-    FIXME
     QPrintPreviewDialog dlg( 0 );
     connect( &dlg, SIGNAL( paintRequested( QPrinter * ) ),
              frame, SLOT( print( QPrinter * ) ) );
     dlg.exec();
     */
+}
+
+void View::showProgressBar()
+{
+    kDebug() << "hiding";
+    m_showProgressBar = true;
+    update();
+}
+
+void View::hideProgressBar()
+{
+    kDebug() << "hiding";
+    m_showProgressBar = false;
+    update();
+}
+
+void View::toggleProgressBar()
+{
+    kDebug() << "toggle to " << !m_showProgressBar;
+    m_showProgressBar = !m_showProgressBar;
+    update();
+}
+
+void View::startTimer()
+{
+    kDebug() << "Starting timer for two seconds";
+    m_progressTimer->setInterval( 2000 );
+    m_progressTimer->setSingleShot( true );
+    m_progressTimer->start();
+    //connect( m_progressTimer, SIGNAL( timeout() ), this, SLOT( toggleProgressBar() ) );
+}
+
+void View::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )
+{
+    QGraphicsWebView::paint(painter, option, widget);
+    if (!m_showProgressBar) {
+        return;
+    }
+    kDebug() << m_progress;
+    painter->save();
+    QColor b = QColor("#223F5B");
+    b.setAlphaF(1-(.5*m_progress));
+
+    //qreal o = .5;
+    //painter->setOpacity(o);
+    painter->setBrush(b);
+    painter->translate(.5, .5);
+
+    QColor p("#223F5B");
+    p.setAlphaF(1-(.5*m_progress));
+    QPen pen(p);
+    pen.setWidth(1);
+    painter->setPen(p);
+    int margin = 2;
+    int w = (geometry().width()-(margin*2)) * m_progress;
+    int h = 10;
+    QRectF progress_rect(margin, margin, w, h);
+    painter->drawRect(progress_rect);
+    painter->restore();
 }
 
 WebAppOptions *View::options() const

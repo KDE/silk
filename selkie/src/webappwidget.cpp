@@ -58,9 +58,6 @@ WebAppWidget::WebAppWidget( KMainWindow *parent )
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
     QGraphicsScene *qgs = new QGraphicsScene(this);
     qgs->addItem(d->view);
     qgs->setActiveWindow(d->view);
@@ -90,7 +87,9 @@ void WebAppWidget::sizeChanged(QRectF geometry)
 
 void WebAppWidget::resizeEvent ( QResizeEvent * event )
 {
-    kDebug() << "resize" << frameRect();
+    Q_UNUSED( event );
+    //kDebug() << "resize" << frameRect();
+    // resize our webview to the new geometry of the widget when it's resized
     d->view->setGeometry(frameRect());
 
 }
