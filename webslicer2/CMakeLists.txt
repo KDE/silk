@@ -18,4 +18,4 @@ target_link_libraries(webslicer2
     ${QT_QTWEBKIT_LIBRARY}
 )
 
-#add_subdirectory(plasma)
+add_subdirectory(plasma)
