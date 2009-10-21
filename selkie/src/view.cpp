@@ -139,9 +139,11 @@ void View::toggleProgressBar()
 void View::startTimer()
 {
     kDebug() << "Starting timer for two seconds";
+    m_progress = 1;
     m_progressTimer->setInterval( 2000 );
     m_progressTimer->setSingleShot( true );
     m_progressTimer->start();
+    update();
     //connect( m_progressTimer, SIGNAL( timeout() ), this, SLOT( toggleProgressBar() ) );
 }
 
