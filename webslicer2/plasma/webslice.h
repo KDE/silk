@@ -21,8 +21,10 @@
 #define WEBSLICE_HEADER
 
 #include <plasma/popupapplet.h>
+#include "ui_websliceConfig.h"
 
 class SliceGraphicsWidget;
+class KConfigDialog;
 
 class WebSlice: public Plasma::PopupApplet
 {
@@ -37,13 +39,21 @@ class WebSlice: public Plasma::PopupApplet
         void constraintsEvent(Plasma::Constraints   constraints);
         SliceGraphicsWidget *m_slice;
 
+    protected Q_SLOTS:
+        void createConfigurationInterface(KConfigDialog *parent);
+        void configAccepted();
+
     private slots:
-        void sizeChanged (QRectF geometry);
+        void sizeChanged (QSizeF newsize);
         void loadFinished();
 
     private:
-        KUrl m_url;
-        QString m_selector;
+        QUrl m_url;
+        QString m_element;
+        QSizeF m_size;
+        // Configuration dialog
+        Ui::websliceConfig ui;
+
 };
 
 K_EXPORT_PLASMA_APPLET(webslice, WebSlice)

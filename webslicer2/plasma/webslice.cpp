@@ -29,7 +29,7 @@
 #include <QGraphicsLinearLayout>
 
 // KDE
-//#include <KGlobalSettings>
+#include <KConfigDialog>
 
 // Plasma
 
@@ -38,28 +38,32 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     : Plasma::PopupApplet(parent, args),
     m_slice(0),
     m_url(0),
-    m_selector(0)
+    m_element(0),
+    m_size(192, 192)
 {
     setPopupIcon("internet-web-browser");
     setAspectRatioMode(Plasma::KeepAspectRatio );
     setAcceptDrops(true);
     setAcceptsHoverEvents(true);
 
+    QSizeF s1(20, 20), s2(390, 390);
+    kDebug() << "sizes:" << s2.height()/s1.height();
     //setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
     //setBackgroundHints(NoBackground); // TODO: conditionally, pls.
     setMinimumSize(64, 64);
     //setMaximumSize(INT_MAX, INT_MAX);
     //setPopupIcon(QIcon());
-    resize(192, 192);
 }
 
 void WebSlice::init()
 {
-    // TODO
     KConfigGroup cg = config();
     m_url = cg.readEntry("url", "http://dot.kde.org/");
-    m_selector = cg.readEntry("selector", "#block-user-0");
+    m_element = cg.readEntry("element", "#block-user-0");
+    m_size = cg.readEntry("size", QSizeF(192, 192));
+    setMinimumSize(m_size);
 
+    kDebug() << "URL/ELEMENT:" << m_url << m_element;
 }
 
 WebSlice::~WebSlice ()
@@ -70,21 +74,51 @@ QGraphicsWidget* WebSlice::graphicsWidget()
 {
     if (!m_slice) {
         m_slice = new SliceGraphicsWidget;
-        connect(m_slice, SIGNAL(newSize(QRectF)), this, SLOT(sizeChanged(QRectF)));
+        connect(m_slice, SIGNAL(newSize(QSizeF)), this, SLOT(sizeChanged(QSizeF)));
         connect(m_slice, SIGNAL(loadFinished()), this, SLOT(loadFinished()));
-
-        m_slice->setUrl( QUrl("http://dot.kde.org/") );
-        m_slice->setElement( QString("#block-user-0") );
+        setBusy(true);
+        m_slice->setUrl(m_url);
+        m_slice->setElement( m_element );
         m_slice->hide();
     }
     return m_slice;
 }
 
+void WebSlice::createConfigurationInterface(KConfigDialog *parent)
+{
+    QWidget *widget = new QWidget(parent);
+    ui.setupUi(widget);
+    parent->addPage(widget, i18n("General"), Applet::icon());
+    connect(parent, SIGNAL(applyClicked()), this, SLOT(configAccepted()));
+    connect(parent, SIGNAL(okClicked()), this, SLOT(configAccepted()));
+    ui.urlEdit->setText(m_url.toString());
+    ui.elementEdit->setText(m_element);
+}
+
+void WebSlice::configAccepted()
+{
+    if (m_url.toString() != ui.urlEdit->text() || m_element != ui.elementEdit->text()) {
+        m_url = QUrl(ui.urlEdit->text());
+        m_element = ui.elementEdit->text();
+
+        m_slice->setUrl(m_url);
+        m_slice->setElement( m_element );
+        m_slice->hide();
+
+        KConfigGroup cg = config();
+        cg.writeEntry("url", m_url.toString());
+        cg.writeEntry("element", m_element);
+        emit configNeedsSaving();
+        kDebug() << "config changed" << m_element << m_url;
+    }
+}
+
+
 void WebSlice::constraintsEvent(Plasma::Constraints constraints)
 {
     if (constraints & (Plasma::FormFactorConstraint | Plasma::SizeConstraint)) {
         kDebug() << "Constraint changed:" << contentsRect();
-        sizeChanged(contentsRect());
+        sizeChanged(contentsRect().size());
     }
 }
 
@@ -93,17 +127,24 @@ void WebSlice::loadFinished()
     kDebug() << "done loading";
     setBusy(false);
     m_slice->show();
+    //m_size = m_slice->geometry().size();
+    //kDebug() << "SIZECHANGE:" << m_size;
 }
 
-void WebSlice::sizeChanged(QRectF geo)
+void WebSlice::sizeChanged(QSizeF newsize)
 {
-    kDebug() << "======================= size changed" << geometry() << geo;
-    setMinimumSize(geo.size());
-    //QRectF g = QRectF(0, 0, geo.width(), geo.height());
-    QRectF g = QRectF(contentsRect().topLeft(), geo.size());
-    //m_slice->setMinimumSize(geo.size());
-    //kDebug() << "now:" << g;
+    kDebug() << "======================= size changed" << newsize;
+    if (m_size != newsize) {
+        m_size = newsize;
+        //setMinimumSize(geo.size());
+        //QRectF g = QRectF(0, 0, geo.width(), geo.height());
+        QRectF g = QRectF(contentsRect().topLeft(), m_size);
+        m_slice->setGeometry(g);
+        //kDebug() << "now:" << g;
+        KConfigGroup cg = config();
+        cg.writeEntry("size", m_size);
+        emit configNeedsSaving();
+    }
 }
-
 
 #include "webslice.moc"

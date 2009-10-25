@@ -15,6 +15,6 @@ X-KDE-PluginInfo-Category=Weather
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 
-X-Silk-StartUrl=http://www.buienradar.nl/images.aspx?jaar=-3&bliksem=0&voor=&soort=verwachting1x1
+X-Silk-StartUrl=http://www.buienradar.nl/
 X-Silk-AllowedBases=http://www.buienradar.nl
 X-Silk-AllowedBases-Size=1

@@ -76,7 +76,7 @@ void SliceGraphicsWidget::createSlice()
     frame->setScrollPosition( element.geometry().topLeft() );
     setGeometry(element.geometry());
     qDebug() << "SliceGraphicsWidget::loading finished" << element.geometry();
-    emit newSize(element.geometry());
+    emit newSize(element.geometry().size());
     //setCurrentIndex(1);
 }
 

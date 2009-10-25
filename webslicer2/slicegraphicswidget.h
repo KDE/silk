@@ -21,7 +21,7 @@ public:
     QString element();
 
 signals:
-    void newSize(QRectF);
+    void newSize(QSizeF);
     void loadFinished();
 
 protected slots:
