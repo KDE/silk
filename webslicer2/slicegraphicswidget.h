@@ -16,6 +16,7 @@ public:
 
     void setUrl( const QUrl &url );
     void setElement( const QString &selector );
+    void setSliceGeometry( const QRectF geo );
 
     QUrl url();
     QString element();

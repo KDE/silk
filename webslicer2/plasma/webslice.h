@@ -51,6 +51,7 @@ class WebSlice: public Plasma::PopupApplet
         QUrl m_url;
         QString m_element;
         QSizeF m_size;
+        QRectF m_sliceGeometry;
         // Configuration dialog
         Ui::websliceConfig ui;
 

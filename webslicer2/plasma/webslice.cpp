@@ -58,12 +58,15 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
 void WebSlice::init()
 {
     KConfigGroup cg = config();
-    m_url = cg.readEntry("url", "http://dot.kde.org/");
-    m_element = cg.readEntry("element", "#block-user-0");
+    //m_url = cg.readEntry("url", "http://kde.org/");
+    m_url = cg.readEntry("url", "http://buienradar.nl/");
+    //m_element = cg.readEntry("element", "#block-user-0");
+    m_element = cg.readEntry("element", QString("hotspot"));
+    m_sliceGeometry = cg.readEntry("size", QRectF(258, 102, 550, 511));
     m_size = cg.readEntry("size", QSizeF(192, 192));
     setMinimumSize(m_size);
 
-    kDebug() << "URL/ELEMENT:" << m_url << m_element;
+    kDebug() << "URL/ELEMENT/SLICEGEOMETRY:" << m_url << m_element << m_sliceGeometry;
 }
 
 WebSlice::~WebSlice ()
@@ -79,6 +82,7 @@ QGraphicsWidget* WebSlice::graphicsWidget()
         setBusy(true);
         m_slice->setUrl(m_url);
         m_slice->setElement( m_element );
+        m_slice->setSliceGeometry(m_sliceGeometry);
         m_slice->hide();
     }
     return m_slice;
