@@ -36,9 +36,9 @@
 
 WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     : Plasma::PopupApplet(parent, args),
+    m_slice(0),
     m_url(0),
-    m_selector(0),
-    m_slice(0)
+    m_selector(0)
 {
     setPopupIcon("internet-web-browser");
     setAspectRatioMode(Plasma::KeepAspectRatio );
