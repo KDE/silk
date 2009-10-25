@@ -40,7 +40,7 @@ class KUrl;
  * the main View.
  *
  * @short Selkie browser main window class
- * @author Sebastian K?gler <sebas@kde.org>
+ * @author Sebastian Kügler <sebas@kde.org>
  * @version 0.1
  */
 class WebApp : public KMainWindow
@@ -60,8 +60,6 @@ public:
 private:
     WebAppWidget *m_widget;
     KActionCollection *m_actionCollection;
-
-    //QGraphicsScene *m_qgs;
 };
 
 #endif // _SITESPECIFICBROWSER_H_

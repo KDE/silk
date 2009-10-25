@@ -1,7 +1,7 @@
 /*
  * Copyright 2009 Richard Moore <rich@kde.org>
  * Copyright 2009 Omat Holding B.V. <info@omat.nl>
- * Copyright 2009 Sebastian Kügler <sebas@kde.org>
+ * Copyright 2009 Sebastian K?gler <sebas@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -153,7 +153,7 @@ void View::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, 
     if (!m_showProgressBar) {
         return;
     }
-    kDebug() << m_progress;
+    //kDebug() << m_progress;
     painter->save();
     QColor b = QColor("#223F5B");
     b.setAlphaF(1-(.5*m_progress));

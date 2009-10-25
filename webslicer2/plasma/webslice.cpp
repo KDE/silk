@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Sebastian Kügler <sebas@kde.org>                *
+ *   Copyright (C) 2009 by Sebastian K?gler <sebas@kde.org>                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,13 +39,16 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     m_slice(0)
 {
     setPopupIcon("internet-web-browser");
-    setAspectRatioMode(Plasma::Square );
+    setAspectRatioMode(Plasma::KeepAspectRatio );
+    setAcceptDrops(true);
+    setAcceptsHoverEvents(true);
+
     //setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
     //setBackgroundHints(NoBackground); // TODO: conditionally, pls.
-    setMinimumSize(8, 8);
+    setMinimumSize(64, 64);
     //setMaximumSize(INT_MAX, INT_MAX);
     //setPopupIcon(QIcon());
-    resize(22, 22);
+    resize(192, 192);
 }
 
 void WebSlice::init()
@@ -62,20 +65,38 @@ QGraphicsWidget* WebSlice::graphicsWidget()
     if (!m_slice) {
         m_slice = new SliceGraphicsWidget;
         connect(m_slice, SIGNAL(newSize(QRectF)), this, SLOT(sizeChanged(QRectF)));
+        connect(m_slice, SIGNAL(loadFinished()), this, SLOT(loadFinished()));
 
         m_slice->setUrl( QUrl("http://dot.kde.org/") );
         m_slice->setElement( QString("#block-user-0") );
+        m_slice->hide();
     }
     return m_slice;
 }
 
-void WebSlice::sizeChanged(QRectF geometry)
+void WebSlice::constraintsEvent(Plasma::Constraints constraints)
 {
-    kDebug() << "size changed" << geometry;
-    setMinimumSize(geometry.size());
-    QRectF g = QRectF(0, 0, geometry.width(), geometry.height());
-    m_slice->setGeometry(g);
-    kDebug() << "now:" << g;
+    if (constraints & (Plasma::FormFactorConstraint | Plasma::SizeConstraint)) {
+        kDebug() << "Constraint changed:" << contentsRect();
+        sizeChanged(contentsRect());
+    }
+}
+
+void WebSlice::loadFinished()
+{
+    kDebug() << "done loading";
+    setBusy(false);
+    m_slice->show();
+}
+
+void WebSlice::sizeChanged(QRectF geo)
+{
+    kDebug() << "======================= size changed" << geometry() << geo;
+    setMinimumSize(geo.size());
+    //QRectF g = QRectF(0, 0, geo.width(), geo.height());
+    QRectF g = QRectF(contentsRect().topLeft(), geo.size());
+    //m_slice->setMinimumSize(geo.size());
+    //kDebug() << "now:" << g;
 }
 
 

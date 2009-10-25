@@ -1,4 +1,5 @@
 #include <qdebug.h>
+#include <QGraphicsSceneResizeEvent>
 #include <qlabel.h>
 #include <qgraphicswebview.h>
 #include <qwebelement.h>
@@ -19,6 +20,7 @@ SliceGraphicsWidget::SliceGraphicsWidget( QGraphicsWidget *parent )
 {
     d = new SliceGraphicsWidgetPrivate;
     d->view = new QGraphicsWebView( this );
+    connect( d->view, SIGNAL( loadFinished() ), this, SIGNAL( loadFinished() ) );
     connect( d->view, SIGNAL( loadFinished() ), this, SLOT( createSlice() ) );
     /*
     QLabel *label = new QLabel( this );
@@ -29,6 +31,7 @@ SliceGraphicsWidget::SliceGraphicsWidget( QGraphicsWidget *parent )
     QWebFrame *frame = d->view->page()->mainFrame();
     frame->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
     frame->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
+    frame->setHtml("<h1>Loading ...</h1>");
 
     //addWidget(d->view);
     //setCurrentIndex(0);
@@ -63,7 +66,6 @@ void SliceGraphicsWidget::setElement( const QString &selector )
 
 void SliceGraphicsWidget::createSlice()
 {
-    qDebug() << "loading finished";
     QWebFrame *frame = d->view->page()->mainFrame();
     QWebElement element = frame->findFirstElement( d->selector );
     if ( element.isNull() ) {
@@ -73,13 +75,15 @@ void SliceGraphicsWidget::createSlice()
     d->view->resize( element.geometry().size() );
     frame->setScrollPosition( element.geometry().topLeft() );
     setGeometry(element.geometry());
-    qDebug() << element.geometry();
+    qDebug() << "SliceGraphicsWidget::loading finished" << element.geometry();
     emit newSize(element.geometry());
     //setCurrentIndex(1);
 }
 
-void SliceGraphicsWidget::resizeEvent ( QResizeEvent * event )
+void SliceGraphicsWidget::resizeEvent ( QGraphicsSceneResizeEvent * event )
 {
+    qDebug() << "SliceGraphicsWidget::resizing ... " << event->oldSize() << " -> " << event->newSize();
+    QGraphicsWidget::resizeEvent(event);
     QWebFrame *frame = d->view->page()->mainFrame();
     QWebElement element = frame->findFirstElement( d->selector );
     if ( element.isNull() ) {

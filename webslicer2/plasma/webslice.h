@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Sebastian Kügler <sebas@kde.org>                *
+ *   Copyright (C) 2009 by Sebastian K?gler <sebas@kde.org>                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,11 +34,12 @@ class WebSlice: public Plasma::PopupApplet
 
     protected:
         QGraphicsWidget *graphicsWidget();
+        void constraintsEvent(Plasma::Constraints   constraints);
         SliceGraphicsWidget *m_slice;
 
     private slots:
         void sizeChanged (QRectF geometry);
-
+        void loadFinished();
 };
 
 K_EXPORT_PLASMA_APPLET(webslice, WebSlice)

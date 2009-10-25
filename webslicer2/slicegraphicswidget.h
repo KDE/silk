@@ -3,6 +3,7 @@
 
 #include <qgraphicswidget.h>
 
+class QGraphicsSceneResizeEvent;
 class QUrl;
 
 class SliceGraphicsWidget : public QGraphicsWidget
@@ -21,10 +22,11 @@ public:
 
 signals:
     void newSize(QRectF);
+    void loadFinished();
 
 protected slots:
     void createSlice();
-    void resizeEvent ( QResizeEvent * event );
+    void resizeEvent ( QGraphicsSceneResizeEvent * event );
 
 private:
     struct SliceGraphicsWidgetPrivate *d;
