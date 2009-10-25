@@ -36,6 +36,8 @@
 
 WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     : Plasma::PopupApplet(parent, args),
+    m_url(0),
+    m_selector(0),
     m_slice(0)
 {
     setPopupIcon("internet-web-browser");
@@ -54,6 +56,10 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
 void WebSlice::init()
 {
     // TODO
+    KConfigGroup cg = config();
+    m_url = cg.readEntry("url", "http://dot.kde.org/");
+    m_selector = cg.readEntry("selector", "#block-user-0");
+
 }
 
 WebSlice::~WebSlice ()

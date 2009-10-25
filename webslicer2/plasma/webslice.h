@@ -40,6 +40,10 @@ class WebSlice: public Plasma::PopupApplet
     private slots:
         void sizeChanged (QRectF geometry);
         void loadFinished();
+
+    private:
+        KUrl m_url;
+        QString m_selector;
 };
 
 K_EXPORT_PLASMA_APPLET(webslice, WebSlice)
