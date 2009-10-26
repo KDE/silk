@@ -63,7 +63,7 @@ void WebSlice::init()
     m_element = cg.readEntry("element", "#block-user-0");
     //m_element = cg.readEntry("element", QString("hotspot"));
     //m_sliceGeometry = cg.readEntry("size", QRectF(258, 102, 550, 511));
-    m_sliceGeometry = cg.readEntry("size", QRectF());
+    m_sliceGeometry = cg.readEntry("sliceGeometry", QRectF());
     m_size = cg.readEntry("size", QSizeF(192, 192));
     setMinimumSize(m_size);
 
@@ -123,6 +123,7 @@ void WebSlice::configAccepted()
                 kWarning() << "a conversion error occured." << gel;
             } else {
                 m_sliceGeometry = QRectF(x, y, w, h);
+                config().writeEntry("sliceGeometry", m_sliceGeometry);
                 kDebug() << "new slice geometry:" << m_sliceGeometry;
             }
         } else {

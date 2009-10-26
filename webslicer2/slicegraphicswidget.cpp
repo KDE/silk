@@ -63,21 +63,12 @@ void SliceGraphicsWidget::setSliceGeometry( const QRectF geo )
 void SliceGraphicsWidget::createSlice()
 {
     qDebug() << "createSLice";
-    d->view->resize( sliceGeometry().size() );
+    QRectF geo = sliceGeometry();
+    d->view->resize( geo.size() );
     QWebFrame *frame = d->view->page()->mainFrame();
-    frame->setScrollPosition( sliceGeometry().topLeft().toPoint() );
-    /*
-    QWebFrame *frame = d->view->page()->mainFrame();
-    qDebug() << "createSLice1";
-    d->view->resize( sliceGeometry().size() );
-    qDebug() << "createSLice2";
-    frame->setScrollPosition( sliceGeometry().topLeft().toPoint() );
-    qDebug() << "createSLice3";
-    setGeometry(sliceGeometry());
-    qDebug() << "SliceGraphicsWidget::loading finished" << sliceGeometry();
-    emit loadFinished();
-    emit newSize(sliceGeometry().size());
-    */
+    frame->setScrollPosition( geo.topLeft().toPoint() );
+    setMinimumSize(geo.size());
+    updateGeometry();
 }
 
 QRectF SliceGraphicsWidget::sliceGeometry()
@@ -89,7 +80,6 @@ QRectF SliceGraphicsWidget::sliceGeometry()
         qDebug() << "Getting size from element";
         QWebElement element = frame->findFirstElement( d->selector );
         if ( element.isNull() ) {
-            //d->view->setHtml("Loading failed. :(");
             qDebug() << "element is null..." << d->selector;
             return QRectF();
         }
@@ -111,7 +101,8 @@ QRectF SliceGraphicsWidget::sliceGeometry()
 void SliceGraphicsWidget::resizeEvent ( QGraphicsSceneResizeEvent * event )
 {
     qDebug() << "resizeevent";
-    d->view->resize( sliceGeometry().size() );
+    QRectF geo = sliceGeometry();
+    d->view->resize( geo.size() );
     QWebFrame *frame = d->view->page()->mainFrame();
-    frame->setScrollPosition( sliceGeometry().topLeft().toPoint() );
+    frame->setScrollPosition( geo.topLeft().toPoint() );
 }
