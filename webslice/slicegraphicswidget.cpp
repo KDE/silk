@@ -34,12 +34,16 @@ struct SliceGraphicsWidgetPrivate
     QGraphicsWebView *view;
     QString selector;
     QRectF sliceGeometry;
+    QRectF originalGeometry;
+    qreal currentZoom;
 };
 
 SliceGraphicsWidget::SliceGraphicsWidget( QGraphicsWidget *parent )
     : QGraphicsWidget( parent )
 {
     d = new SliceGraphicsWidgetPrivate;
+    d->currentZoom = 1.0;
+    d->originalGeometry = QRectF();
     d->view = new QGraphicsWebView( this );
     connect( d->view, SIGNAL( loadFinished() ), this, SIGNAL( loadFinished() ) );
     connect( d->view, SIGNAL( loadFinished() ), this, SLOT( createSlice() ) );
@@ -84,10 +88,11 @@ void SliceGraphicsWidget::createSlice()
 {
     qDebug() << "createSLice";
     QRectF geo = sliceGeometry();
+    d->originalGeometry = geo;
     d->view->resize( geo.size() );
     QWebFrame *frame = d->view->page()->mainFrame();
     frame->setScrollPosition( geo.topLeft().toPoint() );
-    setPreferredSize(geo.size());
+    refresh();
     updateGeometry();
     emit sizeChanged(geo.size());
 }
@@ -123,42 +128,32 @@ void SliceGraphicsWidget::refresh()
     d->view->resize( geo.size() );
     QWebFrame *frame = d->view->page()->mainFrame();
     frame->setScrollPosition( geo.topLeft().toPoint() );
-    setMinimumSize(geo.size());
-    setMaximumSize(geo.size());
+    qDebug() << "top point" << geo.topLeft().toPoint();
+    //setMinimumSize(geo.size());
+    //setMaximumSize(geo.size());
     setPreferredSize(geo.size());
-    resize(geo.size());
+    //resize(geo.size());
     updateGeometry();
+    qDebug() << "refreshed. ... " << geo;
     //emit sizeHintChanged();
 
 }
 
 void SliceGraphicsWidget::resizeEvent ( QGraphicsSceneResizeEvent * event )
 {
-    QSizeF o = event->oldSize();
-    o = d->view->geometry().size();
+    qDebug() << "-------------------__";
+    qDebug() << "SliceGraphicsWidget::resizeEvent" << event->newSize() << "(" << event->oldSize() << ")";
+    QSizeF o = d->originalGeometry.size();
     QSizeF n = event->newSize();
-    qreal f;
-    qDebug() << "old:" << o << "new:" << n;
-    if (!(o.height() && n.height() && o.width() && n.width())) {
-        qDebug() << "chickening out";
+    qDebug() << "Slice :" << o;
+    qDebug() << "Widget:" << n;
+    qreal f = n.width() / o.width();
+    if (f < 5) {
+        d->view->setZoomFactor(f);
         refresh();
-        return;
+        qDebug() << "Zoom  :" << n.width() << " / " <<  o.width() << " = " << f;
     }
-    /*
-    if (o.height() < n.height() || o.width() < n.width()) {
-        // made bigger
-        qreal f = qMin((o.height() / n.height()), (o.width() / n.width()));
-        qDebug() << "Growing" << f << (o.height() / n.height()) << (o.width() / n.width());
-    } else {
-        qreal f = qMin((o.height() / n.height()), (o.width() / n.width()));
-        // smaller
-        qDebug() << "Shrinking" << f << (o.height() / n.height()) << (o.width() / n.width());
-    }
-    //d->view->setZoomFactor(f);
-
-    qDebug() << " -----------> resizeevent" << f << o.height() << n.height();
-    */
-    refresh();
+    //refresh();
 }
 
 QPixmap SliceGraphicsWidget::elementPixmap( const QString &selector )

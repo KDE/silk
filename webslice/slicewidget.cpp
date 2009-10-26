@@ -72,5 +72,9 @@ void SliceWidget::sizeChanged(QSizeF newsize)
 
 void SliceWidget::resizeEvent ( QResizeEvent * event )
 {
+    QRectF newgeometry = QRectF(QPointF(0, 0), event->size());
+    qDebug() << "SliceWidget::resizeEvent" << newgeometry << "(" << event->oldSize() << ")";
+    setSceneRect(newgeometry);
+    d->slice->setGeometry(newgeometry);
 }
 
