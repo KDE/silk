@@ -24,6 +24,8 @@ public:
     QString element();
     QRectF sliceGeometry();
 
+    QPixmap elementPixmap( const QString &selector );
+
 signals:
     void sizeChanged(QSizeF);
     void loadFinished();

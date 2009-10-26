@@ -53,3 +53,4 @@ void SliceWidget::sizeChanged(QSizeF newsize)
 void SliceWidget::resizeEvent ( QResizeEvent * event )
 {
 }
+

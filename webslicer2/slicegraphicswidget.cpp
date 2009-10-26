@@ -140,3 +140,20 @@ void SliceGraphicsWidget::resizeEvent ( QGraphicsSceneResizeEvent * event )
     */
     refresh();
 }
+
+QPixmap SliceGraphicsWidget::elementPixmap( const QString &selector )
+{
+    QRectF rect = sliceGeometry();
+    if (!rect.isValid()) {
+        return QPixmap();
+    }
+    QPixmap result = QPixmap( rect.size().toSize() );
+    result.fill( Qt::white );
+
+    QPainter painter( &result );
+    painter.translate( -rect.x(), -rect.y() );
+    QWebFrame *frame = d->view->page()->mainFrame();
+    frame->render( &painter, QRegion(rect.toRect()) );
+
+    return result;
+}
