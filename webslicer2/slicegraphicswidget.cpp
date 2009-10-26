@@ -69,7 +69,7 @@ void SliceGraphicsWidget::createSlice()
     frame->setScrollPosition( geo.topLeft().toPoint() );
     setPreferredSize(geo.size());
     updateGeometry();
-    emit newSize(geo.size());
+    emit sizeChanged(geo.size());
 }
 
 QRectF SliceGraphicsWidget::sliceGeometry()

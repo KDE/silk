@@ -25,7 +25,7 @@ public:
     QRectF sliceGeometry();
 
 signals:
-    void newSize(QSizeF);
+    void sizeChanged(QSizeF);
     void loadFinished();
 
 protected slots:

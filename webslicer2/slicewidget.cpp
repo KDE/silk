@@ -14,25 +14,10 @@ SliceWidget::SliceWidget( QWidget *parent )
 {
     d = new SliceWidgetPrivate;
     d->slice = new SliceGraphicsWidget;
-    connect(d->slice, SIGNAL(newSize(QRectF)), this, SLOT(sizeChanged(QRectF)));
+    connect(d->slice, SIGNAL(sizeChanged(QSizeF)), this, SLOT(sizeChanged(QSizeF)));
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    /*
-    //d->view = new QGraphicsView( this );
-    //connect( d->view, SIGNAL( loadFinished(bool) ), this, SLOT( createSlice(bool) ) );
-
-    QLabel *label = new QLabel( this );
-    label->setText("loading...");
-    label->setAlignment(Qt::AlignCenter);
-    addWidget(label);
-
-    QWebFrame *frame = d->view->page()->mainFrame();
-    frame->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
-    frame->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
-    */
-    //addWidget(d->slice);
 
     QGraphicsScene *qgs = new QGraphicsScene(this);
     qgs->addItem(d->slice);
@@ -58,11 +43,11 @@ void SliceWidget::setElement( const QString &selector )
     d->slice->setElement(selector);
 }
 
-void SliceWidget::sizeChanged(QRectF geometry)
+void SliceWidget::sizeChanged(QSizeF newsize)
 {
-    qDebug() << "size changed" << geometry;
-    setSceneRect(geometry);
-    setMinimumSize(geometry.size().toSize());
+    qDebug() << "size changed" << newsize;
+    setSceneRect(QRectF(QPointF(0, 0), newsize));
+    setMinimumSize(newsize.toSize());
 }
 
 void SliceWidget::resizeEvent ( QResizeEvent * event )

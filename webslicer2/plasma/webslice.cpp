@@ -51,7 +51,7 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     //kDebug() << "sizes:" << s2.height()/s1.height();
     //setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
     //setBackgroundHints(NoBackground); // TODO: conditionally, pls.
-    //setMinimumSize(64, 64);
+    setMinimumSize(64, 64);
     //setMaximumSize(INT_MAX, INT_MAX);
     //setPopupIcon(QIcon());
 }
@@ -85,7 +85,7 @@ QGraphicsWidget* WebSlice::graphicsWidget()
 
 
         m_slice = new SliceGraphicsWidget(m_widget);
-        connect(m_slice, SIGNAL(newSize(QSizeF)), this, SLOT(sizeChanged(QSizeF)));
+        connect(m_slice, SIGNAL(sizeChanged(QSizeF)), this, SLOT(sizeChanged(QSizeF)));
         connect(m_slice, SIGNAL(loadFinished()), this, SLOT(loadFinished()));
         setBusy(true);
         m_slice->setUrl(m_url);

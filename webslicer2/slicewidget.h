@@ -18,7 +18,7 @@ public:
 
 protected slots:
     void resizeEvent ( QResizeEvent * event );
-    void sizeChanged ( QRectF geometry );
+    void sizeChanged ( QSizeF newsize );
 
 private:
     struct SliceWidgetPrivate *d;
