@@ -5,7 +5,7 @@
 TEMPLATE = app
 TARGET =
 DEPENDPATH += .
-INCLUDEPATH += /home/rich/src/project-silk/webslicer2/. .
+INCLUDEPATH += /home/rich/src/project-silk/webslice/. .
 QT += webkit
 
 # Input

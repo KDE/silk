@@ -6,15 +6,15 @@ include_directories( ${QT_INCLUDES} )
 
 
 
-set(webslicer2_SRCS
+set(webslice_SRCS
     main.cpp
     slicegraphicswidget.cpp
     slicewidget.cpp
 )
 
-KDE4_ADD_EXECUTABLE(webslicer2 ${webslicer2_SRCS})
+KDE4_ADD_EXECUTABLE(webslice ${webslice_SRCS})
 
-target_link_libraries(webslicer2
+target_link_libraries(webslice
     ${QT_QTWEBKIT_LIBRARY}
 )
 
