@@ -50,7 +50,7 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     //kDebug() << "sizes:" << s2.height()/s1.height();
     //setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
     //setBackgroundHints(NoBackground); // TODO: conditionally, pls.
-    setMinimumSize(64, 64);
+    //setMinimumSize(64, 64);
     //setMaximumSize(INT_MAX, INT_MAX);
     //setPopupIcon(QIcon());
 }
@@ -64,7 +64,7 @@ void WebSlice::init()
     //m_element = cg.readEntry("element", QString("hotspot"));
     //m_sliceGeometry = cg.readEntry("size", QRectF(258, 102, 550, 511));
     m_sliceGeometry = cg.readEntry("sliceGeometry", QRectF());
-    m_size = cg.readEntry("size", QSizeF(192, 192));
+    m_size = cg.readEntry("size", m_size);
     setMinimumSize(m_size);
 
     kDebug() << "URL/ELEMENT/SLICEGEOMETRY:" << m_url << m_element << m_sliceGeometry;
@@ -147,13 +147,7 @@ void WebSlice::configAccepted()
 
 QString WebSlice::sliceGeometryToString()
 {
-    /*
-    QString s = QString::number((int)(m_sliceGeometry.x())) << "," << \
-                QString::number((int)(m_sliceGeometry.y())) << "," << \
-                QString::number((int)(m_sliceGeometry.width())) << "," << \
-                QString::number((int)(m_sliceGeometry.height()));
-             */
-    QString s = i18n("%1,%2,%3,%4", m_sliceGeometry.x(), m_sliceGeometry.x(), m_sliceGeometry.x(),m_sliceGeometry.x());
+    QString s = i18n("%1,%2,%3,%4", m_sliceGeometry.x(), m_sliceGeometry.y(), m_sliceGeometry.width(),m_sliceGeometry.height());
     return s;
 }
 
@@ -162,7 +156,7 @@ void WebSlice::constraintsEvent(Plasma::Constraints constraints)
 {
     if (constraints & (Plasma::FormFactorConstraint | Plasma::SizeConstraint)) {
         kDebug() << "Constraint changed:" << mapToScene(contentsRect());
-        //sizeChanged(contentsRect().size());
+        sizeChanged(contentsRect().size());
     }
 }
 
@@ -171,7 +165,7 @@ void WebSlice::loadFinished()
     kDebug() << "done loading";
     setBusy(false);
     m_slice->show();
-    //m_size = m_slice->geometry().size();
+    m_size = m_slice->geometry().size();
     //kDebug() << "SIZECHANGE:" << m_size;
 }
 
@@ -180,7 +174,7 @@ void WebSlice::sizeChanged(QSizeF newsize)
     kDebug() << "======================= size changed" << newsize;
     if (m_size != newsize) {
         m_size = newsize;
-        //setMinimumSize(geo.size());
+        m_slice->setMinimumSize(geo.size());
         //QRectF g = QRectF(0, 0, geo.width(), geo.height());
         QRectF g = QRectF(contentsRect().topLeft(), m_size);
         //m_slice->setMinimumSize(g.size());
