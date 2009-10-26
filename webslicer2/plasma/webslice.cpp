@@ -66,8 +66,8 @@ void WebSlice::init()
     //m_sliceGeometry = cg.readEntry("size", QRectF(258, 102, 550, 511));
     m_sliceGeometry = cg.readEntry("sliceGeometry", QRectF());
     m_size = cg.readEntry("size", m_size);
-    setMinimumSize(m_size);
-    setMaximumSize(500, 500);
+    //setMinimumSize(m_size);
+    //setMaximumSize(500, 500);
 
     kDebug() << "URL/ELEMENT/SLICEGEOMETRY:" << m_url << m_element << m_sliceGeometry;
 }
@@ -173,7 +173,7 @@ void WebSlice::constraintsEvent(Plasma::Constraints constraints)
 {
     if (constraints & (Plasma::FormFactorConstraint | Plasma::SizeConstraint)) {
         kDebug() << "Constraint changed:" << mapToScene(contentsRect());
-        sizeChanged(contentsRect().size());
+        //sizeChanged(contentsRect().size());
         if (m_slice) {
             m_slice->refresh();
         }
@@ -188,8 +188,10 @@ void WebSlice::loadFinished()
     m_size = m_slice->geometry().size();
 
     qreal l, t, r,  b;
-    getContentsMargins(&l, &t, &r, &b);
-    QSizeF effectiveSize = QSizeF((m_slice->geometry().width() + l + r), (m_slice->geometry().height() + t + b));
+    //getContentsMargins(&l, &t, &r, &b);
+
+    //QSizeF effectiveSize = QSizeF((m_slice->geometry().width() + l + r), (m_slice->geometry().height() + t + b));
+    QSizeF effectiveSize = QSizeF((m_slice->geometry().width() + 28), (m_slice->geometry().height() + 28));
     setPreferredSize(effectiveSize);
     qDebug() << "preferred:" << effectiveSize << l << t <<  r << b;
 
@@ -200,7 +202,7 @@ void WebSlice::sizeChanged(QSizeF newsize)
 {
     kDebug() << "======================= size changed" << newsize;
     if (m_slice && m_size != newsize) {
-        m_size = newsize;
+        QSizeF m_size = QSizeF(newsize.width() + 28, newsize.height() + 28);
         m_slice->resize(m_size);
         //QRectF g = QRectF(0, 0, geo.width(), geo.height());
         QRectF g = QRectF(mapToScene(contentsRect().topLeft()), m_size);
@@ -209,7 +211,7 @@ void WebSlice::sizeChanged(QSizeF newsize)
         //m_widget->setMinimumSize(m_size);
         //m_widget->setMinimumSize(400, 400);
         setMinimumSize(m_size);
-        kDebug() << "now:" << g;
+        kDebug() << "now:" << m_size;
         KConfigGroup cg = config();
         cg.writeEntry("size", m_size);
         emit configNeedsSaving();
