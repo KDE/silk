@@ -67,24 +67,23 @@ void SliceGraphicsWidget::createSlice()
     d->view->resize( geo.size() );
     QWebFrame *frame = d->view->page()->mainFrame();
     frame->setScrollPosition( geo.topLeft().toPoint() );
-    setMinimumSize(geo.size());
+    setPreferredSize(geo.size());
     updateGeometry();
+    emit newSize(geo.size());
 }
 
 QRectF SliceGraphicsWidget::sliceGeometry()
 {
-    qDebug() << "get geo";
     QWebFrame *frame = d->view->page()->mainFrame();
     QRectF geo = QRectF();
     if (!d->selector.isEmpty()) {
-        qDebug() << "Getting size from element";
-        QWebElement element = frame->findFirstElement( d->selector );
+       QWebElement element = frame->findFirstElement( d->selector );
         if ( element.isNull() ) {
             qDebug() << "element is null..." << d->selector;
             return QRectF();
         }
         geo = element.geometry();
-        qDebug() << "element geometry" << geo;
+        //qDebug() << "element geometry" << geo;
     } else if (d->sliceGeometry.isValid()) {
         geo = d->sliceGeometry;
     } else {
@@ -98,11 +97,46 @@ QRectF SliceGraphicsWidget::sliceGeometry()
 
 }
 
-void SliceGraphicsWidget::resizeEvent ( QGraphicsSceneResizeEvent * event )
+void SliceGraphicsWidget::refresh()
 {
-    qDebug() << "resizeevent";
     QRectF geo = sliceGeometry();
     d->view->resize( geo.size() );
     QWebFrame *frame = d->view->page()->mainFrame();
     frame->setScrollPosition( geo.topLeft().toPoint() );
+    setMinimumSize(geo.size());
+    setMaximumSize(geo.size());
+    setPreferredSize(geo.size());
+    resize(geo.size());
+    updateGeometry();
+    //emit sizeHintChanged();
+
+}
+
+void SliceGraphicsWidget::resizeEvent ( QGraphicsSceneResizeEvent * event )
+{
+    QSizeF o = event->oldSize();
+    o = d->view->geometry().size();
+    QSizeF n = event->newSize();
+    qreal f;
+    qDebug() << "old:" << o << "new:" << n;
+    if (!(o.height() && n.height() && o.width() && n.width())) {
+        qDebug() << "chickening out";
+        refresh();
+        return;
+    }
+    /*
+    if (o.height() < n.height() || o.width() < n.width()) {
+        // made bigger
+        qreal f = qMin((o.height() / n.height()), (o.width() / n.width()));
+        qDebug() << "Growing" << f << (o.height() / n.height()) << (o.width() / n.width());
+    } else {
+        qreal f = qMin((o.height() / n.height()), (o.width() / n.width()));
+        // smaller
+        qDebug() << "Shrinking" << f << (o.height() / n.height()) << (o.width() / n.width());
+    }
+    //d->view->setZoomFactor(f);
+
+    qDebug() << " -----------> resizeevent" << f << o.height() << n.height();
+    */
+    refresh();
 }

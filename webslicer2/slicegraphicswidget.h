@@ -14,6 +14,8 @@ public:
     SliceGraphicsWidget( QGraphicsWidget *parent=0 );
     ~SliceGraphicsWidget();
 
+    void refresh();
+
     void setUrl( const QUrl &url );
     void setElement( const QString &selector );
     void setSliceGeometry( const QRectF geo );

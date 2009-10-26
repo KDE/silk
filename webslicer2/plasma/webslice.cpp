@@ -23,6 +23,7 @@
 #include <limits.h>
 
 // Qt
+#include <QGraphicsSceneResizeEvent>
 #include <QLabel>
 #include <QSlider>
 
@@ -32,7 +33,7 @@
 #include <KConfigDialog>
 
 // Plasma
-
+#include <Plasma/Label>
 
 WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     : Plasma::PopupApplet(parent, args),
@@ -42,7 +43,7 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     m_size(192, 192)
 {
     setPopupIcon("internet-web-browser");
-    setAspectRatioMode(Plasma::KeepAspectRatio );
+    setAspectRatioMode(Plasma::IgnoreAspectRatio );
     setAcceptDrops(true);
     setAcceptsHoverEvents(true);
 
@@ -78,7 +79,12 @@ WebSlice::~WebSlice ()
 QGraphicsWidget* WebSlice::graphicsWidget()
 {
     if (!m_slice) {
-        m_slice = new SliceGraphicsWidget;
+        m_widget = new QGraphicsWidget(this);
+        QGraphicsLinearLayout *l = new QGraphicsLinearLayout(m_widget);
+        m_widget->setLayout(l);
+
+
+        m_slice = new SliceGraphicsWidget(m_widget);
         connect(m_slice, SIGNAL(newSize(QSizeF)), this, SLOT(sizeChanged(QSizeF)));
         connect(m_slice, SIGNAL(loadFinished()), this, SLOT(loadFinished()));
         setBusy(true);
@@ -86,8 +92,18 @@ QGraphicsWidget* WebSlice::graphicsWidget()
         m_slice->setElement( m_element );
         m_slice->setSliceGeometry(m_sliceGeometry);
         m_slice->hide();
+        l->addItem(m_slice);
+        /*
+        Plasma::Label *lbl = new Plasma::Label(m_widget);
+        lbl->setText("This is my label ...");
+        l->addItem(lbl);
+
+        Plasma::Label *lbl1 = new Plasma::Label(m_widget);
+        lbl1->setText("Another label ...");
+        l->addItem(lbl1);
+        */
     }
-    return m_slice;
+    return m_widget;
 }
 
 void WebSlice::createConfigurationInterface(KConfigDialog *parent)
@@ -158,6 +174,9 @@ void WebSlice::constraintsEvent(Plasma::Constraints constraints)
     if (constraints & (Plasma::FormFactorConstraint | Plasma::SizeConstraint)) {
         kDebug() << "Constraint changed:" << mapToScene(contentsRect());
         sizeChanged(contentsRect().size());
+        if (m_slice) {
+            m_slice->refresh();
+        }
     }
 }
 
@@ -167,18 +186,29 @@ void WebSlice::loadFinished()
     setBusy(false);
     m_slice->show();
     m_size = m_slice->geometry().size();
+
+    qreal l, t, r,  b;
+    getContentsMargins(&l, &t, &r, &b);
+    QSizeF effectiveSize = QSizeF((m_slice->geometry().width() + l + r), (m_slice->geometry().height() + t + b));
+    setPreferredSize(effectiveSize);
+    qDebug() << "preferred:" << effectiveSize << l << t <<  r << b;
+
     //kDebug() << "SIZECHANGE:" << m_size;
 }
 
 void WebSlice::sizeChanged(QSizeF newsize)
 {
     kDebug() << "======================= size changed" << newsize;
-    if (m_size != newsize) {
+    if (m_slice && m_size != newsize) {
         m_size = newsize;
         m_slice->resize(m_size);
         //QRectF g = QRectF(0, 0, geo.width(), geo.height());
-        QRectF g = QRectF(contentsRect().topLeft(), m_size);
-        //m_slice->setMinimumSize(g.size());
+        QRectF g = QRectF(mapToScene(contentsRect().topLeft()), m_size);
+        kDebug() << "CR TOPLEFT:" << mapToScene(contentsRect().topLeft())<< mapFromScene(contentsRect().topLeft());
+
+        //m_widget->setMinimumSize(m_size);
+        //m_widget->setMinimumSize(400, 400);
+        setMinimumSize(m_size);
         kDebug() << "now:" << g;
         KConfigGroup cg = config();
         cg.writeEntry("size", m_size);

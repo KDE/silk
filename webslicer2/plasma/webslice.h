@@ -55,7 +55,7 @@ class WebSlice: public Plasma::PopupApplet
         QRectF m_sliceGeometry;
         // Configuration dialog
         Ui::websliceConfig ui;
-
+        QGraphicsWidget *m_widget;
 };
 
 K_EXPORT_PLASMA_APPLET(webslice, WebSlice)
