@@ -66,6 +66,7 @@ void WebSlice::init()
     m_sliceGeometry = cg.readEntry("sliceGeometry", QRectF());
     m_size = cg.readEntry("size", m_size);
     setMinimumSize(m_size);
+    setMaximumSize(500, 500);
 
     kDebug() << "URL/ELEMENT/SLICEGEOMETRY:" << m_url << m_element << m_sliceGeometry;
 }
@@ -174,11 +175,11 @@ void WebSlice::sizeChanged(QSizeF newsize)
     kDebug() << "======================= size changed" << newsize;
     if (m_size != newsize) {
         m_size = newsize;
-        m_slice->setMinimumSize(geo.size());
+        m_slice->resize(m_size);
         //QRectF g = QRectF(0, 0, geo.width(), geo.height());
         QRectF g = QRectF(contentsRect().topLeft(), m_size);
         //m_slice->setMinimumSize(g.size());
-        //kDebug() << "now:" << g;
+        kDebug() << "now:" << g;
         KConfigGroup cg = config();
         cg.writeEntry("size", m_size);
         emit configNeedsSaving();
