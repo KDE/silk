@@ -20,6 +20,7 @@ public:
 
     QUrl url();
     QString element();
+    QRectF sliceGeometry();
 
 signals:
     void newSize(QSizeF);

@@ -48,6 +48,7 @@ class WebSlice: public Plasma::PopupApplet
         void loadFinished();
 
     private:
+        QString sliceGeometryToString();
         QUrl m_url;
         QString m_element;
         QSizeF m_size;

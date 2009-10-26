@@ -46,8 +46,8 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     setAcceptDrops(true);
     setAcceptsHoverEvents(true);
 
-    QSizeF s1(20, 20), s2(390, 390);
-    kDebug() << "sizes:" << s2.height()/s1.height();
+    //QSizeF s1(20, 20), s2(390, 390);
+    //kDebug() << "sizes:" << s2.height()/s1.height();
     //setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
     //setBackgroundHints(NoBackground); // TODO: conditionally, pls.
     setMinimumSize(64, 64);
@@ -58,11 +58,12 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
 void WebSlice::init()
 {
     KConfigGroup cg = config();
-    //m_url = cg.readEntry("url", "http://kde.org/");
-    m_url = cg.readEntry("url", "http://buienradar.nl/");
-    //m_element = cg.readEntry("element", "#block-user-0");
-    m_element = cg.readEntry("element", QString("hotspot"));
-    m_sliceGeometry = cg.readEntry("size", QRectF(258, 102, 550, 511));
+    m_url = cg.readEntry("url", "http://dot.kde.org/");
+    //m_url = cg.readEntry("url", "http://buienradar.nl/");
+    m_element = cg.readEntry("element", "#block-user-0");
+    //m_element = cg.readEntry("element", QString("hotspot"));
+    //m_sliceGeometry = cg.readEntry("size", QRectF(258, 102, 550, 511));
+    m_sliceGeometry = cg.readEntry("size", QRectF());
     m_size = cg.readEntry("size", QSizeF(192, 192));
     setMinimumSize(m_size);
 
@@ -101,9 +102,32 @@ void WebSlice::createConfigurationInterface(KConfigDialog *parent)
 
 void WebSlice::configAccepted()
 {
-    if (m_url.toString() != ui.urlEdit->text() || m_element != ui.elementEdit->text()) {
+    kDebug() << "slicegeo:" << sliceGeometryToString();
+    if ( m_url.toString() != ui.urlEdit->text() ||
+         m_element != ui.elementEdit->text() ||
+         ui.geometryEdit->text() != sliceGeometryToString() ) {
+
         m_url = QUrl(ui.urlEdit->text());
         m_element = ui.elementEdit->text();
+
+        QString geo = ui.geometryEdit->text();
+        QStringList gel = geo.split(",");
+        qreal x, y, w, h;
+        bool ok = true;
+        if (gel.length() == 4) {
+            x = (qreal)(gel[0].toDouble(&ok));
+            y = (qreal)(gel[1].toDouble(&ok));
+            w = (qreal)(gel[2].toDouble(&ok));
+            h = (qreal)(gel[3].toDouble(&ok));
+            if (!ok) {
+                kWarning() << "a conversion error occured." << gel;
+            } else {
+                m_sliceGeometry = QRectF(x, y, w, h);
+                kDebug() << "new slice geometry:" << m_sliceGeometry;
+            }
+        } else {
+            kWarning() << "format error, use x,y,w,h" << gel << gel.length();
+        }
 
         m_slice->setUrl(m_url);
         m_slice->setElement( m_element );
@@ -112,17 +136,32 @@ void WebSlice::configAccepted()
         KConfigGroup cg = config();
         cg.writeEntry("url", m_url.toString());
         cg.writeEntry("element", m_element);
+        if (!m_element.isEmpty()) {
+            m_sliceGeometry = QRectF();
+        }
         emit configNeedsSaving();
         kDebug() << "config changed" << m_element << m_url;
     }
+}
+
+QString WebSlice::sliceGeometryToString()
+{
+    /*
+    QString s = QString::number((int)(m_sliceGeometry.x())) << "," << \
+                QString::number((int)(m_sliceGeometry.y())) << "," << \
+                QString::number((int)(m_sliceGeometry.width())) << "," << \
+                QString::number((int)(m_sliceGeometry.height()));
+             */
+    QString s = i18n("%1,%2,%3,%4", m_sliceGeometry.x(), m_sliceGeometry.x(), m_sliceGeometry.x(),m_sliceGeometry.x());
+    return s;
 }
 
 
 void WebSlice::constraintsEvent(Plasma::Constraints constraints)
 {
     if (constraints & (Plasma::FormFactorConstraint | Plasma::SizeConstraint)) {
-        kDebug() << "Constraint changed:" << contentsRect();
-        sizeChanged(contentsRect().size());
+        kDebug() << "Constraint changed:" << mapToScene(contentsRect());
+        //sizeChanged(contentsRect().size());
     }
 }
 
@@ -143,7 +182,7 @@ void WebSlice::sizeChanged(QSizeF newsize)
         //setMinimumSize(geo.size());
         //QRectF g = QRectF(0, 0, geo.width(), geo.height());
         QRectF g = QRectF(contentsRect().topLeft(), m_size);
-        m_slice->setGeometry(g);
+        //m_slice->setMinimumSize(g.size());
         //kDebug() << "now:" << g;
         KConfigGroup cg = config();
         cg.writeEntry("size", m_size);
