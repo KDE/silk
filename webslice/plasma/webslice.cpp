@@ -47,13 +47,7 @@ WebSlice::WebSlice(QObject *parent, const QVariantList &args)
     setAcceptDrops(true);
     setAcceptsHoverEvents(true);
 
-    //QSizeF s1(20, 20), s2(390, 390);
-    //kDebug() << "sizes:" << s2.height()/s1.height();
-    //setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
-    //setBackgroundHints(NoBackground); // TODO: conditionally, pls.
     setMinimumSize(64, 64);
-    //setMaximumSize(INT_MAX, INT_MAX);
-    //setPopupIcon(QIcon());
 }
 
 void WebSlice::init()
@@ -66,8 +60,6 @@ void WebSlice::init()
     //m_sliceGeometry = cg.readEntry("size", QRectF(258, 102, 550, 511));
     m_sliceGeometry = cg.readEntry("sliceGeometry", QRectF());
     m_size = cg.readEntry("size", m_size);
-    //setMinimumSize(m_size);
-    //setMaximumSize(500, 500);
 
     kDebug() << "URL/ELEMENT/SLICEGEOMETRY:" << m_url << m_element << m_sliceGeometry;
 }
@@ -173,8 +165,10 @@ void WebSlice::constraintsEvent(Plasma::Constraints constraints)
 {
     if (constraints & (Plasma::FormFactorConstraint | Plasma::SizeConstraint)) {
         kDebug() << "Constraint changed:" << mapToScene(contentsRect());
-        //sizeChanged(contentsRect().size());
         if (m_slice) {
+            kDebug() << "resizing slice to:" << contentsRect().size();
+            m_slice->setMaximumSize(contentsRect().size());
+            m_widget->setMinimumSize(64, 64);
             m_slice->refresh();
         }
     }
@@ -187,15 +181,18 @@ void WebSlice::loadFinished()
     m_slice->show();
     m_size = m_slice->geometry().size();
 
-    qreal l, t, r,  b;
+    //qreal l, t, r,  b;
     //getContentsMargins(&l, &t, &r, &b);
 
     //QSizeF effectiveSize = QSizeF((m_slice->geometry().width() + l + r), (m_slice->geometry().height() + t + b));
-    QSizeF effectiveSize = QSizeF((m_slice->geometry().width() + 28), (m_slice->geometry().height() + 28));
-    setPreferredSize(effectiveSize);
-    qDebug() << "preferred:" << effectiveSize << l << t <<  r << b;
+    //QSizeF effectiveSize = QSizeF((m_slice->geometry().width() + 28), (m_slice->geometry().height() + 28));
+    //setPreferredSize(effectiveSize);
+    //resize(effectiveSize);
+    //qDebug() << "preferred:" << effectiveSize;// << l << t <<  r << b;
+    setAspectRatioMode(Plasma::KeepAspectRatio );
 
-    //kDebug() << "SIZECHANGE:" << m_size;
+    kDebug() << "resizing slice to:" << contentsRect().size();
+    m_slice->setMaximumSize(contentsRect().size());
 }
 
 void WebSlice::sizeChanged(QSizeF newsize)
@@ -208,9 +205,10 @@ void WebSlice::sizeChanged(QSizeF newsize)
         QRectF g = QRectF(mapToScene(contentsRect().topLeft()), m_size);
         kDebug() << "CR TOPLEFT:" << mapToScene(contentsRect().topLeft())<< mapFromScene(contentsRect().topLeft());
 
-        //m_widget->setMinimumSize(m_size);
+        m_widget->setMinimumSize(m_size);
+        m_slice->setMaximumSize(contentsRect().size());
         //m_widget->setMinimumSize(400, 400);
-        setMinimumSize(m_size);
+        setPreferredSize(m_size);
         kDebug() << "now:" << m_size;
         KConfigGroup cg = config();
         cg.writeEntry("size", m_size);
