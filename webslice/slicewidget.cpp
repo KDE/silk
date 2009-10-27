@@ -66,8 +66,14 @@ void SliceWidget::setElement( const QString &selector )
 void SliceWidget::sizeChanged(QSizeF newsize)
 {
     qDebug() << "size changed" << newsize;
-    setSceneRect(QRectF(QPointF(0, 0), newsize));
-    setMinimumSize(newsize.toSize());
+    QRectF newgeometry = QRectF(QPointF(0, 0), newsize);
+    setSceneRect(newgeometry);
+    resize(newgeometry.toRect().size());
+}
+
+QSize SliceWidget::sizeHint () const
+{
+    return sceneRect().size().toSize();
 }
 
 void SliceWidget::resizeEvent ( QResizeEvent * event )
@@ -77,4 +83,3 @@ void SliceWidget::resizeEvent ( QResizeEvent * event )
     setSceneRect(newgeometry);
     d->slice->setGeometry(newgeometry);
 }
-

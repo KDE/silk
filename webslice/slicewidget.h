@@ -36,6 +36,9 @@ public:
     void setUrl( const QUrl &url );
     void setElement( const QString &selector );
 
+protected:
+    QSize sizeHint () const;
+
 protected slots:
     void resizeEvent ( QResizeEvent * event );
     void sizeChanged ( QSizeF newsize );
