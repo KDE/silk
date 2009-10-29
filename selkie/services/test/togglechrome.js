@@ -51,7 +51,6 @@ function toggle(id) {
 
 toggle("header");
 toggle("footer");
-window.silk.showNotification('<strong>... Chrome toggled</strong><br />');
-
+toggle("box");
 // Evil hack to force a reflow since Qt 4.5.1 doesn't do it
 var v = document.body.offsetHeight;

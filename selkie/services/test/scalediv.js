@@ -2,7 +2,7 @@
  * Show/Hide the header, footer and sidebar          *
  *                                                   *
  * Site:    Selkie Test Site                         *
- * Author:  Sebastian Kügler <sebas@kde.org>         *
+ * Author:  Sebastian K?gler <sebas@kde.org>         *
  * License: LGPL v2.1                                *
  * ------------------------------------------------- */
 
@@ -22,14 +22,14 @@ function scaleUp() {
 
 }
 
-setStyle("content", "-webkit-transition", "-webkit-transform .2s ease");
+setStyle("content", "-webkit-transition", "-webkit-transform .4s ease");
 //document.getElementById("picture").style.webkitTransform='rotate(1080deg)'
 window.silk.GM_log("scaling down content");
 
-document.getElementById("content").style.webkitTransform='scale(5)';
+document.getElementById("content").style.webkitTransform='scale(.3)';
 //document.getElementById("mountain").style.webkitTransform='rotate(360deg)';
 
-setTimeout("scaleUp()", 200);
+setTimeout("scaleUp()", 400);
 
 // Evil hack to force a reflow since Qt 4.5.1 doesn't do it
-var v = document.body.offsetHeight;
+//var v = document.body.offsetHeight;
