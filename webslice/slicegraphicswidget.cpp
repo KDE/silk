@@ -1,5 +1,5 @@
 /*
- *   Copyright 2009 by Sebastian K?gler <sebas@kde.org>
+ *   Copyright 2009 by Sebastian Kügler <sebas@kde.org>
  *   Copyright 2009 by Richard Moore <rich@kde.org>
 
  *   This program is free software; you can redistribute it and/or modify
@@ -86,7 +86,7 @@ void SliceGraphicsWidget::setSliceGeometry( const QRectF geo )
 
 void SliceGraphicsWidget::createSlice()
 {
-    qDebug() << "SliceGraphicsWidget::createSlice()";
+    //qDebug() << "SliceGraphicsWidget::createSlice()";
     QRectF geo = sliceGeometry();
     if (!geo.isValid()) {
         qDebug() << "Not creating slice, geo invalid" << geo;
@@ -136,23 +136,21 @@ void SliceGraphicsWidget::refresh()
     d->view->resize( geo.size() );
     QWebFrame *frame = d->view->page()->mainFrame();
     frame->setScrollPosition( geo.topLeft().toPoint() );
-    qDebug() << "top point" << geo.topLeft().toPoint();
+    //qDebug() << "top point" << geo.topLeft().toPoint();
     setPreferredSize(geo.size());
     updateGeometry();
-    qDebug() << "refreshed. ... " << geo;
+    //qDebug() << "refreshed. ... " << geo;
 }
 
 void SliceGraphicsWidget::resizeEvent ( QGraphicsSceneResizeEvent * event )
 {
-    qDebug() << "-------------------__";
-    qDebug() << "SliceGraphicsWidget::resizeEvent" << event->newSize() << "(" << event->oldSize() << ")";
+    //qDebug() << "SliceGraphicsWidget::resizeEvent" << event->newSize() << "(" << event->oldSize() << ")";
     QSizeF o = d->originalGeometry.size();
     QSizeF n = event->newSize();
-    qDebug() << "Slice :" << o;
-    qDebug() << "Widget:" << n;
+
     // Prevent oopses.
     if (n.width() > 2400 || n.height() > 2400) {
-        qDebug() << "What's going on???????" << o.width();
+        qDebug() << "giant size, what's going on???????" << o.width();
         return;
     }
     qreal f = n.width() / o.width();
