@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Sebastian K?gler <sebas@kde.org>                *
+ *   Copyright (C) 2009 by Sebastian Kügler <sebas@kde.org>                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -54,14 +54,15 @@ void WebSlice::init()
 {
     KConfigGroup cg = config();
     m_url = cg.readEntry("url", "http://dot.kde.org/");
-    //m_url = cg.readEntry("url", "http://buienradar.nl/");
     m_element = cg.readEntry("element", "#block-user-0");
-    //m_element = cg.readEntry("element", QString("hotspot"));
+
+    // for testing geometry
+    //m_url = cg.readEntry("url", "http://buienradar.nl/");
     //m_sliceGeometry = cg.readEntry("size", QRectF(258, 102, 550, 511));
     m_sliceGeometry = cg.readEntry("sliceGeometry", QRectF());
     m_size = cg.readEntry("size", m_size);
 
-    kDebug() << "URL/ELEMENT/SLICEGEOMETRY:" << m_url << m_element << m_sliceGeometry;
+    //kDebug() << "url/element/slicegeometry:" << m_url << m_element << m_sliceGeometry;
 }
 
 WebSlice::~WebSlice ()
@@ -85,15 +86,6 @@ QGraphicsWidget* WebSlice::graphicsWidget()
         m_slice->setSliceGeometry(m_sliceGeometry);
         m_slice->hide();
         l->addItem(m_slice);
-        /*
-        Plasma::Label *lbl = new Plasma::Label(m_widget);
-        lbl->setText("This is my label ...");
-        l->addItem(lbl);
-
-        Plasma::Label *lbl1 = new Plasma::Label(m_widget);
-        lbl1->setText("Another label ...");
-        l->addItem(lbl1);
-        */
     }
     return m_widget;
 }
@@ -111,7 +103,6 @@ void WebSlice::createConfigurationInterface(KConfigDialog *parent)
 
 void WebSlice::configAccepted()
 {
-    kDebug() << "slicegeo:" << sliceGeometryToString();
     if ( m_url.toString() != ui.urlEdit->text() ||
          m_element != ui.elementEdit->text() ||
          ui.geometryEdit->text() != sliceGeometryToString() ) {
@@ -133,10 +124,12 @@ void WebSlice::configAccepted()
             } else {
                 m_sliceGeometry = QRectF(x, y, w, h);
                 config().writeEntry("sliceGeometry", m_sliceGeometry);
-                kDebug() << "new slice geometry:" << m_sliceGeometry;
+                //kDebug() << "new slice geometry:" << m_sliceGeometry;
             }
         } else {
-            kWarning() << "format error, use x,y,w,h" << gel << gel.length();
+            if (m_element.isEmpty()) {
+                kWarning() << "format error, use x,y,w,h" << gel << gel.length();
+            }
         }
 
         m_slice->setUrl(m_url);
@@ -150,7 +143,7 @@ void WebSlice::configAccepted()
             m_sliceGeometry = QRectF();
         }
         emit configNeedsSaving();
-        kDebug() << "config changed" << m_element << m_url;
+        //kDebug() << "config changed" << m_element << m_url;
     }
 }
 
@@ -164,9 +157,9 @@ QString WebSlice::sliceGeometryToString()
 void WebSlice::constraintsEvent(Plasma::Constraints constraints)
 {
     if (constraints & (Plasma::FormFactorConstraint | Plasma::SizeConstraint)) {
-        kDebug() << "Constraint changed:" << mapToScene(contentsRect());
+        //kDebug() << "Constraint changed:" << mapToScene(contentsRect());
         if (m_slice) {
-            kDebug() << "resizing slice to:" << contentsRect().size();
+            //kDebug() << "resizing slice to:" << contentsRect().size();
             m_slice->setMaximumSize(contentsRect().size());
             m_widget->setMinimumSize(64, 64);
             m_slice->refresh();
@@ -176,40 +169,29 @@ void WebSlice::constraintsEvent(Plasma::Constraints constraints)
 
 void WebSlice::loadFinished()
 {
-    kDebug() << "done loading";
     setBusy(false);
     m_slice->show();
     m_size = m_slice->geometry().size();
 
-    //qreal l, t, r,  b;
-    //getContentsMargins(&l, &t, &r, &b);
-
-    //QSizeF effectiveSize = QSizeF((m_slice->geometry().width() + l + r), (m_slice->geometry().height() + t + b));
-    //QSizeF effectiveSize = QSizeF((m_slice->geometry().width() + 28), (m_slice->geometry().height() + 28));
-    //setPreferredSize(effectiveSize);
-    //resize(effectiveSize);
-    //qDebug() << "preferred:" << effectiveSize;// << l << t <<  r << b;
     setAspectRatioMode(Plasma::KeepAspectRatio );
 
-    kDebug() << "resizing slice to:" << contentsRect().size();
+    kDebug() << "done loading, resizing slice to:" << contentsRect().size();
     m_slice->setMaximumSize(contentsRect().size());
 }
 
 void WebSlice::sizeChanged(QSizeF newsize)
 {
-    kDebug() << "======================= size changed" << newsize;
     if (m_slice && m_size != newsize) {
         QSizeF m_size = QSizeF(newsize.width() + 28, newsize.height() + 28);
         m_slice->resize(m_size);
-        //QRectF g = QRectF(0, 0, geo.width(), geo.height());
+
         QRectF g = QRectF(mapToScene(contentsRect().topLeft()), m_size);
-        kDebug() << "CR TOPLEFT:" << mapToScene(contentsRect().topLeft())<< mapFromScene(contentsRect().topLeft());
+        mapFromScene(contentsRect().topLeft());
 
         m_widget->setMinimumSize(m_size);
         m_slice->setMaximumSize(contentsRect().size());
-        //m_widget->setMinimumSize(400, 400);
         setPreferredSize(m_size);
-        kDebug() << "now:" << m_size;
+        kDebug() << "size is now:" << m_size;
         KConfigGroup cg = config();
         cg.writeEntry("size", m_size);
         emit configNeedsSaving();

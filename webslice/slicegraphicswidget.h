@@ -1,5 +1,5 @@
 /*
- *   Copyright 2009 by Sebastian Kügler <sebas@kde.org>
+ *   Copyright 2009 by Sebastian K?gler <sebas@kde.org>
  *   Copyright 2009 by Richard Moore <rich@kde.org>
 
  *   This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@ class QGraphicsSceneResizeEvent;
 class QUrl;
 
 /**
- * @class Applet plasma/slicegraphicswidget.h
+ * @class SliceGraphicsWidget plasma/slicegraphicswidget.h
  *
  * @short A QGraphicsWidget displaying a part of a webpage
  *
@@ -116,7 +116,7 @@ public:
      *
      * @return A QPixmap of a part of the webpage
      **/
-    QPixmap elementPixmap( const QString &selector );
+    QPixmap elementPixmap();
 
 signals:
     /**

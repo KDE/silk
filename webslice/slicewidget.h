@@ -25,6 +25,15 @@
 
 class QUrl;
 
+/**
+ * @class SliceWidget 
+ *
+ * @short A QWidget displaying a part of a webpage
+ *
+ * SliceWidget provides a graphicsview embedding the SliceGraphicsWidget
+ * graphicswidget that displays a part of a webpage, based on a QRectF
+ * inside the webpage or a CSS selector (preferred).
+ */
 class SliceWidget : public QGraphicsView
 {
     Q_OBJECT
@@ -33,7 +42,25 @@ public:
     SliceWidget( QWidget *parent=0 );
     ~SliceWidget();
 
+    /**
+     * Set the URL of the webpage the is being sliced. If you want
+     * to use the more flexible CSS selector to render your slice,
+     * the URL should point to the frame you're looking for, not to
+     * the mainframe of the page. If the page doesn't use frames,
+     * just the URL will work of course.
+     *
+     * @param url The page or frame URL to render
+     **/
     void setUrl( const QUrl &url );
+
+    /**
+     * Specify the element of the webpage to be rendered. selector can
+     * be any CSS that is matched by WebKit's findElement() API. If you
+     * want to select a div with the id "mybox", specify "#mybox" here.
+     * The first element found will be used.
+     *
+     * @param selector the name of the group to access
+     **/
     void setElement( const QString &selector );
 
 protected:

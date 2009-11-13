@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Sebastian K?gler <sebas@kde.org>                *
+ *   Copyright (C) 2009 by Sebastian Kügler <sebas@kde.org>                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -53,7 +53,6 @@ class WebSlice: public Plasma::PopupApplet
         QString m_element;
         QSizeF m_size;
         QRectF m_sliceGeometry;
-        // Configuration dialog
         Ui::websliceConfig ui;
         QGraphicsWidget *m_widget;
 };

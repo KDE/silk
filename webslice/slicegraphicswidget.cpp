@@ -1,5 +1,5 @@
 /*
- *   Copyright 2009 by Sebastian Kügler <sebas@kde.org>
+ *   Copyright 2009 by Sebastian K?gler <sebas@kde.org>
  *   Copyright 2009 by Richard Moore <rich@kde.org>
 
  *   This program is free software; you can redistribute it and/or modify
@@ -163,7 +163,7 @@ void SliceGraphicsWidget::resizeEvent ( QGraphicsSceneResizeEvent * event )
     }
 }
 
-QPixmap SliceGraphicsWidget::elementPixmap( const QString &selector )
+QPixmap SliceGraphicsWidget::elementPixmap()
 {
     QRectF rect = sliceGeometry();
     if (!rect.isValid()) {
