@@ -1,8 +1,9 @@
 set(webappeditor_SRCS
-   selkieeditor.cpp
-   webappeditor.cpp
-   webappactioneditor.cpp
-   main.cpp
+    selkieeditor.cpp
+    webappeditor.cpp
+    webappactioneditor.cpp
+    selkiepackagestructure.cpp
+    main.cpp
  )
 
 kde4_add_ui_files(webappeditor_SRCS webapp.ui webappaction.ui)
@@ -14,7 +15,9 @@ kde4_add_executable(webappeditor ${webappeditor_SRCS})
 target_link_libraries(webappeditor
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
-    ${KDE4_KTEXTEDITOR_LIBS})
+    ${KDE4_KTEXTEDITOR_LIBS}
+    ${KDE4_PLASMA_LIBS}
+)
 
 install(TARGETS webappeditor ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
