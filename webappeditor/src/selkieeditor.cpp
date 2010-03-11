@@ -3,6 +3,7 @@
 #include "webappeditor.h"
 #include "webappactioneditor.h"
 
+#include <KAction>
 #include <KActionCollection>
 #include <KApplication>
 #include <KDebug>
@@ -37,8 +38,12 @@ void SelkieEditor::setupActions()
 {
     KStandardAction::open(this, SLOT(open()), actionCollection());
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
+    KStandardAction::save(this, SLOT(exportToFile()), actionCollection());
+}
 
-    //KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
+void SelkieEditor::exportToFile()
+{
+    kDebug() << "exporting goes here";
 }
 
 void SelkieEditor::open()

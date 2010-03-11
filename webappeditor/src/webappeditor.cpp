@@ -68,7 +68,6 @@ void WebAppEditor::loadDesktopFile(KDesktopFile *file)
     setIcon(KIcon(webAppUi.icon->icon()));
     setName(webAppUi.name->text());
     webAppUi.saveButton->setIcon(KIcon("document-save"));
-
     //dump();
 }
 

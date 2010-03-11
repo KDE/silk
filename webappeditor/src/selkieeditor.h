@@ -34,6 +34,7 @@ public:
 private Q_SLOTS:
     void save();
     void open();
+    void exportToFile();
 
 private:
     void setupActions();

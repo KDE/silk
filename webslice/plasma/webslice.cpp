@@ -115,16 +115,20 @@ void WebSlice::configAccepted()
         qreal x, y, w, h;
         bool ok = true;
         if (gel.length() == 4) {
+            bool allOk = true;
             x = (qreal)(gel[0].toDouble(&ok));
+            if (!ok) allOk = false;
             y = (qreal)(gel[1].toDouble(&ok));
+            if (!ok) allOk = false;
             w = (qreal)(gel[2].toDouble(&ok));
+            if (!ok) allOk = false;
             h = (qreal)(gel[3].toDouble(&ok));
-            if (!ok) {
+            if (!allOk) {
                 kWarning() << "a conversion error occured." << gel;
             } else {
                 m_sliceGeometry = QRectF(x, y, w, h);
                 config().writeEntry("sliceGeometry", m_sliceGeometry);
-                //kDebug() << "new slice geometry:" << m_sliceGeometry;
+                kDebug() << "new slice geometry:" << m_sliceGeometry;
             }
         } else {
             if (m_element.isEmpty()) {
@@ -149,7 +153,8 @@ void WebSlice::configAccepted()
 
 QString WebSlice::sliceGeometryToString()
 {
-    QString s = i18n("%1,%2,%3,%4", m_sliceGeometry.x(), m_sliceGeometry.y(), m_sliceGeometry.width(),m_sliceGeometry.height());
+    QString s = i18n("%1,%2,%3,%4", m_sliceGeometry.x(), m_sliceGeometry.y(), m_sliceGeometry.width(),m_sliceGeometry.height()); // 18n - WTF?
+    kDebug() << "geometry:" << s;
     return s;
 }
 
