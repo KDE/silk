@@ -2,6 +2,7 @@
 #include "selkieeditor.h"
 #include "webappeditor.h"
 #include "webappactioneditor.h"
+#include "selkiepackagestructure.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -24,7 +25,7 @@ SelkieEditor::SelkieEditor()
 
     m_pages = new KPageWidget(this);
     m_pages->setFaceType(KPageWidget::Auto);
-    loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/test/");
+    loadWebApp("/home/sebas/kdesvn/src/project-silk/webappeditor/examplepackage/");
     //loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/silk/");
     setupActions();
 
@@ -43,22 +44,32 @@ void SelkieEditor::setupActions()
 
 void SelkieEditor::exportToFile()
 {
-    kDebug() << "exporting goes here";
+    kDebug() << "exporting goes here" << m_dir;
+    SelkiePackageStructure structure;
+    SelkiePackageStructure::exportPackage(KUrl("/home/sebas/kdesvn/src/project-silk/webappeditor/examplepackage/"), KUrl("/tmp/examplepackage.selkie"));
+    //return SelkieEditor::exportPackage(m_projectPath, url);
+
 }
 
 void SelkieEditor::open()
 {
-    QString path = KFileDialog::getExistingDirectory(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), this, i18nc("the directory selection dialogue for the webapp", "Open Web Application Directory"));
+    QString path = KFileDialog::getExistingDirectory(KUrl("file:///home/sebas/kdesvn/src/project-silk/webappeditor/examplepackage"), this, i18nc("the directory selection dialogue for the webapp", "Open Web Application Directory"));
     loadWebApp(path);
 }
 
 void SelkieEditor::loadWebApp(const QString &path)
 {
     m_dir = QDir(path);
-    QStringList files;
     const QString fileName = "*.desktop";
+    QDir actionsDir = QDir(path + "actions/");
+    kDebug() << "actions are in : " << actionsDir;
+    kDebug() << "files:" << actionsDir.entryList(QStringList(fileName), QDir::Files | QDir::NoSymLinks);
+    QStringList files;
     files = m_dir.entryList(QStringList(fileName), QDir::Files | QDir::NoSymLinks);
 
+    QStringList actionFiles = actionsDir.entryList(QStringList(fileName), QDir::Files | QDir::NoSymLinks);
+
+    kDebug() << "===== All Files:";
     // Clean up
     m_actionFiles.clear();
     // FIXME: clearing the pagewidget doesn't work :/
@@ -67,11 +78,47 @@ void SelkieEditor::loadWebApp(const QString &path)
     for (int i = 0; i < rows; i++) {
         model->removeRow(i);
     }
-    kDebug() << "m_pages flushed rows:" << rows;
+    //kDebug() << "m_pages flushed rows:" << rows;
 
     foreach (const QString &f, files) {
         QString fname = m_dir.absolutePath().append("/").append(f);
         //kDebug() << "Found file:" << fname;
+        KDesktopFile *df = new KDesktopFile(fname);
+
+        KConfigGroup group = df->group("Desktop Entry");
+
+        QString type = group.readEntry("Type", QString());
+        QString servicetype = group.readEntry("X-KDE-ServiceTypes", QString());
+        QString pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
+
+        //kDebug() << type << servicetype << pname;
+
+        if (type == "Service") {
+            if (servicetype == "Silk/WebApp") {
+                pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
+                kDebug() << "Found WebApp:" << pname;
+                m_webAppPlugin = df;
+            } else if (servicetype == "Silk/WebApp/Action") {
+                pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
+                kDebug() << "Found Action:" << pname;
+                m_actionFiles << df;
+            } else {
+                kDebug() << "ignoring" << fname;
+                delete df;
+            }
+        } else if (type == "Application") {
+            m_app = df;
+            kDebug() << "Application:" << group.readEntry("Name", QString());
+        } else {
+            kDebug() << "ignoring" << fname;
+            delete df;
+        }
+
+    }
+
+    foreach (const QString &f, actionFiles) {
+        QString fname = actionsDir.absolutePath().append("/").append(f);
+        kDebug() << "Found file:" << fname;
         KDesktopFile *df = new KDesktopFile(fname);
 
         KConfigGroup group = df->group("Desktop Entry");

@@ -193,7 +193,7 @@ void WebAppActionEditor::setupActions()
 */
 void WebAppActionEditor::openActionFile()
 {
-    QString filename = KFileDialog::getOpenFileName(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), QString("*.desktop"));
+    QString filename = KFileDialog::getOpenFileName(KUrl("file:///home/sebas/kdesvn/src/project-silk/webappeditor/examplepackage/actions/"), QString("*.desktop"));
     loadDesktopFile(new KDesktopFile(filename));
 }
 
@@ -245,7 +245,7 @@ void WebAppActionEditor::loadScriptFile()
 
 KUrl WebAppActionEditor::scriptUrl()
 {
-    return KUrl(QString("%1/%2").arg(m_dir.absolutePath(), actionUi.scriptFile->text()));
+    return KUrl(QString("%1/scripts/%2").arg(m_dir.absolutePath(), actionUi.scriptFile->text()));
 }
 
 void WebAppActionEditor::save()

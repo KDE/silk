@@ -26,6 +26,9 @@ public:
     SelkiePackageStructure(QObject* parent = 0, QString name = "Selkie/WebApp");
     virtual ~SelkiePackageStructure();
 
+    static bool exportPackage(const KUrl &exportUrl, const KUrl &targetFile);
+    static bool importPackage(const KUrl &importFile, const KUrl &targetUrl);
+
 };
 
 #endif // SELKIEPACKAGESTRUCTURE_H
