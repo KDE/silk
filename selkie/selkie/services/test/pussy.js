@@ -1,0 +1,1 @@
+// Happy JavaScript hacking!

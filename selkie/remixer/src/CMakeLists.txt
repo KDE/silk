@@ -27,3 +27,4 @@ install(TARGETS webappeditor ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install( FILES webappeditor.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES webappeditor.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES webappeditorui.rc  DESTINATION  ${DATA_INSTALL_DIR}/webappeditor )
+
