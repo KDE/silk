@@ -25,7 +25,7 @@ SelkieEditor::SelkieEditor()
 
     m_pages = new KPageWidget(this);
     m_pages->setFaceType(KPageWidget::Auto);
-    loadWebApp("/home/sebas/kdesvn/src/project-silk/webappeditor/examplepackage/");
+    loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/");
     //loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/silk/");
     setupActions();
 
@@ -46,7 +46,7 @@ void SelkieEditor::exportToFile()
 {
     kDebug() << "exporting goes here" << m_dir;
     SelkiePackageStructure structure;
-    SelkiePackageStructure::exportPackage(KUrl("/home/sebas/kdesvn/src/project-silk/webappeditor/examplepackage/"), KUrl("/tmp/examplepackage.selkie"));
+    SelkiePackageStructure::exportPackage(KUrl("/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/"), KUrl("/tmp/examplepackage.selkie"));
     //return SelkieEditor::exportPackage(m_projectPath, url);
 
 }
