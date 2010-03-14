@@ -274,9 +274,9 @@ void Package::install()
     */
     //QStringList installationPath = KGlobal::dirs()->findDirs("apps", "Internet");
     //kDebug() << "Installation Path:" << installationPath;
-    kDebug() << "App Path:" << m_appPath;
-    kDebug() << "Plugin Path:" << m_pluginPath;
-    kDebug() << "Packageroot Path:" << m_dataPath;
+    //kDebug() << "App Path:" << m_appPath;
+    //kDebug() << "Plugin Path:" << m_pluginPath;
+    //kDebug() << "Packageroot Path:" << m_dataPath;
     if (!isValid()) {
         kWarning() << "Selkie plasmoid invalid, not installing";
         return;
@@ -285,7 +285,7 @@ void Package::install()
     // Install app
     QString appdest = m_appPath + "silk-webapp-" + m_pluginName + ".desktop";
     if (install(m_appFile, appdest)) {
-        kDebug() << "appinstall Success.";
+        //kDebug() << "appinstall Success.";
     } else {
         //return false;
     }
@@ -294,33 +294,33 @@ void Package::install()
     QString plugindest = m_pluginPath + "silk/webapps/" + m_pluginName + "/silk-webapp-" + m_pluginName + ".desktop";
     kDebug() << "creating dir????" << m_pluginPath + "silk/webapps/" + m_pluginName;
     if (!QDir(m_pluginPath + "silk/webapps/" + m_pluginName).exists()) {
-        kDebug() << "creating dir" << m_pluginPath + "silk/webapps/" + m_pluginName;
+        //kDebug() << "creating dir" << m_pluginPath + "silk/webapps/" + m_pluginName;
         KStandardDirs::makeDir(m_pluginPath + "silk/webapps/" + m_pluginName);
     }
     if (install(m_pluginFile, plugindest)) {
-        kDebug() << "=========== :) plugininstall success." << plugindest;
+        //kDebug() << "=========== :) plugininstall success." << plugindest;
     } else {
         //return false;
     }
 
     // Install actions
-    kDebug() << "installing actions" << m_actionFiles;
+    //kDebug() << "installing actions" << m_actionFiles;
     QString actionPath = m_root.path() + "actions/";
     foreach (const QString &af, m_actionFiles) {
-        kDebug() << "installing plugin to " << m_pluginPath + af;
+        //kDebug() << "installing plugin to " << m_pluginPath + af;
         install(actionPath + af, m_pluginPath + af);
     }
 
     // Install datafiles
-    kDebug() << "---> installing scripts" << m_scriptFiles;
+    //kDebug() << "---> installing scripts" << m_scriptFiles;
     QString scriptPath = m_root.path() + "scripts/";
     foreach (const QString &af, m_scriptFiles) {
         if (!QDir(m_dataPath).exists()) {
-            kDebug() << "creating dir" << m_dataPath;
+            //kDebug() << "creating dir" << m_dataPath;
             KStandardDirs::makeDir(m_dataPath);
         }
         if (!install(scriptPath + af, m_dataPath + "/" + af)) {
-            kDebug() << "installation error" << scriptPath + af << m_dataPath + "/" + af;
+            //kDebug() << "installation error" << scriptPath + af << m_dataPath + "/" + af;
         };
     }
 
@@ -330,7 +330,7 @@ void Package::install()
 
 bool Package::install(const QString &source, const QString &destination)
 {
-    kDebug() << "Installing ... " << source << destination;
+    //kDebug() << "Installing ... " << source << destination;
     return QFile::copy(source, destination);
 }
 
