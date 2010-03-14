@@ -76,22 +76,26 @@ void Package::readDir()
 {
     m_appPath = KStandardDirs::locateLocal("apps", "");
     m_pluginPath = KStandardDirs::locateLocal("services", "");
-    m_dataPath = KStandardDirs::locateLocal("data", "silk/webapps/" + m_pluginName);
 
-    kDebug() << "Package path:" << m_root;
+
     if (m_root.isValid()) {
-        m_appFile = m_root.path() + "webapp.desktop";
-        m_pluginFile = m_root.path() + "plugin.desktop";
+        QString rpath = m_root.path();
+        if (!rpath.endsWith('/')) {
+            rpath = rpath + '/';
+        }
+        m_appFile = rpath + "webapp.desktop";
+        m_pluginFile = rpath + "plugin.desktop";
         m_pluginName = pluginName();
+        m_dataPath = KStandardDirs::locateLocal("data", "silk/webapps/" + m_pluginName);
 
-        kDebug() << "Package path:" << m_root.path();
+        kDebug() << "Package path:" << rpath;
         //entries (KIO::Job *job, const KIO::UDSEntryList &list)
-        QDir _root(m_root.path());
+        QDir _root(rpath);
         //m_metadataFiles = _root.entryList(QStringList("*.desktop"));
-        QDir _actions(m_root.path() + "actions/");
+        QDir _actions(rpath + "actions/");
         m_actionFiles = _actions.entryList(QStringList("*.desktop"));
 
-        QDir _scripts(m_root.path() + "scripts/");
+        QDir _scripts(rpath + "scripts/");
         m_scriptFiles = _scripts.entryList(QStringList("*.js"));
 
         kDebug() << "QDir stuff";
@@ -164,20 +168,25 @@ void Package::entries(KIO::Job* job, const KIO::UDSEntryList &list)
 
 bool Package::isValid()
 {
+    QString rpath = m_root.path();
+    if (!rpath.endsWith('/')) {
+        rpath = rpath + '/';
+    }
+
     bool valid = true;
     QString error;
     kDebug() << "m_root" << m_root;
     if (!m_root.isValid()) {
         valid = false;
-        error.append("m_root is invalid" + m_root.path() + "\n");
+        error.append("m_root is invalid" + rpath + "\n");
     }
     if (!QFile(m_appFile).exists()) {
         valid = false;
         error.append("m_appFile is invalid" + m_appFile + "\n");
     }
-    if (!QDir(m_root.path() + "actions/").exists()) {
+    if (!QDir(rpath + "actions/").exists()) {
         valid = false;
-        error.append("actions/ dir does not exist" + m_root.path() + "actions/" + "\n");
+        error.append("actions/ dir does not exist" + rpath + "actions/" + "\n");
     }
 
     if (m_pluginName.isEmpty()) {
@@ -268,6 +277,10 @@ void Package::install()
     kDebug() << "App Path:" << m_appPath;
     kDebug() << "Plugin Path:" << m_pluginPath;
     kDebug() << "Packageroot Path:" << m_dataPath;
+    if (!isValid()) {
+        kWarning() << "Selkie plasmoid invalid, not installing";
+        return;
+    }
 
     // Install app
     QString appdest = m_appPath + "silk-webapp-" + m_pluginName + ".desktop";
@@ -278,9 +291,14 @@ void Package::install()
     }
 
     // Install plugin
-    QString plugindest = m_pluginPath + "silk-webapp-" + m_pluginName + ".desktop";
+    QString plugindest = m_pluginPath + "silk/webapps/" + m_pluginName + "/silk-webapp-" + m_pluginName + ".desktop";
+    kDebug() << "creating dir????" << m_pluginPath + "silk/webapps/" + m_pluginName;
+    if (!QDir(m_pluginPath + "silk/webapps/" + m_pluginName).exists()) {
+        kDebug() << "creating dir" << m_pluginPath + "silk/webapps/" + m_pluginName;
+        KStandardDirs::makeDir(m_pluginPath + "silk/webapps/" + m_pluginName);
+    }
     if (install(m_pluginFile, plugindest)) {
-        kDebug() << "plugininstall success.";
+        kDebug() << "=========== :) plugininstall success." << plugindest;
     } else {
         //return false;
     }
@@ -289,6 +307,7 @@ void Package::install()
     kDebug() << "installing actions" << m_actionFiles;
     QString actionPath = m_root.path() + "actions/";
     foreach (const QString &af, m_actionFiles) {
+        kDebug() << "installing plugin to " << m_pluginPath + af;
         install(actionPath + af, m_pluginPath + af);
     }
 
@@ -301,7 +320,7 @@ void Package::install()
             KStandardDirs::makeDir(m_dataPath);
         }
         if (!install(scriptPath + af, m_dataPath + "/" + af)) {
-            kDebug() << "installation error";
+            kDebug() << "installation error" << scriptPath + af << m_dataPath + "/" + af;
         };
     }
 
