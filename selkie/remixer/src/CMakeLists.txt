@@ -10,16 +10,16 @@ kde4_add_ui_files(webappeditor_SRCS webapp.ui webappaction.ui)
 
 kde4_add_kcfg_files(webappeditor_SRCS settings.kcfgc )
 
-kde4_add_executable(webappeditor ${webappeditor_SRCS})
+kde4_add_executable(selkie-remixer ${webappeditor_SRCS})
 
-target_link_libraries(webappeditor
+target_link_libraries(selkie-remixer
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KTEXTEDITOR_LIBS}
     #${KDE4_PLASMA_LIBS}
 )
 
-install(TARGETS webappeditor ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS selkie-remixer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### install files ###############
