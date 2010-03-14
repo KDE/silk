@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Compose
+Comment=Compose a New Email
+Icon=mail-message-new
+
+Type=Service
+X-KDE-ServiceTypes=Silk/WebApp/Action
+X-KDE-PluginInfo-Name=gmail-compose
+X-KDE-PluginInfo-Depends=gmail
+
+X-Silk-WebApp=gmail
+X-Silk-ShowOnUrl=http://mail.google.com
+X-Silk-Script=window.location = 'http://mail.google.com/mail/?view=cm&fs=1&tf=1'
