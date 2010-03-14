@@ -103,7 +103,7 @@ bool WebApp::loadWebApp(const QString &name)
 
         QUrl startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
         //kDebug() << startUrl;
-        QString dataUrl = "silk-webapp/" + info.pluginName() + "/";
+        QString dataUrl = "silk/webapps/" + info.pluginName() + "/";
         if (startUrl.isRelative()) {
             QString startFile = dataUrl + startUrl.toString();
             //kDebug() << "StartUrl is relative, search KStandardDirs for" << dataUrl << startUrl << startFile;

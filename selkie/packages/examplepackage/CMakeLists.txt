@@ -12,13 +12,13 @@ set( PACKAGE "examplepackage")
 # All the rest should go automatically ...
 
 # install the selkie Application file
-set( APPNAME "selkie-${PACKAGE}.desktop" )
-message( STATUS "installing webapp.desktop to ${XDG_APPS_INSTALL_DIR}/ RENAME ${APPNAME}")
+set( APPNAME "silk-webapp-${PACKAGE}.desktop" )
+message( STATUS "installing webapp.desktop to ${XDG_APPS_INSTALL_DIR}/silk/webapps/ RENAME ${APPNAME}")
 install( FILES webapp.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME ${APPNAME} )
 
 # install the selkie plugin file
-set( PLUGINNAME "selkie-webapp-${PACKAGE}.desktop")
-message( STATUS "installing plugin.desktop to ${SERVICES_INSTALL_DIR}/ RENAME ${PLUGINNAME}")
+set( PLUGINNAME "silk-webapp-${PACKAGE}.desktop")
+message( STATUS "installing plugin.desktop to ${SERVICES_INSTALL_DIR}/silk/webapps/ RENAME ${PLUGINNAME}")
 install( FILES plugin.desktop DESTINATION ${SERVICES_INSTALL_DIR} RENAME ${PLUGINNAME})
 
 # install all action .desktop files from actions/ subdirectory
@@ -26,11 +26,11 @@ file(GLOB files "actions/*.desktop")
 foreach(file ${files})
     set( desktopfile "silk-webapp-${PACKAGE}-${file}" )
     MESSAGE( STATUS "installing file ${file} ${desktopfile}" )
-    install( FILES ${file} DESTINATION ${SERVICES_INSTALL_DIR})
+    install( FILES ${file} DESTINATION ${SERVICES_INSTALL_DIR}/silk/webapps/${PACKAGE}/ )
 endforeach()
 
 # install all script .js files from scripts/ subdirectory
 file(GLOB files "scripts/*.js")
 foreach(file ${files})
-    install( FILES ${file} DESTINATION ${DATA_INSTALL_DIR}/silk-webapp/${PACKAGE}/)
+    install( FILES ${file} DESTINATION ${DATA_INSTALL_DIR}/silk/webapps/${PACKAGE}/)
 endforeach()

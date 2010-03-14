@@ -2,7 +2,7 @@
 #include "selkieeditor.h"
 #include "webappeditor.h"
 #include "webappactioneditor.h"
-#include "selkiepackagestructure.h"
+#include "package.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -45,8 +45,9 @@ void SelkieEditor::setupActions()
 void SelkieEditor::exportToFile()
 {
     kDebug() << "exporting goes here" << m_dir;
-    SelkiePackageStructure structure;
-    SelkiePackageStructure::exportPackage(KUrl("/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/"), KUrl("/tmp/examplepackage.selkie"));
+    Package package(this, "/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/");
+    package.show();
+    //Package::exportPackage(KUrl("/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/"), //KUrl("/tmp/examplepackage.selkie"));
     //return SelkieEditor::exportPackage(m_projectPath, url);
 
 }

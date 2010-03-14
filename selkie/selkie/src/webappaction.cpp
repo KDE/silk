@@ -118,9 +118,10 @@ bool WebAppAction::load(const KPluginInfo &info)
 QString WebAppAction::loadScript(const QString &jsfile)
 {
     QString script;
-    QString scriptfile = "silk-webapp/" + m_webappPlugin + "/" + jsfile;
+    QString scriptfile = "silk/webapps/" + m_webappPlugin + "/" + jsfile;
+    kDebug() << "------ Search:" << scriptfile;
     scriptfile = KGlobal::dirs()->findResource("data", scriptfile);
-    //kDebug() << "Found:" << scriptfile;
+    kDebug() << "++++++++++++++++++++++ Found:" << scriptfile;
 
     QFile f(scriptfile);
     if (!f.open(QIODevice::ReadOnly)) {
