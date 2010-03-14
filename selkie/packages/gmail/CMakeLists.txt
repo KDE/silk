@@ -18,8 +18,8 @@ install( FILES webapp.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME ${APPNA
 
 # install the selkie plugin file
 set( PLUGINNAME "silk-webapp-${PACKAGE}.desktop")
-message( STATUS "installing plugin.desktop to ${SERVICES_INSTALL_DIR}/silk/webapps/ RENAME ${PLUGINNAME}")
-install( FILES plugin.desktop DESTINATION ${SERVICES_INSTALL_DIR} RENAME ${PLUGINNAME})
+message( STATUS "installing plugin.desktop to ${SERVICES_INSTALL_DIR}/silk/webapps/${PACKAGE}/ RENAME ${PLUGINNAME}")
+install( FILES plugin.desktop DESTINATION ${SERVICES_INSTALL_DIR}/silk/webapps/${PACKAGE}/ RENAME ${PLUGINNAME})
 
 # install all action .desktop files from actions/ subdirectory
 file(GLOB files "actions/*.desktop")
