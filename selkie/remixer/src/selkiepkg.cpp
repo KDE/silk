@@ -82,7 +82,6 @@ void showPackage(const QString& package)
 void installPackage(const QString& package)
 {
     Package p(0, package);
-    p.show();
     p.install();
     runKbuildsycoca();
 }
@@ -90,15 +89,12 @@ void installPackage(const QString& package)
 void exportPackage(const QString& package, const QString &exportFile)
 {
     Package p(0, package);
-    p.show();
     if (p.isValid()) {
         Package::exportPackage(KUrl(package), KUrl(exportFile));
         kDebug() << "File exported:" << exportFile;
     } else {
         kDebug() << "package invalid" << package;
     }
-    //p.install();
-    //runKbuildsycoca();
 }
 
 int main(int argc, char **argv)
@@ -155,14 +151,13 @@ int main(int argc, char **argv)
         package = args->getOption("install");
         installPackage(package);
     }
+
     if (!QDir::isAbsolutePath(package)) {
         packageFile = QDir(QDir::currentPath() + '/' + package).absolutePath();
     } else {
         packageFile = package;
     }
     pluginTypes << "WebApp";
-    //pluginTypes << "WebApp/Action";
-
 
     if (args->isSet("list")) {
         listPackages(pluginTypes);
@@ -177,7 +172,7 @@ int main(int argc, char **argv)
     } else {
         runKbuildsycoca();
     }
-    //delete installer;
+
     return 0;
 }
 

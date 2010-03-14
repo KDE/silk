@@ -45,7 +45,7 @@ class Package : public QObject
         bool install(const QString &source, const QString &destination);
 
         QString m_pluginName;
-        
+
         KUrl m_root;
         KUrl m_package;
 
@@ -53,7 +53,6 @@ class Package : public QObject
         QStringList m_scriptFiles;
         QString m_appFile;
         QString m_pluginFile;
-        //QStringList m_metadataFiles;
 
         QString m_appPath;
         QString m_pluginPath;

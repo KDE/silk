@@ -88,28 +88,13 @@ void Package::readDir()
         m_pluginName = pluginName();
         m_dataPath = KStandardDirs::locateLocal("data", "silk/webapps/" + m_pluginName);
 
-        kDebug() << "Package path:" << rpath;
-        //entries (KIO::Job *job, const KIO::UDSEntryList &list)
+        //kDebug() << "Package path:" << rpath;
         QDir _root(rpath);
-        //m_metadataFiles = _root.entryList(QStringList("*.desktop"));
         QDir _actions(rpath + "actions/");
         m_actionFiles = _actions.entryList(QStringList("*.desktop"));
 
         QDir _scripts(rpath + "scripts/");
         m_scriptFiles = _scripts.entryList(QStringList("*.js"));
-
-        kDebug() << "QDir stuff";
-        //ls(lsroot);
-        //foreach (const QString &file, lsroot) {
-        //    m_metadataFiles << file;
-        //}
-
-        
-        //KIO::ListJob* listjob = KIO::listRecursive(m_root);
-        //connect(listjob, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList &)),
-        //        this, SLOT(entries(KIO::Job*, const KIO::UDSEntryList &)));
-        kDebug() << "connected";
-
     }
 
 }
@@ -175,7 +160,7 @@ bool Package::isValid()
 
     bool valid = true;
     QString error;
-    kDebug() << "m_root" << m_root;
+
     if (!m_root.isValid()) {
         valid = false;
         error.append("m_root is invalid" + rpath + "\n");
