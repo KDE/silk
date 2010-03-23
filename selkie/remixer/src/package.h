@@ -23,7 +23,7 @@ class Package : public QObject
 {
     Q_OBJECT
     public:
-        Package(QObject* parent = 0, QString path = QString());
+        Package(QString path = QString(), QObject* parent = 0);
         virtual ~Package();
 
         static bool exportPackage(const KUrl &exportUrl, const KUrl &targetFile);

@@ -45,7 +45,7 @@ void SelkieEditor::setupActions()
 void SelkieEditor::exportToFile()
 {
     kDebug() << "exporting goes here" << m_dir;
-    Package package(this, "/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/");
+    Package package("/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/", this);
     package.show();
     //Package::exportPackage(KUrl("/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/"), //KUrl("/tmp/examplepackage.selkie"));
     //return SelkieEditor::exportPackage(m_projectPath, url);

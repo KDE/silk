@@ -72,20 +72,20 @@ void listPackages(const QStringList& types)
 
 void showPackage(const QString& package)
 {
-    Package p(0, package);
+    Package p(package);
     p.show();
 }
 
 void installPackage(const QString& package)
 {
-    Package p(0, package);
+    Package p(package);
     p.install();
     runKbuildsycoca();
 }
 
 void exportPackage(const QString& package, const QString &exportFile)
 {
-    Package p(0, package);
+    Package p(package);
     if (p.isValid()) {
         Package::exportPackage(KUrl(package), KUrl(exportFile));
         kDebug() << "File exported:" << exportFile;

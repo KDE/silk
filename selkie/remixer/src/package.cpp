@@ -18,7 +18,7 @@
 
 #include "package.h"
 
-Package::Package(QObject* parent, QString path)
+Package::Package(QString path, QObject* parent)
     : QObject(parent)
 {
     /*
