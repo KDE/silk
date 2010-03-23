@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Review Board
+Comment=KDE's ReviewBoard Instance
+Icon=kstars
+Type=Service
+
+X-KDE-ServiceTypes=Silk/WebApp
+
+X-KDE-PluginInfo-Author=Sebastian Kügler
+X-KDE-PluginInfo-Email=sebas@kde.org
+X-KDE-PluginInfo-Name=reviewboard
+X-KDE-PluginInfo-Version=0.01
+X-KDE-PluginInfo-Website=http://kde.org/
+X-KDE-PluginInfo-Category=Development
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+
+X-Silk-StartUrl=http://reviewboard.kde.org/r/
+X-Silk-AllowedBases=http://reviewboard.kde.org/
+X-Silk-AllowedBases-Size=1
