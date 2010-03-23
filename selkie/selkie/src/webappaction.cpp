@@ -116,26 +116,14 @@ bool WebAppAction::load(const KConfigGroup &cfg)
         kWarning() << "Could not load config group, invalid";
         return false;
     }
-    /*
-    m_options->name = info.pluginName();
-    m_options->showOnUrl = info.property("X-Silk-ShowOnUrl").toStringList();
-    m_options->triggerOnUrl = info.property("X-Silk-TriggerOnUrl").toStringList();
-    m_options->showOnWildcard = info.property("X-Silk-ShowOnWildcard").toStringList();
-    m_options->triggerOnWildcard = info.property("X-Silk-TriggerOnWildcard").toStringList();
-    m_options->icon = KIcon(info.icon());
-    m_options->text = info.name();
-    */
-    
-    m_options->name = cfg.readEntry("Name", QString());
+    m_options->name = cfg.readEntry("X-KDE-PluginInfo-Name", QString());
     m_options->showOnUrl = cfg.readEntry("X-Silk-ShowOnUrl", QStringList());
     m_options->triggerOnUrl = cfg.readEntry("X-Silk-TriggerOnUrl", QStringList());
     m_options->showOnWildcard = cfg.readEntry("X-Silk-ShowOnWildcard", QStringList());
     m_options->triggerOnWildcard = cfg.readEntry("X-Silk-TriggerOnWildcard", QStringList());
     m_options->icon = KIcon(cfg.readEntry("Icon", QString("edit-delete-page")));
-    m_options->text = m_options->name;
+    m_options->text = cfg.readEntry("Name", QString());
 
-
-    
     if (!m_options->showOnUrl.isEmpty()) {
         //kDebug() << "=====> ShowOnUrl" << m_options->showOnUrl;
     } else if (!m_options->showOnWildcard.isEmpty()){
