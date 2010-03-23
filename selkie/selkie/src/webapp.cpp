@@ -25,6 +25,9 @@
 #include "view.h"
 #include "../../remixer/src/package.h"
 
+#include <QGraphicsLinearLayout>
+#include <QGraphicsView>
+#include <QGraphicsWidget>
 #include <QtGui/QDropEvent>
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
@@ -35,11 +38,9 @@
 #include <KConfigDialog>
 #include <KDebug>
 #include <KDE/KLocale>
-#include <QGraphicsLinearLayout>
-#include <QGraphicsView>
-#include <QGraphicsWidget>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
+#include <KTempDir>
 #include <KToolBar>
 #include <KStandardAction>
 #include <KStandardDirs>
@@ -150,8 +151,17 @@ bool WebApp::loadWebAppFromPackage(const QString &path)
 {
     kDebug() << "loading path" << path;
 
+    KTempDir tmp;
+    tmp.setAutoRemove(false);
+    kDebug() << "TempDir:" << tmp.name();
+
     Package p(path);
-    p.show();
+    //p.show();
+    kDebug() << "Package imported to" << p.root();
+
+    //importPackage(const KUrl &importFile, const KUrl &targetUrl);
+
+    //Package::importPackage(KUrl(path), KUrl(tmp.name()));
 
     return false;
 

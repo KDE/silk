@@ -14,6 +14,7 @@
 #include <KDesktopFile>
 //#include <KIO/Job>
 //#include <KIO/ListJob>
+#include <KTempDir>
 #include <KStandardDirs>
 
 #include "package.h"
@@ -44,7 +45,12 @@ Package::Package(QString path, QObject* parent)
         kDebug() << "Empty package structure";
     } else if (path.endsWith(".selkie")) {
         kDebug() << "Package file:" << path;
-        QString unpackPath = "/tmp/unpacked/";
+        //QString unpackPath = "/tmp/unpacked/";
+
+        KTempDir tmp;
+        tmp.setAutoRemove(false);
+        kDebug() << "TempDir:" << tmp.name();
+        QString unpackPath = tmp.name();
         importPackage(path, unpackPath);
         m_root = KUrl(unpackPath);
         readDir();
@@ -70,7 +76,10 @@ void Package::show()
 
 }
 
-
+KUrl Package::root()
+{
+    return m_root;
+}
 
 void Package::readDir()
 {

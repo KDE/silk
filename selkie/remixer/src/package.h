@@ -35,6 +35,7 @@ class Package : public QObject
         bool isValid();
 
         QString pluginName();
+        KUrl root();
 
     private Q_SLOTS:
         void entries(KIO::Job* job, const KIO::UDSEntryList &list);
