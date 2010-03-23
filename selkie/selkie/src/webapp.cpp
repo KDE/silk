@@ -23,6 +23,7 @@
 #include "webapp.h"
 #include "webappwidget.h"
 #include "view.h"
+#include "../../remixer/src/package.h"
 
 #include <QtGui/QDropEvent>
 #include <QtGui/QPainter>
@@ -145,4 +146,16 @@ bool WebApp::loadWebApp(const QString &name)
     return false;
 }
 
+bool WebApp::loadWebAppFromPackage(const QString &path)
+{
+    kDebug() << "loading path" << path;
+
+    Package p(path);
+    p.show();
+
+    return false;
+
+    return true;
+
+}
 #include "webapp.moc"

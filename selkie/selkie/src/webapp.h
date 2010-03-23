@@ -53,6 +53,7 @@ public:
     static KPluginInfo::List listWebApps(const QString &name = QString());
 
     bool loadWebApp(const QString &name);
+    bool loadWebAppFromPackage(const QString &path);
     void startApplication();
     QString name();
     QIcon icon();

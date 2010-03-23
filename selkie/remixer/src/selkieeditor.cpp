@@ -25,12 +25,11 @@ SelkieEditor::SelkieEditor()
 
     m_pages = new KPageWidget(this);
     m_pages->setFaceType(KPageWidget::Auto);
-    loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/");
+    loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/packages/silk/");
     //loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/silk/");
     setupActions();
 
     setCentralWidget(m_pages);
-    kDebug() << "set central widget";
     setupGUI();
 }
 
@@ -47,6 +46,7 @@ void SelkieEditor::exportToFile()
     kDebug() << "exporting goes here" << m_dir;
     Package package("/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/", this);
     package.show();
+    kWarning() << "Export needs implementation";
     //Package::exportPackage(KUrl("/home/sebas/kdesvn/src/project-silk/selkie/packages/examplepackage/"), //KUrl("/tmp/examplepackage.selkie"));
     //return SelkieEditor::exportPackage(m_projectPath, url);
 

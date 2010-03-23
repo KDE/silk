@@ -25,6 +25,7 @@
 #include <iostream>
 
 // Qt
+#include <QDir>
 #include <QBoxLayout>
 #include <QWidget>
 
@@ -80,15 +81,34 @@ int main(int argc, char **argv)
         }
         return 1;
     } else {
+        //if (args->arg(0)
         WebApp *webapp = new WebApp();
-        bool ok = webapp->loadWebApp( args->arg(0) );
-        if (!ok) {
-            std::cout << "Could not find plugin: " << args->arg(0).toLocal8Bit().data() << std::endl;
+        QString package = QString(args->arg(0));
+        bool ok = false;
+        if (!package.endsWith(".selkie")) {
+            ok = webapp->loadWebApp(args->arg(0));
+            if (!ok) {
+                std::cout << "Could not find plugin: " << args->arg(0).toLocal8Bit().data() << std::endl;
+                return 1;
+            }
+        } else {
+            QString packageFile;
+            if (!QDir::isAbsolutePath(package)) {
+                packageFile = QDir(QDir::currentPath() + '/' + package).absolutePath();
+            } else {
+                packageFile = package;
+            }
+            kDebug() << "Loading from package..." << package << packageFile;
+        }
+        if (ok) {
+            webapp->startApplication();
+            webapp->show();
+            args->clear();
+            return app.exec();
+        } else {
+            kWarning() << "Could not load" << args->arg(0);
+            kWarning() << "exiting.";
             return 1;
         }
-        webapp->startApplication();
-        webapp->show();
-        args->clear();
-        return app.exec();
     }
 }

@@ -10,6 +10,7 @@ set(selkie_SRCS
     webappaction.cpp
     scriptapi.cpp
     greasemonkeyscript.cpp
+    ../../remixer/src/package.cpp
 )
 
 #kde4_add_ui_files(selkie_SRCS  prefs_base.ui)
