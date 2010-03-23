@@ -34,9 +34,6 @@
 #include <KStandardDirs>
 
 #include "package.h"
-//#include <Plasma/PackageStructure>
-//#include <Plasma/Package>
-//#include <Plasma/PackageMetadata>
 
 static const char description[] = I18N_NOOP("Install, list, remove Selkie WebApp packages");
 static const char version[] = "0.1";
@@ -116,7 +113,7 @@ int main(int argc, char **argv)
     options.add("i");
     options.add("install <path>", ki18nc("Do not translate <path>", "Install the package at <path>"));
     options.add("s");
-    options.add("show <path>", ki18nc("Do not translate <path>", "Install the package at <path>"));
+    options.add("show <path>", ki18nc("Do not translate <path>", "Show details about the package at <path>"));
     options.add("u");
     options.add("upgrade <path>", ki18nc("Do not translate <path>", "Upgrade the package at <path>"));
     options.add("p");
