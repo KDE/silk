@@ -24,6 +24,7 @@
 #define WEBAPPACTION_H
 
 #include <KAction>
+#include <KConfigGroup>
 #include <KPluginInfo>
 
 class WebApp;
@@ -55,9 +56,11 @@ public:
 
 public slots:
     bool load(const KPluginInfo &info);
+    bool load(const KConfigGroup &cfg);
 
 private:
     QString loadScript(const QString &jsfile);
+    void finishLoading();
     WebAppActionOptions *m_options;
     QString m_webappPlugin;
 

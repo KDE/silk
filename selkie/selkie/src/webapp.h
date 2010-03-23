@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sebastian K?gler <sebas@kde.org>
+ * Copyright 2009-2010 Sebastian Kügler <sebas@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

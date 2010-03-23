@@ -73,7 +73,6 @@ bool WebAppAction::load(const KPluginInfo &info)
 
     //kDebug() << "Silk/WebApp/Action:" << comment << info.pluginName() << info.property("X-Silk-ShowOnUrl") <<  info.property("X-Silk-TriggerOnUrl") << info.icon();
     //kDebug() << "Found plugin:" << info.pluginName() << info.name() << info.icon();
-
     m_options->name = info.pluginName();
     m_options->showOnUrl = info.property("X-Silk-ShowOnUrl").toStringList();
     m_options->triggerOnUrl = info.property("X-Silk-TriggerOnUrl").toStringList();
@@ -81,6 +80,8 @@ bool WebAppAction::load(const KPluginInfo &info)
     m_options->triggerOnWildcard = info.property("X-Silk-TriggerOnWildcard").toStringList();
     m_options->icon = KIcon(info.icon());
     m_options->text = info.name();
+
+
     if (!m_options->showOnUrl.isEmpty()) {
         //kDebug() << "=====> ShowOnUrl" << m_options->showOnUrl;
     } else if (!m_options->showOnWildcard.isEmpty()){
@@ -95,10 +96,6 @@ bool WebAppAction::load(const KPluginInfo &info)
     } else if (!scriptFile.isEmpty()) {
         m_options->script = loadScript(scriptFile);
     }
-    // FIXME: append X-Silk-Script to the contents of X-Silk-ScriptFile
-    // should make it possible to first include a javascript lib, and
-    // then executing parts of it as a one-liner.
-
     // Output errors in the .desktop file in the console
     if (!scriptFile.isEmpty() && !script.isEmpty()) {
         kWarning() << "Both, X-Silk-Script and X-Silk-ScriptFile have been defined in the .desktop file";
@@ -109,10 +106,72 @@ bool WebAppAction::load(const KPluginInfo &info)
         kWarning() << "No action will be triggered.";
     }
 
+    finishLoading();
+    return true;
+}
+
+bool WebAppAction::load(const KConfigGroup &cfg)
+{
+    if (!cfg.isValid()) {
+        kWarning() << "Could not load config group, invalid";
+        return false;
+    }
+    /*
+    m_options->name = info.pluginName();
+    m_options->showOnUrl = info.property("X-Silk-ShowOnUrl").toStringList();
+    m_options->triggerOnUrl = info.property("X-Silk-TriggerOnUrl").toStringList();
+    m_options->showOnWildcard = info.property("X-Silk-ShowOnWildcard").toStringList();
+    m_options->triggerOnWildcard = info.property("X-Silk-TriggerOnWildcard").toStringList();
+    m_options->icon = KIcon(info.icon());
+    m_options->text = info.name();
+    */
+    
+    m_options->name = cfg.readEntry("Name", QString());
+    m_options->showOnUrl = cfg.readEntry("X-Silk-ShowOnUrl", QStringList());
+    m_options->triggerOnUrl = cfg.readEntry("X-Silk-TriggerOnUrl", QStringList());
+    m_options->showOnWildcard = cfg.readEntry("X-Silk-ShowOnWildcard", QStringList());
+    m_options->triggerOnWildcard = cfg.readEntry("X-Silk-TriggerOnWildcard", QStringList());
+    m_options->icon = KIcon(cfg.readEntry("Icon", QString("edit-delete-page")));
+    m_options->text = m_options->name;
+
+
+    
+    if (!m_options->showOnUrl.isEmpty()) {
+        //kDebug() << "=====> ShowOnUrl" << m_options->showOnUrl;
+    } else if (!m_options->showOnWildcard.isEmpty()){
+        //kDebug() << "=====> ShowOnWildcard" << m_options->showOnWildcard;
+    }
+    // Loading the JavaScript stuff
+    QString script = cfg.readEntry("X-Silk-Script", QString());
+    QString scriptFile = cfg.readEntry("X-Silk-ScriptFile", QString());
+
+    if (!script.isEmpty()) {
+        m_options->script = script;
+    } else if (!scriptFile.isEmpty()) {
+        m_options->script = loadScript(scriptFile);
+    }
+    // Output errors in the .desktop file in the console
+    if (!scriptFile.isEmpty() && !script.isEmpty()) {
+        kWarning() << "Both, X-Silk-Script and X-Silk-ScriptFile have been defined in the .desktop file";
+        kWarning() << "X-Silk-Script takes precedence.";
+    }
+    if (scriptFile.isEmpty() && script.isEmpty()) {
+        kWarning() << "Neither X-Silk-Script, nor X-Silk-ScriptFile has been defined for this action";
+        kWarning() << "No action will be triggered.";
+    }
+    finishLoading();
+    return true;
+}
+
+void WebAppAction::finishLoading()
+{
+    // FIXME: append X-Silk-Script to the contents of X-Silk-ScriptFile
+    // should make it possible to first include a javascript lib, and
+    // then executing parts of it as a one-liner.
+
+
     setText(m_options->text);
     setIcon(m_options->icon);
-
-    return true;
 }
 
 QString WebAppAction::loadScript(const QString &jsfile)
