@@ -1,7 +1,7 @@
 /*
  * Copyright 2009 Richard Moore <rich@kde.org>
  * Copyright 2009 Omat Holding B.V. <info@omat.nl>
- * Copyright 2009 Sebastian Kügler <sebas@kde.org>
+ * Copyright 2009-2010 Sebastian Kügler <sebas@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -50,6 +50,7 @@ int main(int argc, char **argv)
 {
     KAboutData about("selkie", 0, ki18n("Selkie"), version, ki18n(description),
                      KAboutData::License_GPL, ki18n("(c) 2009-2010 Sebastian Kügler"), KLocalizedString(), 0, "sebas@kde.org");
+                     about.addAuthor( ki18n("Sebastian Kügler"), KLocalizedString(), "sebas@kde.org" );
                      about.addAuthor( ki18n("Richard Moore"), KLocalizedString(), "rich@kde.org" );
     KCmdLineArgs::init(argc, argv, &about);
 
@@ -80,7 +81,6 @@ int main(int argc, char **argv)
         }
         return 1;
     } else {
-        //if (args->arg(0)
         WebApp *webapp = new WebApp();
         QString package = QString(args->arg(0));
         bool ok = false;

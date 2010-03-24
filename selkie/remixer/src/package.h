@@ -38,7 +38,7 @@ class Package : public QObject
         KUrl root();
 
     private Q_SLOTS:
-        void entries(KIO::Job* job, const KIO::UDSEntryList &list);
+        //void entries(KIO::Job* job, const KIO::UDSEntryList &list);
 
     private:
         void readDir();

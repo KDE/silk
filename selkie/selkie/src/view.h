@@ -68,7 +68,7 @@ public:
 
     WebAppOptions* options() const;
     QList<QAction *> actions() const;
-    bool loadWebAppActions(WebApp *parent);
+    bool addAction(WebAppAction *action);
     QString name() const;
     QString plugin() const;
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget );

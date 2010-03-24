@@ -207,11 +207,12 @@ void View::evaluateScript( const QString &script )
 
 void View::loadStyleSheets()
 {
+    // FIXME: loading CSS doesn't work yet as I don't really know how to effectively set a
+    // stylesheet, probably setUserStyle... or something in webkit
     foreach (const QString &css, m_options->styleSheets) {
-        QString scriptfile = "silk-webapp/" + m_options->name + "/" + css;
-        kDebug() << css << scriptfile;
+        QString scriptfile = "silk-webapp/" + m_options->name + "/data/" + css;
         scriptfile = KGlobal::dirs()->findResource("data", scriptfile);
-        kDebug() << "____________ Found:" << scriptfile;
+        kDebug() << " ___ Found CSS:" << scriptfile << css;
 
         m_scriptapi->setTrusted( true );
         m_scriptapi->loadStyleSheet(scriptfile);
@@ -226,21 +227,15 @@ void View::iconLoaded()
     //FIXME: setWindowIcon( m_page->mainFrame()->icon() );
 }
 
-bool View::loadWebAppActions(WebApp *parent)
+bool View::addAction(WebAppAction *action)
 {
     //kDebug() << "Searching for Actions ..." << m_options->name;
-    foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name)) {
-        //kDebug() << "New Action:" << info.name();
-        WebAppAction *action = new WebAppAction(parent);
-        action->setPackageRoot(m_options->packageRoot.path());
-        kDebug() << "set" << m_options->packageRoot.path();
-        action->load(info);
-        m_mapper->setMapping(action, action->options()->script);
-        connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );
-        m_options->actions.append( action );
-        if (m_actionCollection) {
-            m_actionCollection->addAction(action->name(), action);
-        }
+    //kDebug() << "New Action:" << info.name();
+    m_mapper->setMapping(action, action->options()->script);
+    connect(action, SIGNAL(triggered()), m_mapper, SLOT(map()));
+    m_options->actions.append( action );
+    if (m_actionCollection) {
+        m_actionCollection->addAction(action->name(), action);
     }
     return true;
 }

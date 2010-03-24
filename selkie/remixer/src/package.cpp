@@ -105,7 +105,6 @@ void Package::readDir()
         QDir _scripts(rpath + "scripts/");
         m_scriptFiles = _scripts.entryList(QStringList("*.js"));
     }
-
 }
 
 void Package::ls(const QStringList &list)
@@ -126,38 +125,6 @@ QString Package::pluginName()
         kWarning() << "Could not read plugin name";
     }
     return _plugin;
-}
-
-void Package::entries(KIO::Job* job, const KIO::UDSEntryList &list)
-{
-    kDebug() << "--------------> results are in ";
-    if (job->error()) {
-        kWarning() << "Error: could not list dir" << m_root;
-        //kWarning() << "  Msg:" << job->errorMessage();
-        return;
-    }
-    foreach (const KIO::UDSEntry &entry, list) {
-        QString path = entry.stringValue(KIO::UDSEntry::UDS_LOCAL_PATH);
-        if (!entry.isDir() && !entry.isLink()) {
-            kDebug() << "Found file:" << path;
-        }
-    }
-/*
-
-        kDebug() << "Found file:" << path;
-
-   KIO::UDSEntryList::ConstIterator it = entries.begin();
-   const KIO::UDSEntryList::ConstIterator end = entries.end();
-   for (; it != end; ++it) {
-     const KIO::UDSEntry& entry = *it;
-     QString name = entry.stringValue( KIO::UDSEntry::UDS_NAME );
-     bool isDir = entry.isDir();
-     KIO::filesize_t size = entry.numberValue( KIO::UDSEntry::UDS_SIZE, -1 );
-     ...
-   }
-*/
-
-    
 }
 
 bool Package::isValid()
@@ -187,72 +154,6 @@ bool Package::isValid()
         valid = false;
         error.append("Plugin name is empty. \n");
     }
-    /*
-    //TODO: report *what* failed if something does fail
-    QDir root(packageRoot);
-
-    if (!root.exists()) {
-        KStandardDirs::makeDir(packageRoot);
-        if (!root.exists()) {
-            kWarning() << "Could not create package root directory:" << packageRoot;
-            return false;
-        }
-    }
-
-    QFileInfo fileInfo(m_root);
-    if (!fileInfo.exists()) {
-        kWarning() << "No such file:" << package;
-        return false;
-    }
-
-    QString path;
-    KTempDir tempdir;
-    bool archivedPackage = false;
-
-    if (fileInfo.isDir()) {
-        // we have a directory, so let's just install what is in there
-        path = package;
-
-        // make sure we end in a slash!
-        if (path[path.size() - 1] != '/') {
-            path.append('/');
-        }
-    } else {
-        KArchive *archive = 0;
-        KMimeType::Ptr mimetype = KMimeType::findByPath(package);
-
-        if (mimetype->is("application/zip")) {
-            archive = new KZip(package);
-        } else if (mimetype->is("application/x-compressed-tar") ||
-                   mimetype->is("application/x-tar")|| mimetype->is("application/x-bzip-compressed-tar")) {
-            archive = new KTar(package);
-        } else {
-            kWarning() << "Could not open package file, unsupported archive format:" << package << mimetype->name();
-            return false;
-        }
-
-        if (!archive->open(QIODevice::ReadOnly)) {
-            kWarning() << "Could not open package file:" << package;
-        delete archive;
-            return false;
-        }
-
-        archivedPackage = true;
-        path = tempdir.name();
-
-        const KArchiveDirectory *source = archive->directory();
-        source->copyTo(path);
-
-        QStringList entries = source->entries();
-        if (entries.count() == 1) {
-            const KArchiveEntry *entry = source->entry(entries[0]);
-            if (entry->isDirectory()) {
-                path.append(entry->name()).append("/");
-            }
-        }
-    delete archive;
-    }
-    */
     if (!error.isEmpty()) {
         kWarning() << "EE:" << error;
     }
@@ -285,7 +186,8 @@ void Package::install()
     }
 
     // Install plugin
-    QString plugindest = m_pluginPath + "silk/webapps/" + m_pluginName + "/silk-webapp-" + m_pluginName + ".desktop";
+    QString plugindest = m_pluginPath + "silk/webapps/" + m_pluginName + \
+                        "/silk-webapp-" + m_pluginName + ".desktop";
     kDebug() << "creating dir????" << m_pluginPath + "silk/webapps/" + m_pluginName;
     if (!QDir(m_pluginPath + "silk/webapps/" + m_pluginName).exists()) {
         //kDebug() << "creating dir" << m_pluginPath + "silk/webapps/" + m_pluginName;

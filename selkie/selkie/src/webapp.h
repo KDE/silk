@@ -59,9 +59,12 @@ public:
     void startApplication();
     QString name();
     QIcon icon();
+    static void dump(const WebAppOptions options);
+    WebAppOptions* options();
 
 private:
     bool finishLoading(WebAppOptions options);
+    bool loadWebAppActions();
     WebAppWidget *m_widget;
     KActionCollection *m_actionCollection;
 };

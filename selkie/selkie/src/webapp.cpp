@@ -157,21 +157,15 @@ bool WebApp::finishLoading(WebAppOptions options)
         m_widget->view()->options()->comment = options.comment;
     }
 
-
-    m_widget->view()->loadWebAppActions(this);
+    if (loadWebAppActions()) {
+        kDebug() << "some action failed to load";
+    }
     return true;
-
-    //return false;
 }
 
 bool WebApp::loadWebAppFromPackage(const QString &path)
 {
     kDebug() << "loading path" << path;
-/*
-    KTempDir tmp;
-    tmp.setAutoRemove(false);
-    kDebug() << "TempDir:" << tmp.name();
-*/
     Package p(path);
     //p.show();
     kDebug() << "Package imported to" << p.root();
@@ -196,15 +190,7 @@ bool WebApp::loadWebAppFromPackage(const QString &path)
         options.allowedBasesRaw << url;
     }
     options.styleSheets = cfg.readEntry("X-Silk-StyleSheets", QStringList());
-    kDebug() << "//------------- WebApp --------------";
-    kDebug() << "plugin" << options.name;
-    kDebug() << "title" << options.windowTitle;
-    kDebug() << "icon" << options.windowIcon;
-    kDebug() << "comment" << options.comment;
-    kDebug() << "startUrl" << options.startUrl;
-    kDebug() << "packageRoot" << options.packageRoot;
-    kDebug() << "//------------- /WebApp --------------";
-
+    dump(options);
     return finishLoading(options);
 
     //importPackage(const KUrl &importFile, const KUrl &targetUrl);
@@ -216,4 +202,38 @@ bool WebApp::loadWebAppFromPackage(const QString &path)
     //return true;
 
 }
+
+bool WebApp::loadWebAppActions()
+{
+    //kDebug() << "Searching for Actions ..." << m_options->name;
+    bool failed = false;
+    foreach (KPluginInfo info, WebAppAction::listWebAppActions(options()->name)) {
+        //kDebug() << "New Action:" << info.name();
+        WebAppAction *action = new WebAppAction(this);
+        action->setPackageRoot(options()->packageRoot.path());
+        action->load(info);
+        if (!(m_widget->view()->addAction(action))) {
+            failed = true;
+        }
+    }
+    return failed;
+}
+
+WebAppOptions* WebApp::options()
+{
+    return m_widget->view()->options();
+}
+
+void WebApp::dump(const WebAppOptions options)
+{
+    kDebug() << "//------------- WebApp --------------";
+    kDebug() << "plugin" << options.name;
+    kDebug() << "title" << options.windowTitle;
+    kDebug() << "icon" << options.windowIcon;
+    kDebug() << "comment" << options.comment;
+    kDebug() << "startUrl" << options.startUrl;
+    kDebug() << "packageRoot" << options.packageRoot;
+    kDebug() << "//------------- /WebApp --------------";
+}
+
 #include "webapp.moc"
