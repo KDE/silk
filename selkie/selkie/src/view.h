@@ -80,7 +80,7 @@ private slots:
     void updateActions();
     void triggerUrlActions();
     void loadStyleSheets();
-    void updateProgress(qreal progress);
+    void updateProgress(int progress);
     void showProgressBar();
     void hideProgressBar();
     void toggleProgressBar();

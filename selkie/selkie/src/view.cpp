@@ -63,8 +63,8 @@ View::View( KMainWindow *win, QGraphicsItem *parent)
     m_page = new Page( this );
     connect( m_page->mainFrame(), SIGNAL( iconChanged() ), SLOT( iconLoaded() ) );
     connect( this, SIGNAL( urlChanged(const QUrl &) ), this, SLOT( updateActions() ) );
-    connect( this, SIGNAL( loadFinished() ), this, SLOT( loadStyleSheets() ) );
-    connect( this, SIGNAL( loadFinished() ), this, SLOT( triggerUrlActions() ) );
+    connect( this, SIGNAL( loadFinished(bool) ), this, SLOT( loadStyleSheets() ) );
+    connect( this, SIGNAL( loadFinished(bool) ), this, SLOT( triggerUrlActions() ) );
     setPage( m_page );
 
     m_scriptapi = new ScriptApi(this);
@@ -84,11 +84,11 @@ View::View( KMainWindow *win, QGraphicsItem *parent)
     m_progressTimer->setSingleShot( true );
 
     connect( this, SIGNAL( loadStarted() ), m_progressTimer, SLOT( start() ) );
-    connect( this, SIGNAL( progressChanged( qreal ) ), this, SLOT( updateProgress( qreal ) ) );
-    connect( this, SIGNAL( loadFinished() ), m_progressTimer, SLOT( stop() ) );
+    connect( this, SIGNAL( loadProgress( int ) ), this, SLOT( updateProgress( int ) ) );
+    connect( this, SIGNAL( loadFinished(bool) ), m_progressTimer, SLOT( stop() ) );
 
     connect( m_progressTimer, SIGNAL( timeout() ), this, SLOT( toggleProgressBar() ) );
-    connect( this, SIGNAL( loadFinished() ), this, SLOT( startTimer() ) );
+    connect( this, SIGNAL( loadFinished(bool) ), this, SLOT( startTimer() ) );
 
     connect( this->page(), SIGNAL( printRequested ( QWebFrame*) ),
              SLOT( slotPrint( QWebFrame* ) ) );
@@ -99,9 +99,9 @@ View::~View()
     delete m_options;
 }
 
-void View::updateProgress(qreal progress)
+void View::updateProgress(int progress)
 {
-    m_progress = progress;
+    m_progress = (qreal)(progress / 100.0);
 }
 
 void View::slotPrint( QWebFrame* frame )

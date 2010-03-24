@@ -98,8 +98,10 @@ int main(int argc, char **argv)
             } else {
                 packageFile = package;
             }
+            int t1 = QTime::currentTime().msec();
             ok = webapp->loadWebAppFromPackage(package);
-            kDebug() << "Loading from package..." << package << packageFile;
+            int t2 = QTime::currentTime().msec() - t1;
+            kDebug() << t2 << "msec: Loaded from package..." << package << packageFile;
         }
         if (ok) {
             webapp->startApplication();
