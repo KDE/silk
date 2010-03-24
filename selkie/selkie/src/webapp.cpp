@@ -22,7 +22,6 @@
 
 #include "webapp.h"
 #include "webappwidget.h"
-#include "view.h"
 #include "../../remixer/src/package.h"
 
 #include <QGraphicsLinearLayout>
@@ -96,55 +95,72 @@ KPluginInfo::List WebApp::listWebApps(const QString &name)
 bool WebApp::loadWebApp(const QString &name)
 {
     foreach (const KPluginInfo &info, listWebApps(name)) {
-
+        WebAppOptions options;
         kDebug() << "Silk/WebApp:" << name << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
         //kDebug() << "Found plugin:" << name;
-        m_widget->view()->options()->name = info.pluginName();
-        m_widget->view()->options()->windowIcon = KIcon(info.icon());
-        m_widget->view()->options()->windowTitle = info.property("Name").toString();
-
-        QUrl startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
-        //kDebug() << startUrl;
-        QString dataUrl = "silk/webapps/" + info.pluginName() + "/";
-        if (startUrl.isRelative()) {
-            QString startFile = dataUrl + startUrl.toString();
-            //kDebug() << "StartUrl is relative, search KStandardDirs for" << dataUrl << startUrl << startFile;
-            QUrl url = KGlobal::dirs()->findResource("data", startFile);
-            //kDebug() << "Found:" << url;
-            //KGlobal::dirs()->findResource("data", startUrl);
-            m_widget->view()->options()->startUrl = url;
-        } else {
-            m_widget->view()->options()->startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
-
-        }
+        options.comment = info.comment();
+        options.name = info.pluginName();
+        options.windowIcon = KIcon(info.icon());
+        options.windowTitle = info.property("Name").toString();
+        options.startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
         foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
-            if (QUrl(url).isRelative()) {
-                QStringList u = KGlobal::dirs()->findDirs("data", dataUrl + url);
-                foreach (const QString &allowedUrl, u) {
-                    // We need to append file:// as protocol, otherwise the
-                    // parent matching with allowed bases won't work
-                    m_widget->view()->options()->allowedBases << QUrl("file://" + allowedUrl);
-                }
-            } else {
-                m_widget->view()->options()->allowedBases << QUrl(url);
+            options.allowedBasesRaw << url;
+        }
+        options.styleSheets = info.property("X-Silk-StyleSheets").toStringList();
+        return finishLoading(options);
+        //return true;
+    }
+    return false;
+}
+
+bool WebApp::finishLoading(WebAppOptions options)
+{
+    m_widget->view()->options()->name = options.name;
+    m_widget->view()->options()->windowIcon = options.windowIcon;
+    m_widget->view()->options()->windowTitle = options.windowTitle;
+    QUrl startUrl = options.startUrl;
+
+    //kDebug() << startUrl;
+    QString dataUrl = "silk/webapps/" + options.name + "/";
+    if (startUrl.isRelative()) {
+        QString startFile = dataUrl + startUrl.toString();
+        //kDebug() << "StartUrl is relative, search KStandardDirs for" << dataUrl << startUrl << startFile;
+        QUrl url = KGlobal::dirs()->findResource("data", startFile);
+        //kDebug() << "Found:" << url;
+        //KGlobal::dirs()->findResource("data", startUrl);
+        m_widget->view()->options()->startUrl = url;
+    } else {
+        m_widget->view()->options()->startUrl = QUrl(startUrl);
+    }
+    foreach (const QString &url, options.allowedBasesRaw) {
+        if (QUrl(url).isRelative()) {
+            QStringList u = KGlobal::dirs()->findDirs("data", dataUrl + url);
+            foreach (const QString &allowedUrl, u) {
+                // We need to append file:// as protocol, otherwise the
+                // parent matching with allowed bases won't work
+                m_widget->view()->options()->allowedBases << QUrl("file://" + allowedUrl);
             }
+        } else {
+            m_widget->view()->options()->allowedBases << QUrl(url);
         }
-        m_widget->view()->options()->styleSheets = info.property("X-Silk-StyleSheets").toStringList();
-        kDebug() << "Stylesheets: ++" << m_widget->view()->options()->styleSheets;
+    }
+    m_widget->view()->options()->styleSheets = options.styleSheets;
+    kDebug() << "Stylesheets: ++" << m_widget->view()->options()->styleSheets;
 
-        //kDebug() << "AllowedBases:" << m_widget->view()->options()->allowedBases;
-        QString comment = info.comment();
+    //kDebug() << "AllowedBases:" << m_widget->view()->options()->allowedBases;
 
-        if (comment.isEmpty()) {
-            comment = i18n("No description available");
-        }
-
-
-        m_widget->view()->loadWebAppActions(this);
-        return true;
+    if (options.comment.isEmpty()) {
+        m_widget->view()->options()->comment = i18n("No description available");
+    } else {
+        m_widget->view()->options()->comment = options.comment;
     }
 
-    return false;
+
+    m_widget->view()->loadWebAppActions(this);
+    return true;
+    
+
+    //return false;
 }
 
 bool WebApp::loadWebAppFromPackage(const QString &path)

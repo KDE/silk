@@ -46,9 +46,11 @@ class WebApp;
 struct WebAppOptions
 {
     QString name;
+    QString comment;
     QString plugin;
     QUrl startUrl;
     QList<QUrl> allowedBases;
+    QStringList allowedBasesRaw;
     QStringList styleSheets;
     QIcon windowIcon;
     QString windowTitle;
@@ -63,7 +65,7 @@ public:
     View( KMainWindow *win, QGraphicsItem *parent = 0 );
     ~View();
 
-    WebAppOptions *options() const;
+    WebAppOptions* options() const;
     QList<QAction *> actions() const;
     bool loadWebAppActions(WebApp *parent);
     QString name() const;

@@ -23,9 +23,11 @@
 #ifndef WEBAPP_H
 #define WEBAPP_H
 
+#include "view.h"
 
 #include <kxmlguiwindow.h>
 #include <KPluginInfo>
+
 
 class WebAppWidget;
 
@@ -59,6 +61,7 @@ public:
     QIcon icon();
 
 private:
+    bool finishLoading(WebAppOptions options);
     WebAppWidget *m_widget;
     KActionCollection *m_actionCollection;
 };

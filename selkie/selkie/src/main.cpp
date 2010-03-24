@@ -49,7 +49,7 @@ static const char version[] = "0.1";
 int main(int argc, char **argv)
 {
     KAboutData about("selkie", 0, ki18n("Selkie"), version, ki18n(description),
-                     KAboutData::License_GPL, ki18n("(C) 2009 Richard Moore"), KLocalizedString(), 0, "rich@kde.org");
+                     KAboutData::License_GPL, ki18n("(c) 2009-2010 Sebastian Kügler"), KLocalizedString(), 0, "sebas@kde.org");
                      about.addAuthor( ki18n("Richard Moore"), KLocalizedString(), "rich@kde.org" );
     KCmdLineArgs::init(argc, argv, &about);
 
@@ -61,8 +61,7 @@ int main(int argc, char **argv)
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     kDebug() << "ARGS:" << args << args->count();
-    if (args->count() == 0)
-    {
+    if (args->count() == 0) {
         KPluginInfo::List apps = WebApp::listWebApps();
         if ( !apps.size() ) {
             std::cout << "No applications found" << std::endl;
