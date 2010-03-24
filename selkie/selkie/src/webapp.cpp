@@ -119,6 +119,7 @@ bool WebApp::finishLoading(WebAppOptions options)
     m_widget->view()->options()->name = options.name;
     m_widget->view()->options()->windowIcon = options.windowIcon;
     m_widget->view()->options()->windowTitle = options.windowTitle;
+    m_widget->view()->options()->packageRoot = options.packageRoot;
     QUrl startUrl = options.startUrl;
 
     //kDebug() << startUrl;
@@ -159,7 +160,6 @@ bool WebApp::finishLoading(WebAppOptions options)
 
     m_widget->view()->loadWebAppActions(this);
     return true;
-    
 
     //return false;
 }
@@ -211,9 +211,9 @@ bool WebApp::loadWebAppFromPackage(const QString &path)
 
     //Package::importPackage(KUrl(path), KUrl(tmp.name()));
 
-    return false;
+    //return false;
 
-    return true;
+    //return true;
 
 }
 #include "webapp.moc"

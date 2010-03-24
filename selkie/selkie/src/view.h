@@ -72,6 +72,8 @@ public:
     QString name() const;
     QString plugin() const;
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget );
+    //void setPackageRoot(const QString root);
+
 public slots:
     void evaluateScript( const QString &script );
 
@@ -101,6 +103,7 @@ private:
     WebAppOptions *m_options;
     Page *m_page;
     ScriptApi *m_scriptapi;
+    QString m_packageRoot;
     QTimer* m_progressTimer;
     KMainWindow* m_win;
     qreal m_progress;

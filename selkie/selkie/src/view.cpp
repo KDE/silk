@@ -106,6 +106,7 @@ void View::updateProgress(int progress)
 
 void View::slotPrint( QWebFrame* frame )
 {
+    Q_UNUSED( frame )
     //FIXME: should probably move to the mainwindow
     /*
     QPrintPreviewDialog dlg( 0 );
@@ -231,6 +232,8 @@ bool View::loadWebAppActions(WebApp *parent)
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(m_options->name)) {
         //kDebug() << "New Action:" << info.name();
         WebAppAction *action = new WebAppAction(parent);
+        action->setPackageRoot(m_options->packageRoot.path());
+        kDebug() << "set" << m_options->packageRoot.path();
         action->load(info);
         m_mapper->setMapping(action, action->options()->script);
         connect( action, SIGNAL(triggered()), m_mapper, SLOT(map()) );

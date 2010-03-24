@@ -40,7 +40,7 @@ struct WebAppActionOptions
     QStringList triggerOnWildcard;
     QStringList showOnWildcard;
     QString script;
-    QUrl packageRoot;
+    QString packageRoot;
 };
 
 class WebAppAction: public KAction
@@ -54,6 +54,7 @@ public:
     WebAppActionOptions* options() const;
     static KPluginInfo::List listWebAppActions(const QString &name = QString());
     QString name() const;
+    void setPackageRoot(const QString root);
 
 public slots:
     bool load(const KPluginInfo &info);

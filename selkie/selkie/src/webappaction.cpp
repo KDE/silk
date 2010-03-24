@@ -53,6 +53,11 @@ QString WebAppAction::name() const
     return m_options->name;
 }
 
+void WebAppAction::setPackageRoot(const QString root)
+{
+    m_options->packageRoot = root;
+}
+
 KPluginInfo::List WebAppAction::listWebAppActions(const QString &name)
 {
     QString constraint;
@@ -170,8 +175,11 @@ QString WebAppAction::loadScript(const QString &jsfile)
     // FIXME: for packages, we need to consider the packageroot instead of the KGlobal dir
     // otherwise, scripts can't be loaded
     QString script;
-    QString scriptfile = "silk/webapps/" + m_webappPlugin + "/" + jsfile;
+    //QString scriptfile = "silk/webapps/" + m_webappPlugin + "/" + jsfile;
+    QString scriptfile = m_options->packageRoot + "scripts/" + jsfile;
+
     kDebug() << "------ Search:" << scriptfile;
+    kDebug() << "Package Root:" << m_options->packageRoot;
     scriptfile = KGlobal::dirs()->findResource("data", scriptfile);
     kDebug() << "++++++++++++++++++++++ Found:" << scriptfile;
     if (scriptfile.isEmpty()) {
