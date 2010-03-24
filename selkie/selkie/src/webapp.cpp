@@ -61,21 +61,21 @@ WebApp::~WebApp()
 
 QString WebApp::name()
 {
-    return m_widget->view()->options()->name;
+    return options()->name;
 }
 
 QIcon WebApp::icon()
 {
-    return m_widget->view()->options()->windowIcon;
+    return options()->windowIcon;
 }
 
 void WebApp::startApplication()
 {
-    setWindowTitle( m_widget->view()->options()->windowTitle );
-    m_widget->view()->setUrl( m_widget->view()->options()->startUrl );
+    setWindowTitle( options()->windowTitle );
+    m_widget->view()->setUrl( options()->startUrl );
     setWindowIcon(icon());
 
-    QIcon icon = QWebSettings::iconForUrl( m_widget->view()->options()->startUrl );
+    QIcon icon = QWebSettings::iconForUrl( options()->startUrl );
     kDebug() << "Is icon null: " << icon.isNull();
     if ( !icon.isNull() ) {
         setWindowIcon( icon );
@@ -114,47 +114,47 @@ bool WebApp::loadWebApp(const QString &name)
     return false;
 }
 
-bool WebApp::finishLoading(WebAppOptions options)
+bool WebApp::finishLoading(WebAppOptions myoptions)
 {
-    m_widget->view()->options()->name = options.name;
-    m_widget->view()->options()->windowIcon = options.windowIcon;
-    m_widget->view()->options()->windowTitle = options.windowTitle;
-    m_widget->view()->options()->packageRoot = options.packageRoot;
-    QUrl startUrl = options.startUrl;
+    options()->name = myoptions.name;
+    options()->windowIcon = myoptions.windowIcon;
+    options()->windowTitle = myoptions.windowTitle;
+    options()->packageRoot = myoptions.packageRoot;
+    QUrl startUrl = myoptions.startUrl;
 
     //kDebug() << startUrl;
-    QString dataUrl = "silk/webapps/" + options.name + "/";
+    QString dataUrl = "silk/webapps/" + options()->name + "/";
     if (startUrl.isRelative()) {
         QString startFile = dataUrl + startUrl.toString();
         //kDebug() << "StartUrl is relative, search KStandardDirs for" << dataUrl << startUrl << startFile;
         QUrl url = KGlobal::dirs()->findResource("data", startFile);
         //kDebug() << "Found:" << url;
         //KGlobal::dirs()->findResource("data", startUrl);
-        m_widget->view()->options()->startUrl = url;
+        options()->startUrl = url;
     } else {
-        m_widget->view()->options()->startUrl = QUrl(startUrl);
+        options()->startUrl = QUrl(startUrl);
     }
-    foreach (const QString &url, options.allowedBasesRaw) {
+    foreach (const QString &url, myoptions.allowedBasesRaw) {
         if (QUrl(url).isRelative()) {
             QStringList u = KGlobal::dirs()->findDirs("data", dataUrl + url);
             foreach (const QString &allowedUrl, u) {
                 // We need to append file:// as protocol, otherwise the
                 // parent matching with allowed bases won't work
-                m_widget->view()->options()->allowedBases << QUrl("file://" + allowedUrl);
+                options()->allowedBases << QUrl("file://" + allowedUrl);
             }
         } else {
-            m_widget->view()->options()->allowedBases << QUrl(url);
+            options()->allowedBases << QUrl(url);
         }
     }
-    m_widget->view()->options()->styleSheets = options.styleSheets;
-    kDebug() << "Stylesheets: ++" << m_widget->view()->options()->styleSheets;
+    options()->styleSheets = myoptions.styleSheets;
+    kDebug() << "Stylesheets: ++" << options()->styleSheets;
 
-    //kDebug() << "AllowedBases:" << m_widget->view()->options()->allowedBases;
+    //kDebug() << "AllowedBases:" << options()->allowedBases;
 
-    if (options.comment.isEmpty()) {
-        m_widget->view()->options()->comment = i18n("No description available");
+    if (myoptions.comment.isEmpty()) {
+        options()->comment = i18n("No description available");
     } else {
-        m_widget->view()->options()->comment = options.comment;
+        options()->comment = myoptions.comment;
     }
 
     if (loadWebAppActions()) {
@@ -221,7 +221,7 @@ bool WebApp::loadWebAppActions()
 
 WebAppOptions* WebApp::options()
 {
-    return m_widget->view()->options();
+    return options();
 }
 
 void WebApp::dump(const WebAppOptions options)
