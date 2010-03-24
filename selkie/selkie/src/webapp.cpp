@@ -36,6 +36,7 @@
 #include <KActionCollection>
 #include <KConfigDialog>
 #include <KDebug>
+#include <KDesktopFile>
 #include <KDE/KLocale>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
@@ -166,14 +167,45 @@ bool WebApp::finishLoading(WebAppOptions options)
 bool WebApp::loadWebAppFromPackage(const QString &path)
 {
     kDebug() << "loading path" << path;
-
+/*
     KTempDir tmp;
     tmp.setAutoRemove(false);
     kDebug() << "TempDir:" << tmp.name();
-
+*/
     Package p(path);
     //p.show();
     kDebug() << "Package imported to" << p.root();
+    QUrl root = p.root();
+    QString pluginFile = root.path() + "plugin.desktop";
+
+    kDebug() << "Plugin File:" << pluginFile;
+    KDesktopFile* dfile = new KDesktopFile(pluginFile);
+    KConfigGroup cfg = dfile->desktopGroup();
+    if (!cfg.isValid()) {
+        kWarning() << "EE: Invalid KConfigGroup in plugin .desktop file.";
+        return false;
+    }
+    WebAppOptions options;
+    options.name = cfg.readEntry("X-KDE-PluginInfo-Name", QString());
+    options.comment = cfg.readEntry("Comment", QString());
+    options.windowIcon = KIcon(cfg.readEntry("Icon", QString("edit-delete-page")));
+    options.windowTitle = cfg.readEntry("Name", QString());
+    options.startUrl = cfg.readEntry("X-Silk-StartUrl", QString());
+    options.packageRoot = p.root();
+    foreach (const QString &url, cfg.readEntry("X-Silk-AllowedBases", QStringList())) {
+        options.allowedBasesRaw << url;
+    }
+    options.styleSheets = cfg.readEntry("X-Silk-StyleSheets", QStringList());
+    kDebug() << "//------------- WebApp --------------";
+    kDebug() << "plugin" << options.name;
+    kDebug() << "title" << options.windowTitle;
+    kDebug() << "icon" << options.windowIcon;
+    kDebug() << "comment" << options.comment;
+    kDebug() << "startUrl" << options.startUrl;
+    kDebug() << "packageRoot" << options.packageRoot;
+    kDebug() << "//------------- /WebApp --------------";
+
+    return finishLoading(options);
 
     //importPackage(const KUrl &importFile, const KUrl &targetUrl);
 

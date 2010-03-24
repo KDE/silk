@@ -49,6 +49,7 @@ struct WebAppOptions
     QString comment;
     QString plugin;
     QUrl startUrl;
+    QUrl packageRoot;
     QList<QUrl> allowedBases;
     QStringList allowedBasesRaw;
     QStringList styleSheets;

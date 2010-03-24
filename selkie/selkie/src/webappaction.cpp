@@ -164,12 +164,20 @@ void WebAppAction::finishLoading()
 
 QString WebAppAction::loadScript(const QString &jsfile)
 {
+    if (jsfile.isEmpty()) {
+        return QString();
+    }
+    // FIXME: for packages, we need to consider the packageroot instead of the KGlobal dir
+    // otherwise, scripts can't be loaded
     QString script;
     QString scriptfile = "silk/webapps/" + m_webappPlugin + "/" + jsfile;
     kDebug() << "------ Search:" << scriptfile;
     scriptfile = KGlobal::dirs()->findResource("data", scriptfile);
     kDebug() << "++++++++++++++++++++++ Found:" << scriptfile;
-
+    if (scriptfile.isEmpty()) {
+        kDebug() << "Could not find script file";
+        return QString();
+    }
     QFile f(scriptfile);
     if (!f.open(QIODevice::ReadOnly)) {
         kWarning() << "Could not read scriptfile" << scriptfile;

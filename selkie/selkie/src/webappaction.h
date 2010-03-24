@@ -40,6 +40,7 @@ struct WebAppActionOptions
     QStringList triggerOnWildcard;
     QStringList showOnWildcard;
     QString script;
+    QUrl packageRoot;
 };
 
 class WebAppAction: public KAction
