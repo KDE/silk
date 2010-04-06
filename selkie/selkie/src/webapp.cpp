@@ -221,7 +221,7 @@ bool WebApp::loadWebAppActions()
 
 WebAppOptions* WebApp::options()
 {
-    return options();
+    return m_widget->view()->options();
 }
 
 void WebApp::dump(const WebAppOptions options)
