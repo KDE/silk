@@ -4,7 +4,7 @@ Comment=Project Silk on Gitorious
 Icon=project-development
 Type=Service
 
-X-KDE-ServiceTypes=Silk/WebApp
+#X-KDE-ServiceTypes=Silk/WebApp
 
 X-KDE-PluginInfo-Author=Sebastian Kügler
 X-KDE-PluginInfo-Email=sebas@kde.org

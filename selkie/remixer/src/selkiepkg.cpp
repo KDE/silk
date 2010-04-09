@@ -146,7 +146,7 @@ int main(int argc, char **argv)
         exportFile = args->getOption("package");
     } else if (args->isSet("install")) {
         package = args->getOption("install");
-        installPackage(package);
+        //installPackage(package);
     }
 
     if (!QDir::isAbsolutePath(package)) {

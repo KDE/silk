@@ -92,7 +92,7 @@ KUrl Package::root()
 void Package::readDir()
 {
     m_appPath = KStandardDirs::locateLocal("apps", "");
-    m_pluginPath = KStandardDirs::locateLocal("services", "");
+    //m_pluginPath = KStandardDirs::locateLocal("services", "");
 
     //kDebug() << "Root:"
     if (m_root.isValid()) {
@@ -190,15 +190,20 @@ void Package::install()
     }
     */
     if (installationPaths.count()) {
+        // TODO: we take the first, assuming it's the local one, need to check wether that
+        // assumption is safe
         installationPath = installationPaths[0] + "silk/webapps/" + m_pluginName + "/" ;
     }
     if (installationPath.isEmpty()) {
         kDebug() << "Empty installation path. Bugger.";
         return;
     }
-    kDebug() << "Installation Path:" << installationPath << installationPaths;
+    if (!installationPath.endsWith('/')) {
+        installationPath.append('/');
+    }
+    //kDebug() << "Installation Path:" << installationPath << installationPaths;
     kDebug() << "App Path:" << m_appPath;
-    kDebug() << "Plugin Path:" << m_pluginPath;
+    //kDebug() << "Plugin Path:" << m_pluginPath;
     kDebug() << "Packageroot Path:" << m_dataPath;
     if (!isValid()) {
         kWarning() << "Selkie plasmoid invalid, not installing";
@@ -208,12 +213,12 @@ void Package::install()
 
 
     if (!QDir(installationPath).exists()) {
-        kDebug() << "creating dir" << m_dataPath;
+        kDebug() << "creating data dir" << m_dataPath;
         KStandardDirs::makeDir(m_dataPath);
     }
 
     if (!QDir(m_appPath).exists()) {
-        kDebug() << "creating dir" << m_dataPath;
+        kDebug() << "creating app dir" << m_appPath;
         KStandardDirs::makeDir(m_appPath);
     }
 
@@ -225,7 +230,14 @@ void Package::install()
     } else {
         //return false;
     }
+    QString _src = m_root.path() + "/metadata.desktop";
+    QString _dest = installationPath + "metadata.desktop";
+    kDebug() << "src dest" << _src << _dest;
+    if (!install(_src, _dest)) {
+        kDebug() << "EE: Error installing metadata" << _src << _dest;
+    }
 
+    /*
     // Install plugin
     QString plugindest = m_appPath + "silk/webapps/" + m_pluginName + \
                         "/silk-webapp-" + m_pluginName + ".desktop";
@@ -242,34 +254,36 @@ void Package::install()
     //} else {
         //return false;
     //}
-
+    */
     kDebug() << "============== Actions:";
     // Install actions
-    KStandardDirs::makeDir(installationPath + "/scripts/");
-    kDebug() << "installing actions" << m_actionFiles;
+    KStandardDirs::makeDir(installationPath + "actions/");
+    //kDebug() << "installing actions" << m_actionFiles;
     QString actionPath = m_root.path() + "/actions/";
     foreach (const QString &af, m_actionFiles) {
         QString _src = actionPath + af;
-        QString _dest = installationPath + "/actions/" + af;
+        QString _dest = installationPath + "actions/" + af;
         //kDebug() << "installing plugin to " << _ipath;
         if (!install(_src, _dest)) {
-            kDebug() << "action installation error" << _src << _dest;
+            kDebug() << "EE: action installation error" << _src << _dest;
         };
     }
 
     kDebug() << "============== Scripts:";
     // Install datafiles
     //kDebug() << "---> installing scripts" << m_scriptFiles;
+    KStandardDirs::makeDir(installationPath + "scripts/");
     QString scriptPath = m_root.path() + "/scripts/";
     foreach (const QString &af, m_scriptFiles) {
         QString _src = scriptPath + af;
         QString _dest = installationPath + "scripts/" + af;
         if (!install(_src, _dest)) {
-            kDebug() << "script installation error" << scriptPath + af << m_dataPath + "/" + af;
+            kDebug() << "EE: script installation error" << scriptPath + af << m_dataPath + "/" + af;
         };
     }
 
-
+    //kDebug() << "=============== Metadata:";
+    //QString _src, _dest;
     //return true;
 }
 
