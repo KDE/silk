@@ -53,7 +53,7 @@ class Package : public QObject
         QStringList m_actionFiles;
         QStringList m_scriptFiles;
         QString m_appFile;
-        QString m_pluginFile;
+        QString m_metadataFile;
 
         QString m_appPath;
         QString m_pluginPath;
