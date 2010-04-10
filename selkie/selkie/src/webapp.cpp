@@ -22,7 +22,6 @@
 
 #include "webapp.h"
 #include "webappwidget.h"
-#include "../../remixer/src/package.h"
 
 #include <QGraphicsLinearLayout>
 #include <QGraphicsView>
@@ -169,7 +168,7 @@ bool WebApp::loadWebAppFromPackage(const QString &path)
     //p.show();
     kDebug() << "Package imported to" << p.root();
     QUrl root = p.root();
-    QString pluginFile = root.path() + "plugin.desktop";
+    QString pluginFile = root.path() + "metadata.desktop";
 
     kDebug() << "Plugin File:" << pluginFile;
     KDesktopFile* dfile = new KDesktopFile(pluginFile);
@@ -189,6 +188,7 @@ bool WebApp::loadWebAppFromPackage(const QString &path)
         options.allowedBasesRaw << url;
     }
     options.styleSheets = cfg.readEntry("X-Silk-StyleSheets", QStringList());
+
     dump(options);
     return finishLoading(options);
 
@@ -202,8 +202,37 @@ bool WebApp::loadWebAppFromPackage(const QString &path)
 
 }
 
+bool WebApp::loadInstalledWebApp(const QString &name)
+{
+    QString p = Package::findPackage(name);
+    if (p.isEmpty()) {
+        return false;
+    }
+
+    m_package = new Package(name);
+    // already validated, as listPackage only returns valid packages
+    //output(QString("  %1\t%2 (%3)").arg(package, p.metadata()->name, p.metadata()->comment));
+    WebAppOptions options;
+    options.name = m_package->metadata()->pluginName;
+    options.comment = m_package->metadata()->comment;
+    options.windowIcon = KIcon(m_package->metadata()->icon);
+    options.windowTitle = m_package->metadata()->name;
+    options.packageRoot = m_package->metadata()->root;
+    options.startUrl = m_package->metadata()->startUrl;
+    foreach (const QString &base, m_package->metadata()->allowedBases) {
+        options.allowedBases << base;
+    }
+    foreach (const QString &css, m_package->metadata()->styleSheets) {
+        options.styleSheets << css;
+    }
+    //options.styleSheets = m_package->metadata()->styleSheets;
+    finishLoading(options);
+    return true;
+}
+
 bool WebApp::loadWebAppActions()
 {
+    // FIXME: Port to dirlisting mechanism
     //kDebug() << "Searching for Actions ..." << m_options->name;
     bool failed = false;
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(options()->name)) {

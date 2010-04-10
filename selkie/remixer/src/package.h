@@ -14,6 +14,7 @@ struct MetaData {
 
     QString name;
     QString comment;
+    QString icon;
     QString pluginName;
     QString author;
     QString email;
@@ -24,6 +25,7 @@ struct MetaData {
 
     QString startUrl;
     QStringList allowedBases;
+    QStringList styleSheets;
 
     KUrl root;
     KUrl package;

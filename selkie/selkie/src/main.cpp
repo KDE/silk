@@ -85,9 +85,9 @@ int main(int argc, char **argv)
         QString package = QString(args->arg(0));
         bool ok = false;
         if (!package.endsWith(".selkie")) {
-            ok = webapp->loadWebApp(package);
+            ok = webapp->loadInstalledWebApp(package);
             if (!ok) {
-                std::cout << "Could not find plugin: " << args->arg(0).toLocal8Bit().data() << std::endl;
+                std::cout << "Could not find webapp: " << args->arg(0).toLocal8Bit().data() << std::endl;
                 return 1;
             }
         } else {

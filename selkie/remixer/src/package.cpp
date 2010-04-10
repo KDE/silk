@@ -202,6 +202,7 @@ void Package::readMetadata()
     m_metadata->pluginName = group.readEntry("X-KDE-PluginInfo-Name", QString());
     m_metadata->name = group.readEntry("Name", QString());
     m_metadata->comment = group.readEntry("Comment", QString());
+    m_metadata->icon = group.readEntry("Icon", QString());
     m_metadata->author = group.readEntry("X-KDE-PluginInfo-Author", QString());
     m_metadata->email = group.readEntry("X-KDE-PluginInfo-Email", QString());
     m_metadata->version = group.readEntry("X-KDE-PluginInfo-Version", QString());
@@ -210,6 +211,7 @@ void Package::readMetadata()
     m_metadata->license = group.readEntry("X-KDE-PluginInfo-License", QString());
     m_metadata->startUrl = group.readEntry("X-Silk-StartUrl", QString());
     m_metadata->allowedBases = group.readEntry("X-Silk-StartAllowedBases", QStringList());
+    m_metadata->styleSheets= group.readEntry("X-Silk-StyleSheets", QStringList());
 
 }
 

@@ -24,7 +24,7 @@
 #define WEBAPP_H
 
 #include "view.h"
-
+#include "../../remixer/src/package.h"
 #include <kxmlguiwindow.h>
 #include <KPluginInfo>
 
@@ -57,17 +57,22 @@ public:
 
     bool loadWebApp(const QString &name);
     bool loadWebAppFromPackage(const QString &path);
+    bool loadInstalledWebApp(const QString &name);
+
     void startApplication();
     QString name();
     QIcon icon();
     static void dump(const WebAppOptions options);
     WebAppOptions* options();
+    Package* package();
 
 private:
     bool finishLoading(WebAppOptions options);
     bool loadWebAppActions();
     WebAppWidget *m_widget;
     KActionCollection *m_actionCollection;
+
+    Package* m_package;
 };
 
 #endif // _SITESPECIFICBROWSER_H_
