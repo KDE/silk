@@ -226,6 +226,7 @@ bool WebApp::loadInstalledWebApp(const QString &name)
         options.styleSheets << css;
     }
     //options.styleSheets = m_package->metadata()->styleSheets;
+    dump(options);
     finishLoading(options);
     return true;
 }
@@ -260,6 +261,8 @@ void WebApp::dump(const WebAppOptions options)
     kDebug() << "icon" << options.windowIcon;
     kDebug() << "comment" << options.comment;
     kDebug() << "startUrl" << options.startUrl;
+    kDebug() << "allowedBases" << options.allowedBases;
+    kDebug() << "styleSheets" << options.styleSheets;
     kDebug() << "packageRoot" << options.packageRoot;
     kDebug() << "//------------- /WebApp --------------";
 }

@@ -210,7 +210,7 @@ void Package::readMetadata()
     m_metadata->category = group.readEntry("X-KDE-PluginInfo-Category", QString());
     m_metadata->license = group.readEntry("X-KDE-PluginInfo-License", QString());
     m_metadata->startUrl = group.readEntry("X-Silk-StartUrl", QString());
-    m_metadata->allowedBases = group.readEntry("X-Silk-StartAllowedBases", QStringList());
+    m_metadata->allowedBases = group.readEntry("X-Silk-AllowedBases", QStringList());
     m_metadata->styleSheets= group.readEntry("X-Silk-StyleSheets", QStringList());
 
 }
