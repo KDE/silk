@@ -18,6 +18,7 @@ set( APPNAME "silk-webapp-${PACKAGE}.desktop" )
 set( INSTALLPATH "${DATA_INSTALL_DIR}/silk/webapps/${PACKAGE}" )
 message( STATUS "installing webapp.desktop to ${XDG_APPS_INSTALL_DIR}/silk/webapps/ RENAME ${APPNAME}")
 install( FILES webapp.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} RENAME ${APPNAME} )
+install( FILES webapp.desktop DESTINATION ${INSTALLPATH}/ )
 
 # install the selkie plugin file
 set( PLUGINNAME "silk-webapp-${PACKAGE}.desktop")

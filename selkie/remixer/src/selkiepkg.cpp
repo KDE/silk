@@ -61,12 +61,15 @@ QStringList packages(const QStringList& types)
     return result;
 }
 
-void listPackages(const QStringList& types)
+void listPackages()
 {
-    QStringList list = packages(types);
+    kDebug() << "Listing ...";
+    output(i18n("Installed Selkie Packages:"));
+    QStringList list = Package::listPackages();
     list.sort();
     foreach(const QString& package, list) {
-        output(package);
+        Package p(package);
+        output(QString("  %1\t%2 (%3)").arg(package, p.metadata()->name, p.metadata()->comment));
     }
 }
 
@@ -154,10 +157,10 @@ int main(int argc, char **argv)
     } else {
         packageFile = package;
     }
-    pluginTypes << "WebApp";
+    //pluginTypes << "WebApp";
 
     if (args->isSet("list")) {
-        listPackages(pluginTypes);
+        listPackages();
     } else if (args->isSet("show")) {
         showPackage(packageFile);
     } else if (args->isSet("package"))  {

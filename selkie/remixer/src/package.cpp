@@ -21,7 +21,8 @@
 #include "package.h"
 
 Package::Package(QString path, QObject* parent)
-    : QObject(parent)
+    : QObject(parent),
+    m_metadata(new MetaData)
 {
     /*
     A package roughly looks like this:
@@ -39,7 +40,16 @@ Package::Package(QString path, QObject* parent)
 
 
     */
-    //m_pluginName = QString("silk");
+    //m_metadata->pluginName = QString("silk");
+    QString installedPath = findPackage(path);
+    if (!installedPath.isEmpty()) {
+        m_root = installedPath;
+        m_metadataFile = m_root.path() + "/" + "metadata.desktop";
+        readMetadata();
+        readDir();
+        kDebug() << "installed, but valid?" << isValid();
+        return;
+    }
 
     QDir _d(path);
     if (_d.isRelative()) {
@@ -60,10 +70,14 @@ Package::Package(QString path, QObject* parent)
         QString unpackPath = tmp.name();
         importPackage(path, unpackPath);
         m_root = KUrl(unpackPath);
+        m_metadataFile = unpackPath + "/" + "metadata.desktop";
+        readMetadata();
         readDir();
     } else if (_dir.isValid()) {
-        kDebug() << "Reading dir" << _dir;
+        //kDebug() << "Reading dir" << _dir;
         m_root = _dir;
+        m_metadataFile = m_root.path() + "/" + "metadata.desktop";
+        readMetadata();
         readDir();
     }
     //show();
@@ -71,6 +85,42 @@ Package::Package(QString path, QObject* parent)
 
 Package::~Package()
 {
+    // TODO: kill tempdir if necessary
+}
+
+QStringList Package::listPackages()
+{
+    QStringList packages;
+    QStringList packagePaths = KGlobal::dirs()->findDirs("data", "silk/webapps/");
+    foreach (const QString &path, packagePaths) {
+        QDir kstdpath(path);
+        QStringList selkies = kstdpath.entryList( QDir::Files | QDir::Dirs);
+        foreach (const QString &selkie, selkies) {
+            QString _p = path + selkie;
+            //kDebug() << "Check?" << _p << selkie;
+            Package* package = new Package(_p);
+            if (package->isValid()) {
+                kDebug() << "*** Found Valid Package" << package->metadata()->name << _p;
+                packages << selkie;
+            } else {
+                //kDebug() << "--- Invalid Package:" << _p;
+            }
+            delete package;
+        }
+    }
+    return packages;
+}
+
+QString Package::findPackage(const QString &package)
+{
+    QStringList packagePaths = KGlobal::dirs()->findDirs("data", "silk/webapps/" + package);
+    //foreach (const QString &_stddir, installationPaths) 
+    kDebug() << "Found:" << packagePaths;
+    if (packagePaths.count()) {
+        return packagePaths[0];
+    } else {
+        return QString();
+    }
 }
 
 void Package::show()
@@ -102,8 +152,8 @@ void Package::readDir()
         }
         m_appFile = rpath + "webapp.desktop";
         m_metadataFile = rpath + "metadata.desktop";
-        m_pluginName = pluginName();
-        m_dataPath = KStandardDirs::locateLocal("data", "silk/webapps/" + m_pluginName);
+        m_metadata->pluginName = pluginName();
+        m_dataPath = KStandardDirs::locateLocal("data", "silk/webapps/" + m_metadata->pluginName);
 
         //kDebug() << "Package path:" << rpath;
         QDir _root(rpath);
@@ -112,6 +162,9 @@ void Package::readDir()
 
         QDir _scripts(rpath + "scripts/");
         m_scriptFiles = _scripts.entryList(QStringList("*.js"));
+
+        QDir _data(rpath + "data/");
+        m_dataFiles = _data.entryList(QStringList("*"));
     }
 }
 
@@ -122,9 +175,54 @@ void Package::ls(const QStringList &list)
     }
 }
 
+void Package::readMetadata()
+{
+    //kDebug() << "Reading metadata:" << m_metadata->pluginName;
+    KDesktopFile desktopFile(m_metadataFile);
+    KConfigGroup group = desktopFile.group("Desktop Entry");
+
+    //kDebug() << group.readEntry("Name", QString()) << group.readEntry("X-KDE-PluginInfo-Name", QString());
+    //QString _plugin = group.readEntry("X-KDE-PluginInfo-Name", QString());
+
+    /*
+
+    X-KDE-PluginInfo-Author=Sebastian Kügler
+    X-KDE-PluginInfo-Email=sebas@kde.org
+    X-KDE-PluginInfo-Name=silk
+    X-KDE-PluginInfo-Version=0.01
+    X-KDE-PluginInfo-Website=http://kde.org
+    X-KDE-PluginInfo-Category=Development
+    X-KDE-PluginInfo-License=GPL
+
+    X-Silk-StartUrl=http://gitorious.org/project-silk/
+    X-Silk-AllowedBases=http://gitorious.org/,https://secure.gitorious.org/
+
+    */
+
+    m_metadata->pluginName = group.readEntry("X-KDE-PluginInfo-Name", QString());
+    m_metadata->name = group.readEntry("Name", QString());
+    m_metadata->comment = group.readEntry("Comment", QString());
+    m_metadata->author = group.readEntry("X-KDE-PluginInfo-Author", QString());
+    m_metadata->email = group.readEntry("X-KDE-PluginInfo-Email", QString());
+    m_metadata->version = group.readEntry("X-KDE-PluginInfo-Version", QString());
+    m_metadata->website = group.readEntry("X-KDE-PluginInfo-Website", QString());
+    m_metadata->category = group.readEntry("X-KDE-PluginInfo-Category", QString());
+    m_metadata->license = group.readEntry("X-KDE-PluginInfo-License", QString());
+    m_metadata->startUrl = group.readEntry("X-Silk-StartUrl", QString());
+    m_metadata->allowedBases = group.readEntry("X-Silk-StartAllowedBases", QStringList());
+
+}
+
+MetaData* Package::metadata()
+{
+    return m_metadata;
+}
+
 QString Package::pluginName()
 {
-    kDebug() << "Plugin name:" << m_pluginName;
+    return m_metadata->pluginName;
+    /*
+    kDebug() << "Plugin name:" << m_metadata->pluginName;
     KDesktopFile desktopFile(m_metadataFile);
     KConfigGroup group = desktopFile.group("Desktop Entry");
 
@@ -134,6 +232,7 @@ QString Package::pluginName()
         kWarning() << "Could not read plugin name";
     }
     return _plugin;
+    */
 }
 
 bool Package::isValid()
@@ -159,12 +258,12 @@ bool Package::isValid()
         error.append("actions/ dir does not exist" + rpath + "actions/" + "\n");
     }
 
-    if (m_pluginName.isEmpty()) {
+    if (m_metadata->pluginName.isEmpty()) {
         valid = false;
         error.append("Plugin name is empty. \n");
     }
     if (!error.isEmpty()) {
-        kWarning() << "EE:" << error;
+        //kWarning() << "EE:" << error;
     }
     return valid;
 }
@@ -192,7 +291,7 @@ void Package::install()
     if (installationPaths.count()) {
         // TODO: we take the first, assuming it's the local one, need to check wether that
         // assumption is safe
-        installationPath = installationPaths[0] + "silk/webapps/" + m_pluginName + "/" ;
+        installationPath = installationPaths[0] + "silk/webapps/" + m_metadata->pluginName + "/" ;
     }
     if (installationPath.isEmpty()) {
         kDebug() << "Empty installation path. Bugger.";
@@ -224,8 +323,8 @@ void Package::install()
 
     kDebug() << "============== Metadata:";
     // Install app
-    QString appdest = m_appPath + "silk-webapp-" + m_pluginName + ".desktop";
-    if (install(m_appFile, appdest)) {
+    QString appdest = m_appPath + "silk-webapp-" + m_metadata->pluginName + ".desktop";
+    if (install(m_appFile, appdest) && install(m_appFile, installationPath + "webapp.desktop")) {
         kDebug() << "appinstall Success." << appdest;
     } else {
         //return false;
@@ -239,14 +338,14 @@ void Package::install()
 
     /*
     // Install plugin
-    QString plugindest = m_appPath + "silk/webapps/" + m_pluginName + \
-                        "/silk-webapp-" + m_pluginName + ".desktop";
-    kDebug() << "creating dir????" << m_pluginPath + "silk/webapps/" + m_pluginName;
+    QString plugindest = m_appPath + "silk/webapps/" + m_metadata->pluginName + \
+                        "/silk-webapp-" + m_metadata->pluginName + ".desktop";
+    kDebug() << "creating dir????" << m_pluginPath + "silk/webapps/" + m_metadata->pluginName;
     KStandardDirs::makeDir(installationPath + "/actions/");
-    if (!QDir(m_pluginPath + "silk/webapps/" + m_pluginName).exists()) {
-        //kDebug() << "creating dir" << m_pluginPath + "silk/webapps/" + m_pluginName;
+    if (!QDir(m_pluginPath + "silk/webapps/" + m_metadata->pluginName).exists()) {
+        //kDebug() << "creating dir" << m_pluginPath + "silk/webapps/" + m_metadata->pluginName;
         // = /home/sebas/.kde4/share/kde4/services/silk/webapps/gmail
-        //KStandardDirs::makeDir(m_pluginPath + "silk/webapps/" + m_pluginName);
+        //KStandardDirs::makeDir(m_pluginPath + "silk/webapps/" + m_metadata->pluginName);
     }
     
     //if (install(m_metadataFile, plugindest)) {
@@ -279,6 +378,24 @@ void Package::install()
         QString _dest = installationPath + "scripts/" + af;
         if (!install(_src, _dest)) {
             kDebug() << "EE: script installation error" << scriptPath + af << m_dataPath + "/" + af;
+        };
+    }
+
+    kDebug() << "============== Data:";
+    if (!QDir(m_root.path() + "/data/").exists()) {
+        kDebug() << "No data to install, but that's okay.";
+        return;
+    }
+    // Install datafiles
+    //kDebug() << "---> installing scripts" << m_scriptFiles;
+    KStandardDirs::makeDir(installationPath + "data/");
+    QString dataPath = m_root.path() + "/scripts/";
+    // FIXME: needs recursive installation
+    foreach (const QString &df, m_dataFiles) {
+        QString _src = dataPath + df;
+        QString _dest = installationPath + "data/" + df;
+        if (!install(_src, _dest)) {
+            kDebug() << "EE: data installation error" << scriptPath + df << m_dataPath + "/" + df;
         };
     }
 

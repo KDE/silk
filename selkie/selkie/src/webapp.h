@@ -36,6 +36,7 @@ class QPrinter;
 class KToggleAction;
 class KUrl;
 
+
 /**
  * This class serves as the main window for selkie.  It handles the
  * toolbars. Plugins are loaded as actions into the toolbar, and triggered "on"

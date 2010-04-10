@@ -82,8 +82,7 @@ void WebApp::startApplication()
     }
 }
 
-
-KPluginInfo::List WebApp::listWebApps(const QString &name)
+QList<KPluginInfo> WebApp::listWebApps(const QString &name)
 {
     QString constraint;
     if (!name.isEmpty()) {
