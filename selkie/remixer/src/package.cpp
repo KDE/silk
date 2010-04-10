@@ -212,6 +212,7 @@ void Package::readMetadata()
     m_metadata->startUrl = group.readEntry("X-Silk-StartUrl", QString());
     m_metadata->allowedBases = group.readEntry("X-Silk-AllowedBases", QStringList());
     m_metadata->styleSheets= group.readEntry("X-Silk-StyleSheets", QStringList());
+    m_metadata->root = m_root;
 
 }
 

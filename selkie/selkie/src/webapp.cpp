@@ -236,6 +236,35 @@ bool WebApp::loadWebAppActions()
     // FIXME: Port to dirlisting mechanism
     //kDebug() << "Searching for Actions ..." << m_options->name;
     bool failed = false;
+    foreach (const QString &a, WebAppAction::listWebAppActions(options()->packageRoot)) {
+        kDebug() << "NEW ACTION:" << a;
+        WebAppAction *action = new WebAppAction(this);
+        action->setPackageRoot(options()->packageRoot.path());
+        //action->load(info);
+        if (!(m_widget->view()->addAction(action))) {
+            failed = true;
+        }
+    }
+    /*
+    
+    foreach (KPluginInfo info, WebAppAction::listWebAppActions(options()->name)) {
+        //kDebug() << "New Action:" << info.name();
+        WebAppAction *action = new WebAppAction(this);
+        action->setPackageRoot(options()->packageRoot.path());
+        action->load(info);
+        if (!(m_widget->view()->addAction(action))) {
+            failed = true;
+        }
+    }
+    */
+    return failed;
+}
+/*
+bool WebApp::loadWebAppActions()
+{
+    // FIXME: Port to dirlisting mechanism
+    //kDebug() << "Searching for Actions ..." << m_options->name;
+    bool failed = false;
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(options()->name)) {
         //kDebug() << "New Action:" << info.name();
         WebAppAction *action = new WebAppAction(this);
@@ -247,7 +276,7 @@ bool WebApp::loadWebAppActions()
     }
     return failed;
 }
-
+*/
 WebAppOptions* WebApp::options()
 {
     return m_widget->view()->options();

@@ -23,8 +23,11 @@
 #ifndef WEBAPPACTION_H
 #define WEBAPPACTION_H
 
+#include <QDir>
+
 #include <KAction>
 #include <KConfigGroup>
+#include <KDesktopFile>
 #include <KPluginInfo>
 
 class WebApp;
@@ -52,12 +55,12 @@ public:
     ~WebAppAction();
 
     WebAppActionOptions* options() const;
-    static KPluginInfo::List listWebAppActions(const QString &name = QString());
+    static QStringList listWebAppActions(const QUrl &name = QUrl());
     QString name() const;
     void setPackageRoot(const QString root);
 
 public slots:
-    bool load(const KPluginInfo &info);
+    bool load(const QString &path);
     bool load(const KConfigGroup &cfg);
 
 private:
