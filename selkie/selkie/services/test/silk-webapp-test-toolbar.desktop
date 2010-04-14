@@ -1,0 +1,14 @@
+[Desktop Entry]
+Comment=An action in the Toolbar
+Icon=flag-green
+Name=Scale Content
+Type=Service
+X-KDE-PluginInfo-Name=silk-test-toolbar
+X-KDE-ServiceTypes=Silk/WebApp/Action
+X-Silk-Script=
+X-Silk-ScriptFile=scalediv.js
+X-Silk-ShowOnUrl=file:///
+X-Silk-ShowOnWildcard=
+X-Silk-TriggerOnUrl=
+X-Silk-TriggerOnWildcard=
+X-Silk-WebApp=test

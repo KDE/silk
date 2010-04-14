@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Print
+Comment=Print the current page
+Icon=document-print
+
+Type=Service
+X-KDE-ServiceTypes=Silk/WebApp/Action
+X-KDE-PluginInfo-Name=reviewboard-print
+X-KDE-PluginInfo-Depends=reviewboard
+
+X-Silk-WebApp=reviewboard
+X-Silk-ShowOnUrl=http://reviewboard.kde.org/
+X-Silk-TriggerOnUrl=http://reviewboard.kde.org/
+X-Silk-ScriptFile=noop-script.js
+X-Silk-Script=window.print()

@@ -1,0 +1,15 @@
+[Desktop Entry]
+Comment=Show a native system notification
+Icon=media-playlist-shuffle
+Name=Notify
+Type=Service
+X-KDE-PluginInfo-Author=Sebastian
+X-KDE-PluginInfo-Name=silk-test-editor
+X-KDE-ServiceTypes=Silk/WebApp/Action
+X-Silk-Script=window.silk.showNotification('<strong>... Selkie says hi!</strong><br />');
+X-Silk-ScriptFile=
+X-Silk-ShowOnUrl=
+X-Silk-ShowOnWildcard=*
+X-Silk-TriggerOnUrl=
+X-Silk-TriggerOnWildcard=*beach.html
+X-Silk-WebApp=test

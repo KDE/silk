@@ -1,0 +1,19 @@
+[Desktop Entry]
+Name=Gitorious Silk
+Comment=Project Silk on Gitorious
+Icon=project-development
+Type=Service
+
+#X-KDE-ServiceTypes=Silk/WebApp
+
+X-KDE-PluginInfo-Author=Sebastian Kügler
+X-KDE-PluginInfo-Email=sebas@kde.org
+X-KDE-PluginInfo-Name=silk
+X-KDE-PluginInfo-Version=0.01
+X-KDE-PluginInfo-Website=http://kde.org
+X-KDE-PluginInfo-Category=Development
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+
+X-Silk-StartUrl=http://gitorious.org/project-silk/
+X-Silk-AllowedBases=http://gitorious.org/,https://secure.gitorious.org/
