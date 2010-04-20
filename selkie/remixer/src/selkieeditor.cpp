@@ -39,6 +39,7 @@ void SelkieEditor::setupActions()
     KStandardAction::open(this, SLOT(open()), actionCollection());
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
     KStandardAction::save(this, SLOT(exportToFile()), actionCollection());
+    KStandardAction::saveAs(this, SLOT(exportToFile()), actionCollection());
 }
 
 void SelkieEditor::exportToFile()

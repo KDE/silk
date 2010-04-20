@@ -3,7 +3,7 @@ set(webappeditor_SRCS
     webappeditor.cpp
     webappactioneditor.cpp
     package.cpp
-    main.cpp
+    selkie-remixer.cpp
  )
 
 kde4_add_ui_files(webappeditor_SRCS webapp.ui webappaction.ui)
