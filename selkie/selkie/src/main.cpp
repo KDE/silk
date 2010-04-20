@@ -46,9 +46,15 @@ I18N_NOOP("A KDE 4 Application");
 
 static const char version[] = "0.1";
 
+void output(const QString &msg)
+{
+    std::cout << msg.toLocal8Bit().constData() << std::endl;
+}
+
 int main(int argc, char **argv)
 {
-    KAboutData about("selkie", 0, ki18n("Selkie"), version, ki18n(description),
+    // FIXME: selkie icon instead of internet-web-browser
+    KAboutData about("internet-web-browser", 0, ki18n("Selkie"), version, ki18n(description),
                      KAboutData::License_GPL, ki18n("(c) 2009-2010 Sebastian Kügler"), KLocalizedString(), 0, "sebas@kde.org");
                      about.addAuthor( ki18n("Sebastian Kügler"), KLocalizedString(), "sebas@kde.org" );
                      about.addAuthor( ki18n("Richard Moore"), KLocalizedString(), "rich@kde.org" );
@@ -63,15 +69,24 @@ int main(int argc, char **argv)
 
     kDebug() << "ARGS:" << args << args->count();
     if (args->count() == 0) {
-        KPluginInfo::List apps = WebApp::listWebApps();
-        if ( !apps.size() ) {
-            std::cout << "No applications found" << std::endl;
+        QStringList list = Package::listPackages();
+        if ( !list.count() ) {
+            output("No applications found");
             return 1;
         }
 
-        std::cout << "Usage: selkie [plugin]" << std::endl << std::endl;
-        std::cout << "Available plugins:" << std::endl;
-        foreach (const KPluginInfo &info, apps) {
+        output("Usage: selkie [plugin]\n\n");
+        output("Available plugins:");
+
+        //kDebug() << "Listing ...";
+        //output(i18n("Installed Selkie Packages:"));
+        list.sort();
+        foreach(const QString &package, list) {
+            Package p(package);
+            output(QString("    - %1\t%2 (%3)").arg(package, p.metadata()->name, p.metadata()->comment));
+        }
+        /*
+        foreach (const QString &info, apps) {
             QString name = info.pluginName();
             QString comment = info.comment();
             QString applet("    - %1 (%2)");
@@ -79,6 +94,7 @@ int main(int argc, char **argv)
             applet = applet.arg(name).arg(comment);
             std::cout << applet.toLocal8Bit().data() << std::endl;
         }
+        */
         return 1;
     } else {
         WebApp *webapp = new WebApp();

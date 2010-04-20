@@ -55,7 +55,7 @@ public:
 
     static KPluginInfo::List listWebApps(const QString &name = QString());
 
-    bool loadWebApp(const QString &name);
+    //bool loadWebApp(const QString &name);
     bool loadWebAppFromPackage(const QString &path);
     bool loadInstalledWebApp(const QString &name);
 

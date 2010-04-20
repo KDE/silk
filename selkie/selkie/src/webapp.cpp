@@ -81,6 +81,7 @@ void WebApp::startApplication()
     }
 }
 
+/*
 QList<KPluginInfo> WebApp::listWebApps(const QString &name)
 {
     QString constraint;
@@ -91,6 +92,12 @@ QList<KPluginInfo> WebApp::listWebApps(const QString &name)
     return KPluginInfo::fromServices(offers);
 }
 
+QStringList WebApp::listWebApps()
+{
+
+}
+*/
+/*
 bool WebApp::loadWebApp(const QString &name)
 {
     foreach (const KPluginInfo &info, listWebApps(name)) {
@@ -111,7 +118,7 @@ bool WebApp::loadWebApp(const QString &name)
     }
     return false;
 }
-
+*/
 bool WebApp::finishLoading(WebAppOptions myoptions)
 {
     options()->name = myoptions.name;
@@ -246,7 +253,7 @@ bool WebApp::loadWebAppActions()
         }
     }
     /*
-    
+
     foreach (KPluginInfo info, WebAppAction::listWebAppActions(options()->name)) {
         //kDebug() << "New Action:" << info.name();
         WebAppAction *action = new WebAppAction(this);
