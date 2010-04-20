@@ -50,6 +50,7 @@ void WebAppEditor::setupMainWidget()
 void WebAppEditor::openActionFile()
 {
     QString filename = KFileDialog::getOpenFileName(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/services/silk"), QString("*.desktop"));
+    kDebug() << "DFilename" << filename;
     loadDesktopFile(new KDesktopFile(filename));
 }
 

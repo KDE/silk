@@ -81,85 +81,19 @@ void SelkieEditor::loadWebApp(const QString &path)
     }
     //kDebug() << "m_pages flushed rows:" << rows;
 
-    foreach (const QString &f, files) {
-        QString fname = m_dir.absolutePath().append("/").append(f);
-        //kDebug() << "Found file:" << fname;
-        KDesktopFile *df = new KDesktopFile(fname);
+    // Web App page on top
+    QString fname = path + "metadata.desktop";
+    KDesktopFile *metadataFile = new KDesktopFile(fname);
+    m_webAppEditor = new WebAppEditor(metadataFile);
+    m_pages->addPage(m_webAppEditor);
 
-        KConfigGroup group = df->group("Desktop Entry");
-
-        QString type = group.readEntry("Type", QString());
-        QString servicetype = group.readEntry("X-KDE-ServiceTypes", QString());
-        QString pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
-
-        //kDebug() << type << servicetype << pname;
-
-        if (type == "Service") {
-            if (servicetype == "Silk/WebApp") {
-                pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
-                kDebug() << "Found WebApp:" << pname;
-                m_webAppPlugin = df;
-            } else if (servicetype == "Silk/WebApp/Action") {
-                pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
-                kDebug() << "Found Action:" << pname;
-                m_actionFiles << df;
-            } else {
-                kDebug() << "ignoring" << fname;
-                delete df;
-            }
-        } else if (type == "Application") {
-            m_app = df;
-            kDebug() << "Application:" << group.readEntry("Name", QString());
-        } else {
-            kDebug() << "ignoring" << fname;
-            delete df;
-        }
-
-    }
-
+    // Now our actions
+    //foreach (KDesktopFile *f, m_actionFiles) {
     foreach (const QString &f, actionFiles) {
         QString fname = actionsDir.absolutePath().append("/").append(f);
         kDebug() << "Found file:" << fname;
         KDesktopFile *df = new KDesktopFile(fname);
-
-        KConfigGroup group = df->group("Desktop Entry");
-
-        QString type = group.readEntry("Type", QString());
-        QString servicetype = group.readEntry("X-KDE-ServiceTypes", QString());
-        QString pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
-
-        //kDebug() << type << servicetype << pname;
-
-        if (type == "Service") {
-            if (servicetype == "Silk/WebApp") {
-                pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
-                kDebug() << "Found WebApp:" << pname;
-                m_webAppPlugin = df;
-            } else if (servicetype == "Silk/WebApp/Action") {
-                pname = group.readEntry("X-KDE-PluginInfo-Name", QString());
-                kDebug() << "Found Action:" << pname;
-                m_actionFiles << df;
-            } else {
-                kDebug() << "ignoring" << fname;
-                delete df;
-            }
-        } else if (type == "Application") {
-            m_app = df;
-            kDebug() << "Application:" << group.readEntry("Name", QString());
-        } else {
-            kDebug() << "ignoring" << fname;
-            delete df;
-        }
-
-    }
-
-    // Web App page on top
-    m_webAppEditor = new WebAppEditor(m_webAppPlugin);
-    m_pages->addPage(m_webAppEditor);
-
-    // Now our actions
-    foreach (KDesktopFile *f, m_actionFiles) {
-        addAction(f);
+        addAction(df);
     }
 }
 
