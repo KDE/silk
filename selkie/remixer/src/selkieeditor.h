@@ -24,7 +24,7 @@ public:
     /**
      * Default Constructor
      */
-    SelkieEditor();
+    SelkieEditor(const QString &path);
 
     /**
      * Default Destructor

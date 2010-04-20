@@ -17,7 +17,7 @@
 
 #include <QLabel>
 
-SelkieEditor::SelkieEditor()
+SelkieEditor::SelkieEditor(const QString &path)
     : KXmlGuiWindow()
 {
     // accept dnd
@@ -25,7 +25,7 @@ SelkieEditor::SelkieEditor()
 
     m_pages = new KPageWidget(this);
     m_pages->setFaceType(KPageWidget::Auto);
-    loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/packages/silk/");
+    loadWebApp(path);
     //loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/silk/");
     setupActions();
 
