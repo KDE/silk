@@ -75,9 +75,9 @@ void WebApp::startApplication()
     setWindowIcon(icon());
 
     QIcon icon = QWebSettings::iconForUrl( options()->startUrl );
-    kDebug() << "Is icon null: " << icon.isNull();
-    if ( !icon.isNull() ) {
-        setWindowIcon( icon );
+    //kDebug() << "Is icon null: " << icon.isNull();
+    if (!icon.isNull()) {
+        setWindowIcon(icon);
     }
 }
 
@@ -247,8 +247,9 @@ bool WebApp::loadWebAppActions()
         kDebug() << "NEW ACTION:" << a;
         WebAppAction *action = new WebAppAction(this);
         action->setPackageRoot(options()->packageRoot.path());
-        //action->load(info);
+        action->load(a);
         if (!(m_widget->view()->addAction(action))) {
+            kDebug() << "Loading failed:" << a;
             failed = true;
         }
     }

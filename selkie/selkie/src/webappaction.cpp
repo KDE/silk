@@ -64,9 +64,9 @@ QStringList WebAppAction::listWebAppActions(const QUrl &root)
     QDir actionDir = QDir(root.path() + "actions/");
     QStringList actionFiles = actionDir.entryList(QStringList("*.desktop"));
     foreach (const QString &a, actionFiles) {
-        as << root.path() + "actions/" + a;
+        as << actionDir.path() + "/" + a;
     }
-    kDebug() << "As:" << actionDir << actionFiles;
+    kDebug() << "As:" << actionDir << actionFiles << as;
     return as;
     /*
     QString constraint;
@@ -80,17 +80,26 @@ QStringList WebAppAction::listWebAppActions(const QUrl &root)
 
 bool WebAppAction::load(const QString &path)
 {
+    /*
     //QString actionFile = root.path() + "metadata.desktop";
+    return load(m_options->packageRoot);
 
-    //kDebug() << "Plugin File:" << pluginFile;
+}
+
+bool WebAppAction::load(const QString path)
+{
+    */
+    //QString path = m_options->packageRoot;
+    //QString actionFile = root.path() + "metadata.desktop";
+    kDebug() << "loading action:" << path;
     KDesktopFile* dfile = new KDesktopFile(path);
     KConfigGroup cfg = dfile->desktopGroup();
     if (!cfg.isValid()) {
         kWarning() << "EE: Invalid KConfigGroup in action .desktop file.";
         return false;
     }
-    WebAppActionOptions options;
-    options.name = cfg.readEntry("X-KDE-PluginInfo-Name", QString());
+    //WebAppActionOptions options;
+    m_options->name = cfg.readEntry("X-KDE-PluginInfo-Name", QString());
     //options.comment = cfg.readEntry("Comment", QString());
     /*
     struct WebAppActionOptions
@@ -106,7 +115,7 @@ bool WebAppAction::load(const QString &path)
         QString packageRoot;
     };
     */
-    
+
     //QString comment = info.comment();
 
     //if (comment.isEmpty()) {
@@ -115,14 +124,20 @@ bool WebAppAction::load(const QString &path)
 
     //kDebug() << "Silk/WebApp/Action:" << comment << info.pluginName() << info.property("X-Silk-ShowOnUrl") <<  info.property("X-Silk-TriggerOnUrl") << info.icon();
     //kDebug() << "Found plugin:" << info.pluginName() << info.name() << info.icon();
-    //m_options->name = cfg.readEntry("X-Silk-ShowOnUrl", QStringList());
+    m_options->text = cfg.readEntry("Name", QString());
+    m_options->tooltip = cfg.readEntry("Comment", QString());
     m_options->showOnUrl = cfg.readEntry("X-Silk-ShowOnUrl", QStringList());
     m_options->triggerOnUrl = cfg.readEntry("X-Silk-TriggerOnUrl", QStringList());
     m_options->showOnWildcard = cfg.readEntry("X-Silk-ShowOnWildcard", QStringList());
     m_options->triggerOnWildcard = cfg.readEntry("X-Silk-TriggerOnWildcard", QStringList());
     m_options->icon = KIcon(cfg.readEntry("Icon", QString()));
-    m_options->text = cfg.readEntry("Icon", QString());
+    //m_options->text = cfg.readEntry("Icon", QString());
 
+    kDebug() << "--- ::: Action ::: ---";
+    kDebug() << "name:" << m_options->name;
+    kDebug() << "icon:" << m_options->icon;
+    kDebug() << "showOnUrl:" << m_options->showOnUrl;
+    kDebug() << "/---";
 
     if (!m_options->showOnUrl.isEmpty()) {
         //kDebug() << "=====> ShowOnUrl" << m_options->showOnUrl;

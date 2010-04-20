@@ -37,6 +37,7 @@ struct WebAppActionOptions
 {
     QString name;
     QString text;
+    QString tooltip;
     KIcon icon;
     QStringList triggerOnUrl;
     QStringList showOnUrl;
@@ -60,6 +61,7 @@ public:
     void setPackageRoot(const QString root);
 
 public slots:
+    //bool load();
     bool load(const QString &path);
     bool load(const KConfigGroup &cfg);
 
