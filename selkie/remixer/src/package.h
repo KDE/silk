@@ -59,6 +59,7 @@ class Package : public QObject
         void unpack();
         void show();
         bool isValid();
+        QString error();
 
         MetaData* metadata();
         QString pluginName();
@@ -88,6 +89,8 @@ class Package : public QObject
         //QString m_pluginPath;
         QString m_dataPath;
         MetaData* m_metadata;
+
+        QString m_error;
 };
 
 #endif // SELKIEPACKAGESTRUCTURE_H

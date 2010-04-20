@@ -246,27 +246,27 @@ bool Package::isValid()
     }
 
     bool valid = true;
-    QString error;
+    m_error = QString();
 
     if (!m_root.isValid()) {
         valid = false;
-        error.append("m_root is invalid" + rpath + "\n");
+        m_error.append("m_root is invalid" + rpath + "\n");
     }
     if (!QFile(m_appFile).exists()) {
         valid = false;
-        error.append("m_appFile is invalid" + m_appFile + "\n");
+        m_error.append("m_appFile is invalid" + m_appFile + "\n");
     }
     if (!QDir(rpath + "actions/").exists()) {
         valid = false;
-        error.append("actions/ dir does not exist" + rpath + "actions/" + "\n");
+        m_error.append("actions/ dir does not exist" + rpath + "actions/" + "\n");
     }
 
     if (m_metadata->pluginName.isEmpty()) {
         valid = false;
-        error.append("Plugin name is empty. \n");
+        m_error.append("Plugin name is empty. \n");
     }
-    if (!error.isEmpty()) {
-        //kWarning() << "EE:" << error;
+    if (!m_error.isEmpty()) {
+        kWarning() << "EE:" << m_error;
     }
     return valid;
 }

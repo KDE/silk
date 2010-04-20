@@ -4,7 +4,7 @@ Comment=Google's Email Service
 Icon=mail-message
 Type=Service
 
-X-KDE-ServiceTypes=Silk/WebApp
+#X-KDE-ServiceTypes=Silk/WebApp
 
 X-KDE-PluginInfo-Author=Sebastian Kügler
 X-KDE-PluginInfo-Email=sebas@kde.org
@@ -17,4 +17,3 @@ X-KDE-PluginInfo-EnabledByDefault=true
 
 X-Silk-StartUrl=http://mail.google.com
 X-Silk-AllowedBases=http://mail.google.com/
-X-Silk-AllowedBases-Size=1
