@@ -26,8 +26,6 @@
 #include "view.h"
 #include "../../remixer/src/package.h"
 #include <kxmlguiwindow.h>
-#include <KPluginInfo>
-
 
 class WebAppWidget;
 
@@ -55,7 +53,6 @@ public:
 
     static KPluginInfo::List listWebApps(const QString &name = QString());
 
-    //bool loadWebApp(const QString &name);
     bool loadWebAppFromPackage(const QString &path);
     bool loadInstalledWebApp(const QString &name);
 
@@ -75,4 +72,4 @@ private:
     Package* m_package;
 };
 
-#endif // _SITESPECIFICBROWSER_H_
+#endif // WEBAPP

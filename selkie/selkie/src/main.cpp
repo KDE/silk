@@ -42,7 +42,7 @@
 #include "view.h" // needed for listWebApps
 
 static const char description[] =
-I18N_NOOP("A KDE 4 Application");
+I18N_NOOP("A site-specific web application");
 
 static const char version[] = "0.1";
 
@@ -77,24 +77,11 @@ int main(int argc, char **argv)
 
         output("Usage: selkie [plugin]\n\n");
         output("Available plugins:");
-
-        //kDebug() << "Listing ...";
-        //output(i18n("Installed Selkie Packages:"));
         list.sort();
         foreach(const QString &package, list) {
             Package p(package);
             output(QString("    - %1\t%2 (%3)").arg(package, p.metadata()->name, p.metadata()->comment));
         }
-        /*
-        foreach (const QString &info, apps) {
-            QString name = info.pluginName();
-            QString comment = info.comment();
-            QString applet("    - %1 (%2)");
-
-            applet = applet.arg(name).arg(comment);
-            std::cout << applet.toLocal8Bit().data() << std::endl;
-        }
-        */
         return 1;
     } else {
         WebApp *webapp = new WebApp();
@@ -103,7 +90,7 @@ int main(int argc, char **argv)
         if (!package.endsWith(".selkie")) {
             ok = webapp->loadInstalledWebApp(package);
             if (!ok) {
-                std::cout << "Could not find webapp: " << args->arg(0).toLocal8Bit().data() << std::endl;
+                output(QString("Could not find webapp: %1").arg(args->arg(0)));
                 return 1;
             }
         } else {

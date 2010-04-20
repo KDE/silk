@@ -36,9 +36,6 @@
 #include <KConfigDialog>
 #include <KDebug>
 #include <KDesktopFile>
-#include <KDE/KLocale>
-#include <KPluginInfo>
-#include <KServiceTypeTrader>
 #include <KTempDir>
 #include <KToolBar>
 #include <KStandardAction>
@@ -81,44 +78,6 @@ void WebApp::startApplication()
     }
 }
 
-/*
-QList<KPluginInfo> WebApp::listWebApps(const QString &name)
-{
-    QString constraint;
-    if (!name.isEmpty()) {
-        constraint.append(QString("[X-KDE-PluginInfo-Name] == '%1'").arg(name));
-    }
-    KService::List offers = KServiceTypeTrader::self()->query("Silk/WebApp", constraint);
-    return KPluginInfo::fromServices(offers);
-}
-
-QStringList WebApp::listWebApps()
-{
-
-}
-*/
-/*
-bool WebApp::loadWebApp(const QString &name)
-{
-    foreach (const KPluginInfo &info, listWebApps(name)) {
-        WebAppOptions options;
-        kDebug() << "Silk/WebApp:" << name << info.author() << info.property("X-Silk-StartUrl") <<  info.property("X-Silk-StartUrl");
-        //kDebug() << "Found plugin:" << name;
-        options.comment = info.comment();
-        options.name = info.pluginName();
-        options.windowIcon = KIcon(info.icon());
-        options.windowTitle = info.property("Name").toString();
-        options.startUrl = QUrl(info.property("X-Silk-StartUrl").toString());
-        foreach (const QString &url, info.property("X-Silk-AllowedBases").toStringList()) {
-            options.allowedBasesRaw << url;
-        }
-        options.styleSheets = info.property("X-Silk-StyleSheets").toStringList();
-        return finishLoading(options);
-        //return true;
-    }
-    return false;
-}
-*/
 bool WebApp::finishLoading(WebAppOptions myoptions)
 {
     options()->name = myoptions.name;
@@ -152,8 +111,7 @@ bool WebApp::finishLoading(WebAppOptions myoptions)
         }
     }
     options()->styleSheets = myoptions.styleSheets;
-    kDebug() << "Stylesheets: ++" << options()->styleSheets;
-
+    //kDebug() << "Stylesheets: ++" << options()->styleSheets;
     //kDebug() << "AllowedBases:" << options()->allowedBases;
 
     if (myoptions.comment.isEmpty()) {
@@ -198,15 +156,6 @@ bool WebApp::loadWebAppFromPackage(const QString &path)
 
     dump(options);
     return finishLoading(options);
-
-    //importPackage(const KUrl &importFile, const KUrl &targetUrl);
-
-    //Package::importPackage(KUrl(path), KUrl(tmp.name()));
-
-    //return false;
-
-    //return true;
-
 }
 
 bool WebApp::loadInstalledWebApp(const QString &name)
@@ -253,38 +202,9 @@ bool WebApp::loadWebAppActions()
             failed = true;
         }
     }
-    /*
+    return failed;
+}
 
-    foreach (KPluginInfo info, WebAppAction::listWebAppActions(options()->name)) {
-        //kDebug() << "New Action:" << info.name();
-        WebAppAction *action = new WebAppAction(this);
-        action->setPackageRoot(options()->packageRoot.path());
-        action->load(info);
-        if (!(m_widget->view()->addAction(action))) {
-            failed = true;
-        }
-    }
-    */
-    return failed;
-}
-/*
-bool WebApp::loadWebAppActions()
-{
-    // FIXME: Port to dirlisting mechanism
-    //kDebug() << "Searching for Actions ..." << m_options->name;
-    bool failed = false;
-    foreach (KPluginInfo info, WebAppAction::listWebAppActions(options()->name)) {
-        //kDebug() << "New Action:" << info.name();
-        WebAppAction *action = new WebAppAction(this);
-        action->setPackageRoot(options()->packageRoot.path());
-        action->load(info);
-        if (!(m_widget->view()->addAction(action))) {
-            failed = true;
-        }
-    }
-    return failed;
-}
-*/
 WebAppOptions* WebApp::options()
 {
     return m_widget->view()->options();
