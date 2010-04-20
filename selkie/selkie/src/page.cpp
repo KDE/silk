@@ -40,6 +40,7 @@ bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &req
     if ( type == QWebPage::NavigationTypeLinkClicked ) {
         bool inScope = false;
         QUrl base;
+        //kDebug() << "Bases ..." << m_view->options()->allowedBases;
         foreach( base, m_view->options()->allowedBases ) {
             kDebug() << "Check::base::request::parentOf?" << base << request.url() << base.isParentOf( request.url() );
             if ( base.isParentOf( request.url() ) ) {
@@ -48,6 +49,7 @@ bool Page::acceptNavigationRequest( QWebFrame *frame, const QNetworkRequest &req
         }
 
         if ( !inScope ) {
+            //kDebug() << "opening URL externally" << request.url();
             QDesktopServices::openUrl( request.url() );
             return false;
         } else {

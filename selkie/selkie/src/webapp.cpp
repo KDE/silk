@@ -177,6 +177,7 @@ bool WebApp::loadInstalledWebApp(const QString &name)
     options.startUrl = m_package->metadata()->startUrl;
     foreach (const QString &base, m_package->metadata()->allowedBases) {
         options.allowedBases << base;
+        options.allowedBasesRaw << base;
     }
     foreach (const QString &css, m_package->metadata()->styleSheets) {
         options.styleSheets << css;
@@ -219,6 +220,7 @@ void WebApp::dump(const WebAppOptions options)
     kDebug() << "comment" << options.comment;
     kDebug() << "startUrl" << options.startUrl;
     kDebug() << "allowedBases" << options.allowedBases;
+    kDebug() << "allowedBasesRaw" << options.allowedBasesRaw;
     kDebug() << "styleSheets" << options.styleSheets;
     kDebug() << "packageRoot" << options.packageRoot;
     kDebug() << "//------------- /WebApp --------------";

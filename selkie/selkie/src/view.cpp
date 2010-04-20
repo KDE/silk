@@ -230,7 +230,7 @@ void View::iconLoaded()
 bool View::addAction(WebAppAction *action)
 {
     //kDebug() << "Searching for Actions ..." << m_options->name;
-    kDebug() << "New Action:" << action->name();
+    //kDebug() << "New Action:" << action->name();
     m_mapper->setMapping(action, action->options()->script);
     connect(action, SIGNAL(triggered()), m_mapper, SLOT(map()));
     m_options->actions.append( action );
@@ -296,7 +296,7 @@ void View::updateActions()
 
 void View::resetToolbarActions()
 {
-    kDebug() << "Updating ACtions.";
+    //kDebug() << "Updating ACtions.";
     //KMainWindow* win = qobject_cast<KMainWindow*>(parent());
     if (!m_win) {
         kWarning() << "Our parent is not a KMainWindow, be afraid";
@@ -305,12 +305,9 @@ void View::resetToolbarActions()
 
     m_win->toolBar()->clear();
     foreach (QAction *action, m_actionCollection->actions()) {
-        kDebug() << "action!" << action->text();
         WebAppAction *wa_action = qobject_cast<WebAppAction*>(action);
         if (wa_action) {
-            kDebug() << "wa_action" << wa_action->name();
             if (match(wa_action->options()->showOnWildcard, wa_action->options()->showOnUrl)) {
-                kDebug() << "Showing" << wa_action->options()->name;
                 m_win->toolBar()->addAction(wa_action);
             }
         }
