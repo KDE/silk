@@ -7,6 +7,7 @@
 
 #include <QDir>
 
+class DashBoard;
 class WebAppEditor;
 class WebAppActionEditor;
 
@@ -31,6 +32,7 @@ public:
      */
     virtual ~SelkieEditor();
 
+public Q_SLOTS:
     void init(const QString &path);
 
 private Q_SLOTS:
@@ -40,10 +42,11 @@ private Q_SLOTS:
 
 private:
     void setupActions();
-    void loadWebApp(const QString &path);
+    bool loadWebApp(const QString &path);
     void addAction(KDesktopFile *file);
 
     KPageWidget *m_pages;
+    DashBoard *m_dashboard;
     WebAppEditor *m_webAppEditor;
     QList<WebAppActionEditor*> m_actionEditors;
     QList<KDesktopFile*> m_actionFiles;

@@ -1,5 +1,6 @@
 set(webappeditor_SRCS
     selkieeditor.cpp
+    dashboard.cpp
     webappeditor.cpp
     webappactioneditor.cpp
     package.cpp
@@ -13,6 +14,7 @@ kde4_add_kcfg_files(webappeditor_SRCS settings.kcfgc )
 kde4_add_executable(selkie-remixer ${webappeditor_SRCS})
 
 target_link_libraries(selkie-remixer
+    ${QT_QTWEBKIT_LIBRARY}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KTEXTEDITOR_LIBS}

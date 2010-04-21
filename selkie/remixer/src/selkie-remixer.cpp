@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
 
-
+    SelkieEditor *widget = 0;
     // see if we are starting with session management
     if (app.isSessionRestored()) {
         //RESTORE(WebAppEditor);
@@ -30,12 +30,12 @@ int main(int argc, char **argv)
         // no session.. just start up normally
         KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
         if (args->count() == 0) {
-            SelkieEditor *widget = new SelkieEditor("/home/sebas/kdesvn/src/project-silk/selkie/packages/silk/");
+            widget = new SelkieEditor(QString());
             //webappeditor *widget = new webappeditor;
             widget->show();
         } else {
             kDebug() << "Loading:" << argv[0];
-            SelkieEditor *widget = new SelkieEditor(argv[1]);
+            widget = new SelkieEditor(argv[1]);
             widget->show();
             /*
             int i = 0;

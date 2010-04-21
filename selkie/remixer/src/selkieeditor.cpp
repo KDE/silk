@@ -1,4 +1,5 @@
 
+#include "dashboard.h"
 #include "selkieeditor.h"
 #include "webappeditor.h"
 #include "webappactioneditor.h"
@@ -19,13 +20,19 @@
 
 SelkieEditor::SelkieEditor(const QString &path)
     : KXmlGuiWindow(),
-    m_pages(0)
+    m_pages(0),
+    m_dashboard(0)
 {
     // accept dnd
     setAcceptDrops(true);
-    if (!path.isEmpty()) {
+    //if (loadWebApp(path)) {
         init(path);
+    /*} else {
+        m_dashboard = new DashBoard(this);
+        connect(m_dashboard, SIGNAL(openWebApp(const QString&)), this, SLOT(init(const QString)));
+        setCentralWidget(m_dashboard);
     }
+    */
     setupActions();
     setupGUI();
 }
@@ -33,16 +40,38 @@ SelkieEditor::SelkieEditor(const QString &path)
 void SelkieEditor::init(const QString &path)
 {
     QString p = path;
+
+
     if (m_pages) {
         delete m_pages;
+        m_pages = 0;
+    } else {
+        //loadWebApp(p);
     }
+    /*
+    if (m_dashboard) {
+        delete m_dashboard;
+    }
+    */
     if (!p.endsWith('/')) {
         p.append('/');
     }
-    m_pages = new KPageWidget(this);
-    m_pages->setFaceType(KPageWidget::Auto);
-    loadWebApp(p);
+    if (!m_pages) {
+        m_pages = new KPageWidget(this);
+        m_pages->setFaceType(KPageWidget::Auto);
+    }
     //loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/silk/");
+    if (!loadWebApp(p)) {
+        kDebug() << "loading failed";
+        //delete m_pages;
+        if (!m_dashboard) {
+            m_dashboard = new DashBoard(this);
+            connect(m_dashboard, SIGNAL(openWebApp(const QString&)), this, SLOT(init(const QString&)));
+        }
+        setCentralWidget(m_dashboard);
+        return;
+    }
+    kDebug() << "loading succeeded";
 
     setCentralWidget(m_pages);
 }
@@ -73,9 +102,13 @@ void SelkieEditor::open()
     init(path);
 }
 
-void SelkieEditor::loadWebApp(const QString &path)
+bool SelkieEditor::loadWebApp(const QString &path)
 {
     m_dir = QDir(path);
+    if (!m_dir.exists()) {
+        kDebug() << "Directory doesn't exist, cannot load webapp";
+        return false;
+    }
     const QString fileName = "*.desktop";
     QDir actionsDir = QDir(path + "actions/");
     kDebug() << "actions are in : " << actionsDir;
@@ -98,6 +131,10 @@ void SelkieEditor::loadWebApp(const QString &path)
 
     // Web App page on top
     QString fname = m_dir.absolutePath().append("/metadata.desktop");
+    if (!QFile::exists(fname)) {
+        kDebug() << "metadata file doesn't exist:" << fname;
+        return false;
+    }
     KDesktopFile *metadataFile = new KDesktopFile(fname);
     m_webAppEditor = new WebAppEditor(metadataFile);
     m_pages->addPage(m_webAppEditor);
@@ -110,6 +147,7 @@ void SelkieEditor::loadWebApp(const QString &path)
         KDesktopFile *df = new KDesktopFile(fname);
         addAction(df);
     }
+    return true;
 }
 
 SelkieEditor::~SelkieEditor()
