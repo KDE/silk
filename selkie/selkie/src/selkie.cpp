@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    kDebug() << "ARGS:" << args << args->count();
+    //kDebug() << "ARGS:" << args << args->count();
     if (args->count() == 0) {
         QStringList list = Package::listPackages();
         if ( !list.count() ) {
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
             return 1;
         }
 
-        output("Usage: selkie [plugin]\n\n");
+        output("Usage: selkie [plugin]\n");
         output("Available plugins:");
         list.sort();
         foreach(const QString &package, list) {

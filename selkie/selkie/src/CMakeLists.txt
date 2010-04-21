@@ -2,7 +2,7 @@
 include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES} )
 
 set(selkie_SRCS
-    main.cpp
+    selkie.cpp
     view.cpp
     page.cpp
     webapp.cpp

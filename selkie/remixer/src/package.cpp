@@ -47,7 +47,7 @@ Package::Package(QString path, QObject* parent)
         m_metadataFile = m_root.path() + "/" + "metadata.desktop";
         readMetadata();
         readDir();
-        kDebug() << "installed, but valid?" << isValid();
+        //kDebug() << "installed, but valid?" << isValid();
         return;
     }
 
@@ -61,12 +61,12 @@ Package::Package(QString path, QObject* parent)
     if (path.isEmpty()) {
         kDebug() << "Empty package structure";
     } else if (path.endsWith(".selkie")) {
-        kDebug() << "Package file:" << path;
+        //kDebug() << "Package file:" << path;
         //QString unpackPath = "/tmp/unpacked/";
 
         KTempDir tmp;
         tmp.setAutoRemove(false);
-        kDebug() << "TempDir:" << tmp.name();
+        //kDebug() << "TempDir:" << tmp.name();
         QString unpackPath = tmp.name();
         importPackage(path, unpackPath);
         m_root = KUrl(unpackPath);
@@ -100,7 +100,7 @@ QStringList Package::listPackages()
             //kDebug() << "Check?" << _p << selkie;
             Package* package = new Package(_p);
             if (package->isValid()) {
-                kDebug() << "*** Found Valid Package" << package->metadata()->name << _p;
+                //kDebug() << "*** Found Valid Package" << package->metadata()->name << _p;
                 packages << selkie;
             } else {
                 //kDebug() << "--- Invalid Package:" << _p;
@@ -115,7 +115,7 @@ QString Package::findPackage(const QString &package)
 {
     QStringList packagePaths = KGlobal::dirs()->findDirs("data", "silk/webapps/" + package);
     //foreach (const QString &_stddir, installationPaths) 
-    kDebug() << "Found:" << packagePaths;
+    //kDebug() << "Found:" << packagePaths;
     if (packagePaths.count()) {
         return packagePaths[0];
     } else {
@@ -266,7 +266,7 @@ bool Package::isValid()
         m_error.append("Plugin name is empty. \n");
     }
     if (!m_error.isEmpty()) {
-        kWarning() << "EE:" << m_error;
+        //kWarning() << "EE:" << m_error;
     }
     return valid;
 }
