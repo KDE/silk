@@ -57,6 +57,7 @@ void WebAppEditor::openActionFile()
 void WebAppEditor::loadDesktopFile(KDesktopFile *file)
 {
     m_desktopFile = file;
+    kDebug() << "desktop filename:" << file->fileName();
     KConfigGroup group = m_desktopFile->group("Desktop Entry");
 
     webAppUi.name->setText(group.readEntry("Name", QString()));
@@ -69,7 +70,7 @@ void WebAppEditor::loadDesktopFile(KDesktopFile *file)
     setIcon(KIcon(webAppUi.icon->icon()));
     setName(webAppUi.name->text());
     webAppUi.saveButton->setIcon(KIcon("document-save"));
-    //dump();
+    dump();
 }
 
 void WebAppEditor::save()

@@ -31,6 +31,8 @@ public:
      */
     virtual ~SelkieEditor();
 
+    void init(const QString &path);
+
 private Q_SLOTS:
     void save();
     void open();

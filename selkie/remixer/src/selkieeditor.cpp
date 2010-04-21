@@ -18,19 +18,33 @@
 #include <QLabel>
 
 SelkieEditor::SelkieEditor(const QString &path)
-    : KXmlGuiWindow()
+    : KXmlGuiWindow(),
+    m_pages(0)
 {
     // accept dnd
     setAcceptDrops(true);
+    if (!path.isEmpty()) {
+        init(path);
+    }
+    setupActions();
+    setupGUI();
+}
 
+void SelkieEditor::init(const QString &path)
+{
+    QString p = path;
+    if (m_pages) {
+        delete m_pages;
+    }
+    if (!p.endsWith('/')) {
+        p.append('/');
+    }
     m_pages = new KPageWidget(this);
     m_pages->setFaceType(KPageWidget::Auto);
-    loadWebApp(path);
+    loadWebApp(p);
     //loadWebApp("/home/sebas/kdesvn/src/project-silk/selkie/services/silk/");
-    setupActions();
 
     setCentralWidget(m_pages);
-    setupGUI();
 }
 
 
@@ -55,8 +69,8 @@ void SelkieEditor::exportToFile()
 
 void SelkieEditor::open()
 {
-    QString path = KFileDialog::getExistingDirectory(KUrl("file:///home/sebas/kdesvn/src/project-silk/webappeditor/examplepackage"), this, i18nc("the directory selection dialogue for the webapp", "Open Web Application Directory"));
-    loadWebApp(path);
+    QString path = KFileDialog::getExistingDirectory(KUrl("file:///home/sebas/kdesvn/src/project-silk/selkie/packages/"), this, i18nc("the directory selection dialogue for the webapp", "Open Web Application Directory"));
+    init(path);
 }
 
 void SelkieEditor::loadWebApp(const QString &path)
@@ -83,7 +97,7 @@ void SelkieEditor::loadWebApp(const QString &path)
     //kDebug() << "m_pages flushed rows:" << rows;
 
     // Web App page on top
-    QString fname = path + "metadata.desktop";
+    QString fname = m_dir.absolutePath().append("/metadata.desktop");
     KDesktopFile *metadataFile = new KDesktopFile(fname);
     m_webAppEditor = new WebAppEditor(metadataFile);
     m_pages->addPage(m_webAppEditor);
