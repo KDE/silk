@@ -59,6 +59,9 @@ namespace SilkWebWelcome
 
     private :
         void buildDialog();
+
+        Plasma::WebView *m_dashboard;
+        QHash<QString, QGraphicsWidget*> m_serviceButtons;
   };
 }
 

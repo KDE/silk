@@ -19,9 +19,9 @@
 //Qt
 #include <QGraphicsGridLayout>
 #include <QLabel>
-#include <QVBoxLayout>
-#include <QTimer>
-#include <QWebFrame>
+//#include <QVBoxLayout>
+//#include <QTimer>
+//#include <QWebFrame>
 
 //KDE
 #include <KDebug>
@@ -31,6 +31,7 @@
 #include <KStandardDirs>
 
 //plasma
+#include <Plasma/Label>
 #include <Plasma/Dialog>
 #include <Plasma/Theme>
 
@@ -53,9 +54,22 @@ Dialog::~Dialog()
 void Dialog::buildDialog()
 {
     QGraphicsGridLayout *gridLayout = new QGraphicsGridLayout(this);
-    setLayout(gridLayout);
-    // ...
+
+    m_dashboard = new Plasma::WebView(this);
+    gridLayout->addItem(m_dashboard, 0, 0, 1, 3); // top cell, spanning 3 columns
+
+    QString img_path = "/home/sebas/kdesvn/src/project-silk/webwelcome/images/";
+
+    Plasma::Label *gmail = new Plasma::Label(this);
+    gmail->setImage(img_path + "gmail.png");
+    gridLayout->addItem(gmail, 1, 0);
+
+    Plasma::Label *twitter = new Plasma::Label(this);
+    gmail->setImage(img_path + "twitter.png");
+    gridLayout->addItem(gmail, 1, 1);
+
     setPreferredSize(400, 400);
+    setLayout(gridLayout);
 }
 
 #include "dialog.moc"
