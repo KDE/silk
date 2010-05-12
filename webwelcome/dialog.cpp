@@ -53,9 +53,16 @@ Dialog::~Dialog()
 
 void Dialog::buildDialog()
 {
+    kDebug() << " =========================================== ";
     QGraphicsGridLayout *gridLayout = new QGraphicsGridLayout(this);
 
     m_dashboard = new Plasma::WebView(this);
+    QString html = QString("<h1>Welcome to your Desktop</h1>");
+    html.append("<p>Please take some minutes to set up your online services on this system.");
+    html.append("Your passwords will be safely stored in the KWallet secure storage.</p>");
+    m_dashboard->setHtml(html);
+
+
     gridLayout->addItem(m_dashboard, 0, 0, 1, 3); // top cell, spanning 3 columns
 
     QString img_path = "/home/sebas/kdesvn/src/project-silk/webwelcome/images/";

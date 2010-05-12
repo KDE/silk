@@ -42,14 +42,13 @@ using namespace SilkWebWelcome;
 K_EXPORT_PLASMA_APPLET(webwelcome, Applet)
 
 Applet::Applet(QObject *parent, const QVariantList &args)
-    : Plasma::PopupApplet(parent, args),
-      m_icon(0),
+    : Plasma::Applet(parent, args),
       m_dialog(0)
 {
-    setBackgroundHints(StandardBackground);
-    setAspectRatioMode(Plasma::IgnoreAspectRatio);
+    //setBackgroundHints(StandardBackground);
+    //setAspectRatioMode(Plasma::IgnoreAspectRatio);
     //setHasConfigurationInterface(true);
-    setAcceptsHoverEvents(true);
+    //setAcceptsHoverEvents(true);
 
     // initialize the widget
     (void)graphicsWidget();
@@ -62,9 +61,9 @@ Applet::~Applet()
 
 void Applet::init()
 {
-    setPopupIcon(m_icon->icon());
+    //setPopupIcon(m_icon->icon());
 
-    configChanged();
+    //configChanged();
 }
 
 QGraphicsWidget* Applet::graphicsWidget()

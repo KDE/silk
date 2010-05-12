@@ -36,7 +36,7 @@ namespace Plasma
 
 namespace SilkWebWelcome
 {
-  class Applet : public Plasma::PopupApplet
+  class Applet : public Plasma::Applet
   {
     Q_OBJECT
 
@@ -47,7 +47,7 @@ namespace SilkWebWelcome
         QGraphicsWidget *graphicsWidget();
 
     private:
-        Plasma::IconWidget *m_icon;
+        //Plasma::IconWidget *m_icon;
         Dialog *m_dialog;
   };
 };
