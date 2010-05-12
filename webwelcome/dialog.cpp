@@ -65,8 +65,8 @@ void Dialog::buildDialog()
     gridLayout->addItem(gmail, 1, 0);
 
     Plasma::Label *twitter = new Plasma::Label(this);
-    gmail->setImage(img_path + "twitter.png");
-    gridLayout->addItem(gmail, 1, 1);
+    twitter->setImage(img_path + "twitter.png");
+    gridLayout->addItem(twitter, 1, 1);
 
     setPreferredSize(400, 400);
     setLayout(gridLayout);
