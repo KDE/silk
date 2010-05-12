@@ -37,7 +37,7 @@
 #include <Plasma/TabBar>
 #include <Plasma/WebView>
 
-
+class StyleSheet;
 //class Applet;
 
 //desktop view
@@ -62,6 +62,8 @@ namespace SilkWebWelcome
 
         Plasma::WebView *m_dashboard;
         QHash<QString, QGraphicsWidget*> m_serviceButtons;
+
+        StyleSheet *m_styleSheet;
   };
 }
 

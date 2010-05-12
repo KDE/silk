@@ -38,6 +38,7 @@
 
 //own
 #include "dialog.h"
+#include "stylesheet.h"
 
 using namespace SilkWebWelcome;
 
@@ -56,8 +57,11 @@ void Dialog::buildDialog()
     kDebug() << " =========================================== ";
     QGraphicsGridLayout *gridLayout = new QGraphicsGridLayout(this);
 
+    m_styleSheet = new StyleSheet(QString(), this);
+
     m_dashboard = new Plasma::WebView(this);
-    QString html = QString("<h1>Welcome to your Desktop</h1>");
+    QString html = QString("<style>%1</style>").arg(m_styleSheet->styleSheet());
+    html.append("<h1>Welcome to your Desktop</h1>");
     html.append("<p>Please take some minutes to set up your online services on this system.");
     html.append("Your passwords will be safely stored in the KWallet secure storage.</p>");
     m_dashboard->setHtml(html);

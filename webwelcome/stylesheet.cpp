@@ -34,22 +34,28 @@
 
 using namespace Plasma;
 
-StyleSheet::StyleSheet(QObject *parent)
+StyleSheet::StyleSheet(QString filename, QObject *parent)
     : QObject(parent)
 {
     //m_cssFile = "/home/sebas/kdesvn/src/playground-plasma/applets/crystal/user.css"; // For debugging quicker
-    m_cssFile = KStandardDirs::locate("data", "plasma-applet-crystal/user.css");
+    if (!filename.isEmpty()) {
+        m_cssFile = KStandardDirs::locate("data", "plasma-applet-crystal/user.css");
 
-    load(m_cssFile);
-    m_cssWatch = new KDirWatch(this);
-    m_cssWatch->addFile(m_cssFile);
-    connect(m_cssWatch,SIGNAL(dirty(QString)),this,SLOT(load(QString)));
-    connect(m_cssWatch,SIGNAL(created(QString)),this,SLOT(load(QString)));
-    connect(m_cssWatch,SIGNAL(deleted(QString)),this,SLOT(load(QString)));
+        load(m_cssFile);
+        m_cssWatch = new KDirWatch(this);
+        m_cssWatch->addFile(m_cssFile);
+        connect(m_cssWatch,SIGNAL(dirty(QString)),this,SLOT(load(QString)));
+        connect(m_cssWatch,SIGNAL(created(QString)),this,SLOT(load(QString)));
+        connect(m_cssWatch,SIGNAL(deleted(QString)),this,SLOT(load(QString)));
 
-    connect(Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), SLOT(update()));
-    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), SLOT(update()));
+        connect(Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), SLOT(update()));
+        connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), SLOT(update()));
+
+    } else {
+        m_styleSheet = processStyleSheet();
+    }
 }
+
 
 StyleSheet::~StyleSheet()
 {

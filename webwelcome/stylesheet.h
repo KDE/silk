@@ -31,7 +31,7 @@ class StyleSheet : public QObject
     Q_OBJECT
 
     public:
-        StyleSheet(QObject *parent);
+        StyleSheet(QString filename = QString(), QObject *parent = 0);
         virtual ~StyleSheet();
 
         void setFileName(const QString &cssFile);
