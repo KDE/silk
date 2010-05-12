@@ -60,12 +60,12 @@ void Dialog::buildDialog()
     m_styleSheet = new StyleSheet(QString(), this);
 
     m_dashboard = new Plasma::WebView(this);
-    QString html = QString("<style>%1</style>").arg(m_styleSheet->styleSheet());
-    html.append("<h1>Welcome to your Desktop</h1>");
-    html.append("<p>Please take some minutes to set up your online services on this system.");
+    QString html = QString("<style>\n%1\n</style>\n").arg(m_styleSheet->styleSheet());
+    html.append("<h1>Welcome to your Desktop</h1>\n");
+    html.append("<p>Please take some minutes to set up your online services on this system.\n");
     html.append("Your passwords will be safely stored in the KWallet secure storage.</p>");
     m_dashboard->setHtml(html);
-
+    kDebug() << html;
 
     gridLayout->addItem(m_dashboard, 0, 0, 1, 3); // top cell, spanning 3 columns
 
@@ -73,12 +73,20 @@ void Dialog::buildDialog()
 
     Plasma::Label *gmail = new Plasma::Label(this);
     gmail->setImage(img_path + "gmail.png");
+    gmail->setPreferredSize(QSize(140, 40));
     gridLayout->addItem(gmail, 1, 0);
 
     Plasma::Label *twitter = new Plasma::Label(this);
     twitter->setImage(img_path + "twitter.png");
+    twitter->setPreferredSize(140, 40);
     gridLayout->addItem(twitter, 1, 1);
 
+    /*
+    Plasma::Label *wikipedia = new Plasma::Label(this);
+    wikipedia->setImage(img_path + "wikipedia.png");
+    wikipedia->setPreferredSize(140, 40);
+    gridLayout->addItem(wikipedia, 1, 2);
+    */
     setPreferredSize(400, 400);
     setLayout(gridLayout);
 }
