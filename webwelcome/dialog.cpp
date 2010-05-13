@@ -81,12 +81,11 @@ void Dialog::buildDialog()
     twitter->setPreferredSize(140, 40);
     gridLayout->addItem(twitter, 1, 1);
 
-    /*
     Plasma::Label *wikipedia = new Plasma::Label(this);
     wikipedia->setImage(img_path + "wikipedia.png");
     wikipedia->setPreferredSize(140, 40);
     gridLayout->addItem(wikipedia, 1, 2);
-    */
+
     setPreferredSize(400, 400);
     setLayout(gridLayout);
 }
