@@ -52,6 +52,14 @@ class Places:
                 return True
         return False
 
+    def __len__(self):
+        """Returns number of places.
+
+        @return: number of places
+        @rtype: int
+        """
+        return len(self._places)
+
     def add(self, place):
         """Add place to object Places.
 
@@ -64,19 +72,58 @@ class Places:
             raise Exception("InvalidPlace")
         self._places.append(place)
 
-    def set_display_name(self, osm_id, name):
+    def set_display_name(self, osm_id, name, fall_back=False):
         """Set display name of place with given id.
+
+        Fall back mode means that search in nominatim failed, so display name
+        is improvised from normal name, place and city. Difference is that
+        we need to check for duplicates in this mode.
 
         @param osm_id: id of place to change display name
         @type osm_id: int
         @param name: new display name of object
         @type name: str
+        @param fall_back: if display name is set from fall back mode
+        @type fall_back: bool
         """
+        if fall_back:
+            if self._check_for_duplicate_name(osm_id, name):
+                raise Exception("DuplicatePlace")
         if osm_id not in self:
             raise Exception("NonexistingId")
-        if len(name) == 0:
-            raise Exception("InvalidDisplayName")
         for place in self._places:
             if place.get_osm_id() == osm_id:
                 place.set_display_name(name)
-                break
+                return
+
+    def search(self, osm_id):
+        """Search for place with given id.
+
+        @param osm_id: id of place we want to search
+        @type osm_id: str
+        @return: place we are searching for
+        @rtype: Places
+        """
+        for place in self._places:
+            if place.get_osm_id() == osm_id:
+                return place
+
+    def _check_for_duplicate_name(self, osm_id, name):
+        """Check for duplicate places in fall back mode.
+
+        Duplicate places are when display names and amenity are equal and
+        id differs.
+
+        @param osm_id: id of place
+        @type osm_id: str
+        @param name: display name of place
+        @type name: str
+        @return: True if given place is duplicate, False otherwise
+        @rtype: bool
+        """
+        for place in self._places:
+            if place.get_display_name() == name and \
+            place.get_osm_id() != osm_id and \
+            place.get_amenity() == self.search(osm_id).get_amenity():
+                return True
+        return False

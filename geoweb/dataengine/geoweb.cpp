@@ -24,7 +24,7 @@ Geoweb::Geoweb(QObject *parent, const QVariantList &args)
 {
     Q_UNUSED(args)
 
-    setMinimumPollingInterval(30 * 60000);
+    setMinimumPollingInterval(0);
 }
 
 void Geoweb::init()

@@ -22,6 +22,10 @@ class Place:
         self._name = ""
         self._amenity = ""
         self._display_name = ""
+        self._distance = ""
+        self._website = ""
+        self._cuisine = ""
+        self._opening_hours = ""
 
     def is_valid(self):
         """Checks if place is valid.
@@ -34,6 +38,20 @@ class Place:
         if len(self._osm_id) != 0 and len(self._lat) != 0 and \
            len(self._lon) != 0 and len(self._name) != 0 and \
            len(self._amenity) != 0:
+            return True
+        return False
+
+    def is_complete(self):
+        """Checks if place is complete.
+
+        Place is complete if is valid and has set display_name. Validity and
+        completness must be divided into 2 methods because place is not
+        complete when is addded to places - when is checked for validity.
+
+        @return True of False
+        @rtype: bool
+        """
+        if self.is_valid() and len(self._display_name) != 0:
             return True
         return False
 
@@ -87,19 +105,139 @@ class Place:
         @param name: display name
         @type name: str
         """
-        if len(name) == 0:
+        if len(name) == 0 or name.isspace():
             raise Exception("InvalidDisplayName")
         self._display_name = name
 
-    def get_id_key(self):
-        """Returns unique key of the place to be shown in datasource.
+    def set_distance(self, dist):
+        """Sets distance of place from current location.
+
+        @param dist: sitance
+        @type dist: str
+        """
+        try:
+            float(dist)
+            self._distance = dist
+        except ValueError:
+            raise Exception("InvalidDistance")
+
+    def set_website(self, url):
+        """Sets website of place.
+
+        @param url: url of website
+        @type url: str
+        """
+        if len(url) != 0:
+            self._website = url
+
+    def set_cuisine(self, cuis):
+        """Sets cuisine for place.
+
+        @param cuis: cuisine
+        @type cuis: str
+        """
+        if len(cuis) != 0:
+            self._cuisine = cuis.title()
+
+    def set_opening_hours(self, hours):
+        """Sets opening hours for place
+
+        @param hours: opening hours
+        @type hours: str
+        """
+        if len(hours) != 0:
+            self._opening_hours = hours
+
+    def get_osm_id_key(self):
+        """Returns key of the place name to be shown in datasource.
 
         Key consists of its amenity and id.
 
         @return: amenity_id
         @rtype: str
         """
-        return "%s_%s" % (self._amenity, self._osm_id)
+        return "osm_%s" % self._osm_id
+
+    def get_type_id(self):
+        """ID of type information
+
+        @return: type id
+        @rtype: str
+        """
+        return "type_%s" % self._osm_id
+
+    def get_latlng_id(self):
+        """ID of latitude and longitude
+
+        @return: latlng id
+        @rtype: str
+        """
+        return "latlng_%s" % self._osm_id
+
+    def get_distance_id(self):
+        """ID of distance
+
+        @return: distance id
+        @rtype: str
+        """
+        return "dist_%s" % self._osm_id
+
+    def get_url_id(self):
+        """ID of url
+
+        @return url id
+        @rtype: str
+        """
+        return "url_%s" % self._osm_id
+
+    def get_website_id(self):
+        """ID of website
+
+        @return: website url id
+        @rtype: str
+        """
+        return "web_%s" % self._osm_id
+
+    def get_cuisine_id(self):
+        """ID of cuisine
+
+        @return cuisine id
+        @rtype: str
+        """
+        return "cuisine_%s" % self._osm_id
+
+    def get_opening_hours_id(self):
+        """ID for opening hours
+
+        @return: opening hours id
+        @rtype: str
+        """
+        return "openingh_%s" % self._osm_id
+
+    def get_type(self):
+        """Returns type of the place
+
+        @return: type of place
+        @rtype: str
+        """
+        return self._amenity
+
+    def get_latlng(self):
+        """Returns latitude and longitude of place as one string
+
+        @return: latitude and longitude
+        @rtype: str
+        """
+        return "%s,%s" % (self._lat, self._lon)
+
+    def get_url(self):
+        """Returns url to the place on open street maps.
+
+        @return: url to place
+        @rtype: str
+        """
+        return "http://www.openstreetmap.org/index.html?" \
+        "mlat=%s&mlon=%s&zoom=18" % (self._lat, self._lon)
 
     def get_osm_id(self):
         """Returns place id.
@@ -142,9 +280,41 @@ class Place:
         return self._amenity
 
     def get_display_name(self):
-        """Returns place display name (complete address) with amenity.
+        """Returns place display name.
 
-        @return: amenity display name
+        @return: display name
         @rtype: str
         """
-        return "%s %s" % (self._amenity.title(), self._display_name)
+        return self._display_name
+
+    def get_distance(self):
+        """Returns distance of place from current location rounded to int.
+
+        @return: distance
+        @rtype: str
+        """
+        return "%i" % round(self._distance)
+
+    def get_website(self):
+        """Returns place website
+
+        @return: url of website
+        @rtype: str
+        """
+        return self._website
+
+    def get_cuisine(self):
+        """Returns cuisine
+
+        @return: cuisine
+        @rtype: str
+        """
+        return self._cuisine
+
+    def get_opening_hours(self):
+        """Returns opening hours
+
+        @return: opening hours
+        @rtype: str
+        """
+        return self._opening_hours

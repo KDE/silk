@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env kross
 # -*- coding: utf-8 -*-
 
 """Example plugin.
@@ -47,8 +47,13 @@ def request():
     QString getCountryCode();
     QString getCountry();
     QString getCity();
+    QString getAddress(); // this method is usefull only when user has chosen
+                          // manual configuration of location, otherwise its
+                          // return is empty
     QString getLongitude();
     QString getLatitude();
+    double getRange();    // range in KM around location for which user wants
+                          // information
 
     Provider methods:
     void setProperty(QString source, QString key, QString value);

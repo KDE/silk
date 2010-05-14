@@ -22,21 +22,26 @@
 
 #include <Plasma/DataEngine>
 
+#include "settings.h"
+
 /**
  * This class provides information about geolocation to geoweb dataengine
  * mainly using geolocation dataengine.
  */
+
 class GeoLoc : public QObject
 {
     Q_OBJECT
 
     public:
+
         /**
          * Contructor, connects to geolocation dataengine
          *
          * @param parent    parent
          */
         GeoLoc(QObject *parent);
+
         /**
          * Disconnects geolocation engine
          */
@@ -52,8 +57,8 @@ class GeoLoc : public QObject
          */
         bool isValid();
 
-
     public Q_SLOTS:
+
         /**
          * Slot called when geolocation dataengine has new data
          *
@@ -69,39 +74,72 @@ class GeoLoc : public QObject
          * @param data  sets to actual location data
          */
         void getLocation(Plasma::DataEngine::Data &data);
+
         /**
-         * Returns country code, e.g. CZ
+         * @return  country code, e.g. CZ
          */
         QString getCountryCode();
+
         /**
-         * Return country
+         * @return  country
          */
         QString getCountry();
+
         /**
-         * Returns city
+         * @return  city
          */
         QString getCity();
+
         /**
-         * Returns longitude
+         * @return  address (empty with geolocation engine)
+         */
+        QString getAddress();
+
+        /**
+         * @return  longitude
          */
         QString getLongitude();
+
         /**
-         * Returns latitude
+         * @return  latitude
          */
         QString getLatitude();
 
+        /**
+         * @return  user set range in KM
+         */
+        double getRange();
+
+        /**
+         * @return  4 coordinates as box around current location counted with range
+                    order: left, bottom, right, top
+                    QString, doubles separated with ','
+         */
+        QString getBox();
+
+        /**
+         * Reloads location and configuration
+         */
+        void reload();
 
 Q_SIGNALS:
+
         /**
          * Signal emitted when location has been updated.
          */
         void locationUpdated();
 
     private:
-        // geolocation engine
-        Plasma::DataEngine *geolocationEngine;
         // location data
         Plasma::DataEngine::Data location;
+        Plasma::DataEngine::Data geolocationData;
+        QString box;
+
+        void clearLocation();
+        void countBox();
+
+    private slots:
+        void updateData(Settings::EnumSource::type src);
 };
 
 #endif // LOCATION_H

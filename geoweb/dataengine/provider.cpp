@@ -36,6 +36,12 @@ Provider::Provider(QObject *parent, GeoLoc *loc)
     states["na"] = "n/a";
 }
 
+Provider::~Provider()
+{
+    foreach(Kross::Action *plg, pluginsCollection->actions())
+        plg->callFunction("destroy");
+}
+
 void Provider::loadSources()
 {
     pluginsDir = QDir(KGlobal::dirs()->findResource("data", PLUGINS_PATH));
@@ -81,7 +87,7 @@ void Provider::setProperty(QString source, QString name, QString value)
 
 void Provider::done(const QString source)
 {
-    if (m_sourceData[source]["status"] == states["loading"])
+    if (!m_sourceData[source].contains("status") || m_sourceData[source]["status"] == states["loading"])
         m_sourceData[source]["status"] = states["ok"];
 
     emit dataUpdated(source, m_sourceData[source]);
@@ -101,6 +107,7 @@ void Provider::requestPluginSlot(const QString &source)
         return;
     }
 
+    m_sourceData[source].clear();
     m_sourceData[source]["status"] = states["loading"];
     done(source);
 
@@ -135,6 +142,9 @@ void Provider::updatePluginSlot(const QString &source)
         requestPluginSlot(source);
         return;
     }
+
+    m_sourceData[source].clear();
+    m_sourceData[source]["status"] = states["loading"];
 
     plugin->callFunction("request");
 }
