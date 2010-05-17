@@ -19,6 +19,7 @@ kde4_add_plugin(plasma_applet_geoweb-openstreetmap-map ${geoweb-openstreetmap_SR
 target_link_libraries(plasma_applet_geoweb-openstreetmap-map
                       ${KDE4_PLASMA_LIBS}
                       ${KDE4_KDEUI_LIBS}
+                      ${QT_QTNETWORK_LIBRARY}
                       ${QT_QTWEBKIT_LIBRARY})
 
 install(TARGETS plasma_applet_geoweb-openstreetmap-map

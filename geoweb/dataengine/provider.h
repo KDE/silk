@@ -101,7 +101,8 @@ Q_SIGNALS:
          * @param source    name of plugin
          * @param data      new data
          */
-        void dataUpdated(const QString &source, const Plasma::DataEngine::Data &data);
+        //void dataUpdated(const QString &source, const Plasma::DataEngine::Data &data);
+        void dataUpdated(const QString &source, const QHash<QString, QVariant> &data);
 
     private:
         // path to plugins
@@ -116,9 +117,12 @@ Q_SIGNALS:
         sourceData m_sourceData;
         Kross::Action *plugin;
         Kross::ActionCollection *pluginsCollection;
+        // remember if plugins is processing right now
+        QHash<QString, bool> pluginsWorking;
 
         // loads sources accroding to directories in PLUGINS_PATH
         void loadSources();
+        void requestPlugin(Kross::Action *plugin);
 
     private Q_SLOTS:
         // called by plugins to set data

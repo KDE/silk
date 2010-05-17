@@ -24,6 +24,9 @@ class NetworkInterface():
         @param url: url
         @type url: str
         """
-        fetch = urllib2.urlopen(url)
-        data = fetch.read()
-        self._parent.receive_data(data)
+        try:
+            fetch = urllib2.urlopen(url, None, 30)
+            data = fetch.read()
+            self._parent.receive_data(data)
+        except urllib2.URLError:
+            raise Exception("Server unreachable.")

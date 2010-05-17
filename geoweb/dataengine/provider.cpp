@@ -17,6 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <QtConcurrentRun>
+
 #include <kstandarddirs.h>
 #include <kross/core/manager.h>
 
@@ -82,7 +84,19 @@ QStringList Provider::getSources()
 
 void Provider::setProperty(QString source, QString name, QString value)
 {
-    m_sourceData[source][name] = value;
+    if (name == "error")
+    {
+        m_sourceData[source].clear();
+        m_sourceData[source]["status"] = "error";
+        m_sourceData[source]["error"] = value;
+        done(source);
+    }
+    else
+    {
+        m_sourceData[source]["status"] = states["loading"];
+        m_sourceData[source]["error"].clear();
+        m_sourceData[source][name] = value;
+    }
 }
 
 void Provider::done(const QString source)
@@ -90,7 +104,9 @@ void Provider::done(const QString source)
     if (!m_sourceData[source].contains("status") || m_sourceData[source]["status"] == states["loading"])
         m_sourceData[source]["status"] = states["ok"];
 
-    emit dataUpdated(source, m_sourceData[source]);
+    pluginsWorking[source] = false;
+
+    emit dataUpdated(source, (QHash<QString, QVariant>)m_sourceData[source]);
 }
 
 void Provider::requestPluginSlot(const QString &source)
@@ -122,7 +138,10 @@ void Provider::requestPluginSlot(const QString &source)
     plugin->callFunction("init");
 
     if (location->isValid())
-        plugin->callFunction("request");
+    {
+        pluginsWorking[source] = true;
+        QtConcurrent::run(this, &Provider::requestPlugin, plugin);
+    }
 }
 
 void Provider::updatePluginSlot(const QString &source)
@@ -143,14 +162,34 @@ void Provider::updatePluginSlot(const QString &source)
         return;
     }
 
+    if (pluginsWorking.contains(source) && pluginsWorking[source])
+        return;
+
     m_sourceData[source].clear();
     m_sourceData[source]["status"] = states["loading"];
+    done(source);
 
-    plugin->callFunction("request");
+    pluginsWorking[source] = true;
+    QtConcurrent::run(this, &Provider::requestPlugin, plugin);
 }
 
 void Provider::updateAllPlugins()
 {
     foreach(Kross::Action *plg, pluginsCollection->actions())
-        plg->callFunction("request");
+    {
+        if (pluginsWorking.contains(plg->name()) && pluginsWorking[plg->name()])
+            continue;
+
+        m_sourceData[plg->name()].clear();
+        m_sourceData[plg->name()]["status"] = states["loading"];
+        done(plg->name());
+
+        pluginsWorking[plg->name()] = true;
+        QtConcurrent::run(this, &Provider::requestPlugin, plg);
+    }
+}
+
+void Provider::requestPlugin(Kross::Action *plugin)
+{
+    plugin->callFunction("request");
 }

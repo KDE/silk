@@ -27,6 +27,7 @@
 GeoLoc::GeoLoc(QObject *parent)
     : QObject(parent)
 {
+    range = 0.0;
     clearLocation();
     reload();
 }
@@ -131,6 +132,12 @@ void GeoLoc::updateData(Settings::EnumSource::type src)
         }
     }
 
+    if (range != Settings::range())
+    {
+        range = Settings::range();
+        updated = true;
+    }
+
     location["status"] = "ok";
 
     // if location changed, emit signal
@@ -176,11 +183,11 @@ void GeoLoc::clearLocation()
 
 void GeoLoc::countBox()
 {
-    double pi = 3.14159265358979323846;
-    double rad = pi / 180.0;    // this is not one radian, it's used for conversion from degrees to radians
+    const double pi = 3.14159265358979323846;
+    const double rad = pi / 180.0;    // this is not one radian, it's used for conversion from degrees to radians
+    //const double milesPerNauticalMile = 57.875 / 50.292;
+    const double kilometresPerNauticalMile = 1.852;
 
-    //double milesPerNauticalMile = 57.875 / 50.292;
-    double kilometresPerNauticalMile = 1.852;
     double unitsPerNauticalMile = kilometresPerNauticalMile;
 
     double lat_range = Settings::range() / (unitsPerNauticalMile * 60);
@@ -199,8 +206,8 @@ bool GeoLoc::isValid()
 {
     bool valid = false;
 
-    if (location["longitude"].toFloat() > 0.0 && location["latitude"].toFloat() > 0.0
-            && location["country"] != "" && location["city"] != "")
+    if (location["longitude"].toString() != "" && location["latitude"].toString() != ""
+            && location["country"].toString() != "" && location["city"].toString() != "")
         valid = true;
 
     return valid;

@@ -58,15 +58,15 @@ def distance(lat1, long1, lat2, long2, units="meters"):
 
     # Remember to multiply arc by the radius of the earth
     # in your favorite set of units to get length.
-    # TODO count radius according to current latitude
+    # Radius as is defined by WGS 84
     # Miles
     if units == "miles":
-        radius_in_units = 3959.0
+        radius_in_units = 3963.19059
     # Kilemetres
     elif units == "km":
-        radius_in_units = 6371.0
+        radius_in_units = 6378.137
     # Metres
     else:
-        radius_in_units = 6371000.0
+        radius_in_units = 6378137.0
 
     return arc * radius_in_units

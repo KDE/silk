@@ -74,6 +74,7 @@ class OSM : public Plasma::Applet
         Plasma::TreeView *tree;
         // data from dataengine
         Plasma::DataEngine::Data m_data;
+        bool error;
 
         void connectEngine();
         int parseKey(const QString &key, QString &type, QString &osm_id);

@@ -65,6 +65,7 @@ class OSMMap : public Plasma::Applet
         Plasma::DataEngine::Data m_data;
         // map view
         QWebView *m_view;
+        bool error;
 
         void connectEngine();
 

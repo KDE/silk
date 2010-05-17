@@ -134,6 +134,7 @@ Q_SIGNALS:
         Plasma::DataEngine::Data location;
         Plasma::DataEngine::Data geolocationData;
         QString box;
+        double range;
 
         void clearLocation();
         void countBox();

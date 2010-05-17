@@ -35,11 +35,13 @@ OSM::OSM(QObject *parent, const QVariantList &args)
     // this will get us the standard applet background, for free!
     setBackgroundHints(DefaultBackground);
     resize(400, 250);
+
+    error = false;
 }
 
 OSM::~OSM()
 {
-    if (!hasFailedToLaunch())
+    if (Plasma::DataEngineManager::self()->engine("geoweb")->isValid())
         Plasma::DataEngineManager::self()->unloadEngine("geoweb");
 }
 
@@ -71,16 +73,22 @@ void OSM::connectEngine()
         setFailedToLaunch(true, I18N_NOOP("Problem loading geoweb dataengine!"));
 
     geowebEngine->connectSource("openstreetmap", this);
-    geowebEngine->connectSource("location", this, 15000);
+    geowebEngine->connectSource("location", this, 5000);
 }
 
 void OSM::dataUpdated(const QString &source, const Plasma::DataEngine::Data &data)
 {
     if (source != "openstreetmap")
+    {
+        if (error)
+        {
+            m_data = Plasma::DataEngineManager::self()->engine("geoweb")->query("openstreetmap");
+            emit updateData();
+        }
         return;
+    }
 
     m_data = data;
-    m_data.remove("status");
 
     emit updateData();
 }
@@ -104,6 +112,32 @@ void OSM::updateDataSlot()
     // reset model
     model->removeRows(0, model->rowCount());
 
+    if (m_data["status"] == "error")
+    {
+        item = new QStandardItem(m_data["error"].toString());
+        item->setFlags(Qt::ItemIsEnabled);
+        parentItem->appendRow(item);
+        error = true;
+        return;
+    }
+    else if (m_data["status"] == "loading")
+    {
+        item = new QStandardItem("Loading..");
+        item->setFlags(Qt::ItemIsEnabled);
+        parentItem->appendRow(item);
+        error = true;
+        return;
+    }
+    else if (m_data["status"] == "n/a")
+    {
+        item = new QStandardItem("Service unavailable.");
+        item->setFlags(Qt::ItemIsEnabled);
+        parentItem->appendRow(item);
+        error = true;
+        return;
+    }
+
+    error = false;
     Plasma::DataEngine::Data::const_iterator i = m_data.constBegin();
     while (i != m_data.constEnd())
     {

@@ -19,6 +19,7 @@
 
 #include <QWebPage>
 #include <QWebFrame>
+#include <QTcpSocket>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsLinearLayout>
 
@@ -37,6 +38,7 @@ OSMMap::OSMMap(QObject *parent, const QVariantList &args)
     resize(350, 400);
 
     m_data.clear();
+    error = false;
 }
 
 OSMMap::~OSMMap()
@@ -87,36 +89,49 @@ void OSMMap::dataUpdated(const QString &source, const Plasma::DataEngine::Data &
         updated = true;
     }
 
-    if (updated)
+    if (updated || error)
         emit updateData();
 }
 
 void OSMMap::updateDataSlot()
 {
-    QString page = QString("<html><head>"
-        "<style type=\"text/css\">"
-          "html,body,#basicMap{"
-              "height:100%;"
-              "margin:0;"
-              "width:100%;}"
-        "</style></head>"
-        "<body onload=\"init();\">"
-          "<div id=\"basicMap\"></div>"
-        "</body>"
-        "<script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script>"
-        "<script>"
-          "function init() {"
-            "map = new OpenLayers.Map(\"basicMap\");"
-            "var mapnik = new OpenLayers.Layer.OSM();"
-            "map.addLayer(mapnik);"
-            "map.setCenter(new OpenLayers.LonLat(%1,%2)"
-              ".transform("
-                "new OpenLayers.Projection(\"EPSG:4326\"),"
-                "new OpenLayers.Projection(\"EPSG:900913\")"
-              "), 17"
-            ");"
-          "}"
-        "</script></html>").arg(m_data["lon"].toString(), m_data["lat"].toString());
+    QString page;
+    QTcpSocket socket;
+    socket.connectToHost("www.openlayers.org", 80);
+    if (!socket.waitForConnected(2000))
+        error = true;
+    else
+        error = false;
+
+    if (!error)
+    {
+        page = QString("<html><head>"
+            "<style type=\"text/css\">"
+              "html,body,#basicMap{"
+                  "height:100%;"
+                  "margin:0;"
+                  "width:100%;}"
+            "</style></head>"
+            "<body onload=\"init();\">"
+              "<div id=\"basicMap\"></div>"
+            "</body>"
+            "<script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script>"
+            "<script>"
+              "function init() {"
+                "map = new OpenLayers.Map(\"basicMap\");"
+                "var mapnik = new OpenLayers.Layer.OSM();"
+                "map.addLayer(mapnik);"
+                "map.setCenter(new OpenLayers.LonLat(%1,%2)"
+                  ".transform("
+                    "new OpenLayers.Projection(\"EPSG:4326\"),"
+                    "new OpenLayers.Projection(\"EPSG:900913\")"
+                  "), 17"
+                ");"
+              "}"
+            "</script></html>").arg(m_data["lon"].toString(), m_data["lat"].toString());
+    }
+    else
+        page = "<h2 style=\"text-align:center;width:100%\">Service unavailable.</h2>";
 
     m_view->setHtml(page);
 }

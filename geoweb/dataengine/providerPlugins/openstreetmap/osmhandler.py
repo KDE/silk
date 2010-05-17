@@ -132,3 +132,7 @@ class OSMHandler(QXmlDefaultHandler):
         @rtype: Places
         """
         return self._places
+
+    def clear_places(self):
+        """Resets places."""
+        self._places = Places()

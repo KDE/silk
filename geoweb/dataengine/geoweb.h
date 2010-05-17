@@ -71,7 +71,7 @@ class Geoweb : public Plasma::DataEngine
          * @param source    name of source
          * @param data      data to be set
          */
-        void setProviderData(const QString &source, const Plasma::DataEngine::Data &data);
+        void setProviderData(const QString &source, const QHash<QString, QVariant> &data);
 
 Q_SIGNALS:
 

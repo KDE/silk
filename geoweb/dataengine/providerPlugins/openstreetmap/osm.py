@@ -42,7 +42,7 @@ class OSM():
 
         self._plugin_name = "openstreetmap"
         self._has_list = False
-        self._places = ""
+        self._places = None
         self._net_if = NetworkInterface(self)
 
         self._osm_hand = OSMHandler(self.AMENITY_SUSTENANCE,
@@ -58,13 +58,20 @@ class OSM():
 
     def start(self):
         """Starts the downloading process."""
+        #url = "http://xapi.openstreetmap.org" \
+        #url = "http://osm.bearstech.com" \
         url = "http://osmxapi.hypercube.telascience.org" \
         "/api/0.6/node[amenity=%s][bbox=%s]" % \
         (self._amenity, self._location.getBox())
 
         self._has_list = False
         self._places = None
-        self._net_if.download(url)
+        self._osm_hand.clear_places()
+        
+        try:
+            self._net_if.download(url)
+        except Exception as inst:
+            self.send_error(inst)
 
     def receive_data(self, data):
         """Method called from network interface with new data.
@@ -89,14 +96,18 @@ class OSM():
         @param data: downloaded data with main list
         @type data: str
         """
-        source = QXmlInputSource()
-        source.setData(data)
-        self._reader.parse(source)
-        self._has_list = True
-        self._places = self._osm_hand.get_places()
+        try:
+            source = QXmlInputSource()
+            source.setData(data)
+            self._reader.parse(source)
+            self._has_list = True
+            self._places = self._osm_hand.get_places()
+        except Exception:
+            self.send_error("Invalid Response.")
+            return
 
         if len(self._places) == 0:
-            print "No place found."
+            self.send_error("No place found.")
             return
 
         for place in self._places:
@@ -128,6 +139,10 @@ class OSM():
                 place.set_distance(distance(self._location.getLatitude(),
                 self._location.getLongitude(), place.get_lat(),
                 place.get_lon()))
+                # If place is far away
+                if (float(place.get_distance()) > \
+                (self._location.getRange() * 1000)):
+                    return
                 # Send distance
                 self._provider.setProperty(self._plugin_name,
                 place.get_distance_id(), place.get_distance())
@@ -161,3 +176,12 @@ class OSM():
                 place.get_opening_hours_id(), place.get_opening_hours())
 
             self._provider.done(self._plugin_name)
+
+    def send_error(self, err):
+        """Send information about error to provider.
+
+        @param err: error
+        @type err: str
+        """
+        print err
+        self._provider.setProperty(self._plugin_name, "error", str(err))

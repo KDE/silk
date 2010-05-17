@@ -250,10 +250,28 @@ void Location::httpFinished()
         {
             setConfigLocation(handler.getData());
         }
+        else
+            invalidInput();
     }
 
     reply->deleteLater();
     reply = 0;
+}
+
+void Location::invalidInput()
+{
+    if (locationConfUi.PlaceRadioButton->isChecked())
+    {
+        locationConfUi.latitudeLineEdit->setText("");
+        locationConfUi.longitudeLineEdit->setText("");
+    }
+    else
+    {
+        locationConfUi.countryCodeLineEdit->setText("");
+        locationConfUi.countryLineEdit->setText("");
+        locationConfUi.cityLineEdit->setText("");
+        locationConfUi.addressLineEdit->setText("");
+    }
 }
 
 #include "plasma-geoweb-location.moc"

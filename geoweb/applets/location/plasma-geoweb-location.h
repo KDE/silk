@@ -90,6 +90,7 @@ class Location : public Plasma::Applet
         void disableAddress();          // disable address line edit fields on configuration widget
         void disableCoordinates();      // disable coordinates line edit fields on configuration widget
         void setConfigLocation(Plasma::DataEngine::Data loc);       // sets location line edit fields to given location
+        void invalidInput();            // clear other fields when invalid options were inserted
 
     private slots:
         void checkLocation();       // check user inserted location against google geocode
