@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=GMail
-Comment=A GMail Browser
+Comment=Google's Email Service
+Description=Google's Email Service
 Exec=selkie gmail
 Icon=mail-message
 Type=Application
