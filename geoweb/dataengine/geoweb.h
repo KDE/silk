@@ -30,11 +30,13 @@
  * Main geoweb dataengine class. Sends request to Provider object.
  * Getting location from Location object.
  */
+
 class Geoweb : public Plasma::DataEngine
 {
     Q_OBJECT
 
     public:
+
         /**
          * Constructor.
          *
@@ -48,6 +50,7 @@ class Geoweb : public Plasma::DataEngine
          * Creates Location and Provider objects, connects signals and slots.
          */
         void init();
+
         /**
          * Returns list of available sources (plugins).
          *
@@ -56,29 +59,34 @@ class Geoweb : public Plasma::DataEngine
         QStringList sources() const;
 
     public Q_SLOTS:
+
         /**
          * Slot called when new location from Location object is available
          */
         void gotNewLocation();
+
         /**
          * Slot called by Provider object to set data for dataengine
          *
          * @param source    name of source
          * @param data      data to be set
          */
-        void setProviderData(const QString &source, const Plasma::DataEngine::Data &data);
+        void setProviderData(const QString &source, const QHash<QString, QVariant> &data);
 
 Q_SIGNALS:
+
         /**
          * Signal emmited for Provider object when new location is available.
          */
         void updatedLocation();
+
         /**
          * Emitted when sourceRequestEvent is called.
          *
          * @param plugin    name of requested source
          */
         void requestProvider(const QString &plugin);
+
         /**
          * Emitted when updateSourceEvent is called.
          *

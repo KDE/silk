@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Geoweb - Hello
+Comment=Applet for Geoweb source - Hello
+Type=Service
+ServiceTypes=Plasma/Applet
+
+X-KDE-Library=plasma_applet_geoweb-hello
+X-KDE-PluginInfo-Author=Peter Schiffer
+X-KDE-PluginInfo-Email=peter.schiffer@eyeos.cz
+X-KDE-PluginInfo-Name=geoweb-hello
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://techbase.kde.org/Projects/Silk
+X-KDE-PluginInfo-Category=Mapping
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true 

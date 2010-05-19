@@ -24,7 +24,7 @@ Geoweb::Geoweb(QObject *parent, const QVariantList &args)
 {
     Q_UNUSED(args)
 
-    setMinimumPollingInterval(30 * 60000);
+    setMinimumPollingInterval(0);
 }
 
 void Geoweb::init()
@@ -36,8 +36,8 @@ void Geoweb::init()
     connect(this, SIGNAL(requestProvider(QString)), providers, SLOT(requestPluginSlot(QString)));
     connect(this, SIGNAL(updateProvider(QString)), providers, SLOT(updatePluginSlot(QString)));
     connect(location, SIGNAL(locationUpdated()), this, SLOT(gotNewLocation()));
-    connect(providers, SIGNAL(dataUpdated(const QString &, const Plasma::DataEngine::Data &)), this,
-            SLOT(setProviderData(const QString &, const Plasma::DataEngine::Data &)));
+    connect(providers, SIGNAL(dataUpdated(const QString &, const QHash<QString, QVariant> &)), this,
+            SLOT(setProviderData(const QString &, const QHash<QString, QVariant> &)));
 }
 
 bool Geoweb::sourceRequestEvent(const QString &source)
@@ -84,9 +84,9 @@ void Geoweb::gotNewLocation()
     emit updatedLocation();
 }
 
-void Geoweb::setProviderData(const QString &source, const Plasma::DataEngine::Data &data)
+void Geoweb::setProviderData(const QString &source, const QHash<QString, QVariant> &data)
 {
-    setData(source, data);
+    setData(source, (Plasma::DataEngine::Data)data);
 }
 
 K_EXPORT_PLASMA_DATAENGINE(geoweb, Geoweb)

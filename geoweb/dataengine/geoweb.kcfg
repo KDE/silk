@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name="geowebrc"/>
+    <group name="location">
+        <entry name="Source" type="Enum">
+            <label>Source of the location.</label>
+            <choices>
+                <choice name="GeolocationDataengine"/>
+                <choice name="Manual"/>
+            </choices>
+            <default>GeolocationDataengine</default>
+        </entry>
+        <entry name="ManualSelection" type="Enum">
+            <label>Manual selection by coordinates or place.</label>
+            <choices>
+                <choice name="Coordinates"/>
+                <choice name="Place"/>
+            </choices>
+            <default>Place</default>
+        </entry>
+        <entry name="Latitude" type="String">
+            <label>Latitude of the location.</label>
+            <default></default>
+        </entry>
+        <entry name="Longitude" type="String">
+            <label>Longitude of the location.</label>
+            <default></default>
+        </entry>
+        <entry name="CountryCode" type="String">
+            <label>Country code.</label>
+            <default></default>
+        </entry>
+        <entry name="Country" type="String">
+            <label>Country.</label>
+            <default></default>
+        </entry>
+        <entry name="City" type="String">
+            <label>City.</label>
+            <default></default>
+        </entry>
+        <entry name="Address" type="String">
+            <label>Address.</label>
+            <default></default>
+        </entry>
+        <entry name="Range" type="Double">
+            <label>Range of relevant area in KM.</label>
+            <default>1.0</default>
+            <min>0.1</min>
+            <max>5.0</max>
+        </entry>
+    </group>
+</kcfg>

@@ -35,11 +35,13 @@
  * Class communicating with external plugins. For connecting to plugins is used
  * KDE Kross, so plugins can be written in python, ruby, js...
  */
+
 class Provider : public QObject
 {
     Q_OBJECT
 
     public:
+
         /**
          * QHash holding data from all plugins.
          */
@@ -59,6 +61,11 @@ class Provider : public QObject
         Provider(QObject *parent, GeoLoc *loc);
 
         /**
+         * Destructor.
+         */
+        ~Provider();
+
+        /**
          * Returns list of available plugins.
          *
          * @return QStringList of available plugins
@@ -66,16 +73,19 @@ class Provider : public QObject
         QStringList getSources();
 
     public Q_SLOTS:
+
         /**
          * Called when all plugins have to be updated.
          */
         void updateAllPlugins();
+
         /**
          * Called when requesting plugin.
          *
          * @param source    name of requested plugin
          */
         void requestPluginSlot(const QString &source);
+
         /**
          * Called when plugin should ne updated.
          *
@@ -84,13 +94,15 @@ class Provider : public QObject
         void updatePluginSlot(const QString &source);
 
 Q_SIGNALS:
+
         /**
          * Emitted when some plugin have new data.
          *
          * @param source    name of plugin
          * @param data      new data
          */
-        void dataUpdated(const QString &source, const Plasma::DataEngine::Data &data);
+        //void dataUpdated(const QString &source, const Plasma::DataEngine::Data &data);
+        void dataUpdated(const QString &source, const QHash<QString, QVariant> &data);
 
     private:
         // path to plugins
@@ -105,9 +117,12 @@ Q_SIGNALS:
         sourceData m_sourceData;
         Kross::Action *plugin;
         Kross::ActionCollection *pluginsCollection;
+        // remember if plugins is processing right now
+        QHash<QString, bool> pluginsWorking;
 
         // loads sources accroding to directories in PLUGINS_PATH
         void loadSources();
+        void requestPlugin(Kross::Action *plugin);
 
     private Q_SLOTS:
         // called by plugins to set data

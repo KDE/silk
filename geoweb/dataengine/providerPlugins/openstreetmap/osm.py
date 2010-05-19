@@ -1,67 +1,187 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""Module containing class implementing ContentHandler for OSM data."""
+"""Module containing main class for open street map plugin."""
 
-from xml.sax.handler import ContentHandler
+from PyQt4.QtXml import QXmlSimpleReader, QXmlInputSource
 
-from place import Place
-from places import Places
+from osmhandler import OSMHandler
+from distance import distance
+from networkinterface_urllib2 import NetworkInterface
+#from networkinterface_asyncore import NetworkInterface
+#from networkinterface_qt import NetworkInterface
 
 
-class OSM(ContentHandler):
+class OSM():
 
-    """Class processing XML data from OSM service and holding places.
+    """Main class for open street map."""
 
-    Class is procesing data from xapi.openstreetmap.org and from
-    nominatim.openstreetmap.org.
-    """
+    # Amenity set for food and drink
+    AMENITY_SUSTENANCE = [
+        "restaurant",
+        "food_court",
+        "fast_food",
+        "drinking_water",
+        "bbq",
+        "pub",
+        "bar",
+        "cafe",
+        "biergarten",
+    ]
 
-    def __init__(self, types):
-        """Initialize Places.
+    def __init__(self, provider, location):
+        """Constructor.
 
-        @param types: list of allowed types of places
-        @type types: list
+        @param provider: provider from dataengine, for sending data
+        @type provider: Provider
+        @param location: location from dataengine
+        @type: location: Location
         """
-        ContentHandler.__init__(self)
-        self._place = ""
-        self._places = Places()
-        self._valid_types = types
+        self._provider = provider
+        self._location = location
 
-    def startElement(self, name, attrs):
-        """Called on every start element of XML file.
+        self._plugin_name = "openstreetmap"
+        self._has_list = False
+        self._places = None
+        self._net_if = NetworkInterface(self)
 
-        On elements from xapi creates Place object and set attributes.
-        On elements from nominatim sets display_name(address) and if place
-        is valid, add it to the Places.
+        self._osm_hand = OSMHandler(self.AMENITY_SUSTENANCE,
+        self._location, self)
+        self._reader = QXmlSimpleReader()
+        self._reader.setContentHandler(self._osm_hand)
+        self._reader.setErrorHandler(self._osm_hand)
+
+        self._amenity = ""
+        for i in self.AMENITY_SUSTENANCE:
+            self._amenity += "%s|" % i
+        self._amenity = self._amenity.rstrip("|")
+
+    def start(self):
+        """Starts the downloading process."""
+        #url = "http://xapi.openstreetmap.org" \
+        #url = "http://osm.bearstech.com" \
+        url = "http://osmxapi.hypercube.telascience.org" \
+        "/api/0.6/node[amenity=%s][bbox=%s]" % \
+        (self._amenity, self._location.getBox())
+
+        self._has_list = False
+        self._places = None
+        self._osm_hand.clear_places()
+        
+        try:
+            self._net_if.download(url)
+        except Exception as inst:
+            self.send_error(inst)
+
+    def receive_data(self, data):
+        """Method called from network interface with new data.
+
+        @param data: downloaded data
+        @type data: str
         """
-        # Node from xapi - create Place
-        if name == "node":
-            self._place = Place(attrs.getValue("id"))
-            self._place.set_lat(attrs.getValue("lat"))
-            self._place.set_lon(attrs.getValue("lon"))
-        # Tag from xapi - assign name and type
-        elif name == "tag":
-            if attrs.getValue("k") == "name":
-                self._place.set_name(attrs.getValue("v"))
-            elif attrs.getValue("k") == "amenity":
-                if attrs.getValue("v") in self._valid_types:
-                    self._place.set_amenity(attrs.getValue("v"))
-        # Place from nominatim - set display_name
-        elif name == "place":
-            self._places.set_display_name(attrs.getValue("osm_id"),
-                    attrs.getValue("display_name"))
+        if not self._has_list:
+            self._process_main_list(data)
+            return
+        source = QXmlInputSource()
+        source.setData(data)
 
-    def endElement(self, name):
-        """Called on every end element of XML file."""
-        # When we are at the end of node from xapi add place to places.
-        if (name == "node") and self._place.is_valid():
-            self._places.add(self._place)
+        try:
+            self._reader.parse(source)
+        except Exception:
+            pass
 
-    def get_places(self):
-        """Returns places.
+    def _process_main_list(self, data):
+        """Process main list from xapi.openstreetmap.org
 
-        @return: places
-        @rtype: Places
+        @param data: downloaded data with main list
+        @type data: str
         """
-        return self._places
+        try:
+            source = QXmlInputSource()
+            source.setData(data)
+            self._reader.parse(source)
+            self._has_list = True
+            self._places = self._osm_hand.get_places()
+        except Exception:
+            self.send_error("Invalid Response.")
+            return
+
+        if len(self._places) == 0:
+            self.send_error("No place found.")
+            return
+
+        for place in self._places:
+            try:
+                url = "http://nominatim.openstreetmap.org" \
+                "/reverse?format=xml&osm_type=N&osm_id=%s" % place.get_osm_id()
+                self._net_if.download(url)
+                print "%s, %s" % (place.get_name(), place.get_amenity())
+            except Exception:
+                continue
+
+    def send_place(self, osm_id):
+        """Method for sending data to dataengine.
+
+        Called from OSMHandler when place is ready for sending. Before sending
+        counts distance from current location to place.
+
+        @param osm_id: id of place
+        @type osm_id: str
+        """
+        # Send place types in categories
+        self._provider.setProperty(self._plugin_name,
+            "food_and_drink", self._amenity)
+
+        place = self._places.search(osm_id)
+        if place.is_complete():
+            # Count distance
+            try:
+                place.set_distance(distance(self._location.getLatitude(),
+                self._location.getLongitude(), place.get_lat(),
+                place.get_lon()))
+                # If place is far away
+                if (float(place.get_distance()) > \
+                (self._location.getRange() * 1000)):
+                    return
+                # Send distance
+                self._provider.setProperty(self._plugin_name,
+                place.get_distance_id(), place.get_distance())
+            except Exception:
+                pass
+
+            # Send rest of data
+            # Main name
+            self._provider.setProperty(self._plugin_name,
+            place.get_osm_id_key(), place.get_display_name())
+            # Type
+            self._provider.setProperty(self._plugin_name,
+            place.get_type_id(), place.get_type())
+            # Latitude and Longitude
+            self._provider.setProperty(self._plugin_name,
+            place.get_latlng_id(), place.get_latlng())
+            # Url
+            self._provider.setProperty(self._plugin_name,
+            place.get_url_id(), place.get_url())
+            # Website
+            if place.get_website():
+                self._provider.setProperty(self._plugin_name,
+                place.get_website_id(), place.get_website())
+            # Cuisine
+            if place.get_cuisine():
+                self._provider.setProperty(self._plugin_name,
+                place.get_cuisine_id(), place.get_cuisine())
+            # Opening hours
+            if place.get_opening_hours():
+                self._provider.setProperty(self._plugin_name,
+                place.get_opening_hours_id(), place.get_opening_hours())
+
+            self._provider.done(self._plugin_name)
+
+    def send_error(self, err):
+        """Send information about error to provider.
+
+        @param err: error
+        @type err: str
+        """
+        print err
+        self._provider.setProperty(self._plugin_name, "error", str(err))
