@@ -23,6 +23,7 @@
 
 //Qt
 #include <QClipboard>
+#include <QGraphicsLinearLayout>
 
 //KDE
 #include <KIcon>
@@ -69,7 +70,10 @@ void Applet::init()
 QGraphicsWidget* Applet::graphicsWidget()
 {
     if (!m_dialog) {
+        QGraphicsLinearLayout *lay = new QGraphicsLinearLayout(this);
+        setLayout(lay);
         m_dialog = new Dialog(this);
+        lay->addItem(m_dialog);
     }
     return m_dialog;
 }
