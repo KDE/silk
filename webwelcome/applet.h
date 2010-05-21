@@ -21,13 +21,11 @@
 #define WEBWELCOMEAPPLET_H
 
 //Plasma
-#include <Plasma/PopupApplet>
-#include <Plasma/ToolTipManager>
+#include <Plasma/Applet>
+//#include <Plasma/ToolTipManager>
 
 // own
 #include "dialog.h"
-
-class QGraphicsProxyWidget;
 
 namespace Plasma
 {
@@ -47,7 +45,6 @@ namespace SilkWebWelcome
         QGraphicsWidget *graphicsWidget();
 
     private:
-        //Plasma::IconWidget *m_icon;
         Dialog *m_dialog;
   };
 };

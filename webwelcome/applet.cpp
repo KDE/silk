@@ -47,7 +47,7 @@ Applet::Applet(QObject *parent, const QVariantList &args)
       m_dialog(0)
 {
     //setBackgroundHints(StandardBackground);
-    //setAspectRatioMode(Plasma::IgnoreAspectRatio);
+    setAspectRatioMode(Plasma::IgnoreAspectRatio);
     //setHasConfigurationInterface(true);
     //setAcceptsHoverEvents(true);
 

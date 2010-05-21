@@ -38,6 +38,7 @@
 
 //own
 #include "dialog.h"
+//#include "servicebutton.h"
 #include "stylesheet.h"
 
 using namespace SilkWebWelcome;
@@ -45,6 +46,7 @@ using namespace SilkWebWelcome;
 Dialog::Dialog(QGraphicsWidget *parent)
     : QGraphicsWidget(parent)
 {
+    setMinimumSize(500, 300);
     buildDialog();
 }
 
@@ -56,6 +58,7 @@ void Dialog::buildDialog()
 {
     kDebug() << " =========================================== ";
     QGraphicsGridLayout *gridLayout = new QGraphicsGridLayout(this);
+    setLayout(gridLayout);
 
     m_styleSheet = new StyleSheet(QString(), this);
 
@@ -69,25 +72,30 @@ void Dialog::buildDialog()
 
     gridLayout->addItem(m_dashboard, 0, 0, 1, 3); // top cell, spanning 3 columns
 
-    QString img_path = "/home/sebas/kdesvn/src/project-silk/webwelcome/images/";
+    //QString img_path = "/home/sebas/kdesvn/src/project-silk/webwelcome/images/";
 
-    Plasma::Label *gmail = new Plasma::Label(this);
-    gmail->setImage(img_path + "gmail.png");
-    gmail->setPreferredSize(QSize(140, 40));
-    gridLayout->addItem(gmail, 1, 0);
+    //QStringList _b;
+    //_b << "gmail.png" << "twitter.png" << "wikipedia.png";
 
-    Plasma::Label *twitter = new Plasma::Label(this);
-    twitter->setImage(img_path + "twitter.png");
-    twitter->setPreferredSize(140, 40);
-    gridLayout->addItem(twitter, 1, 1);
+    ServiceButton* b = new ServiceButton(this);
+    b->setPixmap("gmail.png");
+    m_buttons << b;
+    gridLayout->addItem(b, 1, 0);
 
-    Plasma::Label *wikipedia = new Plasma::Label(this);
-    wikipedia->setImage(img_path + "wikipedia.png");
-    wikipedia->setPreferredSize(140, 40);
-    gridLayout->addItem(wikipedia, 1, 2);
+    ServiceButton* g = new ServiceButton(this);
+    g->setPixmap("twitter.png");
+    m_buttons << g;
+    gridLayout->addItem(g, 1, 1);
 
-    setPreferredSize(400, 400);
-    setLayout(gridLayout);
+    ServiceButton* w = new ServiceButton(this);
+    w->setPixmap("wikipedia.png");
+    m_buttons << w;
+    gridLayout->addItem(w, 2, 0);
+
+    ServiceButton* f = new ServiceButton(this);
+    f->setPixmap("facebook.png");
+    m_buttons << f;
+    gridLayout->addItem(f, 2, 1);
 }
 
 #include "dialog.moc"

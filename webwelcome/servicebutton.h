@@ -17,59 +17,42 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef SWWDIALOG_H
-#define SWWDIALOG_H
+#ifndef SERVICEBUTTON_H
+#define SERVICEBUTTON_H
 
 //Qt
-#include <QLabel>
-#include <QStringList>
+#include <QGraphicsLinearLayout>
 
 // KDE
-#include <KDirLister>
-#include <KFileItem>
-#include <KIO/ListJob>
-#include <kio/jobclasses.h>
 
 // Plasma
 #include <Plasma/IconWidget>
 #include <Plasma/Label>
-#include <Plasma/LineEdit>
-#include <Plasma/TabBar>
-#include <Plasma/WebView>
 
-// Own
-#include "servicebutton.h"
-
-class StyleSheet;
-//class Applet;
-
-//desktop view
 namespace Plasma
 {
-    class Icon;
-    class Dialog;
+    class IconWidget;
 }
 
 namespace SilkWebWelcome
 {
-  class Dialog : public QGraphicsWidget
+  class ServiceButton : public Plasma::IconWidget
   {
   Q_OBJECT
 
     public:
-        Dialog(QGraphicsWidget *parent);
-        virtual ~Dialog();
+        ServiceButton(QGraphicsWidget *parent = 0);
+        virtual ~ServiceButton();
+
+        void setPixmap(const QString &img);
 
     private :
-        void buildDialog();
+        void setupButton();
 
-        Plasma::WebView *m_dashboard;
-        QHash<QString, QGraphicsWidget*> m_serviceButtons;
-
-        StyleSheet *m_styleSheet;
-
-        QList<ServiceButton*> m_buttons;
-  };
+        QString m_imgPath;
+        QGraphicsLinearLayout* m_layout;
+        Plasma::Label* m_pixmapLabel;
+};
 }
 
 #endif

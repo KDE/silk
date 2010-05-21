@@ -9,6 +9,7 @@ set(webwelcome_SRCS
     stylesheet.cpp
     applet.cpp
     dialog.cpp
+    servicebutton.cpp
     )
 
 #kde4_add_ui_files(webwelcome_SRCS wwConfig.ui )
