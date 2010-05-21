@@ -22,6 +22,7 @@
 
 //KDE
 #include <KDebug>
+#include <KRun>
 #include <KStandardDirs>
 //plasma
 #include <Plasma/IconWidget>
@@ -81,7 +82,7 @@ void ServiceButton::load(const KPluginInfo* info)
     m_metadata->name = group.readEntry("Name", QString());
     m_metadata->comment = group.readEntry("Comment", QString());
     */
-    setPixmap(KStandardDirs::locate("data", QString("silk/webservices/logo_%1.png").arg(m_kcmName)));
+    setPixmap(KStandardDirs::locate("data", QString("silk/webservices/logo_%1.png").arg(m_pluginName)));
 }
 
 void ServiceButton::setupButton()
@@ -108,7 +109,10 @@ void ServiceButton::setPixmap(const QString &img)
 
 void ServiceButton::run()
 {
-    kDebug() << "Run clicked" << m_name << m_comment << m_kcmName;
+    //m_kcmName = "mouse";
+    kDebug() << "Run clicked, starting kcmshell4"  << m_kcmName;
+    QString cmd = QString("kcmshell4 %1").arg(m_kcmName);
+    KRun::runCommand(cmd, 0);
 }
 
 #include "servicebutton.moc"

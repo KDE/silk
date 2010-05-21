@@ -18,7 +18,7 @@ kde4_add_plugin(plasma_applet_webwelcome ${webwelcome_SRCS})
 target_link_libraries(
     plasma_applet_webwelcome
     ${KDE4_PLASMA_LIBS}
-    #${KDE4_KIO_LIBS}
+    ${KDE4_KIO_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
 )
 
