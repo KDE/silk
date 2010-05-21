@@ -39,6 +39,8 @@ ServiceButton::ServiceButton(QGraphicsWidget *parent)
     m_imgPath = "/home/sebas/kdesvn/src/project-silk/webwelcome/images/"; // FIXME: guess what!?!
     setupButton();
     setAcceptsHoverEvents(true);
+    setDrawBackground(true);
+    setContentsMargins(8,8,8,8);
 }
 
 ServiceButton::~ServiceButton()
@@ -59,8 +61,9 @@ void ServiceButton::setupButton()
 void ServiceButton::setPixmap(const QString &img)
 {
     m_pixmapLabel->setImage(m_imgPath + img);
-    m_pixmapLabel->setMinimumHeight(88);
-    m_pixmapLabel->setMinimumWidth(188);
+    m_pixmapLabel->setMinimumHeight(68);
+    m_pixmapLabel->setMaximumHeight(68);
+    m_pixmapLabel->setMinimumWidth(128);
 }
 
 #include "servicebutton.moc"

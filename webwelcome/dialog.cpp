@@ -46,7 +46,7 @@ using namespace SilkWebWelcome;
 Dialog::Dialog(QGraphicsWidget *parent)
     : QGraphicsWidget(parent)
 {
-    setMinimumSize(500, 300);
+    setMinimumSize(400, 300);
     buildDialog();
 }
 
@@ -69,9 +69,9 @@ void Dialog::buildDialog()
     html.append("Your passwords will be safely stored in the KWallet secure storage.</p>");
     m_dashboard->setHtml(html);
     kDebug() << html;
-
-    gridLayout->addItem(m_dashboard, 0, 0, 1, 3); // top cell, spanning 3 columns
-
+    m_dashboard->setMinimumHeight(145);
+    m_dashboard->setMaximumHeight(145);
+    gridLayout->addItem(m_dashboard, 0, 0, 1, 2); // top cell, spanning 2 columns
     //QString img_path = "/home/sebas/kdesvn/src/project-silk/webwelcome/images/";
 
     //QStringList _b;
@@ -79,21 +79,25 @@ void Dialog::buildDialog()
 
     ServiceButton* b = new ServiceButton(this);
     b->setPixmap("gmail.png");
+    b->setToolTip(i18nc("gmail setup button", "Click here to setup your GMail email, contacts and calendar"));
     m_buttons << b;
     gridLayout->addItem(b, 1, 0);
 
     ServiceButton* g = new ServiceButton(this);
     g->setPixmap("twitter.png");
+    g->setToolTip(i18nc("twitter setup button", "Click here to setup your Twitter account"));
     m_buttons << g;
     gridLayout->addItem(g, 1, 1);
 
     ServiceButton* w = new ServiceButton(this);
     w->setPixmap("wikipedia.png");
+    w->setToolTip(i18nc("gmail setup button", "Click here to integrate Wikipedia search into your workspace"));
     m_buttons << w;
     gridLayout->addItem(w, 2, 0);
 
     ServiceButton* f = new ServiceButton(this);
     f->setPixmap("facebook.png");
+    f->setToolTip(i18nc("gmail setup button", "Click here to setup your Facebook account"));
     m_buttons << f;
     gridLayout->addItem(f, 2, 1);
 }
