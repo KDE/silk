@@ -36,8 +36,8 @@ using namespace SilkWebWelcome;
 
 ServiceButton::ServiceButton(QGraphicsWidget *parent)
     : Plasma::IconWidget(parent),
-    m_pixmapLabel(0),
-    m_layout(0)
+    m_layout(0),
+    m_pixmapLabel(0)
 {
     setupButton();
     setAcceptsHoverEvents(true);
