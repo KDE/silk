@@ -105,30 +105,38 @@ void OSMMap::updateDataSlot()
 
     if (!error)
     {
-        page = QString("<html><head>"
-            "<style type=\"text/css\">"
-              "html,body,#basicMap{"
-                  "height:100%;"
-                  "margin:0;"
-                  "width:100%;}"
-            "</style></head>"
-            "<body onload=\"init();\">"
-              "<div id=\"basicMap\"></div>"
-            "</body>"
-            "<script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script>"
-            "<script>"
-              "function init() {"
-                "map = new OpenLayers.Map(\"basicMap\");"
-                "var mapnik = new OpenLayers.Layer.OSM();"
-                "map.addLayer(mapnik);"
-                "map.setCenter(new OpenLayers.LonLat(%1,%2)"
-                  ".transform("
-                    "new OpenLayers.Projection(\"EPSG:4326\"),"
-                    "new OpenLayers.Projection(\"EPSG:900913\")"
-                  "), 17"
-                ");"
-              "}"
-            "</script></html>").arg(m_data["lon"].toString(), m_data["lat"].toString());
+        if (m_data["lat"].toDouble() > 90 || m_data["lat"].toDouble() < -90 ||
+            m_data["lon"].toDouble() > 180 || m_data["lon"].toDouble() < -180)
+        {
+            page = "<h2 style=\"text-align:center;width:100%\">Invalid place.</h2>";
+        }
+        else
+        {
+            page = QString("<html><head>"
+                "<style type=\"text/css\">"
+                  "html,body,#basicMap{"
+                      "height:100%;"
+                      "margin:0;"
+                      "width:100%;}"
+                "</style></head>"
+                "<body onload=\"init();\">"
+                  "<div id=\"basicMap\"></div>"
+                "</body>"
+                "<script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script>"
+                "<script>"
+                  "function init() {"
+                    "map = new OpenLayers.Map(\"basicMap\");"
+                    "var mapnik = new OpenLayers.Layer.OSM();"
+                    "map.addLayer(mapnik);"
+                    "map.setCenter(new OpenLayers.LonLat(%1,%2)"
+                      ".transform("
+                        "new OpenLayers.Projection(\"EPSG:4326\"),"
+                        "new OpenLayers.Projection(\"EPSG:900913\")"
+                      "), 17"
+                    ");"
+                  "}"
+                "</script></html>").arg(m_data["lon"].toString(), m_data["lat"].toString());
+        }
     }
     else
         page = "<h2 style=\"text-align:center;width:100%\">Service unavailable.</h2>";
