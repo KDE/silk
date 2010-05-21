@@ -21,6 +21,7 @@
 #define SWWDIALOG_H
 
 //Qt
+#include <QGraphicsGridLayout>
 #include <QLabel>
 #include <QStringList>
 
@@ -62,7 +63,9 @@ namespace SilkWebWelcome
 
     private :
         void buildDialog();
+        void loadServices();
 
+        QGraphicsGridLayout *m_gridLayout;
         Plasma::WebView *m_dashboard;
         QHash<QString, QGraphicsWidget*> m_serviceButtons;
 

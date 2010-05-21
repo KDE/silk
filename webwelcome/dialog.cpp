@@ -28,6 +28,7 @@
 #include <KIcon>
 #include <KIconLoader>
 #include <KRun>
+#include <KServiceTypeTrader>
 #include <KStandardDirs>
 
 //plasma
@@ -57,8 +58,8 @@ Dialog::~Dialog()
 void Dialog::buildDialog()
 {
     kDebug() << " =========================================== ";
-    QGraphicsGridLayout *gridLayout = new QGraphicsGridLayout(this);
-    setLayout(gridLayout);
+    m_gridLayout = new QGraphicsGridLayout(this);
+    setLayout(m_gridLayout);
 
     m_styleSheet = new StyleSheet(QString(), this);
 
@@ -71,35 +72,47 @@ void Dialog::buildDialog()
     kDebug() << html;
     m_dashboard->setMinimumHeight(145);
     m_dashboard->setMaximumHeight(145);
-    gridLayout->addItem(m_dashboard, 0, 0, 1, 2); // top cell, spanning 2 columns
+    m_gridLayout->addItem(m_dashboard, 0, 0, 1, 2); // top cell, spanning 2 columns
     //QString img_path = "/home/sebas/kdesvn/src/project-silk/webwelcome/images/";
 
     //QStringList _b;
     //_b << "gmail.png" << "twitter.png" << "wikipedia.png";
 
+    loadServices();
+}
+
+void Dialog::loadServices()
+{
+    KService::List offers = KServiceTypeTrader::self()->query("Silk/WebService");
+    foreach (const KSharedPtr<KService> s, offers) {
+        KPluginInfo* info = new KPluginInfo(s);
+        kDebug() << info->name() << info->comment();
+    }
+
+    // all hardcoded from here, FIXME: remove when plugin stuff works
     ServiceButton* b = new ServiceButton(this);
     b->setPixmap("gmail.png");
     b->setToolTip(i18nc("gmail setup button", "Click here to setup your GMail email, contacts and calendar"));
     m_buttons << b;
-    gridLayout->addItem(b, 1, 0);
+    m_gridLayout->addItem(b, 1, 0);
 
     ServiceButton* g = new ServiceButton(this);
     g->setPixmap("twitter.png");
     g->setToolTip(i18nc("twitter setup button", "Click here to setup your Twitter account"));
     m_buttons << g;
-    gridLayout->addItem(g, 1, 1);
+    m_gridLayout->addItem(g, 1, 1);
 
     ServiceButton* w = new ServiceButton(this);
     w->setPixmap("wikipedia.png");
     w->setToolTip(i18nc("gmail setup button", "Click here to integrate Wikipedia search into your workspace"));
     m_buttons << w;
-    gridLayout->addItem(w, 2, 0);
+    m_gridLayout->addItem(w, 2, 0);
 
     ServiceButton* f = new ServiceButton(this);
     f->setPixmap("facebook.png");
     f->setToolTip(i18nc("gmail setup button", "Click here to setup your Facebook account"));
     m_buttons << f;
-    gridLayout->addItem(f, 2, 1);
+    m_gridLayout->addItem(f, 2, 1);
 }
 
 #include "dialog.moc"

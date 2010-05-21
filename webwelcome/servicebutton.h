@@ -43,8 +43,11 @@ namespace SilkWebWelcome
     public:
         ServiceButton(QGraphicsWidget *parent = 0);
         virtual ~ServiceButton();
-
         void setPixmap(const QString &img);
+        void load(const KPluginInfo* info);
+
+    public Q_SLOTS:
+        void run();
 
     private :
         void setupButton();
@@ -52,6 +55,10 @@ namespace SilkWebWelcome
         QString m_imgPath;
         QGraphicsLinearLayout* m_layout;
         Plasma::Label* m_pixmapLabel;
+
+        QString m_name;
+        QString m_comment;
+        QString m_kcmName;
 };
 }
 
