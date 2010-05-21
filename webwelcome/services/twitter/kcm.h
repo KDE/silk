@@ -37,7 +37,7 @@ class KcmTwitter: public KCModule
 
   private:
     QLabel *lbl;
-    Ui::TWitterConfig m_twitterConfig;
+    Ui::Config m_twitterConfig;
 
 };
 

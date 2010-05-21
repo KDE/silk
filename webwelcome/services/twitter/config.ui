@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TwitterConfig</class>
- <widget class="QWidget" name="TwitterConfig">
+ <class>Config</class>
+ <widget class="QWidget" name="Config">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>205</width>
-    <height>63</height>
+    <height>64</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Username:</string>
-     </property>
-    </widget>
-   </item>
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
    <item row="0" column="1">
-    <widget class="QLineEdit" name="userName"/>
+    <widget class="KLineEdit" name="klineedit"/>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="userName">
      <property name="text">
       <string>Password:</string>
      </property>
@@ -33,6 +29,13 @@
    </item>
    <item row="2" column="1">
     <widget class="KLineEdit" name="passWord"/>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Username:</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
