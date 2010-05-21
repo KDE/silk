@@ -57,7 +57,6 @@ Dialog::~Dialog()
 
 void Dialog::buildDialog()
 {
-    kDebug() << " =========================================== ";
     m_gridLayout = new QGraphicsGridLayout(this);
     setLayout(m_gridLayout);
 
@@ -69,50 +68,38 @@ void Dialog::buildDialog()
     html.append("<p>Please take some minutes to set up your online services on this system.\n");
     html.append("Your passwords will be safely stored in the KWallet secure storage.</p>");
     m_dashboard->setHtml(html);
-    kDebug() << html;
     m_dashboard->setMinimumHeight(145);
     m_dashboard->setMaximumHeight(145);
     m_gridLayout->addItem(m_dashboard, 0, 0, 1, 2); // top cell, spanning 2 columns
-    //QString img_path = "/home/sebas/kdesvn/src/project-silk/webwelcome/images/";
-
-    //QStringList _b;
-    //_b << "gmail.png" << "twitter.png" << "wikipedia.png";
 
     loadServices();
 }
 
 void Dialog::loadServices()
 {
+    kDebug() << "Looking for webservice plugins...";
     KService::List offers = KServiceTypeTrader::self()->query("Silk/WebService");
+
+    int row = 1;
+    int col = 0;
+
     foreach (const KSharedPtr<KService> s, offers) {
+        // Create plugininfo, feed that to the button to load it up
         KPluginInfo* info = new KPluginInfo(s);
-        kDebug() << info->name() << info->comment();
+        ServiceButton* button = new ServiceButton(this);
+        button->load(info);
+
+        // And sort our button into the layout, into two columns and as many rows as we need
+        m_gridLayout->addItem(button, row, col);
+        kDebug() << "Added:" << info->pluginName() << row << col;
+        if (col == 1) {
+            row++;
+            col = 0;
+        } else {
+            col++;
+        }
     }
-
-    // all hardcoded from here, FIXME: remove when plugin stuff works
-    ServiceButton* b = new ServiceButton(this);
-    b->setPixmap("gmail.png");
-    b->setToolTip(i18nc("gmail setup button", "Click here to setup your GMail email, contacts and calendar"));
-    m_buttons << b;
-    m_gridLayout->addItem(b, 1, 0);
-
-    ServiceButton* g = new ServiceButton(this);
-    g->setPixmap("twitter.png");
-    g->setToolTip(i18nc("twitter setup button", "Click here to setup your Twitter account"));
-    m_buttons << g;
-    m_gridLayout->addItem(g, 1, 1);
-
-    ServiceButton* w = new ServiceButton(this);
-    w->setPixmap("wikipedia.png");
-    w->setToolTip(i18nc("gmail setup button", "Click here to integrate Wikipedia search into your workspace"));
-    m_buttons << w;
-    m_gridLayout->addItem(w, 2, 0);
-
-    ServiceButton* f = new ServiceButton(this);
-    f->setPixmap("facebook.png");
-    f->setToolTip(i18nc("gmail setup button", "Click here to setup your Facebook account"));
-    m_buttons << f;
-    m_gridLayout->addItem(f, 2, 1);
+    kDebug() << "Done, found" << offers.count();
 }
 
 #include "dialog.moc"

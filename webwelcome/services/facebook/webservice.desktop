@@ -1,8 +1,9 @@
 [Desktop Entry]
-Name=Twitter
-Comment=Setup your Twitter account on this computer
-Icon=project-development
+Name=Facebook
+Comment=Setup your Facebook account on this computer
+Icon=facebook
 Type=Service
+X-KDE-ServiceTypes=Silk/WebService
 
 X-KDE-PluginInfo-Author=Sebastian Kügler
 X-KDE-PluginInfo-Email=sebas@kde.org
@@ -13,4 +14,4 @@ X-KDE-PluginInfo-Category=Internet
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 
-X-Silk-KcmName=webwelcome_twitter
+X-Silk-KcmName=facebook

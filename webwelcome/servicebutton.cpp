@@ -22,7 +22,7 @@
 
 //KDE
 #include <KDebug>
-
+#include <KStandardDirs>
 //plasma
 #include <Plasma/IconWidget>
 #include <Plasma/Theme>
@@ -35,11 +35,9 @@ using namespace SilkWebWelcome;
 
 ServiceButton::ServiceButton(QGraphicsWidget *parent)
     : Plasma::IconWidget(parent),
-    m_name("unset name"),
-    m_comment("unset tooltip"),
-    m_kcmName("unset KcmName")
+    m_pixmapLabel(0),
+    m_layout(0)
 {
-    m_imgPath = "/home/sebas/kdesvn/src/project-silk/webwelcome/images/"; // FIXME: guess what!?!
     setupButton();
     setAcceptsHoverEvents(true);
     setDrawBackground(true);
@@ -54,6 +52,16 @@ ServiceButton::~ServiceButton()
 
 void ServiceButton::load(const KPluginInfo* info)
 {
+    kDebug() << "================";
+    kDebug() << "Name   :" << info->name();
+    kDebug() << "Comment:" << info->comment();
+    kDebug() << "Plugin :" << info->pluginName();
+
+    m_name = info->name();
+    m_comment = info->comment();
+    m_pluginName = info->pluginName();
+    m_kcmName = info->property("X-Silk-KcmName").toString();
+    //kDebug() << "Name:" << info.name();
     // ...
     // name
 
@@ -65,33 +73,15 @@ void ServiceButton::load(const KPluginInfo* info)
     KDesktopFile desktopFile(m_metadataFile);
     KConfigGroup group = desktopFile.group("Desktop Entry");
 
-    //kDebug() << group.readEntry("Name", QString()) << group.readEntry("X-KDE-PluginInfo-Name", QString());
-    //QString _plugin = group.readEntry("X-KDE-PluginInfo-Name", QString());
-
-    / *
-
     X-KDE-PluginInfo-Author=Sebastian Kügler
     X-KDE-PluginInfo-Email=sebas@kde.org
     X-KDE-PluginInfo-Name=silk
-    X-KDE-PluginInfo-Version=0.01
-    X-KDE-PluginInfo-Website=http://kde.org
-    X-KDE-PluginInfo-Category=Development
-    X-KDE-PluginInfo-License=GPL
-
     X-Silk-StartUrl=http://gitorious.org/project-silk/
-    X-Silk-AllowedBases=http://gitorious.org/,https://secure.gitorious.org/
-
-    * /
-
     m_metadata->pluginName = group.readEntry("X-KDE-PluginInfo-Name", QString());
     m_metadata->name = group.readEntry("Name", QString());
     m_metadata->comment = group.readEntry("Comment", QString());
-    m_metadata->icon = group.readEntry("Icon", QString());
-    m_metadata->author = group.readEntry("X-KDE-PluginInfo-Author", QString());
-    m_metadata->email = group.readEntry("X-KDE-PluginInfo-Email", QString());
-    m_metadata->version = group.readEntry("X-KDE-PluginInfo-Version", QString());
-    m_metadata->website = group.readEntry("X-KDE-PluginInfo-Website", QString());
     */
+    setPixmap(KStandardDirs::locate("data", QString("silk/webservices/logo_%1.png").arg(m_kcmName)));
 }
 
 void ServiceButton::setupButton()
@@ -107,7 +97,10 @@ void ServiceButton::setupButton()
 
 void ServiceButton::setPixmap(const QString &img)
 {
-    m_pixmapLabel->setImage(m_imgPath + img);
+    //QString _img = ;
+    kDebug() << "Image:" << img;
+
+    m_pixmapLabel->setImage(img);
     m_pixmapLabel->setMinimumHeight(68);
     m_pixmapLabel->setMaximumHeight(68);
     m_pixmapLabel->setMinimumWidth(128);

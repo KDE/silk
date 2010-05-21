@@ -57,6 +57,7 @@ namespace SilkWebWelcome
         Plasma::Label* m_pixmapLabel;
 
         QString m_name;
+        QString m_pluginName;
         QString m_comment;
         QString m_kcmName;
 };
