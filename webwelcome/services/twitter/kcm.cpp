@@ -36,7 +36,7 @@
 K_PLUGIN_FACTORY(KcmTwitterFactory,
         registerPlugin<KcmTwitter>();
         )
-K_EXPORT_PLUGIN(KcmTwitterFactory("kcmTwitter"))
+K_EXPORT_PLUGIN(KcmTwitterFactory("kcmTwitter", "silk_webservices.po"))
 
 
 KcmTwitter::KcmTwitter(QWidget *parent, const QVariantList &)
