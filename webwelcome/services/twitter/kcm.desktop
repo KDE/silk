@@ -1,0 +1,19 @@
+[Desktop Entry]
+Name=Twitter
+Comment=Twitter Setup
+Exec=kcmshell4 webservice_twitter
+
+Terminal=false
+Type=Service
+Icon=internet-web-browser
+Categories=Qt;KDE;X-KDE-settings-hardware;
+
+X-KDE-ServiceTypes=KCModule
+X-KDE-Library=kcm_twitter
+X-KDE-Test-Module=true
+X-KDE-System-Settings-Parent-Category=input-devices
+X-KDE-ParentApp=kcontrol
+X-KDE-Weight=70
+
+
+X-KDE-Keywords=web,wiki,internet,silk,microblog
