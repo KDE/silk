@@ -39,6 +39,6 @@ set(selkiepkg_SRCS
 
 kde4_add_executable(selkiepkg ${selkiepkg_SRCS})
 
-target_link_libraries(selkiepkg ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS})
+target_link_libraries(selkiepkg ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4_KIO_LIBS})
 
 install(TARGETS selkiepkg ${INSTALL_TARGETS_DEFAULT_ARGS})
