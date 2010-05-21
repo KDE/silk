@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=Silk/WebService
+
+Name=Silk Webservice
+Comment=Web Service Configuration
+
+[PropertyDef::X-Silk-KcmName]
+Type=QString
+
