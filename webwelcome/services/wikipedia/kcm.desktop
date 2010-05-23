@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Wikipedia
 Comment=Wikipedia Setup
-Exec=kcmshell4 webservice_wikipedia
+Exec=kcmshell4 silk_webservice_wikipedia
 
 Terminal=false
 Type=Service
@@ -9,7 +9,7 @@ Icon=internet-web-browser
 Categories=Qt;KDE;X-KDE-settings-hardware;
 
 X-KDE-ServiceTypes=KCModule
-X-KDE-Library=kcm_wikipedia
+X-KDE-Library=silk_webservice_wikipedia
 X-KDE-Test-Module=true
 X-KDE-System-Settings-Parent-Category=input-devices
 X-KDE-ParentApp=kcontrol

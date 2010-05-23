@@ -36,7 +36,6 @@ class KcmTwitter: public KCModule
     virtual void defaults();
 
   private:
-    QLabel *lbl;
     Ui::Config m_twitterConfig;
 
 };

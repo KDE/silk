@@ -44,7 +44,7 @@ ServiceButton::ServiceButton(QGraphicsWidget *parent)
     setDrawBackground(true);
     setContentsMargins(8,8,8,8);
     connect(this, SIGNAL(clicked()), this, SLOT(run()));
-    
+
 }
 
 ServiceButton::~ServiceButton()

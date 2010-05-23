@@ -22,13 +22,13 @@ install(FILES logo.png DESTINATION ${DATA_INSTALL_DIR}/silk/webservices RENAME l
 
 # our KControl Module
 
-set(kcm_${PACKAGE}_PART_SRCS
+set(silk_webservice_${PACKAGE}_PART_SRCS
     kcm.cpp)
 
-kde4_add_ui_files(kcm_${PACKAGE}_PART_SRCS config.ui)
-kde4_add_plugin(kcm_${PACKAGE} ${kcm_${PACKAGE}_PART_SRCS})
+kde4_add_ui_files(silk_webservice_${PACKAGE}_PART_SRCS config.ui)
+kde4_add_plugin(silk_webservice_${PACKAGE} ${silk_webservice_${PACKAGE}_PART_SRCS})
 
-target_link_libraries(kcm_${PACKAGE}  ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTGUI_LIBRARY})
+target_link_libraries(silk_webservice_${PACKAGE}  ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_QTGUI_LIBRARY})
 
-install(TARGETS kcm_${PACKAGE}  DESTINATION ${PLUGIN_INSTALL_DIR} )
-install( FILES kcm.desktop  DESTINATION ${SERVICES_INSTALL_DIR} RENAME kcm_${PACKAGE}.desktop)
+install(TARGETS silk_webservice_${PACKAGE}  DESTINATION ${PLUGIN_INSTALL_DIR} )
+install( FILES kcm.desktop  DESTINATION ${SERVICES_INSTALL_DIR} RENAME silk_webservice_${PACKAGE}.desktop)

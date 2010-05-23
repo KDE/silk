@@ -52,15 +52,6 @@ KcmTwitter::KcmTwitter(QWidget *parent, const QVariantList &)
                 "This module sets up Twitter on your machine, as a desktop widget (the microblog widget) and full app (choqok).<br />"
                 ));
     m_twitterConfig.setupUi(this);
-  /*
-  lbl = new QLabel(this);
-  lbl->setText("Twitter config widget loaded. Yay.");
-
-  QVBoxLayout *top = new QVBoxLayout(this);
-  top->setMargin(0);
-  top->setSpacing(KDialog::spacingHint());
-  top->addWidget(lbl);
-  */
 }
 
 //---------------------------------------------------------------------------------------------
