@@ -18,7 +18,7 @@
     <enum>QFormLayout::ExpandingFieldsGrow</enum>
    </property>
    <item row="0" column="1">
-    <widget class="KLineEdit" name="klineedit"/>
+    <widget class="KLineEdit" name="username"/>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="userName">
@@ -28,7 +28,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="KLineEdit" name="passWord"/>
+    <widget class="KLineEdit" name="password"/>
    </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label">

@@ -18,6 +18,7 @@
 */
 
 
+#include <QGraphicsView>
 #include <QLabel>
 
 #include "kcm.h"
@@ -28,8 +29,10 @@
 #include <kdialog.h>
 
 #include <stdio.h>
+#include <KDebug>
 #include <KPluginFactory>
 #include <KPluginLoader>
+#include <KWallet/Wallet>
 
 #include <QVBoxLayout>
 
@@ -52,21 +55,86 @@ KcmTwitter::KcmTwitter(QWidget *parent, const QVariantList &)
                 "This module sets up Twitter on your machine, as a desktop widget (the microblog widget) and full app (choqok).<br />"
                 ));
     m_twitterConfig.setupUi(this);
+    m_walletFolder = QString("Plasma-Microblog");
+
+    connect(m_twitterConfig.username, SIGNAL(textChanged(const QString&)), this, SLOT(emitChanged()));
+    connect(m_twitterConfig.password, SIGNAL(textChanged(const QString&)), this, SLOT(emitChanged()));
 }
 
 //---------------------------------------------------------------------------------------------
+
+void KcmTwitter::emitChanged()
+{
+    emit changed(true);
+}
 
 void KcmTwitter::load()
 {
-  //lbl->init();
+    m_username = "sebasje";
+    m_wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
+                                           winId(), KWallet::Wallet::Asynchronous);
+    connect(m_wallet, SIGNAL(walletOpened(bool)), SLOT(readWallet()));
 }
 
-//---------------------------------------------------------------------------------------------
+void KcmTwitter::loadPlasmoid()
+{
+    // Load a microblog widget onto the desktop
+    // qdbus org.kde.plasma-desktop /MainApplication loadScriptInInteractiveConsole /path/to/file
+    kDebug() << "Loading plasmoid....";
+}
+
+void KcmTwitter::readWallet()
+{
+    QString pwd;
+    if (!m_wallet->setFolder(m_walletFolder)) {
+        kDebug() << "error setting wallet to folder" << m_walletFolder;
+    }
+    if (m_wallet->readPassword(m_username, pwd) == 0) {
+        kDebug() << "got the password from the wallet";
+    }
+        m_password = pwd;
+    //}
+    if (m_password.isEmpty()) {
+        kDebug() << "password failed reading / empty";
+    }
+    //kDebug() << "password:" << m_password;
+    m_twitterConfig.username->setText(m_username);
+    m_twitterConfig.password->setText(m_password);
+    delete m_wallet;
+    m_wallet = 0;
+}
+
+
+void KcmTwitter::writeWallet()
+{
+    m_wallet->createFolder(m_walletFolder);
+    if (!m_wallet->setFolder(m_walletFolder)) {
+        kDebug() << "error setting wallet to folder" << m_walletFolder;
+    }
+    if ((m_wallet->writePassword(m_username, m_password) == 0)) {
+        kDebug() << "successfully wrote password to wallet";
+    } else {
+        kDebug() << "failed to store password in wallet";
+    }
+    delete m_wallet;
+    m_wallet = 0;
+
+    loadPlasmoid();
+}
+
+void KcmTwitter::save()
+{
+    m_username = m_twitterConfig.username->text();
+    m_password = m_twitterConfig.password->text();
+    kDebug() << "Saving ..." << m_username << m_password;
+    // Write password into the wallet
+    m_wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
+                                           winId(), KWallet::Wallet::Asynchronous);
+    connect(m_wallet, SIGNAL(walletOpened(bool)), SLOT(writeWallet()));
+}
 
 void KcmTwitter::defaults()
 {
-  //lbl->resetCalibration();
-
   emit changed(true);
 }
 

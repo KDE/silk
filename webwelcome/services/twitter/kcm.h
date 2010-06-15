@@ -25,6 +25,11 @@
 
 #include "ui_config.h"
 
+namespace KWallet
+{
+    class Wallet;
+}
+
 class KcmTwitter: public KCModule
 {
   Q_OBJECT
@@ -32,11 +37,23 @@ class KcmTwitter: public KCModule
   public:
     explicit KcmTwitter(QWidget *parent = 0, const QVariantList &list = QVariantList());
 
+  public Q_SLOTS:
     virtual void load();
+    virtual void save();
     virtual void defaults();
+    void emitChanged();
+
+  private Q_SLOTS:
+    void  readWallet();
+    void  writeWallet();
+    void loadPlasmoid();
 
   private:
     Ui::Config m_twitterConfig;
+    KWallet::Wallet *m_wallet;
+    QString m_walletFolder;
+    QString m_username;
+    QString m_password;
 
 };
 
