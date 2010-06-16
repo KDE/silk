@@ -17,25 +17,38 @@
     Boston, MA 02110-1301, USA.
 */
 
-
 #ifndef KCM_H
 #define KCM_H
 
 #include <KCModule>
 #include <QLabel>
 
-class KcmWikipedia: public KCModule
+#include "ui_config.h"
+
+namespace KWallet
+{
+    class Wallet;
+}
+
+class KcmWiki: public KCModule
 {
   Q_OBJECT
 
   public:
-    explicit KcmWikipedia(QWidget *parent = 0, const QVariantList &list = QVariantList());
+    explicit KcmWiki(QWidget *parent = 0, const QVariantList &list = QVariantList());
 
+  public Q_SLOTS:
     virtual void load();
+    virtual void save();
     virtual void defaults();
+    void emitChanged();
+
+  private Q_SLOTS:
+    void enableWiki();
 
   private:
-    QLabel *lbl;
+    Ui::Config m_wikiConfig;
+    bool m_wikipediaEnabled;
 };
 
 #endif

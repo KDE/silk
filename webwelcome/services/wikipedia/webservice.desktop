@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Wikipedia
-Comment=Setup your computer to natively support Wikipedia search
+Comment=Setup Wikipedia on this computer
 Icon=project-development
 Type=Service
 X-KDE-ServiceTypes=Silk/WebService

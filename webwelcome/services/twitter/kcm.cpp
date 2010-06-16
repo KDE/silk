@@ -91,19 +91,17 @@ void KcmTwitter::readWallet()
     }
     if (m_wallet->readPassword(m_username, pwd) == 0) {
         kDebug() << "got the password from the wallet";
-    }
         m_password = pwd;
-    //}
-    if (m_password.isEmpty()) {
+    }
+    if (!m_password.isEmpty()) {
         kDebug() << "password failed reading / empty";
+        m_twitterConfig.username->setText(m_username);
+        m_twitterConfig.password->setText(m_password);
     }
     //kDebug() << "password:" << m_password;
-    m_twitterConfig.username->setText(m_username);
-    m_twitterConfig.password->setText(m_password);
     delete m_wallet;
     m_wallet = 0;
 }
-
 
 void KcmTwitter::writeWallet()
 {
