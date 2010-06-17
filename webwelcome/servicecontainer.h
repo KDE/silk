@@ -21,18 +21,16 @@
 #define SERVICECONTAINER_H
 
 //Qt
-#include <QGraphicsLinearLayout>
 #include <QGraphicsWidget>
 
-// KDE
+class QGraphicsGridLayout;
 
 // Plasma
-#include <Plasma/IconWidget>
-#include <Plasma/Label>
-
 namespace Plasma
 {
     class IconWidget;
+    class PushButton;
+    class Label;
 }
 
 namespace SilkWebWelcome
@@ -46,8 +44,6 @@ namespace SilkWebWelcome
         virtual ~ServiceContainer();
         virtual void setup();
 
-        void setPixmap(const QString &img);
-        void load(const KPluginInfo* info);
         QGraphicsWidget* smallWidget();
         QGraphicsWidget* fullWidget();
 
@@ -58,23 +54,18 @@ namespace SilkWebWelcome
         virtual void run();
 
     protected:
-        QString m_imgPath;
-        //QGraphicsLinearLayout* m_layout;
-        //Plasma::Label* m_pixmapLabel;
-
         QGraphicsWidget* m_smallWidget;
         QGraphicsWidget* m_fullWidget;
-
-        QString m_smallText;
-        QString m_fullText;
-        QString m_logo;
+        QGraphicsGridLayout* m_smallLayout;
+        QGraphicsGridLayout* m_fullLayout;
+        Plasma::PushButton* m_pushButton;
         Plasma::Label *m_pixmapLabel;
         Plasma::Label *m_smallPixmapLabel;
-        QPixmap m_pixmap;
-        //QString m_name;
-        //QString m_pluginName;
-        //QString m_comment;
-        //QString m_kcmName;
+
+        QString m_logo;
+        QString m_smallText;
+        QString m_fullText;
+        QString m_buttonText;
 };
 }
 

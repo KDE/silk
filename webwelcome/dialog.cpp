@@ -18,10 +18,8 @@
 */
 //Qt
 #include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
 #include <QLabel>
-//#include <QVBoxLayout>
-//#include <QTimer>
-//#include <QWebFrame>
 
 //KDE
 #include <KDebug>
@@ -47,7 +45,7 @@ using namespace SilkWebWelcome;
 Dialog::Dialog(QGraphicsWidget *parent)
     : QGraphicsWidget(parent)
 {
-    setMinimumSize(400, 300);
+    setMinimumSize(400, 400);
     buildDialog();
 }
 
@@ -60,10 +58,9 @@ void Dialog::buildDialog()
     QGraphicsLinearLayout* lay = new QGraphicsLinearLayout();
     setLayout(lay);
 
-    
     m_tabBar = new Plasma::TabBar(this);
     lay->addItem(m_tabBar);
-    
+
     m_homeWidget = new QGraphicsWidget(this);
     m_gridLayout = new QGraphicsGridLayout();
     m_homeWidget->setLayout(m_gridLayout);

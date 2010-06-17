@@ -18,14 +18,18 @@
 */
 //Qt
 #include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
 #include <QPixmap>
 
 //KDE
 #include <KDebug>
 #include <KRun>
 #include <KStandardDirs>
+
 //plasma
 #include <Plasma/IconWidget>
+#include <Plasma/Label>
+#include <Plasma/PushButton>
 #include <Plasma/Theme>
 #include <Plasma/WebView>
 
@@ -44,9 +48,7 @@ ServiceContainer::ServiceContainer(QGraphicsWidget *parent)
     kDebug();
     setup();
     setAcceptsHoverEvents(true);
-    //setDrawBackground(true);
     setContentsMargins(8,8,8,8);
-    //connect(this, SIGNAL(clicked()), this, SLOT(run()));
 }
 
 ServiceContainer::~ServiceContainer()
@@ -56,18 +58,15 @@ ServiceContainer::~ServiceContainer()
 void ServiceContainer::setup()
 {
     kDebug() << "setup(),  FIXME: overload!";
+    m_logo = "bird-64.png";
     m_smallText = i18nc("quick intro what this button does", "small text about this service");
     m_fullText = i18nc("the full text explaining what happens here", "the full text explaining what happens, can be longer, point to additional information, and so on.");
-    //m_pixmap = QPixmap();
-    m_logo = "bird-64.png";
+    m_buttonText = i18nc("text on the pushbutton", "Trigger");
 }
 
 void ServiceContainer::run()
 {
     kDebug() << "Running ...; FIXME: overload!";
-    //kDebug() << "Run clicked, starting kcmshell4"  << m_kcmName;
-    //QString cmd = QString("kcmshell4 %1").arg(m_kcmName);
-    //KRun::runCommand(cmd, 0);
 }
 
 QGraphicsWidget* ServiceContainer::smallWidget()
@@ -76,8 +75,8 @@ QGraphicsWidget* ServiceContainer::smallWidget()
         kDebug() << "creating small widget";
         // TODO: build widget
         m_smallWidget = new Plasma::IconWidget(this);
-        QGraphicsGridLayout* layout = new QGraphicsGridLayout();
-        m_smallWidget->setLayout(layout);
+        m_smallLayout = new QGraphicsGridLayout();
+        m_smallWidget->setLayout(m_smallLayout);
 
         QString image_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/%1").arg(m_logo));
         kDebug() << "Image is at:" << image_path;
@@ -86,17 +85,12 @@ QGraphicsWidget* ServiceContainer::smallWidget()
         m_smallPixmapLabel->setMinimumSize(QSizeF(72, 72));
         //m_smallPixmapLabel->setPreferredSize(QSizeF(72, 72));
         m_smallPixmapLabel->setImage(image_path);
-        layout->addItem(m_smallPixmapLabel, 0, 0);
+        m_smallLayout->addItem(m_smallPixmapLabel, 0, 0);
 
         Plasma::Label* toplbl = new Plasma::Label(this);
         toplbl->setText(m_smallText);
-        layout->addItem(toplbl, 0, 1);
+        m_smallLayout->addItem(toplbl, 0, 1);
         connect(m_smallWidget, SIGNAL(clicked()), this, SIGNAL(showDetails()));
-
-        //Plasma::Label* lbl = new Plasma::Label(this);
-        //lbl->setText(m_smallText);
-        //m_pixmapLabel->setScaledContents(true);
-        //m_pixmapLabel->setPreferredSize(QSize(140, 60));
     }
     return m_smallWidget;
 }
@@ -107,8 +101,8 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         kDebug() << "creating full widget";
         // TODO: build widget
         m_fullWidget = new QGraphicsWidget(this);
-        QGraphicsGridLayout* layout = new QGraphicsGridLayout(m_fullWidget);
-        m_fullWidget->setLayout(layout);
+        m_fullLayout = new QGraphicsGridLayout(m_fullWidget);
+        m_fullWidget->setLayout(m_fullLayout);
 
         QString image_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/%1").arg(m_logo));
         kDebug() << "Image is at:" << image_path;
@@ -116,34 +110,25 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         m_pixmapLabel->setPreferredSize(QSizeF(72, 72));
         m_pixmapLabel->setMinimumSize(QSizeF(72, 72));
         m_pixmapLabel->setImage(image_path);
-        layout->addItem(m_pixmapLabel, 0, 0);
+        m_fullLayout->addItem(m_pixmapLabel, 0, 0);
 
         Plasma::Label* toplbl = new Plasma::Label(m_fullWidget);
         toplbl->setText(m_smallText);
-        layout->addItem(toplbl, 0, 1);
+        m_fullLayout->addItem(toplbl, 0, 1);
 
         Plasma::WebView* lbl = new Plasma::WebView(m_fullWidget);
         lbl->setHtml(m_fullText);
+        m_fullLayout->addItem(lbl, 1, 0, 1, 2);
+
+        m_pushButton = new Plasma::PushButton(m_fullWidget);
+        m_pushButton->setIcon(KIcon("dialog-ok-apply"));
+        m_pushButton->setText(m_buttonText);
+        connect(m_pushButton, SIGNAL(clicked()), this, SLOT(run()));
+        m_fullLayout->addItem(m_pushButton, 2, 1);
         //m_pixmapLabel->setScaledContents(true);
         //m_pixmapLabel->setPreferredSize(QSize(140, 60));
-        layout->addItem(lbl, 1, 0, 1, 2);
     }
     return m_fullWidget;
-}
-
-void ServiceContainer::setPixmap(const QString &img)
-{
-    kDebug() << "+++++++++" << img;
-    QString image_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/%1").arg(img));
-    kDebug() << "Image is at:" << image_path;
-    if (m_smallPixmapLabel) {
-        m_smallPixmapLabel->setImage(image_path);
-    }
-    if (m_pixmapLabel) {
-        m_pixmapLabel->setImage(image_path);
-    }
-    //QString _img = ;
-    //kDebug() << "Image:" << img;
 }
 
 #include "servicecontainer.moc"
