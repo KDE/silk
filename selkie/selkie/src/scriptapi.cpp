@@ -113,7 +113,7 @@ void ScriptApi::showNotification( const QString &text, QString icon )
 {
     kDebug() << "notification:" << text << icon;
     int s = KIconLoader::SizeMedium;
-    KNotification::event(QString("popup"),
+    KNotification::event(QString("selkieevent"),
                          text,
                          KIcon(icon).pixmap(QSize(s, s)));
 }

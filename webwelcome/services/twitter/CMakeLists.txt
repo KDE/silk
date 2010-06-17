@@ -20,8 +20,6 @@ set(PACKAGE "twitter")
 install(FILES webservice.desktop DESTINATION ${SERVICES_INSTALL_DIR} RENAME webservice_${PACKAGE}.desktop)
 install(FILES logo.png DESTINATION ${DATA_INSTALL_DIR}/silk/webservices RENAME logo_${PACKAGE}.png)
 
-install(FILES icons/twitter.png DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
-
 # our KControl Module
 
 set(silk_webservice_${PACKAGE}_PART_SRCS

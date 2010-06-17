@@ -67,6 +67,7 @@ namespace SilkWebWelcome
 
         QString m_smallText;
         QString m_fullText;
+        QString m_logo;
         Plasma::Label *m_pixmapLabel;
         Plasma::Label *m_smallPixmapLabel;
         QPixmap m_pixmap;

@@ -15,3 +15,6 @@ set ( testgreasemonkeyscript_SRCS
 
 kde4_add_executable( testgreasemonkeyscript TEST ${testgreasemonkeyscript_SRCS})
 target_link_libraries( testgreasemonkeyscript ${KDE4_KDEUI_LIBS} )
+
+
+install( FILES selkie.notifyrc DESTINATION ${DATA_INSTALL_DIR}/selkie)
