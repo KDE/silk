@@ -83,8 +83,10 @@ QGraphicsWidget* ServiceContainer::smallWidget()
         m_smallPixmapLabel = new Plasma::Label(m_smallWidget);
         m_smallPixmapLabel->setPreferredSize(QSizeF(72, 72));
         m_smallPixmapLabel->setMinimumSize(QSizeF(72, 72));
+        m_smallPixmapLabel->setMaximumSize(QSizeF(72, 72));
         //m_smallPixmapLabel->setPreferredSize(QSizeF(72, 72));
         m_smallPixmapLabel->setImage(image_path);
+        m_smallPixmapLabel->setScaledContents(true);
         m_smallLayout->addItem(m_smallPixmapLabel, 0, 0);
 
         Plasma::Label* toplbl = new Plasma::Label(this);
@@ -109,7 +111,9 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         m_pixmapLabel = new Plasma::Label(m_fullWidget);
         m_pixmapLabel->setPreferredSize(QSizeF(72, 72));
         m_pixmapLabel->setMinimumSize(QSizeF(72, 72));
+        m_pixmapLabel->setMaximumSize(QSizeF(72, 72));
         m_pixmapLabel->setImage(image_path);
+        m_pixmapLabel->setScaledContents(true);
         m_fullLayout->addItem(m_pixmapLabel, 0, 0);
 
         Plasma::Label* toplbl = new Plasma::Label(m_fullWidget);
@@ -125,8 +129,6 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         m_pushButton->setText(m_buttonText);
         connect(m_pushButton, SIGNAL(clicked()), this, SLOT(run()));
         m_fullLayout->addItem(m_pushButton, 2, 1);
-        //m_pixmapLabel->setScaledContents(true);
-        //m_pixmapLabel->setPreferredSize(QSize(140, 60));
     }
     return m_fullWidget;
 }
