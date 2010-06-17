@@ -29,6 +29,8 @@ install(FILES plasma-applet-webwelcome.desktop DESTINATION ${SERVICES_INSTALL_DI
 #install(FILES user.css DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
 install(FILES services/webservice.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
+install(FILES icons/twitter.png DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
+
 # Disabled for now
 #add_subdirectory("services")
 

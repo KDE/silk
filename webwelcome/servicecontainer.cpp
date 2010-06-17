@@ -37,7 +37,9 @@ using namespace SilkWebWelcome;
 ServiceContainer::ServiceContainer(QGraphicsWidget *parent)
     : QGraphicsWidget(parent),
     m_smallWidget(0),
-    m_fullWidget(0)
+    m_fullWidget(0),
+    m_smallPixmapLabel(0),
+    m_pixmapLabel(0)
 {
     kDebug();
     setup();
@@ -56,7 +58,7 @@ void ServiceContainer::setup()
     kDebug() << "setup(),  FIXME: overload!";
     m_smallText = i18nc("quick intro what this button does", "small text about this service");
     m_fullText = i18nc("the full text explaining what happens here", "the full text explaining what happens, can be longer, point to additional information, and so on.");
-    m_pixmap = QPixmap();
+    //m_pixmap = QPixmap();
 }
 
 void ServiceContainer::run()
@@ -76,10 +78,11 @@ QGraphicsWidget* ServiceContainer::smallWidget()
         QGraphicsGridLayout* layout = new QGraphicsGridLayout();
         m_smallWidget->setLayout(layout);
 
-        Plasma::Label* pixmaplbl = new Plasma::Label(this);
-        //pixmaplbl->setText(m_smallText);
+        m_smallPixmapLabel = new Plasma::Label(this);
+        //m_pixmapLabel->setText(m_smallText);
         // setImage...
-        layout->addItem(pixmaplbl, 0, 1);
+        setPixmap("twitter.png");
+        layout->addItem(m_smallPixmapLabel, 0, 1);
 
         Plasma::Label* toplbl = new Plasma::Label(this);
         toplbl->setText(m_smallText);
@@ -103,10 +106,11 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         QGraphicsGridLayout* layout = new QGraphicsGridLayout(m_fullWidget);
         m_fullWidget->setLayout(layout);
 
-        Plasma::Label* pixmaplbl = new Plasma::Label(m_fullWidget);
-        //pixmaplbl->setText(m_smallText);
+        m_pixmapLabel = new Plasma::Label(m_fullWidget);
+        //m_pixmapLabel->setText(m_smallText);
         // setImage...
-        layout->addItem(pixmaplbl, 0, 0);
+        layout->addItem(m_pixmapLabel, 0, 0);
+        setPixmap("twitter.png");
 
         Plasma::Label* toplbl = new Plasma::Label(m_fullWidget);
         toplbl->setText(m_smallText);
@@ -123,6 +127,14 @@ QGraphicsWidget* ServiceContainer::fullWidget()
 
 void ServiceContainer::setPixmap(const QString &img)
 {
+    QString image_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/%1").arg(img));
+    kDebug() << "Image is at:" << image_path;
+    if (m_smallPixmapLabel) {
+        m_smallPixmapLabel->setImage(img);
+    }
+    if (m_pixmapLabel) {
+        m_pixmapLabel->setImage(img);
+    }
     //QString _img = ;
     kDebug() << "Image:" << img;
 }
