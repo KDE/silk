@@ -39,7 +39,7 @@
 
 //own
 #include "dialog.h"
-//#include "servicebutton.h"
+#include "servicecontainer.h"
 #include "stylesheet.h"
 
 using namespace SilkWebWelcome;
@@ -64,17 +64,18 @@ void Dialog::buildDialog()
 
     m_dashboard = new Plasma::WebView(this);
     QString html = QString("<style>\n%1\n</style>\n").arg(m_styleSheet->styleSheet());
-    html.append("<h1>Welcome to your Desktop</h1>\n");
-    html.append("<p>Please take some minutes to set up your online services on this system.\n");
-    html.append("Your passwords will be safely stored in the KWallet secure storage.</p>");
+    html.append("<h1>The Web on your Desktop</h1>\n");
+    html.append("<p>Many KDE applications can make use of services you find on the web. Read your Twitter messages directly from your desktop, write your weblog entries offline, share your photos on FlickR -- all that is very easy.</p>");
+    html.append("<p>Just follow these steps and suggestions to find out about and setup this functionality:</p>");
     m_dashboard->setHtml(html);
-    m_dashboard->setMinimumHeight(145);
-    m_dashboard->setMaximumHeight(145);
+    m_dashboard->setMinimumHeight(170);
+    m_dashboard->setMaximumHeight(200);
     m_gridLayout->addItem(m_dashboard, 0, 0, 1, 2); // top cell, spanning 2 columns
 
     loadServices();
 }
 
+/*
 void Dialog::loadServices()
 {
     kDebug() << "Looking for webservice plugins...";
@@ -86,8 +87,8 @@ void Dialog::loadServices()
     foreach (const KSharedPtr<KService> s, offers) {
         // Create plugininfo, feed that to the button to load it up
         KPluginInfo* info = new KPluginInfo(s);
-        ServiceButton* button = new ServiceButton(this);
-        button->load(info);
+        //ServiceButton* button = new ServiceButton(this);
+        //button->load(info);
 
         // And sort our button into the layout, into two columns and as many rows as we need
         m_gridLayout->addItem(button, row, col);
@@ -101,5 +102,14 @@ void Dialog::loadServices()
     }
     kDebug() << "Done, found" << offers.count();
 }
+*/
 
+void Dialog::loadServices()
+{
+    int row = 1;
+    ServiceContainer* w1 = new ServiceContainer(this);
+    m_gridLayout->addItem(w1->smallWidget(), row, 0);
+    row++;
+    
+}
 #include "dialog.moc"

@@ -9,7 +9,8 @@ set(webwelcome_SRCS
     stylesheet.cpp
     applet.cpp
     dialog.cpp
-    servicebutton.cpp
+    #servicebutton.cpp
+    servicecontainer.cpp
     )
 
 #kde4_add_ui_files(webwelcome_SRCS wwConfig.ui )
@@ -28,7 +29,8 @@ install(FILES plasma-applet-webwelcome.desktop DESTINATION ${SERVICES_INSTALL_DI
 #install(FILES user.css DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
 install(FILES services/webservice.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
-add_subdirectory("services")
+# Disabled for now
+#add_subdirectory("services")
 
 #install(FILES services/twitter/webservice_twitter.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 # install all .png files from images/ subdirectory
