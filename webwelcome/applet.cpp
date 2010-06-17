@@ -32,6 +32,7 @@
 #include <KToolInvocation>
 
 //plasma
+#include <Plasma/Containment>
 #include <Plasma/Dialog>
 #include <Plasma/IconWidget>
 #include <Plasma/Theme>
@@ -67,6 +68,13 @@ void Applet::init()
     //configChanged();
 }
 
+void Applet::handleAddApplet(const QString &applet)
+{
+    kDebug() << "Adding applet ..." << applet;
+    containment()->addApplet(applet);
+}
+
+
 QGraphicsWidget* Applet::graphicsWidget()
 {
     if (!m_dialog) {
@@ -74,6 +82,7 @@ QGraphicsWidget* Applet::graphicsWidget()
         setLayout(lay);
         m_dialog = new Dialog(this);
         lay->addItem(m_dialog);
+        connect(m_dialog, SIGNAL(addApplet(const QString&)), this, SLOT(handleAddApplet(const QString&)));
     }
     return m_dialog;
 }

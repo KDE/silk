@@ -44,6 +44,9 @@ namespace SilkWebWelcome
         void init();
         QGraphicsWidget *graphicsWidget();
 
+    private Q_SLOTS:
+        void handleAddApplet(const QString &applet);
+
     private:
         Dialog *m_dialog;
   };

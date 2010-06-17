@@ -61,6 +61,9 @@ namespace SilkWebWelcome
         Dialog(QGraphicsWidget *parent);
         virtual ~Dialog();
 
+    Q_SIGNALS:
+        void addApplet(const QString&);
+
     private Q_SLOTS:
         void widgetDetails();
 

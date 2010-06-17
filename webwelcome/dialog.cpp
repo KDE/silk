@@ -37,7 +37,8 @@
 
 //own
 #include "dialog.h"
-#include "servicecontainer.h"
+//#include "servicecontainer.h"
+#include "services/news.h"
 #include "stylesheet.h"
 
 using namespace SilkWebWelcome;
@@ -78,7 +79,7 @@ void Dialog::buildDialog()
     m_gridLayout->addItem(m_dashboard, 0, 0, 1, 2); // top cell, spanning 2 columns
 
     m_tabBar->addTab("Home", m_homeWidget);
-    
+
     loadServices();
 }
 
@@ -117,6 +118,11 @@ void Dialog::loadServices()
 
     ServiceContainer* w1 = new ServiceContainer(this);
     addService(w1, row);
+    row++;
+
+    News* news = new News(this);
+    connect(news, SIGNAL(addApplet(const QString&)), this, SIGNAL(addApplet(const QString&)));
+    addService(news, row);
     row++;
 }
 

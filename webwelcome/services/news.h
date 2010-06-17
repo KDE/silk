@@ -17,56 +17,27 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef SERVICECONTAINER_H
-#define SERVICECONTAINER_H
+#ifndef NEWS_H
+#define NEWS_H
 
-//Qt
-#include <QGraphicsWidget>
+// own
+#include "../servicecontainer.h"
 
-class QGraphicsGridLayout;
-
-// Plasma
-namespace Plasma
-{
-    class IconWidget;
-    class PushButton;
-    class Label;
-}
 
 namespace SilkWebWelcome
 {
-  class ServiceContainer : public QGraphicsWidget
+  class News : public ServiceContainer
   {
   Q_OBJECT
 
     public:
-        ServiceContainer(QGraphicsWidget *parent = 0);
-        virtual ~ServiceContainer();
-        virtual void setup();
-
-        QGraphicsWidget* smallWidget();
-        QGraphicsWidget* fullWidget();
-
-  Q_SIGNALS:
-        void showDetails();
-        void addApplet(const QString&);
+        News(QGraphicsWidget *parent = 0);
+        ~News();
+        void setup();
 
     public Q_SLOTS:
         virtual void run();
 
-    protected:
-        QGraphicsWidget* m_smallWidget;
-        QGraphicsWidget* m_fullWidget;
-        QGraphicsGridLayout* m_smallLayout;
-        QGraphicsGridLayout* m_fullLayout;
-        Plasma::PushButton* m_pushButton;
-        Plasma::Label *m_pixmapLabel;
-        Plasma::Label *m_smallPixmapLabel;
-
-        QString m_logo;
-        QString m_smallText;
-        QString m_fullText;
-        QString m_buttonText;
 };
 }
 

@@ -59,7 +59,7 @@ void ServiceContainer::setup()
 {
     kDebug() << "setup(),  FIXME: overload!";
     m_logo = "bird-64.png";
-    m_smallText = i18nc("quick intro what this button does", "small text about this service");
+    m_smallText = i18nc("quick intro what this button does", "<h2>small text about this service</h2>");
     m_fullText = i18nc("the full text explaining what happens here", "the full text explaining what happens, can be longer, point to additional information, and so on.");
     m_buttonText = i18nc("text on the pushbutton", "Trigger");
 }

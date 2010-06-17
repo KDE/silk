@@ -11,6 +11,7 @@ set(webwelcome_SRCS
     dialog.cpp
     #servicebutton.cpp
     servicecontainer.cpp
+    services/news.cpp
     )
 
 #kde4_add_ui_files(webwelcome_SRCS wwConfig.ui )
@@ -30,6 +31,12 @@ install(FILES plasma-applet-webwelcome.desktop DESTINATION ${SERVICES_INSTALL_DI
 install(FILES services/webservice.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 install(FILES images/bird-64.png DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
+
+# News widget
+install(FILES services/news-add.js DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
+install(FILES images/news-64.png DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
+
+
 
 # Disabled for now
 #add_subdirectory("services")
