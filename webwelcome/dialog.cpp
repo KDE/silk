@@ -57,12 +57,20 @@ Dialog::~Dialog()
 
 void Dialog::buildDialog()
 {
-    m_gridLayout = new QGraphicsGridLayout(this);
-    setLayout(m_gridLayout);
+    QGraphicsLinearLayout* lay = new QGraphicsLinearLayout();
+    setLayout(lay);
+
+    
+    m_tabBar = new Plasma::TabBar(this);
+    lay->addItem(m_tabBar);
+    
+    m_homeWidget = new QGraphicsWidget(this);
+    m_gridLayout = new QGraphicsGridLayout();
+    m_homeWidget->setLayout(m_gridLayout);
 
     m_styleSheet = new StyleSheet(QString(), this);
 
-    m_dashboard = new Plasma::WebView(this);
+    m_dashboard = new Plasma::WebView(m_homeWidget);
     QString html = QString("<style>\n%1\n</style>\n").arg(m_styleSheet->styleSheet());
     html.append("<h1>The Web on your Desktop</h1>\n");
     html.append("<p>Many KDE applications can make use of services you find on the web. Read your Twitter messages directly from your desktop, write your weblog entries offline, share your photos on FlickR -- all that is very easy.</p>");
@@ -72,6 +80,8 @@ void Dialog::buildDialog()
     m_dashboard->setMaximumHeight(200);
     m_gridLayout->addItem(m_dashboard, 0, 0, 1, 2); // top cell, spanning 2 columns
 
+    m_tabBar->addTab("Home", m_homeWidget);
+    
     loadServices();
 }
 
@@ -107,9 +117,33 @@ void Dialog::loadServices()
 void Dialog::loadServices()
 {
     int row = 1;
+
     ServiceContainer* w1 = new ServiceContainer(this);
-    m_gridLayout->addItem(w1->smallWidget(), row, 0);
+    addService(w1, row);
     row++;
-    
+}
+
+void Dialog::addService(ServiceContainer* container, int row)
+{
+    m_gridLayout->addItem(container->smallWidget(), row, 0);
+    m_containers << container;
+    connect(container, SIGNAL(showDetails()), this, SLOT(widgetDetails()));
+
+}
+
+void Dialog::widgetDetails()
+{
+    kDebug() << "widgetDetails";
+    ServiceContainer *container = dynamic_cast<ServiceContainer*>(sender());
+    if (container) {
+        if (m_tabBar->count() > 1) {
+            m_tabBar->removeTab(1);
+        }
+        kDebug() << "Adding tab";
+        m_tabBar->addTab("Details", container->fullWidget());
+        m_tabBar->setCurrentIndex(1);
+    } else {
+        kDebug() << "Invalid container, sender is not a ServiceContainer";
+    }
 }
 #include "dialog.moc"

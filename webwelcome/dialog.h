@@ -39,7 +39,7 @@
 #include <Plasma/WebView>
 
 // Own
-#include "servicebutton.h"
+#include "servicecontainer.h"
 
 class StyleSheet;
 //class Applet;
@@ -61,17 +61,23 @@ namespace SilkWebWelcome
         Dialog(QGraphicsWidget *parent);
         virtual ~Dialog();
 
+    private Q_SLOTS:
+        void widgetDetails();
+
     private :
         void buildDialog();
         void loadServices();
+        void addService(ServiceContainer* container, int row);
 
         QGraphicsGridLayout *m_gridLayout;
+        QGraphicsWidget *m_homeWidget;
+        Plasma::TabBar* m_tabBar;
         Plasma::WebView *m_dashboard;
         QHash<QString, QGraphicsWidget*> m_serviceButtons;
 
         StyleSheet *m_styleSheet;
 
-        QList<ServiceButton*> m_buttons;
+        QList<ServiceContainer*> m_containers;
   };
 }
 

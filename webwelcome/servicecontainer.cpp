@@ -27,7 +27,7 @@
 //plasma
 #include <Plasma/IconWidget>
 #include <Plasma/Theme>
-
+#include <Plasma/WebView>
 
 //own
 #include "servicecontainer.h"
@@ -44,7 +44,7 @@ ServiceContainer::ServiceContainer(QGraphicsWidget *parent)
     setAcceptsHoverEvents(true);
     //setDrawBackground(true);
     setContentsMargins(8,8,8,8);
-    connect(this, SIGNAL(clicked()), this, SLOT(run()));
+    //connect(this, SIGNAL(clicked()), this, SLOT(run()));
 }
 
 ServiceContainer::~ServiceContainer()
@@ -72,7 +72,7 @@ QGraphicsWidget* ServiceContainer::smallWidget()
     if (!m_smallWidget) {
         kDebug() << "creating small widget";
         // TODO: build widget
-        m_smallWidget = new QGraphicsWidget(this);
+        m_smallWidget = new Plasma::IconWidget(this);
         QGraphicsGridLayout* layout = new QGraphicsGridLayout();
         m_smallWidget->setLayout(layout);
 
@@ -84,6 +84,7 @@ QGraphicsWidget* ServiceContainer::smallWidget()
         Plasma::Label* toplbl = new Plasma::Label(this);
         toplbl->setText(m_smallText);
         layout->addItem(toplbl, 1, 1);
+        connect(m_smallWidget, SIGNAL(clicked()), this, SIGNAL(showDetails()));
 
         //Plasma::Label* lbl = new Plasma::Label(this);
         //lbl->setText(m_smallText);
@@ -99,20 +100,20 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         kDebug() << "creating full widget";
         // TODO: build widget
         m_fullWidget = new QGraphicsWidget(this);
-        QGraphicsGridLayout* layout = new QGraphicsGridLayout(this);
+        QGraphicsGridLayout* layout = new QGraphicsGridLayout(m_fullWidget);
         m_fullWidget->setLayout(layout);
 
-        Plasma::Label* pixmaplbl = new Plasma::Label(this);
+        Plasma::Label* pixmaplbl = new Plasma::Label(m_fullWidget);
         //pixmaplbl->setText(m_smallText);
         // setImage...
-        layout->addItem(pixmaplbl, 0, 1);
+        layout->addItem(pixmaplbl, 0, 0);
 
-        Plasma::Label* toplbl = new Plasma::Label(this);
+        Plasma::Label* toplbl = new Plasma::Label(m_fullWidget);
         toplbl->setText(m_smallText);
-        layout->addItem(toplbl, 1, 1);
+        layout->addItem(toplbl, 0, 1);
 
-        Plasma::Label* lbl = new Plasma::Label(this);
-        lbl->setText(m_fullText);
+        Plasma::WebView* lbl = new Plasma::WebView(m_fullWidget);
+        lbl->setHtml(m_fullText);
         //m_pixmapLabel->setScaledContents(true);
         //m_pixmapLabel->setPreferredSize(QSize(140, 60));
         layout->addItem(lbl, 1, 0, 1, 2);

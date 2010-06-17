@@ -51,6 +51,9 @@ namespace SilkWebWelcome
         QGraphicsWidget* smallWidget();
         QGraphicsWidget* fullWidget();
 
+  Q_SIGNALS:
+        void showDetails();
+
     public Q_SLOTS:
         virtual void run();
 
