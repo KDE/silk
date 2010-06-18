@@ -58,6 +58,7 @@ void Twitter::setup()
     m_smallText = i18nc("quick intro what this button does", "Follow your Friends on Twitter");
     m_fullText = i18nc("the full text explaining what happens here", "<p><em>Add a Twitter widget to see what your friends are thinking.</em></p>\n" \
     "<p>Click on the Twitter Widget's \"Configure...\" button to enter your account information.. </p>\n" \
+    "<p><em>Choqok</em> is a more powerful application for all your microblogging needs. <a href=\"startchoqok\">Start Choqok</a></p>" \
     "<p><strong>Click on the button below to add a Twitter Widget to your desktop.</strong></p>");
     m_buttonText = i18nc("text on the pushbutton", "Add Twitter Widget");
 }
@@ -72,5 +73,24 @@ void Twitter::run()
     //kDebug() << ">>>>>>>>>>>>> HTML:\n\n" << m_mainView->html();
 }
 
+void Twitter::linkClicked(const QUrl &url)
+{
+    if (url.toString() == "startchoqok") {
+        runChoqok();
+    } else {
+        kDebug() << "don't know what to do with URL, passing into parent class";
+        ServiceContainer::linkClicked(url);
+    }
+}
+
+void Twitter::runChoqok()
+{
+    kDebug() << "Trying to start Choqok";
+    if (KRun::runCommand("choqok", 0)) {
+        kDebug() << "Yay! =)";
+    } else {
+        kDebug() << "Nay! :-(";
+    }
+}
 
 #include "twitter.moc"

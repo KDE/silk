@@ -55,10 +55,11 @@ namespace SilkWebWelcome
 
     public Q_SLOTS:
         virtual void run();
+        virtual void linkClicked(const QUrl&);
         void widgetDestroyed();
 
     protected:
-        QGraphicsWidget* m_smallWidget;
+        Plasma::IconWidget* m_smallWidget;
         QGraphicsWidget* m_fullWidget;
         QGraphicsGridLayout* m_smallLayout;
         QGraphicsGridLayout* m_fullLayout;

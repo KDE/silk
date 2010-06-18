@@ -20,6 +20,8 @@
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
 #include <QPixmap>
+#include <QWebFrame>
+#include <QWebPage>
 
 //KDE
 #include <KDebug>
@@ -82,22 +84,28 @@ QGraphicsWidget* ServiceContainer::smallWidget()
         kDebug() << "creating small widget" << m_style;
         // TODO: build widget
         m_smallWidget = new Plasma::IconWidget();
+        m_smallWidget->setAcceptsHoverEvents(true);
+        m_smallWidget->setDrawBackground(true);
+        m_smallWidget->setMinimumWidth(240);
+        m_smallWidget->setMaximumHeight(72);
         m_smallLayout = new QGraphicsGridLayout(m_smallWidget);
         m_smallWidget->setLayout(m_smallLayout);
 
-        QString image_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/%1").arg(m_logo));
+        QString image_path = KGlobal::dirs()->findResource("data",
+                                            QString("plasma-applet-webwelcome/%1").arg(m_logo));
         kDebug() << "Image is at:" << image_path;
         m_smallPixmapLabel = new Plasma::Label(m_smallWidget);
-        m_smallPixmapLabel->setPreferredSize(QSizeF(72, 72));
-        m_smallPixmapLabel->setMinimumSize(QSizeF(72, 72));
-        m_smallPixmapLabel->setMaximumSize(QSizeF(72, 72));
-        //m_smallPixmapLabel->setPreferredSize(QSizeF(72, 72));
+        m_smallPixmapLabel->setPreferredSize(QSizeF(48, 48));
+        m_smallPixmapLabel->setMinimumSize(QSizeF(48, 48));
+        m_smallPixmapLabel->setMaximumSize(QSizeF(48, 48));
+        //m_smallPixmapLabel->setPreferredSize(QSizeF(48, 48));
         m_smallPixmapLabel->setImage(image_path);
         m_smallPixmapLabel->setScaledContents(true);
         m_smallLayout->addItem(m_smallPixmapLabel, 0, 0);
 
         Plasma::Label* toplbl = new Plasma::Label(m_smallWidget);
-        toplbl->setText(QString("<style>\n%1\n</style>\n<body><strong>%2</strong></body>").arg(m_styleSheet->styleSheet(), m_smallText));
+        toplbl->setText(QString("<style>\n%1\n</style>\n<body><strong>%2</strong></body>").arg(
+                                                        m_styleSheet->styleSheet(), m_smallText));
         m_smallLayout->addItem(toplbl, 0, 1);
         connect(m_smallWidget, SIGNAL(clicked()), this, SIGNAL(showDetails()));
     }
@@ -114,7 +122,8 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         m_fullLayout = new QGraphicsGridLayout(m_fullWidget);
         m_fullWidget->setLayout(m_fullLayout);
 
-        QString image_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/%1").arg(m_logo));
+        QString image_path = KGlobal::dirs()->findResource("data",
+                                            QString("plasma-applet-webwelcome/%1").arg(m_logo));
         kDebug() << "Image is at:" << image_path;
         m_pixmapLabel = new Plasma::Label(m_fullWidget);
         m_pixmapLabel->setPreferredSize(QSizeF(72, 72));
@@ -125,11 +134,23 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         m_fullLayout->addItem(m_pixmapLabel, 0, 0);
 
         Plasma::Label* toplbl = new Plasma::Label(m_fullWidget);
-        toplbl->setText(QString("<style>\n%1\n</style>\n<body><h2>%2</h2></body>").arg(m_styleSheet->styleSheet(), m_smallText));
+        toplbl->setText(QString("<style>\n%1\n</style>\n<body><h2>%2</h2></body>").arg(
+                                                        m_styleSheet->styleSheet(), m_smallText));
         m_fullLayout->addItem(toplbl, 0, 1);
 
         m_mainView = new Plasma::WebView(m_fullWidget);
-        m_mainView->setHtml(QString("<style>\n%1\n</style>\n<body>%2</body>").arg(m_styleSheet->styleSheet(), m_fullText));
+        m_mainView->setHtml(QString("<style>\n%1\n</style>\n<body>%2</body>").arg(
+                                                        m_styleSheet->styleSheet(), m_fullText));
+        m_mainView->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+        m_mainView->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
+        //QWebPage* p = m_mainView->page();
+        //connect(p, SIGNAL(linkClicked(const QUrl&)), this, SLOT(linkClicked(const QUrl&)));
+
+        QWebPage *_page = m_mainView->mainFrame()->page();
+        _page->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+        connect(_page, SIGNAL(linkClicked(const QUrl&)), SLOT(linkClicked(const QUrl&)));
+
+        
         m_fullLayout->addItem(m_mainView, 1, 0, 1, 2);
 
         QGraphicsLinearLayout* buttonLayout = new QGraphicsLinearLayout;
@@ -160,5 +181,11 @@ void ServiceContainer::widgetDestroyed()
     kDebug() << "Fullwidget is gone.";
     m_fullWidget = 0;
 }
+
+void ServiceContainer::linkClicked(const QUrl &url)
+{
+    kDebug() << "link clicked, but apparently not implemented in subsclass:" << url.toString();
+}
+
 
 #include "servicecontainer.moc"

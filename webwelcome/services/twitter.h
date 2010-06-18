@@ -37,7 +37,8 @@ namespace SilkWebWelcome
 
     public Q_SLOTS:
         virtual void run();
-
+        virtual void linkClicked(const QUrl&);
+        void runChoqok();
 };
 }
 

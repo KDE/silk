@@ -20,6 +20,7 @@
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
 #include <QLabel>
+#include <QWebFrame>
 
 //KDE
 #include <KDebug>
@@ -71,6 +72,8 @@ void Dialog::buildDialog()
     m_styleSheet = new StyleSheet(QString(), this);
 
     m_dashboard = new Plasma::WebView(m_homeWidget);
+    m_dashboard->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+    m_dashboard->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     QString html = QString("<style>\n%1\n</style>\n").arg(m_styleSheet->styleSheet());
     html.append("<h1>The Web on your Desktop</h1>\n");
     html.append("<p>Many KDE applications can make use of services you find on the web. Read your Twitter messages directly from your desktop, write your weblog entries offline, share your photos on FlickR -- all that is very easy.</p>");
