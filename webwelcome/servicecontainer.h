@@ -25,6 +25,7 @@
 
 class QGraphicsGridLayout;
 
+class StyleSheet;
 // Plasma
 namespace Plasma
 {
@@ -50,23 +51,30 @@ namespace SilkWebWelcome
   Q_SIGNALS:
         void showDetails();
         void addApplet(const QString&);
+        void back();
 
     public Q_SLOTS:
         virtual void run();
+        void widgetDestroyed();
 
     protected:
         QGraphicsWidget* m_smallWidget;
         QGraphicsWidget* m_fullWidget;
         QGraphicsGridLayout* m_smallLayout;
         QGraphicsGridLayout* m_fullLayout;
+        Plasma::PushButton* m_backButton;
         Plasma::PushButton* m_pushButton;
         Plasma::Label *m_pixmapLabel;
         Plasma::Label *m_smallPixmapLabel;
+        Plasma::WebView* m_mainView;
 
+        QString m_style;
         QString m_logo;
         QString m_smallText;
         QString m_fullText;
         QString m_buttonText;
+
+        StyleSheet* m_styleSheet;
 };
 }
 

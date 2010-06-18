@@ -34,43 +34,43 @@
 #include <Plasma/WebView>
 
 //own
-#include "news.h"
+#include "twitter.h"
 
 using namespace SilkWebWelcome;
 
-News::News(QGraphicsWidget *parent)
+Twitter::Twitter(QGraphicsWidget *parent)
     : ServiceContainer(parent)
 {
     //ServiceContainer(parent);
-    kDebug() << "Adding News";
+    kDebug() << "Adding Twitter";
     //ServiceContainer::setup();
     setup();
 }
 
-News::~News()
+Twitter::~Twitter()
 {
 }
 
-void News::setup()
+void Twitter::setup()
 {
-    kDebug() << "setup of News";
-    m_logo = "news-64.png";
-    m_smallText = i18nc("quick intro what this button does", "Follow news feeds");
-    m_fullText = i18nc("the full text explaining what happens here", "<p><em>Add a News widget to your desktop to keep tabs on what's going on in the world.</em></p>\n" \
-    "<p>Click on the News Widget's wrench icon to personalize your news feeds. By pointing a News widget at multiple feeds, you get a timeline view of news items from different sources. You can also add multiple News widgets to your workspace pointing to separate feeds, or collections of feeds. </p>\n" \
-    "<p><strong>Click on the button below to add a News Widget to your desktop.</strong></p>");
-    m_buttonText = i18nc("text on the pushbutton", "Add News Widget");
+    kDebug() << "setup of Twitter";
+    m_logo = "twitter-64.png";
+    m_smallText = i18nc("quick intro what this button does", "Follow your friends on Twitter");
+    m_fullText = i18nc("the full text explaining what happens here", "<p><em>Add a Twitter widget to see what your friends are thinking.</em></p>\n" \
+    "<p>Click on the Twitter Widget's \"Configure...\" button to enter your account information.. </p>\n" \
+    "<p><strong>Click on the button below to add a Twitter Widget to your desktop.</strong></p>");
+    m_buttonText = i18nc("text on the pushbutton", "Add Twitter Widget");
 }
 
-void News::run()
+void Twitter::run()
 {
-    QString js_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/news-add.js"));
-    kDebug() << "Script found at:" << js_path;
-    //emit addApplet("news");
-    kDebug() << "Added News Widget!";
+    //QString js_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/news-add.js"));
+    //kDebug() << "Script found at:" << js_path;
+    emit addApplet("twitter");
+    kDebug() << "Added Twitter Widget!";
 
-    kDebug() << ">>>>>>>>>>>>> HTML:\n\n" << m_mainView->html();
+    //kDebug() << ">>>>>>>>>>>>> HTML:\n\n" << m_mainView->html();
 }
 
 
-#include "news.moc"
+#include "twitter.moc"

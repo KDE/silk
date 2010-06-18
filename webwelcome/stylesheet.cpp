@@ -113,6 +113,7 @@ const QString StyleSheet::processStyleSheet(const QString &css)
         stylesheet = QString("\n\
                     body {\n\
                         color: %textcolor;\n\
+                        text-align: justify;\n\
                         font-size: %fontsize;\n\
                         font-family: %fontfamily;\n\
                     }\n\

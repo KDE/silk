@@ -12,6 +12,7 @@ set(webwelcome_SRCS
     #servicebutton.cpp
     servicecontainer.cpp
     services/news.cpp
+    services/twitter.cpp
     )
 
 #kde4_add_ui_files(webwelcome_SRCS wwConfig.ui )
@@ -30,11 +31,14 @@ install(FILES plasma-applet-webwelcome.desktop DESTINATION ${SERVICES_INSTALL_DI
 #install(FILES user.css DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
 install(FILES services/webservice.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
-install(FILES images/bird-64.png DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
+install(FILES images/twitter-64.png DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
 
 # News widget
-install(FILES services/news-add.js DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
+#install(FILES services/news-add.js DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
 install(FILES images/news-64.png DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
+
+# Twitter widget
+install(FILES images/bird-64.png DESTINATION ${DATA_INSTALL_DIR}/plasma-applet-webwelcome/)
 
 
 

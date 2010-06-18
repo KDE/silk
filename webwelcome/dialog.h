@@ -66,6 +66,7 @@ namespace SilkWebWelcome
 
     private Q_SLOTS:
         void widgetDetails();
+        void back();
 
     private :
         void buildDialog();

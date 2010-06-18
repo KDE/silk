@@ -34,6 +34,7 @@
 #include <Plasma/WebView>
 
 //own
+#include "stylesheet.h"
 #include "servicecontainer.h"
 
 using namespace SilkWebWelcome;
@@ -45,10 +46,13 @@ ServiceContainer::ServiceContainer(QGraphicsWidget *parent)
     m_pixmapLabel(0),
     m_smallPixmapLabel(0)
 {
-    kDebug();
+    kDebug() << "ServiceContainer CTOR";
     setup();
     setAcceptsHoverEvents(true);
     setContentsMargins(8,8,8,8);
+
+    m_styleSheet = new StyleSheet(QString(), this);
+    //QString m_style = QString("<style>\n%1\n</style>\n").arg(styleSheet->styleSheet());
 }
 
 ServiceContainer::~ServiceContainer()
@@ -59,9 +63,12 @@ void ServiceContainer::setup()
 {
     kDebug() << "setup(),  FIXME: overload!";
     m_logo = "bird-64.png";
-    m_smallText = i18nc("quick intro what this button does", "<h2>small text about this service</h2>");
+    m_smallText = i18nc("quick intro what this button does", "Add a Service");
     m_fullText = i18nc("the full text explaining what happens here", "the full text explaining what happens, can be longer, point to additional information, and so on.");
     m_buttonText = i18nc("text on the pushbutton", "Trigger");
+
+    //delete styleSheet;
+    kDebug() << "====== Style:" << m_style;
 }
 
 void ServiceContainer::run()
@@ -72,7 +79,7 @@ void ServiceContainer::run()
 QGraphicsWidget* ServiceContainer::smallWidget()
 {
     if (!m_smallWidget) {
-        kDebug() << "creating small widget";
+        kDebug() << "creating small widget" << m_style;
         // TODO: build widget
         m_smallWidget = new Plasma::IconWidget(this);
         m_smallLayout = new QGraphicsGridLayout();
@@ -90,7 +97,7 @@ QGraphicsWidget* ServiceContainer::smallWidget()
         m_smallLayout->addItem(m_smallPixmapLabel, 0, 0);
 
         Plasma::Label* toplbl = new Plasma::Label(this);
-        toplbl->setText(m_smallText);
+        toplbl->setText(QString("<style>\n%1\n</style>\n<body><h3>%2</h3></body>").arg(m_styleSheet->styleSheet(), m_smallText));
         m_smallLayout->addItem(toplbl, 0, 1);
         connect(m_smallWidget, SIGNAL(clicked()), this, SIGNAL(showDetails()));
     }
@@ -103,6 +110,7 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         kDebug() << "creating full widget";
         // TODO: build widget
         m_fullWidget = new QGraphicsWidget(this);
+        connect(m_fullWidget, SIGNAL(destroyed(QObject*)), this, SLOT(widgetDestroyed()));
         m_fullLayout = new QGraphicsGridLayout(m_fullWidget);
         m_fullWidget->setLayout(m_fullLayout);
 
@@ -117,20 +125,40 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         m_fullLayout->addItem(m_pixmapLabel, 0, 0);
 
         Plasma::Label* toplbl = new Plasma::Label(m_fullWidget);
-        toplbl->setText(m_smallText);
+        toplbl->setText(QString("<style>\n%1\n</style>\n<body><h3>%2</h3></body>").arg(m_styleSheet->styleSheet(), m_smallText));
         m_fullLayout->addItem(toplbl, 0, 1);
 
-        Plasma::WebView* lbl = new Plasma::WebView(m_fullWidget);
-        lbl->setHtml(m_fullText);
-        m_fullLayout->addItem(lbl, 1, 0, 1, 2);
+        m_mainView = new Plasma::WebView(m_fullWidget);
+        m_mainView->setHtml(QString("<style>\n%1\n</style>\n<body>%2</body>").arg(m_styleSheet->styleSheet(), m_fullText));
+        m_fullLayout->addItem(m_mainView, 1, 0, 1, 2);
+
+        QGraphicsLinearLayout* buttonLayout = new QGraphicsLinearLayout;
+        m_backButton = new Plasma::PushButton(m_fullWidget);
+        m_backButton->setIcon(KIcon("go-previous"));
+        m_backButton->setText(i18nc("back button in service widget", "Back"));
+        connect(m_backButton, SIGNAL(clicked()), this, SIGNAL(back()));
+        buttonLayout->addItem(m_backButton);
+
+        QGraphicsWidget* spacer = new QGraphicsWidget(m_fullWidget);
+        spacer->setMaximumHeight(10);
+        spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        buttonLayout->addItem(spacer);
 
         m_pushButton = new Plasma::PushButton(m_fullWidget);
         m_pushButton->setIcon(KIcon("dialog-ok-apply"));
         m_pushButton->setText(m_buttonText);
         connect(m_pushButton, SIGNAL(clicked()), this, SLOT(run()));
-        m_fullLayout->addItem(m_pushButton, 2, 1);
+        buttonLayout->addItem(m_pushButton);
+
+        m_fullLayout->addItem(buttonLayout, 2, 0, 1, 2);
     }
     return m_fullWidget;
+}
+
+void ServiceContainer::widgetDestroyed()
+{
+    kDebug() << "Fullwidget is gone.";
+    m_fullWidget = 0;
 }
 
 #include "servicecontainer.moc"

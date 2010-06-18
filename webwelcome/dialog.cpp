@@ -39,6 +39,7 @@
 #include "dialog.h"
 //#include "servicecontainer.h"
 #include "services/news.h"
+#include "services/twitter.h"
 #include "stylesheet.h"
 
 using namespace SilkWebWelcome;
@@ -60,6 +61,7 @@ void Dialog::buildDialog()
     setLayout(lay);
 
     m_tabBar = new Plasma::TabBar(this);
+    m_tabBar->setTabBarShown(false);
     lay->addItem(m_tabBar);
 
     m_homeWidget = new QGraphicsWidget(this);
@@ -73,6 +75,7 @@ void Dialog::buildDialog()
     html.append("<h1>The Web on your Desktop</h1>\n");
     html.append("<p>Many KDE applications can make use of services you find on the web. Read your Twitter messages directly from your desktop, write your weblog entries offline, share your photos on FlickR -- all that is very easy.</p>");
     html.append("<p>Just follow these steps and suggestions to find out about and setup this functionality:</p>");
+    html.append("<p>When done, just remove this widget. You can add it back at any time using \"Add Widgets...\" in the Plasma Toolbox.</p>");
     m_dashboard->setHtml(html);
     m_dashboard->setMinimumHeight(170);
     m_dashboard->setMaximumHeight(200);
@@ -116,12 +119,11 @@ void Dialog::loadServices()
 {
     int row = 1;
 
-    ServiceContainer* w1 = new ServiceContainer(this);
-    addService(w1, row);
+    Twitter* twitter = new Twitter(this);
+    addService(twitter, row);
     row++;
 
     News* news = new News(this);
-    connect(news, SIGNAL(addApplet(const QString&)), this, SIGNAL(addApplet(const QString&)));
     addService(news, row);
     row++;
 }
@@ -131,7 +133,8 @@ void Dialog::addService(ServiceContainer* container, int row)
     m_gridLayout->addItem(container->smallWidget(), row, 0);
     m_containers << container;
     connect(container, SIGNAL(showDetails()), this, SLOT(widgetDetails()));
-
+    connect(container, SIGNAL(addApplet(const QString&)), this, SIGNAL(addApplet(const QString&)));
+    connect(container, SIGNAL(back()), this, SLOT(back()));
 }
 
 void Dialog::widgetDetails()
@@ -139,6 +142,7 @@ void Dialog::widgetDetails()
     kDebug() << "widgetDetails";
     ServiceContainer *container = dynamic_cast<ServiceContainer*>(sender());
     if (container) {
+
         if (m_tabBar->count() > 1) {
             m_tabBar->removeTab(1);
         }
@@ -147,6 +151,14 @@ void Dialog::widgetDetails()
         m_tabBar->setCurrentIndex(1);
     } else {
         kDebug() << "Invalid container, sender is not a ServiceContainer";
+    }
+}
+
+void Dialog::back()
+{
+    m_tabBar->setCurrentIndex(0);
+    if (m_tabBar->count() > 1) {
+        m_tabBar->removeTab(1);
     }
 }
 #include "dialog.moc"
