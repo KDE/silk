@@ -48,7 +48,7 @@ using namespace SilkWebWelcome;
 Dialog::Dialog(QGraphicsWidget *parent)
     : QGraphicsWidget(parent)
 {
-    setMinimumSize(400, 400);
+    setMinimumSize(400, 300);
     buildDialog();
 }
 
