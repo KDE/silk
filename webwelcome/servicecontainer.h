@@ -36,7 +36,7 @@ namespace Plasma
 
 namespace SilkWebWelcome
 {
-  class ServiceContainer : public QGraphicsWidget
+  class ServiceContainer : public QObject
   {
   Q_OBJECT
 

@@ -40,7 +40,7 @@
 using namespace SilkWebWelcome;
 
 ServiceContainer::ServiceContainer(QGraphicsWidget *parent)
-    : QGraphicsWidget(parent),
+    : QObject(parent),
     m_smallWidget(0),
     m_fullWidget(0),
     m_pixmapLabel(0),
@@ -48,8 +48,8 @@ ServiceContainer::ServiceContainer(QGraphicsWidget *parent)
 {
     kDebug() << "ServiceContainer CTOR";
     setup();
-    setAcceptsHoverEvents(true);
-    setContentsMargins(8,8,8,8);
+    //setAcceptsHoverEvents(true);
+    //setContentsMargins(8,8,8,8);
 
     m_styleSheet = new StyleSheet(QString(), this);
     //QString m_style = QString("<style>\n%1\n</style>\n").arg(styleSheet->styleSheet());
@@ -81,8 +81,8 @@ QGraphicsWidget* ServiceContainer::smallWidget()
     if (!m_smallWidget) {
         kDebug() << "creating small widget" << m_style;
         // TODO: build widget
-        m_smallWidget = new Plasma::IconWidget(this);
-        m_smallLayout = new QGraphicsGridLayout();
+        m_smallWidget = new Plasma::IconWidget();
+        m_smallLayout = new QGraphicsGridLayout(m_smallWidget);
         m_smallWidget->setLayout(m_smallLayout);
 
         QString image_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/%1").arg(m_logo));
@@ -96,8 +96,8 @@ QGraphicsWidget* ServiceContainer::smallWidget()
         m_smallPixmapLabel->setScaledContents(true);
         m_smallLayout->addItem(m_smallPixmapLabel, 0, 0);
 
-        Plasma::Label* toplbl = new Plasma::Label(this);
-        toplbl->setText(QString("<style>\n%1\n</style>\n<body><h3>%2</h3></body>").arg(m_styleSheet->styleSheet(), m_smallText));
+        Plasma::Label* toplbl = new Plasma::Label(m_smallWidget);
+        toplbl->setText(QString("<style>\n%1\n</style>\n<body><strong>%2</strong></body>").arg(m_styleSheet->styleSheet(), m_smallText));
         m_smallLayout->addItem(toplbl, 0, 1);
         connect(m_smallWidget, SIGNAL(clicked()), this, SIGNAL(showDetails()));
     }
@@ -109,7 +109,7 @@ QGraphicsWidget* ServiceContainer::fullWidget()
     if (!m_fullWidget) {
         kDebug() << "creating full widget";
         // TODO: build widget
-        m_fullWidget = new QGraphicsWidget(this);
+        m_fullWidget = new QGraphicsWidget();
         connect(m_fullWidget, SIGNAL(destroyed(QObject*)), this, SLOT(widgetDestroyed()));
         m_fullLayout = new QGraphicsGridLayout(m_fullWidget);
         m_fullWidget->setLayout(m_fullLayout);
@@ -125,7 +125,7 @@ QGraphicsWidget* ServiceContainer::fullWidget()
         m_fullLayout->addItem(m_pixmapLabel, 0, 0);
 
         Plasma::Label* toplbl = new Plasma::Label(m_fullWidget);
-        toplbl->setText(QString("<style>\n%1\n</style>\n<body><h3>%2</h3></body>").arg(m_styleSheet->styleSheet(), m_smallText));
+        toplbl->setText(QString("<style>\n%1\n</style>\n<body><h2>%2</h2></body>").arg(m_styleSheet->styleSheet(), m_smallText));
         m_fullLayout->addItem(toplbl, 0, 1);
 
         m_mainView = new Plasma::WebView(m_fullWidget);

@@ -55,7 +55,7 @@ void News::setup()
 {
     kDebug() << "setup of News";
     m_logo = "news-64.png";
-    m_smallText = i18nc("quick intro what this button does", "Follow news feeds");
+    m_smallText = i18nc("quick intro what this button does", "Keep an Eye on News Feeds");
     m_fullText = i18nc("the full text explaining what happens here", "<p><em>Add a News widget to your desktop to keep tabs on what's going on in the world.</em></p>\n" \
     "<p>Click on the News Widget's wrench icon to personalize your news feeds. By pointing a News widget at multiple feeds, you get a timeline view of news items from different sources. You can also add multiple News widgets to your workspace pointing to separate feeds, or collections of feeds. </p>\n" \
     "<p><strong>Click on the button below to add a News Widget to your desktop.</strong></p>");
@@ -66,7 +66,7 @@ void News::run()
 {
     QString js_path = KGlobal::dirs()->findResource("data", QString("plasma-applet-webwelcome/news-add.js"));
     kDebug() << "Script found at:" << js_path;
-    //emit addApplet("news");
+    emit addApplet("news");
     kDebug() << "Added News Widget!";
 
     kDebug() << ">>>>>>>>>>>>> HTML:\n\n" << m_mainView->html();

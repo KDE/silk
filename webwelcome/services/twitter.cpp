@@ -55,7 +55,7 @@ void Twitter::setup()
 {
     kDebug() << "setup of Twitter";
     m_logo = "twitter-64.png";
-    m_smallText = i18nc("quick intro what this button does", "Follow your friends on Twitter");
+    m_smallText = i18nc("quick intro what this button does", "Follow your Friends on Twitter");
     m_fullText = i18nc("the full text explaining what happens here", "<p><em>Add a Twitter widget to see what your friends are thinking.</em></p>\n" \
     "<p>Click on the Twitter Widget's \"Configure...\" button to enter your account information.. </p>\n" \
     "<p><strong>Click on the button below to add a Twitter Widget to your desktop.</strong></p>");
