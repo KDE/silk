@@ -1,2 +1,2 @@
 add_subdirectory(selkie)
-add_subdirectory(webwelcome)
+add_subdirectory(mediawiki)
