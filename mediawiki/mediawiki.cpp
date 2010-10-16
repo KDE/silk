@@ -17,6 +17,24 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "mediawiki.h"
+
+struct MediaWikiPrivate {
+    QUrl url;
+};
+
+MediaWiki::MediaWiki(QUrl const & url)
+    : d(new MediaWikiPrivate)
+{
+    d->url = url;
+}
+
+QUrl MediaWiki::url() const {
+    return d->url;
+}
+
+#ifdef MEDIAWIKI_OLD
+
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -223,4 +241,4 @@ bool MediaWiki::processSearchResult( QIODevice *source )
     return true;
 }
 
-
+#endif

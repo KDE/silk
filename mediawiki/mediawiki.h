@@ -20,6 +20,24 @@
 #ifndef MEDIAWIKI_H
 #define MEDIAWIKI_H
 
+#include <QtCore/QUrl>
+
+class MediaWiki {
+
+public:
+
+    explicit MediaWiki(QUrl const & url);
+
+    QUrl url() const;
+
+private:
+
+    struct MediaWikiPrivate * const d;
+
+};
+
+#ifdef MEDIAWIKI_OLD
+
 #include <QObject>
 #include <QList>
 #include <QUrl>
@@ -128,5 +146,7 @@ private:
 
     struct MediaWikiPrivate *d;
 };
+
+#endif
 
 #endif // MEDIAWIKI_H
