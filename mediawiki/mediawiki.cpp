@@ -17,19 +17,31 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <QtNetwork/QNetworkAccessManager>
+
 #include "mediawiki.h"
 
-struct MediaWikiPrivate {
+struct MediaWikiPrivate
+{
+    QNetworkAccessManager * manager;
     QUrl url;
 };
 
-MediaWiki::MediaWiki(QUrl const & url)
-    : d(new MediaWikiPrivate)
+MediaWiki::MediaWiki(QUrl const & url, QObject * parent)
+    : QObject(parent)
+    , d(new MediaWikiPrivate)
 {
+    d->manager = new QNetworkAccessManager(this);
     d->url = url;
 }
 
-QUrl MediaWiki::url() const {
+QNetworkAccessManager * MediaWiki::manager() const
+{
+    return d->manager;
+}
+
+QUrl MediaWiki::url() const
+{
     return d->url;
 }
 

@@ -20,19 +20,46 @@
 #ifndef MEDIAWIKI_H
 #define MEDIAWIKI_H
 
+#include <QtCore/QObject>
 #include <QtCore/QUrl>
 
-class MediaWiki {
+class QNetworkAccessManager;
+
+/**
+ * @brief Provides access to wiki powered by MediaWiki.
+ */
+class MediaWiki : public QObject {
+
+    Q_OBJECT
+
+    friend class UserGroups;
 
 public:
 
-    explicit MediaWiki(QUrl const & url);
+    /**
+     * @brief Constructs a MediaWiki by its url api.
+     * @param url the url api of the wiki
+     * @param parent the parent object
+     */
+    explicit MediaWiki(QUrl const & url, QObject * parent = 0);
 
+    /**
+     * @brief Returns the url api of the wiki
+     * @returns the url api of the wiki
+     */
     QUrl url() const;
 
 private:
 
+    QNetworkAccessManager * manager() const;
+
     struct MediaWikiPrivate * const d;
+
+private:
+
+    MediaWiki(MediaWiki const &);
+
+    MediaWiki & operator=(MediaWiki const &);
 
 };
 
