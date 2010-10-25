@@ -20,60 +20,48 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
-#include "mediawiki.h"
+#include <qobject.h>
+#include <mediawiki.h>
 #include <QList>
 #include <kdemacros.h>
 class QNetworkReply;
-
-class LoginL {
-
-public:
-
-    QString lgname;
-    QString lgpassword;
-    QString lgtoken;
-    QString lgsessionid;
-
-};
 
 class KDE_EXPORT Login : public QObject
 {
     Q_OBJECT
 public:
-    class Result {
-    public:
-        Result() {
-        };
-
-        Result( const Result &r ) {
-            this->title = r.title;
-            this->url = r.url;
-        };
-
-        Result &operator= (const Result &other)  {
-            this->title = other.title;
-            this->url = other.url;
-
-            return *this;
-        };
-
-        /** The page title of the match. */
-        QString title;
-        /** The URL of the page containing the match. */
-        QUrl url;
-    };
-    explicit Login(MediaWiki const & media, const QString &login, const QString &password, QObject * parent = 0);
+    explicit Login( MediaWiki const & media, const QString &login, const QString &password, QObject * parent = 0 );
 
     virtual ~Login();
 
-private slots:
-    void finishedLogin( QNetworkReply *reply );
-    void finishedToken( QNetworkReply *reply );
-
 signals:
-    void finishedLogin(bool);
-    void finishedToken(bool);
-
+    /**
+     * Emitted when a connection request has been completed.
+     * @param success true if the request was completed successfully.
+     */
+    void finishedLogin( bool );
+    /**
+     * Emitted when a connection has been completed.
+     * @param success true if the connection was completed successfully.
+     */
+    void finishedToken( bool );
+public slots:
+    /**
+     * Aborts the currently running request.
+     */
+    void abort();
+private slots:
+    /**
+     * Reads the xml
+     * if the attribute value is equal to "NeedToken", try to log in the user
+     * else if the attribute value is equal to "Success", the user is logged in
+     */
+    void finishedLogin( QNetworkReply *reply );
+    /**
+     * Reads the xml
+     * if the attribute value is equal to "Success", the user is logged in
+     */
+    void finishedToken( QNetworkReply *reply );
 
 private:
 
