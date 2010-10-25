@@ -28,10 +28,8 @@ void Server::startAndWait()
 void Server::newConnection()
 {
     QMutexLocker locker(&m_mutex);
-    qDebug()<< "nouvelle connection";
     m_clientSocket = m_tcpServer->nextPendingConnection();
     connect(m_clientSocket, SIGNAL(readyRead()), this, SLOT(dataAvailable()));
-    qDebug()<< "writeServerPart";
     this->writeServerPart();
 }
 void Server::dataAvailable()
@@ -125,7 +123,6 @@ void Server::writeServerPart()
 
     QString retour = m_scenarios.isEmpty() ? QString("vide") : m_scenarios.takeFirst();
     QString scenario = "HTTP/1.0 200 Ok\r\nContent-Type: text/html; charset=\"utf-8\"\r\nSet-Cookie: name=value\r\n\r\n" + retour;
-    qDebug() << "martine:" + retour;
     m_clientSocket->write( scenario.toLocal8Bit() );
     //clientSocket->waitForDisconnected();
     m_clientSocket->close();

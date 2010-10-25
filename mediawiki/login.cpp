@@ -24,14 +24,14 @@ Login::Login(MediaWiki const & media, const QString &login, const QString &passw
     : QObject(parent)
     , d(new LoginPrivate)
 {
-    qDebug()<< "Login" ;
+//    qDebug()<< "Login" ;
     d->apiUrl = media.url();
     QUrl url = d->apiUrl;
     QString data = "action=login&lgname="+login+"&lgpassword="+password+"&format=xml";
     d->baseUrl=data;
 
-    qDebug() << "Constructed login URL" << url.toString();
-    qDebug() << "Constructed login postData" << data;
+//    qDebug() << "Constructed login URL" << url.toString();
+//    qDebug() << "Constructed login postData" << data;
 
     // Set the request
     QNetworkRequest request(url);
@@ -39,12 +39,12 @@ Login::Login(MediaWiki const & media, const QString &login, const QString &passw
     // Send the request
     d->manager = new QNetworkAccessManager(this);
 
-    qDebug()<< "d->reply avant";
+//    qDebug()<< "d->reply avant";
     connect( d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedLogin(QNetworkReply *)) );
     d->reply = d->manager->post( request, data.toUtf8() );
 
-    qDebug()<< "d->reply apres connect";
-    qDebug()<< "Fin Login\n" ;
+//    qDebug()<< "d->reply apres connect";
+//    qDebug()<< "Fin Login\n" ;
 }
 
 Login::~Login()
@@ -54,17 +54,17 @@ Login::~Login()
 
 void Login::finishedLogin( QNetworkReply *reply )
 {
-    qDebug()<< "finishedLogin" << reply->error();
+//    qDebug()<< "finishedLogin" << reply->error();
 
     if (reply->error() == QNetworkReply::NoError) {
-        qDebug()<< "pas d erreur";
+//        qDebug()<< "pas d erreur";
         QXmlStreamReader reader(reply);
 
         while(!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if(token == QXmlStreamReader::StartElement) {
                 if(reader.name() == QString("login")) {
-                    qDebug()<<reader.name().toString();
+//                    qDebug()<<reader.name().toString();
                     QXmlStreamAttributes attrs = reader.attributes();
 
                     //TODO : tester l'attribut result si success alors pas de traitement sinon traitement
@@ -76,13 +76,13 @@ void Login::finishedLogin( QNetworkReply *reply )
                     else if(attrs.value( QString("result") ).toString() == "NeedToken")
                     {
                         d->lgtoken= attrs.value( QString("result") ).toString() ;
-                        qDebug() << "tagattribute result"<< d->lgtoken;
+//                        qDebug() << "tagattribute result"<< d->lgtoken;
 
                         d->lgtoken= attrs.value( QString("token") ).toString() ;
-                        qDebug() << "tagattribute token"<< d->lgtoken;
+//                        qDebug() << "tagattribute token"<< d->lgtoken;
 
                         d->lgsessionid = attrs.value( QString("sessionid") ).toString() ;
-                        qDebug() << "tagattribute sessionid"<< d->lgsessionid;
+//                        qDebug() << "tagattribute sessionid"<< d->lgsessionid;
                         emit finishedLogin( true );
                     }
                 }
@@ -91,54 +91,54 @@ void Login::finishedLogin( QNetworkReply *reply )
                 emit finishedLogin( false );
         }
 
-        qDebug()<< "hors de la boucle";
+//        qDebug()<< "hors de la boucle";
 
         QUrl url = d->apiUrl;
         QString data = d->baseUrl.toString();
-        data+="&lgtoken="+d->lgtoken;
+//        data+="&lgtoken="+d->lgtoken;
 
-        qDebug() << "Constructed login URL" << url.toString();
-        qDebug() << "Constructed login postData" << data;
+//        qDebug() << "Constructed login URL" << url.toString();
+//        qDebug() << "Constructed login postData" << data;
 
         // Set the request
         QNetworkRequest request(url);
         request.setRawHeader("User-Agent", "mediawiki-silk");
         request.setRawHeader("Cookie", d->manager->cookieJar()->cookiesForUrl(d->apiUrl).at(0).toRawForm());
 
-        qDebug()<<"cookie "<<d->manager->cookieJar()->cookiesForUrl(d->apiUrl).at(0).toRawForm();
+//        qDebug()<<"cookie "<<d->manager->cookieJar()->cookiesForUrl(d->apiUrl).at(0).toRawForm();
 
         // Send the request
         d->manager = new QNetworkAccessManager(this);
 
-        qDebug()<< "d->reply avant";
+//        qDebug()<< "d->reply avant";
         connect( d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finishedToken(QNetworkReply *)) );
         d->reply = d->manager->post( request, data.toUtf8() );
 
-        qDebug()<< "d->reply apres connect";
-        qDebug()<< "Fin finishedLogin\n" ;
+//        qDebug()<< "d->reply apres connect";
+//        qDebug()<< "Fin finishedLogin\n" ;
     }
 }
 
 
 void Login::finishedToken( QNetworkReply *reply )
 {
-    qDebug()<< "finishedToken" << reply->error();
+//    qDebug()<< "finishedToken" << reply->error();
 
     if (reply->error() == QNetworkReply::NoError) {
-        qDebug()<< "pas d erreur";
+//        qDebug()<< "pas d erreur";
         QXmlStreamReader reader(reply);
 
         while(!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if(token == QXmlStreamReader::StartElement) {
                 if(reader.name() == QString("login")) {
-                    qDebug()<<reader.name().toString();
+//                    qDebug()<<reader.name().toString();
                     QXmlStreamAttributes attrs = reader.attributes();
                     if(attrs.value( QString("result") ).toString() == "Success")
                     {
 
                         d->lgtoken= attrs.value( QString("result") ).toString() ;
-                        qDebug() << "tagattribute result"<< d->lgtoken;
+//                        qDebug() << "tagattribute result"<< d->lgtoken;
                         emit finishedToken( true );
                     }
                 }
@@ -146,7 +146,7 @@ void Login::finishedToken( QNetworkReply *reply )
             else if ( token == QXmlStreamReader::Invalid )
                 emit finishedToken( false );
         }
-        qDebug()<< "hors de la boucle";
-        qDebug()<< "Fin finishedToken\n" ;
+//        qDebug()<< "hors de la boucle";
+//        qDebug()<< "Fin finishedToken\n" ;
     }
 }

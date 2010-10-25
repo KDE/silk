@@ -12,3 +12,5 @@ set(test_login_SRCS
 
 kde4_add_executable(test_login ${test_login_SRCS} ${test_login_HDRS})
 target_link_libraries( test_login ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTTEST_LIBRARIES})
+
+install( TARGETS test_login DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS}/test )
