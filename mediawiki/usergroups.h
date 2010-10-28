@@ -48,7 +48,7 @@ public:
     
 signals:
 
-    void finished(QList<UserGroups::Result> usergroups);
+    void finished(QList<UserGroups::Result> const & usergroups);
 
 private slots:
 

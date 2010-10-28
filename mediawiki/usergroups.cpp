@@ -30,6 +30,7 @@ struct UserGroupsPrivate
 {
     QNetworkAccessManager * manager;
     QNetworkReply * reply;
+    QList<UserGroups::Result> usergroups;
 };
 
 UserGroups::UserGroups(MediaWiki const & mediawiki, QObject * parent)
@@ -61,7 +62,6 @@ void UserGroups::processReply()
     if (d->reply->error() == QNetworkReply::NoError)
     {
         QXmlStreamReader reader(d->reply);
-        QList<UserGroups::Result> usergroups;
         UserGroups::Result usergroup;
         while(!reader.atEnd() && !reader.hasError())
         {
@@ -86,11 +86,11 @@ void UserGroups::processReply()
             {
                 if (reader.name() == "group")
                 {
-                    usergroups.push_back(usergroup);
+                    d->usergroups.push_back(usergroup);
                 }
             }
         }
-        emit finished(usergroups);
+        emit finished(d->usergroups);
     }
 }
 
