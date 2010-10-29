@@ -3,9 +3,9 @@
 
 #include <QObject>
 #include <QtTest/QtTest>
-#include "mediawiki/mediawiki.h"
-#include "mediawiki/login.h"
-#include "mediawiki/tests/fake_server/server.h"
+#include "../mediawiki.h"
+#include "../login.h"
+#include "fake_server/server.h"
 
 class test_login : public QObject
 {

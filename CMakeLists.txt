@@ -3,6 +3,4 @@ if(SELKIE)
 add_subdirectory(selkie)
 endif(SELKIE)
 
-if(MEDIAWIKI)
 add_subdirectory(mediawiki)
-endif(MEDIAWIKI)
