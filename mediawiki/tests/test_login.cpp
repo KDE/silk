@@ -5,7 +5,7 @@
 #include <QtTest/QtTest>
 #include "mediawiki/mediawiki.h"
 #include "mediawiki/login.h"
-#include "mediawiki/test/fake_server/server.h"
+#include "mediawiki/tests/fake_server/server.h"
 
 class test_login : public QObject
 {

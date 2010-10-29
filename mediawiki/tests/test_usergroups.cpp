@@ -5,7 +5,7 @@
 #include <QtTest/QtTest>
 #include "mediawiki/mediawiki.h"
 #include "mediawiki/usergroups.h"
-#include "mediawiki/test/fake_server/server.h"
+#include "mediawiki/tests/fake_server/server.h"
 
 Q_DECLARE_METATYPE(QList<UserGroups::Result>)
 
