@@ -1,15 +1,13 @@
+project(mediawiki)
 
 find_package(KDE4 REQUIRED)
 
-if(TEST)
-add_subdirectory(test)
-endif(TEST)
-
-project(mediawiki)
 include(KDE4Defaults)
 include_directories(${KDE4_INCLUDES} ${QT_INCLUDES})
 
-set( mediawiki_SRCS
+add_subdirectory(tests)
+
+set(mediawiki_SRCS
     mediawiki.cpp
     login.cpp
     general.cpp
