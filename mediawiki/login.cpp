@@ -25,8 +25,8 @@
 #include <QDebug>
 #include <QNetworkCookieJar>
 
-
 #include "login.h"
+#include "mediawiki.h"
 
 struct LoginPrivate
 {
@@ -111,6 +111,11 @@ void Login::finishedLogin( QNetworkReply *reply )
                     d->lgsessionid = attrs.value( QString( "sessionid" ) ).toString() ;
                     emit finishedLogin( true );
                 }
+                else
+                {
+                    emit finishedLogin( false );
+                    return;
+                }
             }
         }
         else if ( token == QXmlStreamReader::Invalid )
@@ -162,6 +167,11 @@ void Login::finishedToken( QNetworkReply *reply )
                     qDebug() << "Logged in";
                     d->lgtoken = attrs.value( QString( "result" ) ).toString() ;
                     emit finishedToken( true );
+                }
+                else
+                {
+                    emit finishedToken( false );
+                    return;
                 }
             }
         }

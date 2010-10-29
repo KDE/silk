@@ -21,10 +21,9 @@
 #define LOGIN_H
 
 #include <qobject.h>
-#include <mediawiki.h>
-#include <QList>
 #include <kdemacros.h>
 class QNetworkReply;
+class MediaWiki;
 
 class KDE_EXPORT Login : public QObject
 {
