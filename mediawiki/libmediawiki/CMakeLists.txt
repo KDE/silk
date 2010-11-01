@@ -1,11 +1,11 @@
-project(mediawiki)
+project( mediawiki )
 
-find_package(KDE4 REQUIRED)
+find_package( KDE4 REQUIRED )
 
-include(KDE4Defaults)
-include_directories(${KDE4_INCLUDES} ${QT_INCLUDES})
+include( KDE4Defaults )
+include_directories( ${KDE4_INCLUDES} )
 
-add_subdirectory(tests)
+add_subdirectory( tests )
 
 set(mediawiki_SRCS
     mediawiki.cpp
@@ -15,7 +15,6 @@ set(mediawiki_SRCS
 )
 
 
-kde4_add_library( mediawiki ${mediawiki_SRCS})
-target_link_libraries( mediawiki ${KDE4_KIO_LIBS})
-include_directories( ${CMAKE_SOURCE_DIR} )
+kde4_add_library( mediawiki ${mediawiki_SRCS} )
+target_link_libraries( mediawiki ${KDE4_KIO_LIBS} )
 install( TARGETS mediawiki ${INSTALL_TARGETS_DEFAULT_ARGS} )

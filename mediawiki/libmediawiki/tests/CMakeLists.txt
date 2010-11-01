@@ -1,26 +1,26 @@
-if(KDE4_BUILD_TESTS)
-include_directories( ${CMAKE_SOURCE_DIR}/mediawiki ${KDE4_INCLUDES} ${QT_INCLUDES})
+if( KDE4_BUILD_TESTS )
 
-MACRO(MEDIAWIKI_UNIT_TESTS)
+include_directories( ${CMAKE_SOURCE_DIR}/mediawiki/libmediawiki ${KDE4_INCLUDES} )
 
-  FOREACH(_testname ${ARGN})
+MACRO( MEDIAWIKI_UNIT_TESTS )
 
-    add_definitions(-DTEST_DATA="\"${CMAKE_CURRENT_SOURCE_DIR}\"")
-    kde4_add_unit_test(${_testname} TESTNAME mediawiki-${_testname} NOGUI ${_testname}.cpp fake_server/server.cpp)
-    target_link_libraries(${_testname} ${KDE4_KIO_LIBS} ${QT_QTTEST_LIBRARY}
-                          mediawiki )
-    include_directories( ${CMAKE_SOURCE_DIR} )
+  FOREACH( _testname ${ARGN} )
 
-  ENDFOREACH(_testname)
+    add_definitions( -DTEST_DATA="\"${CMAKE_CURRENT_SOURCE_DIR}\"" )
+    kde4_add_unit_test( ${_testname} TESTNAME mediawiki-${_testname} NOGUI ${_testname}.cpp fake_server/server.cpp )
+    target_link_libraries( ${_testname} ${KDE4_KIO_LIBS} ${QT_QTTEST_LIBRARY} mediawiki )
 
-ENDMACRO(MEDIAWIKI_UNIT_TESTS)
+  ENDFOREACH( _testname )
+
+ENDMACRO( MEDIAWIKI_UNIT_TESTS )
 
 MEDIAWIKI_UNIT_TESTS(
     test_general
     test_login
     test_usergroups
 )
-endif(KDE4_BUILD_TESTS)
+
+endif( KDE4_BUILD_TESTS )
 
 
 

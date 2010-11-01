@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QtTest/QtTest>
-#include "../mediawiki.h"
-#include "../usergroups.h"
+#include "mediawiki.h"
+#include "usergroups.h"
 #include "fake_server/server.h"
 
 Q_DECLARE_METATYPE(QList<UserGroups::Result>)

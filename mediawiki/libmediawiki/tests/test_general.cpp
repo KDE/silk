@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QtTest/QtTest>
-#include "../mediawiki.h"
-#include "../general.h"
+#include "mediawiki.h"
+#include "general.h"
 #include "fake_server/server.h"
 
 class test_general : public QObject
