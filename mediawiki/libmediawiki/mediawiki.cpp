@@ -19,16 +19,14 @@
 
 #include "mediawiki.h"
 
-struct MediaWikiPrivate
-{
-    QUrl url;
+struct MediaWikiPrivate {
+    MediaWikiPrivate(QUrl const &url) : url(url) {}
+    QUrl const url;
 };
 
 MediaWiki::MediaWiki(QUrl const & url)
-    : d(new MediaWikiPrivate)
-{
-    d->url = url;
-}
+        : d(new MediaWikiPrivate(url))
+{}
 
 QUrl MediaWiki::url() const
 {
