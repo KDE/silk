@@ -79,9 +79,10 @@ General::~General()
 }
 
 void General::onFinished(QNetworkReply * reply)
-{    
+{
+    bool xmlReturn = true;
     if (reply->error() == QNetworkReply::NoError) {
-        QXmlStreamReader reader(reply);        
+        QXmlStreamReader reader(reply);
         while(!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if(token == QXmlStreamReader::StartElement) {
@@ -112,10 +113,16 @@ void General::onFinished(QNetworkReply * reply)
                 }
             }
         }
+        xmlReturn = reader.hasError();
+
     }
     reply->close();
     reply->deleteLater();
-    emit finished(true);
+    if(!xmlReturn)
+        emit finished(true);
+    else
+        emit finished(false);
+
 
     //TESTS VALEURS GET
 //    qDebug() << "getMainpage : " << this->getMainpage();
@@ -166,4 +173,3 @@ QString General::getVariantarticlepath(){ return d->variantarticlepath; }
 QString General::getServer(){ return d->server; }
 QString General::getWikiid(){ return d->wikiid; }
 QString General::getTime(){ return d->time; }
-

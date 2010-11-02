@@ -20,8 +20,7 @@
 #ifndef GENERAL_H
 #define GENERAL_H
 
-//#include <kdemacros.h>
-#define KDE_EXPORT
+#include <kdemacros.h>
 
 #include <QtCore/QList>
 #include <QtCore/QObject>

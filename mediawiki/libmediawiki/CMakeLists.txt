@@ -1,9 +1,9 @@
 project( mediawiki )
 
-find_package( KDE4 REQUIRED )
-
-include( KDE4Defaults )
-include_directories( ${KDE4_INCLUDES} )
+find_package(KDE4 REQUIRED)
+set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage")
+include(KDE4Defaults)
+include_directories(${KDE4_INCLUDES} ${QT_INCLUDES})
 
 add_subdirectory( tests )
 
@@ -15,6 +15,21 @@ set(mediawiki_SRCS
 )
 
 
-kde4_add_library( mediawiki ${mediawiki_SRCS} )
-target_link_libraries( mediawiki ${KDE4_KIO_LIBS} )
+kde4_add_library( mediawiki ${mediawiki_SRCS})
+target_link_libraries( mediawiki ${KDE4_KIO_LIBS}  -fprofile-arcs)
+include_directories( ${CMAKE_SOURCE_DIR} )
 install( TARGETS mediawiki ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
+FIND_PATH(DOXYGEN_DIR doxygen
+/usr/local/bin
+/usr/bin
+)
+IF (DOXYGEN_DIR)
+MESSAGE(STATUS " Doxygen generation of the documentation")
+MESSAGE(STATUS ${CMAKE_CURRENT_SOURCE_DIR})
+EXEC_PROGRAM(
+"cd  ${CMAKE_CURRENT_SOURCE_DIR}; ${DOXYGEN_DIR}/doxygen"
+)
+ELSE (DOXYGEN_DIR)
+MESSAGE(STATUS "Doxygen not found, I cannot generate the documentation")
+ENDIF (DOXYGEN_DIR)

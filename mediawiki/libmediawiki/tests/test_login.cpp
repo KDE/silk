@@ -43,11 +43,11 @@ private:
     Server* m_server;
 };
 
-#endif // TEST_LOGIN_H
-
-
 
 QTEST_MAIN(test_login)
 #include "test_login.moc"
+#endif // TEST_LOGIN_H
+
+
 
 

@@ -131,6 +131,6 @@ void Server::writeServerPart()
 void Server::readClientPart()
 {
     char data[512] = {"\0"};
-    int returnV = m_clientSocket->read(data,512);
+    m_clientSocket->read(data,512);
     m_scenarios << data;
 }
