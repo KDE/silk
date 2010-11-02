@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef MEDIAWIKI_H
-#define MEDIAWIKI_H
+#ifndef MEDIAWIKI_MEDIAWIKI_H
+#define MEDIAWIKI_MEDIAWIKI_H
 
 #include <QtCore/QUrl>
 
@@ -59,4 +59,4 @@ private:
 
 }
 
-#endif // MEDIAWIKI_H
+#endif
