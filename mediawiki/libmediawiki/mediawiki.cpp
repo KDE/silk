@@ -19,10 +19,17 @@
 
 #include "mediawiki.h"
 
+namespace mediawiki
+{
+
 struct MediaWikiPrivate {
     MediaWikiPrivate(QUrl const &url) : url(url) {}
     QUrl const url;
 };
+
+}
+
+using namespace mediawiki;
 
 MediaWiki::MediaWiki(QUrl const & url)
         : d(new MediaWikiPrivate(url))

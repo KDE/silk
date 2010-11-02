@@ -7,6 +7,9 @@
 #include "general.h"
 #include "fake_server/server.h"
 
+using mediawiki::MediaWiki;
+using mediawiki::General;
+
 class test_general : public QObject
 {
     Q_OBJECT

@@ -24,6 +24,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
+namespace mediawiki {
+
 class MediaWiki;
 
 class UserGroups : public QObject {
@@ -63,6 +65,8 @@ private:
     UserGroups & operator=(UserGroups const &);
 
 };
+
+}
 
 #endif // USERGROUPS_H
 

@@ -23,6 +23,9 @@
 #include <qobject.h>
 #include <kdemacros.h>
 class QNetworkReply;
+
+namespace mediawiki {
+    
 class MediaWiki;
 
 class KDE_EXPORT Login : public QObject
@@ -66,5 +69,7 @@ private:
 
     struct LoginPrivate * const d;
 };
+
+}
 
 #endif // LOGIN_H

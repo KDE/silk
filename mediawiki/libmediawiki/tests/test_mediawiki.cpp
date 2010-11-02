@@ -5,6 +5,8 @@
 #include <QtTest/QtTest>
 #include "../mediawiki.h"
 
+using mediawiki::MediaWiki;
+
 class test_mediawiki: public QObject
 {
     Q_OBJECT

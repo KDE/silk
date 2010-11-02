@@ -28,6 +28,8 @@
 #include "login.h"
 #include "mediawiki.h"
 
+namespace mediawiki {
+    
 struct LoginPrivate
 {
     QNetworkAccessManager *manager;
@@ -39,6 +41,10 @@ struct LoginPrivate
     QString lgtoken;
     QString lgsessionid;
 };
+
+}
+
+using namespace mediawiki;
 
 Login::Login( MediaWiki const & media, const QString &login, const QString &password, QObject * parent )
         : QObject( parent )

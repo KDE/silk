@@ -7,6 +7,9 @@
 #include "login.h"
 #include "fake_server/server.h"
 
+using mediawiki::MediaWiki;
+using mediawiki::Login;
+
 class test_login : public QObject
 {
     Q_OBJECT

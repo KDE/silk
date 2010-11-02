@@ -22,6 +22,9 @@
 
 #include <QtCore/QUrl>
 
+namespace mediawiki
+{
+
 /**
  * @brief Provides access to wiki powered by MediaWiki.
  */
@@ -53,5 +56,7 @@ private:
     MediaWiki & operator=(MediaWiki const &);
 
 };
+
+}
 
 #endif // MEDIAWIKI_H

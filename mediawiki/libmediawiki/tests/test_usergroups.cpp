@@ -7,6 +7,9 @@
 #include "usergroups.h"
 #include "fake_server/server.h"
 
+using mediawiki::MediaWiki;
+using mediawiki::UserGroups;
+
 Q_DECLARE_METATYPE(QList<UserGroups::Result>)
 
 class test_usergroups : public QObject

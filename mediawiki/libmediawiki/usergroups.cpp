@@ -26,12 +26,18 @@
 
 #include "usergroups.h"
 
+namespace mediawiki {
+
 struct UserGroupsPrivate
 {
     QNetworkAccessManager * manager;
     QNetworkReply * reply;
     QList<UserGroups::Result> usergroups;
 };
+
+}
+
+using namespace mediawiki;
 
 UserGroups::UserGroups(MediaWiki const & mediawiki, QObject * parent)
     : QObject(parent)

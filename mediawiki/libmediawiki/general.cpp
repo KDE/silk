@@ -28,6 +28,8 @@
 
 #include "general.h"
 
+namespace mediawiki {
+
 struct GeneralPrivate
 {
     QNetworkAccessManager * manager;
@@ -55,6 +57,10 @@ struct GeneralPrivate
     QString wikiid;
     QString time;
 };
+
+}
+
+using namespace mediawiki;
 
 General::General(MediaWiki const & mediawiki, QObject * parent) : QObject(parent), d(new GeneralPrivate)
 {

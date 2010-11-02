@@ -27,6 +27,9 @@
 #include <QtCore/QString>
 
 class QNetworkReply;
+
+namespace mediawiki {
+
 class MediaWiki;
 
 
@@ -76,5 +79,7 @@ private:
     struct GeneralPrivate * const d;
 
 };
+
+}
 
 #endif // USERGROUPS_H
