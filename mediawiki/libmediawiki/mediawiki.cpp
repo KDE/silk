@@ -23,8 +23,11 @@ namespace mediawiki
 {
 
 struct MediaWikiPrivate {
+
     MediaWikiPrivate(QUrl const &url) : url(url) {}
+
     QUrl const url;
+
 };
 
 }
