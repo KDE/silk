@@ -10,7 +10,7 @@
 using mediawiki::MediaWiki;
 using mediawiki::Login;
 
-class test_login : public QObject
+class LoginTest : public QObject
 {
     Q_OBJECT
 private slots:
@@ -47,8 +47,8 @@ private:
 };
 
 
-QTEST_MAIN(test_login)
-#include "test_login.moc"
+QTEST_MAIN(LoginTest);
+#include "logintest.moc"
 #endif // TEST_LOGIN_H
 
 

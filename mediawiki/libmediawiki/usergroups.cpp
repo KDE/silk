@@ -17,7 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <QtCore/QXmlStreamReader>
+#include <QtCore/QTimer>
+#include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
@@ -26,13 +27,19 @@
 
 #include "usergroups.h"
 
-namespace mediawiki {
-
-struct UserGroupsPrivate
+namespace mediawiki
 {
-    QNetworkAccessManager * manager;
-    QNetworkReply * reply;
-    QList<UserGroups::Result> usergroups;
+
+struct UserGroupsPrivate {
+
+    UserGroupsPrivate(QNetworkAccessManager * const manager, MediaWiki const & mediawiki)
+            : manager(manager)
+            , mediawiki(mediawiki) {}
+
+    QNetworkAccessManager * const manager;
+
+    MediaWiki const & mediawiki;
+
 };
 
 }
@@ -40,22 +47,10 @@ struct UserGroupsPrivate
 using namespace mediawiki;
 
 UserGroups::UserGroups(MediaWiki const & mediawiki, QObject * parent)
-    : QObject(parent)
-    , d(new UserGroupsPrivate)
+        : KJob(parent)
+        , d(new UserGroupsPrivate(new QNetworkAccessManager(this), mediawiki))
 {
-    // Set the url
-    QUrl url = mediawiki.url();
-    url.addQueryItem("format", "xml");
-    url.addQueryItem("action", "query");
-    url.addQueryItem("meta", "siteinfo");
-    url.addQueryItem("siprop", "usergroups");
-    // Set the request
-    QNetworkRequest request(url);
-    request.setRawHeader("User-Agent", "mediawiki-silk");
-    // Send the request
-    d->manager = new QNetworkAccessManager(this);
-    d->reply = d->manager->get(request);
-    connect(d->reply, SIGNAL(finished()), this, SLOT(processReply()));
+    setCapabilities(KJob::NoCapabilities);
 }
 
 UserGroups::~UserGroups()
@@ -63,40 +58,32 @@ UserGroups::~UserGroups()
     delete d;
 }
 
-void UserGroups::processReply()
+void UserGroups::start()
 {
-    if (d->reply->error() == QNetworkReply::NoError)
-    {
-        QXmlStreamReader reader(d->reply);
-        UserGroups::Result usergroup;
-        while(!reader.atEnd() && !reader.hasError())
-        {
-            QXmlStreamReader::TokenType token = reader.readNext();
-            if(token == QXmlStreamReader::StartElement)
-            {
-                if(reader.name() == "group")
-                {
-                    usergroup.name = reader.attributes().value("name").toString();
-                }
-                else if (reader.name() == "rights")
-                {
-                    usergroup.rights.clear();
-                }
-                else if (reader.name() == "permission")
-                {
-                    reader.readNext();
-                    usergroup.rights.push_back(reader.text().toString());
-                }
-            }
-            else if (token == QXmlStreamReader::EndElement)
-            {
-                if (reader.name() == "group")
-                {
-                    d->usergroups.push_back(usergroup);
-                }
-            }
-        }
-        emit finished(d->usergroups);
-    }
+    QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
+void UserGroups::doWorkSendRequest()
+{
+    // Set the url
+    QUrl url = d->mediawiki.url();
+    url.addQueryItem("format", "xml");
+    url.addQueryItem("action", "query");
+    url.addQueryItem("meta",   "siteinfo");
+    url.addQueryItem("siprop", "usergroups");
+    // Set the request
+    QNetworkRequest request(url);
+    request.setRawHeader("User-Agent", "mediawiki-silk");
+    // Send the request
+    d->manager->get(request);
+    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+}
+
+void UserGroups::doWorkProcessReply(QNetworkReply * reply)
+{
+    if (reply->error() == QNetworkReply::NoError) {
+        setError(KJob::NoError);
+        emitResult();
+        emit result(this, QList<UserGroups::Result>());
+    }
+}

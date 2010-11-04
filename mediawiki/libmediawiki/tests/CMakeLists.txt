@@ -16,9 +16,9 @@ MACRO(MEDIAWIKI_UNIT_TESTS)
 ENDMACRO( MEDIAWIKI_UNIT_TESTS )
 
 MEDIAWIKI_UNIT_TESTS(
-    test_general
-    test_login
-    test_usergroups
-    test_mediawiki
+    generaltest
+    logintest
+    usergroupstest
+    mediawikitest
 )
 endif(KDE4_BUILD_TESTS)

@@ -10,7 +10,7 @@
 using mediawiki::MediaWiki;
 using mediawiki::General;
 
-class test_general : public QObject
+class GeneralTest : public QObject
 {
     Q_OBJECT
 private slots:
@@ -108,8 +108,8 @@ private:
     MediaWiki* m_mediaWiki;
     Server* m_server;
 };
-QTEST_MAIN(test_general)
-#include "test_general.moc"
+QTEST_MAIN(GeneralTest);
+#include "generaltest.moc"
 
 #endif // TEST_GENERAL_H
 

@@ -7,7 +7,7 @@
 
 using mediawiki::MediaWiki;
 
-class test_mediawiki: public QObject
+class MediaWikiTest : public QObject
 {
     Q_OBJECT
 private slots:
@@ -29,8 +29,8 @@ private:
 };
 
 
-QTEST_MAIN(test_mediawiki)
-#include "test_mediawiki.moc"
+QTEST_MAIN(MediaWikiTest);
+#include "mediawikitest.moc"
 
 #endif // TEST_MEDIAWIKI_H
 
