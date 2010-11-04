@@ -19,12 +19,12 @@
 
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
+#include <QtCore/QXmlStreamReader>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
 #include "mediawiki.h"
-
 #include "usergroups.h"
 
 namespace mediawiki
@@ -82,8 +82,28 @@ void UserGroups::doWorkSendRequest()
 void UserGroups::doWorkProcessReply(QNetworkReply * reply)
 {
     if (reply->error() == QNetworkReply::NoError) {
+        QList<UserGroups::Result> results;
+        UserGroups::Result result;
+        QXmlStreamReader reader(reply);
+        while (!reader.atEnd() && !reader.hasError()) {
+            QXmlStreamReader::TokenType token = reader.readNext();
+            if (token == QXmlStreamReader::StartElement) {
+                if (reader.name() == "group") {
+                    result.name = reader.attributes().value("name").toString();
+                } else if (reader.name() == "rights") {
+                    result.rights.clear();
+                } else if (reader.name() == "permission") {
+                    reader.readNext();
+                    result.rights.push_back(reader.text().toString());
+                }
+            } else if (token == QXmlStreamReader::EndElement) {
+                if (reader.name() == "group") {
+                    results.push_back(result);
+                }
+            }
+        }
         setError(KJob::NoError);
         emitResult();
-        emit result(this, QList<UserGroups::Result>());
+        emit usergroups(results);
     }
 }

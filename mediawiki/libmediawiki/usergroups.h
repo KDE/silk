@@ -52,7 +52,7 @@ public:
          * @brief The name of the user group.
          */
         QString name;
-        
+
         /**
          * @brief Rights of the user group.
          */
@@ -80,11 +80,10 @@ public:
 signals:
 
     /**
-     * @brief Emitted when the job is finished.
-     * @param job the job that emitted this signal
-     * @param results a list of all user groups and their permissions
+     * @brief Provides a list of all user groups.
+     * @param results list of all user groups
      */
-    void result(UserGroups * job, QList<UserGroups::Result> const & results);
+    void usergroups(QList<UserGroups::Result> const & results);
 
 private slots:
 
