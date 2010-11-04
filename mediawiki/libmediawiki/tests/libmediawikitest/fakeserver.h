@@ -52,13 +52,13 @@ QT_END_NAMESPACE
 
 //! [0]
 
-class Server : QThread
+class FakeServer : QThread
 {
     Q_OBJECT
 
 public:
-    Server(QObject* parent = 0);
-    ~Server();
+    FakeServer(QObject* parent = 0);
+    ~FakeServer();
     void startAndWait();
     virtual void run();
 

@@ -25,7 +25,7 @@
 #include <QtTest/QTest>
 #include <KDE/KJob>
 
-#include "fake_server/server.h"
+#include "libmediawikitest/fakeserver.h"
 
 #include "mediawiki.h"
 #include "usergroups.h"
@@ -74,9 +74,9 @@ private slots:
         QFETCH(int, error);
         QFETCH(QList<UserGroups::Result>, results);
 
-        Server server;
-        server.setScenario(scenario);
-        server.startAndWait();
+        FakeServer fakeserver;
+        fakeserver.setScenario(scenario);
+        fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         UserGroups job(mediawiki);
@@ -92,7 +92,7 @@ private slots:
 
         QCOMPARE(m_results, results);
         
-        QVERIFY(server.isAllScenarioDone());
+        QVERIFY(fakeserver.isAllScenarioDone());
     }
 
     void testResult_data() {           

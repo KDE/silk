@@ -4,41 +4,41 @@
 #include <iostream>
 #include <QDebug>
 
-#include "server.h"
+#include "fakeserver.h"
 
-Server::Server(QObject* parent)
+FakeServer::FakeServer(QObject* parent)
 :  QThread( parent )
 {
 
     moveToThread(this);
 
 }
-Server::~Server()
+FakeServer::~FakeServer()
 {
   quit();
   wait();
 }
-void Server::startAndWait()
+void FakeServer::startAndWait()
 {
   start();
   // this will block until the event queue starts
   QMetaObject::invokeMethod( this, "started", Qt::BlockingQueuedConnection );
 }
 
-void Server::newConnection()
+void FakeServer::newConnection()
 {
     QMutexLocker locker(&m_mutex);
     m_clientSocket = m_tcpServer->nextPendingConnection();
     connect(m_clientSocket, SIGNAL(readyRead()), this, SLOT(dataAvailable()));
     this->writeServerPart();
 }
-void Server::dataAvailable()
+void FakeServer::dataAvailable()
 {
     QMutexLocker locker(&m_mutex);
     readClientPart();
     writeServerPart();
 }
-void Server::run()
+void FakeServer::run()
 {
     m_tcpServer = new QTcpServer();
     if ( !m_tcpServer->listen( QHostAddress( QHostAddress::LocalHost ), 12566 ) ) {
@@ -54,12 +54,12 @@ void Server::run()
     delete m_tcpServer;
 }
 
-void Server::started()
+void FakeServer::started()
 {
   // do nothing: this is a dummy slot used by startAndWait()
 }
 
-void Server::setScenario( const QString &scenario )
+void FakeServer::setScenario( const QString &scenario )
 {
     QMutexLocker locker(&m_mutex);
 
@@ -67,7 +67,7 @@ void Server::setScenario( const QString &scenario )
     m_scenarios << scenario;
 }
 
-void Server::addScenario( const QString &scenario )
+void FakeServer::addScenario( const QString &scenario )
 {
     QMutexLocker locker(&m_mutex);
 
@@ -76,7 +76,7 @@ void Server::addScenario( const QString &scenario )
 
 }
 
-void Server::addScenarioFromFile( const QString &fileName )
+void FakeServer::addScenarioFromFile( const QString &fileName )
 {
   QFile file( fileName );
   file.open( QFile::ReadOnly );
@@ -96,7 +96,7 @@ void Server::addScenarioFromFile( const QString &fileName )
   addScenario( scenario );
 }
 
-bool Server::isScenarioDone( int scenarioNumber ) const
+bool FakeServer::isScenarioDone( int scenarioNumber ) const
 {
   QMutexLocker locker(&m_mutex);
 
@@ -107,7 +107,7 @@ bool Server::isScenarioDone( int scenarioNumber ) const
   }
 }
 
-bool Server::isAllScenarioDone() const
+bool FakeServer::isAllScenarioDone() const
 {
   QMutexLocker locker( &m_mutex );
 
@@ -118,7 +118,7 @@ bool Server::isAllScenarioDone() const
   }
   return true;
 }
-void Server::writeServerPart()
+void FakeServer::writeServerPart()
 {
 
     QString retour = m_scenarios.isEmpty() ? QString("vide") : m_scenarios.takeFirst();
@@ -128,7 +128,7 @@ void Server::writeServerPart()
     m_clientSocket->close();
 
 }
-void Server::readClientPart()
+void FakeServer::readClientPart()
 {
     char data[512] = {"\0"};
     m_clientSocket->read(data,512);

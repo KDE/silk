@@ -5,7 +5,7 @@
 #include <QtTest/QtTest>
 #include "mediawiki.h"
 #include "general.h"
-#include "fake_server/server.h"
+#include "libmediawikitest/fakeserver.h"
 
 using mediawiki::MediaWiki;
 using mediawiki::General;
@@ -18,7 +18,7 @@ private slots:
     void initTestCase()
 {
     this->m_mediaWiki = new MediaWiki(QUrl("http://127.0.0.1:12566"));
-    this->m_server = new Server(0);
+    this->m_server = new FakeServer(0);
 }
     void generalTestConnectTrue()
 {
@@ -106,7 +106,7 @@ private slots:
 private:
     General* m_general;
     MediaWiki* m_mediaWiki;
-    Server* m_server;
+    FakeServer* m_server;
 };
 QTEST_MAIN(GeneralTest);
 #include "generaltest.moc"
