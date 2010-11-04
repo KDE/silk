@@ -57,7 +57,7 @@ class Server : QThread
     Q_OBJECT
 
 public:
-    Server(QObject* parent);
+    Server(QObject* parent = 0);
     ~Server();
     void startAndWait();
     virtual void run();
