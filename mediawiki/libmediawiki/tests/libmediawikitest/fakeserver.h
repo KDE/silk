@@ -45,6 +45,7 @@
 #include <QString>
 #include <QTcpSocket>
 
+
 QT_BEGIN_NAMESPACE
 class QTcpServer;
 class QNetworkSession;
@@ -52,11 +53,17 @@ QT_END_NAMESPACE
 
 //! [0]
 
+
 class FakeServer : QThread
 {
     Q_OBJECT
 
 public:
+    struct Request{
+        QString type;
+        QString agent;
+        QString value;
+    };
     FakeServer(QObject* parent = 0);
     ~FakeServer();
     void startAndWait();
@@ -68,7 +75,10 @@ public:
 
     bool isScenarioDone( int scenarioNumber ) const;
     bool isAllScenarioDone() const;
-
+    QList<FakeServer::Request>& getRequest(){return m_request;} const
+    FakeServer::Request takeLastRequest(){return m_request.takeLast();}
+    FakeServer::Request takeFirstRequest(){return m_request.takeFirst();}
+    void clearRequest(){return m_request.clear();}
 
 private slots:
     void newConnection();
@@ -80,6 +90,7 @@ private:
     void readClientPart();
 
     QStringList m_scenarios;
+    QList<FakeServer::Request> m_request;
     QTcpServer *m_tcpServer;
     mutable QMutex m_mutex;
     QTcpSocket* m_clientSocket;

@@ -1,4 +1,3 @@
-
 #include <QtGui>
 #include <QtNetwork>
 #include <iostream>
@@ -30,7 +29,7 @@ void FakeServer::newConnection()
     QMutexLocker locker(&m_mutex);
     m_clientSocket = m_tcpServer->nextPendingConnection();
     connect(m_clientSocket, SIGNAL(readyRead()), this, SLOT(dataAvailable()));
-    this->writeServerPart();
+    //this->writeServerPart();
 }
 void FakeServer::dataAvailable()
 {
@@ -130,7 +129,16 @@ void FakeServer::writeServerPart()
 }
 void FakeServer::readClientPart()
 {
-    char data[512] = {"\0"};
-    m_clientSocket->read(data,512);
-    m_scenarios << data;
+    if (m_clientSocket->canReadLine()) {
+        QStringList token = QString(m_clientSocket->readAll()).split(QRegExp("[ \r\n][ \r\n]*"));
+        Server::Request request;
+        request.type = token[0];
+        request.agent = token[4];
+        request.value = token[17];
+        m_request << request;
+        if (token[0] == "POST") {
+
+            this->m_scenarios << QString("martine");
+        }
+    }
 }
