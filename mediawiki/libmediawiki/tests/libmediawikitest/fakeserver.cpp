@@ -132,9 +132,11 @@ void FakeServer::readClientPart()
     if (m_clientSocket->canReadLine()) {
         QStringList token = QString(m_clientSocket->readAll()).split(QRegExp("[ \r\n][ \r\n]*"));
         FakeServer::Request request;
-        request.type = token.empty() ? QString("") : token[0];
-        request.agent = token.size() < 4 ? QString("") : token[4];
-        request.value = token.size() < 17 ? QString("") : token[17];
+        if(token.empty())return;
+        request.type = token[0];
+        request.agent = token[4];
+        if(request.type == "GET")request.value = token[1];
+        else if(request.type == "POST")request.value = token[17];
         m_request << request;
     }
 }
