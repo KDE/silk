@@ -1,5 +1,6 @@
 /*
  *   Copyright 2010 by Manuel Campomanes <campomanes.manuel@gmail.com>
+ *   Copyright 2010 by Guillaume Hormiere <hormiere.guillaume@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -92,7 +93,10 @@ public:
         QString time;
 
     };
-
+    /**
+     * @brief Result Getter.
+     * @return General::Result
+     */
     General::Result getResult();
 
 private slots:
