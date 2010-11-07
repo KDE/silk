@@ -19,12 +19,11 @@
 
 #ifndef GENERAL_H
 #define GENERAL_H
-
-#include <kdemacros.h>
-
+#include <QObject>
 #include <QtCore/QList>
-#include <QtCore/QObject>
 #include <QtCore/QString>
+
+#include <KDE/KJob>
 
 class QNetworkReply;
 
@@ -32,54 +31,78 @@ namespace mediawiki {
 
 class MediaWiki;
 
-
-class KDE_EXPORT General : public QObject {
+/**
+ * @brief General job.
+ *
+ * Uses for fetch a generals information about the wiki.
+ */
+class General : public KJob
+{
 
     Q_OBJECT
 
 public:
-
+    enum
+    {
+        falsexml = KJob::UserDefinedError+1,
+        connectionAbort,
+        includeAllDenied
+    };
+    /**
+     * @brief Constructs a General job.
+     * @param mediawiki the mediawiki concerned by the job
+     * @param parent the QObject parent
+     */
     explicit General(MediaWiki const & mediawiki, QObject * parent = 0);
 
+    /**
+     * @brief Destroys the general job.
+     */
     virtual ~General();
+    /**
+     * @brief Starts the job asynchronously.
+     */
+    virtual void start();
+    /**
+     * @brief A general result.
+     */
+    struct Result {
+        QString mainpage;
+        QString base;
+        QString sitename;
+        QString generator;
+        QString phpversion;
+        QString phpsapi;
+        QString dbtype;
+        QString dbversion;
+        QString rev;
+        QString cas;
+        QString rights;
+        QString lang;
+        QString fallback8bitencoding;
+        QString writeapi;
+        QString timezone;
+        QString timeoffset;
+        QString articlepath;
+        QString scriptpath;
+        QString script;
+        QString variantarticlepath;
+        QString server;
+        QString wikiid;
+        QString time;
 
-    QString getMainpage();
-    QString getBase();
-    QString getSitename();
-    QString getGenerator();
-    QString getPhpversion();
-    QString getPhpsapi();
-    QString getDbtype();
-    QString getDbversion();
-    QString getRev();
-    QString getCase();
-    QString getRights();
-    QString getLang();
-    QString getFallback8bitencoding();
-    QString getWriteapi();
-    QString getTimezone();
-    QString getTimeoffset();
-    QString getArticlepath();
-    QString getScriptpath();
-    QString getScript();
-    QString getVariantarticlepath();
-    QString getServer();
-    QString getWikiid();
-    QString getTime();
+    };
 
+    General::Result getResult();
 
 private slots:
-
-    void onFinished(QNetworkReply * reply);
-signals:
-    void finished(bool);
-
+    void abort();
+    void doWorkSendRequest();
+    void doWorkProcessReply(QNetworkReply * reply);
 private:
 
     struct GeneralPrivate * const d;
 
 };
-
 }
-
-#endif // USERGROUPS_H
+#endif // GENERAL_H

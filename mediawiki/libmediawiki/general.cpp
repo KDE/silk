@@ -18,6 +18,7 @@
  */
 
 #include <QtCore/QDebug>
+#include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
 
 #include <QtNetwork/QNetworkAccessManager>
@@ -25,47 +26,44 @@
 #include <QtNetwork/QNetworkRequest>
 
 #include "mediawiki.h"
-
 #include "general.h"
 
 namespace mediawiki {
 
-struct GeneralPrivate
-{
-    QNetworkAccessManager * manager;
-    QString mainpage;
-    QString base;
-    QString sitename;
-    QString generator;
-    QString phpversion;
-    QString phpsapi;
-    QString dbtype;
-    QString dbversion;
-    QString rev;
-    QString cas;
-    QString rights;
-    QString lang;
-    QString fallback8bitencoding;
-    QString writeapi;
-    QString timezone;
-    QString timeoffset;
-    QString articlepath;
-    QString scriptpath;
-    QString script;
-    QString variantarticlepath;
-    QString server;
-    QString wikiid;
-    QString time;
-};
+    struct GeneralPrivate
+    {
+        GeneralPrivate(QNetworkAccessManager * const manager,General::Result* result, MediaWiki const & mediawiki)
+                : manager(manager)
+                , result(result)
+                , mediawiki(mediawiki) {}
+        QNetworkAccessManager * manager;
+        General::Result* result;
+        MediaWiki const & mediawiki;
+    };
 
 }
 
 using namespace mediawiki;
 
-General::General(MediaWiki const & mediawiki, QObject * parent) : QObject(parent), d(new GeneralPrivate)
+General::General(MediaWiki const & mediawiki, QObject * parent)
+    : KJob(parent),d(new GeneralPrivate(new QNetworkAccessManager(this),new Result,mediawiki))
+{
+    setCapabilities(KJob::NoCapabilities);
+}
+
+General::~General()
+{
+    delete this->d->result;
+    delete d;
+}
+void General::start()
+{
+    QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
+}
+void General::doWorkSendRequest()
 {
     // Set the url
-    QUrl url = mediawiki.url();
+    QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "query");
     url.addQueryItem("meta", "siteinfo");
@@ -74,108 +72,70 @@ General::General(MediaWiki const & mediawiki, QObject * parent) : QObject(parent
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", "mediawiki-silk");
     // Send the request
-    d->manager = new QNetworkAccessManager(this);
-    connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onFinished(QNetworkReply *)));
     d->manager->get(request);
+    connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
-
-General::~General()
+void General::abort()
 {
-    delete d;
+    this->setError(this->connectionAbort);
+    emitResult();
 }
-
-void General::onFinished(QNetworkReply * reply)
+void General::doWorkProcessReply(QNetworkReply * reply)
 {
-    bool xmlReturn = true;
-    if (reply->error() == QNetworkReply::NoError) {
-        QXmlStreamReader reader(reply);
-        while(!reader.atEnd() && !reader.hasError()) {
-            QXmlStreamReader::TokenType token = reader.readNext();
-            if(token == QXmlStreamReader::StartElement) {
-                if(reader.name() == "general") {
-                    d->mainpage = reader.attributes().value("mainpage").toString();
-                    d->base = reader.attributes().value("base").toString();
-                    d->sitename = reader.attributes().value("sitename").toString();
-                    d->generator = reader.attributes().value("generator").toString();
-                    d->phpversion = reader.attributes().value("phpversion").toString();
-                    d->phpsapi = reader.attributes().value("phpsapi").toString();
-                    d->dbtype = reader.attributes().value("dbtype").toString();
-                    d->dbversion = reader.attributes().value("dbversion").toString();
-                    d->rev = reader.attributes().value("rev").toString();
-                    d->cas = reader.attributes().value("case").toString();
-                    d->rights = reader.attributes().value("rights").toString();
-                    d->lang = reader.attributes().value("lang").toString();
-                    d->fallback8bitencoding = reader.attributes().value("fallback8bitEncoding").toString();
-                    d->writeapi = reader.attributes().value("writeapi").toString();
-                    d->timezone = reader.attributes().value("timezone").toString();
-                    d->timeoffset = reader.attributes().value("timeoffset").toString();
-                    d->articlepath = reader.attributes().value("articlepath").toString();
-                    d->scriptpath = reader.attributes().value("scriptpath").toString();
-                    d->script = reader.attributes().value("script").toString();
-                    d->variantarticlepath = reader.attributes().value("variantarticlepath").toString();
-                    d->server = reader.attributes().value("server").toString();
-                    d->wikiid = reader.attributes().value("wikiid").toString();
-                    d->time = reader.attributes().value("time").toString();
-                }
+    if ( reply->error() != QNetworkReply::NoError )
+    {
+        this->setError(this->connectionAbort);
+        reply->close();
+        reply->deleteLater();
+        emitResult();
+        return;
+    }
+
+    QXmlStreamReader reader(reply);
+    while(!reader.atEnd() && !reader.hasError()) {
+        QXmlStreamReader::TokenType token = reader.readNext();
+        if(token == QXmlStreamReader::StartElement) {
+            if(reader.name() == "general") {
+                d->result->mainpage = reader.attributes().value("mainpage").toString();
+                d->result->base = reader.attributes().value("base").toString();
+                d->result->sitename = reader.attributes().value("sitename").toString();
+                d->result->generator = reader.attributes().value("generator").toString();
+                d->result->phpversion = reader.attributes().value("phpversion").toString();
+                d->result->phpsapi = reader.attributes().value("phpsapi").toString();
+                d->result->dbtype = reader.attributes().value("dbtype").toString();
+                d->result->dbversion = reader.attributes().value("dbversion").toString();
+                d->result->rev = reader.attributes().value("rev").toString();
+                d->result->cas = reader.attributes().value("case").toString();
+                d->result->rights = reader.attributes().value("rights").toString();
+                d->result->lang = reader.attributes().value("lang").toString();
+                d->result->fallback8bitencoding = reader.attributes().value("fallback8bitEncoding").toString();
+                d->result->writeapi = reader.attributes().value("writeapi").toString();
+                d->result->timezone = reader.attributes().value("timezone").toString();
+                d->result->timeoffset = reader.attributes().value("timeoffset").toString();
+                d->result->articlepath = reader.attributes().value("articlepath").toString();
+                d->result->scriptpath = reader.attributes().value("scriptpath").toString();
+                d->result->script = reader.attributes().value("script").toString();
+                d->result->variantarticlepath = reader.attributes().value("variantarticlepath").toString();
+                d->result->server = reader.attributes().value("server").toString();
+                d->result->wikiid = reader.attributes().value("wikiid").toString();
+                d->result->time = reader.attributes().value("time").toString();
+            }
+            else if(reader.name() == "error")
+            {
+                this->setError(this->includeAllDenied);
+                reply->close();
+                reply->deleteLater();
+                emitResult();
+                return;
             }
         }
-        xmlReturn = reader.hasError();
-
     }
+    if(reader.hasError())this->setError(this->falsexml);
+
+
     reply->close();
     reply->deleteLater();
-    if(!xmlReturn)
-        emit finished(true);
-    else
-        emit finished(false);
-
-
-    //TESTS VALEURS GET
-//    qDebug() << "getMainpage : " << this->getMainpage();
-//    qDebug() << "getArticlepath : " << this->getArticlepath();
-//    qDebug() << "getBase : " << this->getBase();
-//    qDebug() << "getCase : " << this->getCase();
-//    qDebug() << "getDbtype : " << this->getDbtype();
-//    qDebug() << "getDbversion : " << this->getDbversion();
-//    qDebug() << "getFallback8bitencoding : " << this->getFallback8bitencoding();
-//    qDebug() << "getGenerator : " << this->getGenerator();
-//    qDebug() << "getLang : " << this->getLang();
-//    qDebug() << "getPhpsapi : " << this->getPhpsapi();
-//    qDebug() << "getPhpversion : " << this->getPhpversion();
-//    qDebug() << "getRev : " << this->getRev();
-//    qDebug() << "getRights : " << this->getRights();
-//    qDebug() << "getScript : " << this->getScript();
-//    qDebug() << "getScriptpath : " << this->getScriptpath();
-//    qDebug() << "getServer : " << this->getServer();
-//    qDebug() << "getSitename : " << this->getSitename();
-//    qDebug() << "getTime : " << this->getTime();
-//    qDebug() << "getTimeoffset : " << this->getTimeoffset();
-//    qDebug() << "getTimezone : " << this->getTimezone();
-//    qDebug() << "getVariantarticlepath : " << this->getVariantarticlepath();
-//    qDebug() << "getWikiid : " << this->getWikiid();
-//    qDebug() << "getWriteapi : " << this->getWriteapi();
+    emitResult();
 }
-
-QString General::getMainpage(){ return d->mainpage; }
-QString General::getBase(){ return d->base; }
-QString General::getSitename(){ return d->sitename; }
-QString General::getGenerator(){ return d->generator; }
-QString General::getPhpversion(){ return d->phpversion; }
-QString General::getPhpsapi(){ return d->phpsapi; }
-QString General::getDbtype(){ return d->dbtype; }
-QString General::getDbversion(){ return d->dbversion; }
-QString General::getRev(){ return d->rev; }
-QString General::getCase(){ return d->cas; }
-QString General::getRights(){ return d->rights; }
-QString General::getLang(){ return d->lang; }
-QString General::getFallback8bitencoding(){ return d->fallback8bitencoding; }
-QString General::getWriteapi(){ return d->writeapi; }
-QString General::getTimezone(){ return d->timezone; }
-QString General::getTimeoffset(){ return d->timeoffset; }
-QString General::getArticlepath(){ return d->articlepath; }
-QString General::getScriptpath(){ return d->scriptpath; }
-QString General::getScript(){ return d->script; }
-QString General::getVariantarticlepath(){ return d->variantarticlepath; }
-QString General::getServer(){ return d->server; }
-QString General::getWikiid(){ return d->wikiid; }
-QString General::getTime(){ return d->time; }
+mediawiki::General::Result General::getResult(){ return *d->result; }
