@@ -17,57 +17,212 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef LOGIN_H
-#define LOGIN_H
+#ifndef MEDIAWIKI_LOGIN_H
+#define MEDIAWIKI_LOGIN_H
 
-#include <qobject.h>
+#include <QtCore/QString>
+#include <KDE/KJob>
 #include <kdemacros.h>
+
 class QNetworkReply;
 
 namespace mediawiki {
     
 class MediaWiki;
 
-class KDE_EXPORT Login : public QObject
+/**
+ * @brief Login job.
+ *
+ * Uses for log in a user.
+ */
+class KDE_EXPORT Login : public KJob
 {
-    Q_OBJECT
-public:
-    explicit Login( MediaWiki const & media, const QString &login, const QString &password, QObject * parent = 0 );
 
+    Q_OBJECT
+
+public:
+
+    enum error
+    {
+        /**
+         * @brief
+         */
+        Falsexml = KJob::UserDefinedError+1,
+
+        /**
+         * @brief
+         */
+        ConnectionAbort,
+
+        /**
+         * @brief You didn't set the lgname parameter
+         */
+        NoName,
+
+        /**
+         * @brief You provided an illegal username
+         */
+        Illegal,
+
+        /**
+         * @brief The username you provided doesn't exist
+         */
+
+        NotExists,
+
+        /**
+        * @brief You didn't set the lgpassword parameter or you left it empty
+        */
+        EmptyPass,
+
+
+        /**
+        * @brief The password you provided is incorrect
+        */
+        WrongPass,
+
+
+        /**
+        * @brief Same as WrongPass, returned when an authentication plugin rather than MediaWiki itself rejected the password
+        */
+        WrongPluginPass,
+
+
+        /**
+        * @brief The wiki tried to automatically create a new account for you, but your IP address has been blocked from account creation
+        */
+        CreateBlocked,
+
+
+        /**
+        * @brief You've logged in too many times in a short time. See also throttling
+        */
+        Throttled,
+
+
+        /**
+        * @brief User is blocked
+        */
+        Blocked,
+
+
+        /**
+        * @brief The login module requires a POST request
+        */
+        Mustbeposted,
+
+
+        /**
+        * @brief Either you did not provide the login token or the sessionid cookie. Request again with the token and cookie given in this response
+        */
+        NeedToken,
+
+    };
+
+    /**
+     * @brief A login result.
+     */
+    struct Result
+    {
+
+        /**
+         * @brief The username.
+         */
+        QString lgname;
+
+        /**
+         * @brief The password.
+         */
+        QString lgpassword;
+
+        /**
+         * @brief The token.
+         */
+        QString lgtoken;
+
+        /**
+         * @brief The session id.
+         */
+        QString lgsessionid;
+
+    };
+
+    /**
+     * @brief Return all parameters defined in the result struct.
+     */
+    Login::Result getResults();
+
+    /**
+     * @brief Constructs a Login job.
+     * @param mediawiki the mediawiki concerned by the job
+     * @param lgname the QObject parent
+     * @param lgpassword the QObject parent
+     * @param parent the QObject parent
+     */
+    explicit Login( MediaWiki const & media, const QString & lgname, const QString & lgpassword, QObject * parent = 0 );
+
+    /**
+     * @brief Destroys the Login job.
+     */
     virtual ~Login();
 
-signals:
     /**
-     * Emitted when a connection request has been completed.
+     * @brief Starts the job asynchronously.
+     */
+    virtual void start();
+
+    int getError(const QString & error);
+signals:
+
+    /**
+     * @brief Emitted when a connection request has been completed.
      * @param success true if the request was completed successfully.
      */
-    void finishedLogin( bool );
+    void resultLogin( KJob * job );
+
     /**
-     * Emitted when a connection has been completed.
+     * @brief Emitted when a connection has been completed.
      * @param success true if the connection was completed successfully.
      */
-    void finishedToken( bool );
-public slots:
+    void resultToken( KJob * job );
+
     /**
-     * Aborts the currently running request.
+     * @brief Emitted when a connection has been completed.
+     * @param success true if the connection was completed successfully.
+     */
+    void result( KJob * job );
+
+private slots:
+
+    /**
+     * @brief Destroy the connection.
      */
     void abort();
-private slots:
+
+    void doWorkSendRequest();
+
     /**
-     * Reads the xml
+     * @brief Reads the xml
      * if the attribute value is equal to "NeedToken", try to log in the user
      * else if the attribute value is equal to "Success", the user is logged in
+     * @param success true if the connection was completed successfully.
      */
     void finishedLogin( QNetworkReply *reply );
+
     /**
-     * Reads the xml
+     * @brief Reads the xml
      * if the attribute value is equal to "Success", the user is logged in
+     * @param success true if the connection was completed successfully.
      */
     void finishedToken( QNetworkReply *reply );
 
 private:
 
     struct LoginPrivate * const d;
+
+    Login(Login const &);
+
+    Login & operator=(Login const &);
 };
 
 }

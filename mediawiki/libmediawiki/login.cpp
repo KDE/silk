@@ -17,71 +17,88 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QXmlStreamReader>
-#include <QTimer>
+#include <QtCore/QTimer>
+#include <QtCore/QUrl>
+#include <QtCore/QXmlStreamReader>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkCookieJar>
+#include <QStringList>
 #include <QDebug>
-#include <QNetworkCookieJar>
 
 #include "login.h"
 #include "mediawiki.h"
 
-namespace mediawiki {
-    
-struct LoginPrivate
+namespace mediawiki
 {
-    QNetworkAccessManager *manager;
-    QNetworkReply *reply;
-    QUrl apiUrl;
-    QUrl baseUrl;
-    QString lgname;
-    QString lgpassword;
-    QString lgtoken;
-    QString lgsessionid;
-};
+    struct LoginPrivate
+    {
+
+        LoginPrivate(QNetworkAccessManager * const manager, const QString &lgname, const QString &lgpassword, MediaWiki const & mediawiki)
+            : manager(manager)
+            , mediawiki(mediawiki)
+        {
+            result.lgname = lgname;
+            result.lgpassword = lgpassword;
+        }
+
+        QNetworkAccessManager *manager;
+        QUrl baseUrl;
+        MediaWiki const & mediawiki;
+        Login::Result result;
+
+    };
 
 }
 
 using namespace mediawiki;
 
-Login::Login( MediaWiki const & media, const QString &login, const QString &password, QObject * parent )
-        : QObject( parent )
-        , d( new LoginPrivate )
+Login::Login( MediaWiki const & media, const QString &lgname, const QString &lgpassword, QObject * parent )
+    : KJob(parent)
+    , d(new LoginPrivate(new QNetworkAccessManager(this), lgname, lgpassword, media))
 {
-
-    d->apiUrl = media.url();
-    QUrl url = d->apiUrl;
-    QString data = "action=login&lgname=" + login + "&lgpassword=" + password + "&format=xml";
-    d->baseUrl = data;
-
-    // Set the request
-    QNetworkRequest request( url );
-    request.setRawHeader( "User-Agent", "mediawiki-silk" );
-    // Send the request
-    d->manager = new QNetworkAccessManager( this );
-
-    qDebug() << "connect log in";
-    connect( d->manager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedLogin( QNetworkReply * ) ) );
-    d->reply = d->manager->post( request, data.toUtf8() );
-    QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
-
+    setCapabilities(KJob::NoCapabilities);
 }
+
+
 
 Login::~Login()
 {
     delete d;
 }
 
+void Login::start()
+{
+    QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
+}
+
+void Login::doWorkSendRequest()
+{
+    // Set the url
+    QUrl url = d->mediawiki.url();
+    url.addQueryItem("format", "xml");
+    url.addQueryItem("action", "login");
+    url.addQueryItem("lgname", d->result.lgname);
+    url.addQueryItem("lgpassword", d->result.lgpassword);
+    d->baseUrl = url;
+    // Set the request
+    QNetworkRequest request( url );
+    request.setRawHeader( "User-Agent", "mediawiki-silk" );
+    // Send the request
+    d->manager->post( request, url.toString().toUtf8() );
+    qDebug() << "connect log in";
+    connect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedLogin( QNetworkReply * ) ) );
+    QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
+
+}
+
 void Login::abort()
 {
     qDebug() << "abort";
-    if ( !d->reply )
-        return;
-
-    d->reply->abort();
-    d->reply = 0;
+    this->setError(this->ConnectionAbort);
+    delete d->manager;
+    emit result(this);
 }
 
 void Login::finishedLogin( QNetworkReply *reply )
@@ -89,7 +106,8 @@ void Login::finishedLogin( QNetworkReply *reply )
     if ( reply->error() != QNetworkReply::NoError )
     {
         qDebug() << "Request failed, " << reply->errorString();
-        emit finishedLogin( false );
+        this->setError(this->ConnectionAbort);
+        emit resultLogin( this );
         return;
     }
 
@@ -105,45 +123,45 @@ void Login::finishedLogin( QNetworkReply *reply )
                 QXmlStreamAttributes attrs = reader.attributes();
                 if ( attrs.value( QString( "result" ) ).toString() == "Success" )
                 {
-                    emit finishedLogin( true );
+                    setError(KJob::NoError);
+                    emitResult();
+                    emit resultToken( this );
                     return;
                 }
                 else if ( attrs.value( QString( "result" ) ).toString() == "NeedToken" )
                 {
-                    d->lgtoken = attrs.value( QString( "result" ) ).toString() ;
-
-                    d->lgtoken = attrs.value( QString( "token" ) ).toString() ;
-
-                    d->lgsessionid = attrs.value( QString( "sessionid" ) ).toString() ;
-                    emit finishedLogin( true );
+                    d->result.lgtoken = attrs.value( QString( "token" ) ).toString() ;
+                    d->result.lgsessionid = attrs.value( QString( "sessionid" ) ).toString() ;
+                    emit resultLogin( this );
                 }
                 else
                 {
-                    emit finishedLogin( false );
+                    this->setError(this->getError(attrs.value( QString( "result" ) ).toString()));
+                    emit resultLogin( this );
                     return;
                 }
             }
         }
-        else if ( token == QXmlStreamReader::Invalid )
-            emit finishedLogin( false );
+        else if ( token == QXmlStreamReader::Invalid ){
+            this->setError(this->Falsexml);
+            emit resultLogin( this );
+        }
     }
 
-    QUrl url = d->apiUrl;
-    QString data = d->baseUrl.toString();
-    data += "&lgtoken=" + d->lgtoken;
-
+    QUrl url = d->baseUrl;
+    url.addQueryItem("lgtoken", d->result.lgtoken);
+    QString data = url.toString();
 
     // Set the request
     QNetworkRequest request( url );
     request.setRawHeader( "User-Agent", "mediawiki-silk" );
-    request.setRawHeader( "Cookie", d->manager->cookieJar()->cookiesForUrl( d->apiUrl ).at( 0 ).toRawForm() );
-
+    request.setRawHeader( "Cookie", d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).at( 0 ).toRawForm() );
 
     // Send the request
     d->manager = new QNetworkAccessManager( this );
     qDebug() << "connect token";
     connect( d->manager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedToken( QNetworkReply * ) ) );
-    d->reply = d->manager->post( request, data.toUtf8() );
+    d->manager->post( request, data.toUtf8() );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 
 }
@@ -154,7 +172,8 @@ void Login::finishedToken( QNetworkReply *reply )
     if ( reply->error() != QNetworkReply::NoError )
     {
         qDebug() << "Request failed, " << reply->errorString();
-        emit finishedToken( false );
+        this->setError(this->ConnectionAbort);
+        emit resultToken( this );
         return;
     }
 
@@ -171,17 +190,45 @@ void Login::finishedToken( QNetworkReply *reply )
                 if ( attrs.value( QString( "result" ) ).toString() == "Success" )
                 {
                     qDebug() << "Logged in";
-                    d->lgtoken = attrs.value( QString( "result" ) ).toString() ;
-                    emit finishedToken( true );
+                    setError(KJob::NoError);
+                    emitResult();
+                    emit resultToken( this );
                 }
                 else
                 {
-                    emit finishedToken( false );
+                    this->setError(this->getError(attrs.value( QString( "result" ) ).toString()));
+                    emit resultToken( this );
                     return;
                 }
             }
         }
-        else if ( token == QXmlStreamReader::Invalid )
-            emit finishedToken( false );
+        else if ( token == QXmlStreamReader::Invalid ){
+            this->setError(this->Falsexml);
+            emit resultToken( this );
+        }
     }
+}
+
+
+Login::Result Login::getResults()
+{
+    return d->result;
+}
+
+
+int Login::getError(const QString & error)
+{
+    QStringList list;
+    list << "NoName"
+            <<"Illegal"
+            <<"NotExists"
+            <<"EmptyPass"
+            <<"WrongPass"
+            <<"WrongPluginPass"
+            <<"CreateBlocked"
+            <<"Throttled"
+            <<"Blocked"
+            <<"mustbeposted"
+            <<"NeedToken";
+    return list.indexOf(error) + Login::NoName;
 }
