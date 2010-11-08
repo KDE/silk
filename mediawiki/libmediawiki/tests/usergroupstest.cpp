@@ -78,6 +78,14 @@ private slots:
 
         job->exec();
 
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+
+        FakeServer::Request request = requests[0];
+        QCOMPARE(request.agent, QString("mediawiki-silk"));
+        QCOMPARE(request.type, QString("GET"));
+        QCOMPARE(request.value, QString("?format=xml&action=query&meta=siteinfo&siprop=usergroups"));
+
         QCOMPARE(job->error(), error);
 
         QCOMPARE(usergroupsCount, 1);
