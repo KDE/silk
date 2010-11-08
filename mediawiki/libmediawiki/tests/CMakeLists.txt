@@ -19,4 +19,6 @@ MEDIAWIKI_UNIT_TESTS(
     usergroupstest
     mediawikitest
 )
-endif(KDE4_BUILD_TESTS)
+
+
+endif( KDE4_BUILD_TESTS )
