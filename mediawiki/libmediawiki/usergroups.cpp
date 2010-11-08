@@ -102,8 +102,8 @@ void UserGroups::doWorkProcessReply(QNetworkReply * reply)
                 }
             }
         }
+        emit usergroups(results);
         setError(KJob::NoError);
         emitResult();
-        emit usergroups(results);
     }
 }
