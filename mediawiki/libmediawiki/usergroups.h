@@ -81,9 +81,9 @@ signals:
 
     /**
      * @brief Provides a list of all user groups.
-     * @param results list of all user groups
+     * @param usergroups list of all user groups
      */
-    void usergroups(QList<UserGroups::Result> const & results);
+    void usergroups(QList<UserGroups::Result> const & usergroups);
 
 private slots:
 
