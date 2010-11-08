@@ -51,9 +51,9 @@ class UserGroupsTest : public QObject
     
 public slots:
     
-    void usergroupsHandle(QList<UserGroups::Result> const & results) {
+    void usergroupsHandle(QList<UserGroups::Result> const & usergroups) {
         ++usergroupsCount;
-        usergroupsResults = results;
+        usergroupsResults = usergroups;
     }
 
 private slots:
