@@ -28,30 +28,30 @@
 #include "libmediawikitest/fakeserver.h"
 
 #include "mediawiki.h"
-#include "usergroups.h"
+#include "querysiteinfousergroups.h"
 
 using mediawiki::MediaWiki;
-using mediawiki::UserGroups;
+using mediawiki::QuerySiteinfoUsergroups;
 
-Q_DECLARE_METATYPE(QList<UserGroups::Result>)
+Q_DECLARE_METATYPE(QList<QuerySiteinfoUsergroups::Result>)
 
-bool operator==(UserGroups::Result const & lhs, UserGroups::Result const & rhs) {
+bool operator==(QuerySiteinfoUsergroups::Result const & lhs, QuerySiteinfoUsergroups::Result const & rhs) {
     return lhs.name == rhs.name && lhs.rights == rhs.rights;
 }
 
-UserGroups::Result makeResult(QString name, QList<QString> rights) {
-    UserGroups::Result result = {name, rights};
+QuerySiteinfoUsergroups::Result makeResult(QString name, QList<QString> rights) {
+    QuerySiteinfoUsergroups::Result result = {name, rights};
     return result;
 }
 
-class UserGroupsTest : public QObject
+class QuerySiteinfoUsergroupsTest : public QObject
 {
 
     Q_OBJECT
     
 public slots:
     
-    void usergroupsHandle(QList<UserGroups::Result> const & usergroups) {
+    void usergroupsHandle(QList<QuerySiteinfoUsergroups::Result> const & usergroups) {
         ++usergroupsCount;
         usergroupsResults = usergroups;
     }
@@ -65,16 +65,16 @@ private slots:
     void testResult() {
         QFETCH(QString, scenario);
         QFETCH(int, error);
-        QFETCH(QList<UserGroups::Result>, results);
+        QFETCH(QList<QuerySiteinfoUsergroups::Result>, results);
 
         FakeServer fakeserver;
         fakeserver.setScenario(scenario);
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        UserGroups * job = new UserGroups(mediawiki);
+        QuerySiteinfoUsergroups * job = new QuerySiteinfoUsergroups(mediawiki);
 
-        connect(job, SIGNAL(usergroups(QList<UserGroups::Result> const &)), this, SLOT(usergroupsHandle(QList<UserGroups::Result> const &)));
+        connect(job, SIGNAL(usergroups(QList<QuerySiteinfoUsergroups::Result> const &)), this, SLOT(usergroupsHandle(QList<QuerySiteinfoUsergroups::Result> const &)));
 
         job->exec();
 
@@ -98,91 +98,91 @@ private slots:
     void testResult_data() {           
         QTest::addColumn<QString>("scenario");
         QTest::addColumn<int>("error");
-        QTest::addColumn< QList<UserGroups::Result> >("results");
+        QTest::addColumn< QList<QuerySiteinfoUsergroups::Result> >("results");
 
         QTest::newRow("No group")
                 << "<?xml version=\"1.0\"?><api><query><usergroups></usergroups></query></api>"
                 << int(KJob::NoError)
-                << QList<UserGroups::Result>();
+                << QList<QuerySiteinfoUsergroups::Result>();
         
         QTest::newRow("One group with no right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"/></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>()));
 
         QTest::newRow("One group with one right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission></rights></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>() << "permission_1_1"));
 
         QTest::newRow("One group with two rights")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission><permission>permission_1_2</permission></rights></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>() << "permission_1_1" << "permission_1_2"));
 
         QTest::newRow("Two groups with group one no right and group two no right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"></group><group name=\"name_2\" /></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>())
                         << makeResult("name_2", QList<QString>()));
 
         QTest::newRow("Two groups with group one no right and group two one right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"></group><group name=\"name_2\"><rights><permission>permission_2_1</permission></rights></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>())
                         << makeResult("name_2", QList<QString>() << "permission_2_1"));
 
         QTest::newRow("Two groups with group one no right and group two two rights")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"></group><group name=\"name_2\"><rights><permission>permission_2_1</permission><permission>permission_2_2</permission></rights></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>())
                         << makeResult("name_2", QList<QString>() << "permission_2_1" << "permission_2_2"));
 
         QTest::newRow("Two groups with group one one right and group two no right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission></rights></group><group name=\"name_2\"><rights></rights></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>() << "permission_1_1")
                         << makeResult("name_2", QList<QString>()));
 
         QTest::newRow("Two groups with group one one right and group two one right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission></rights></group><group name=\"name_2\"><rights><permission>permission_2_1</permission></rights></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>() << "permission_1_1")
                         << makeResult("name_2", QList<QString>() << "permission_2_1"));
 
         QTest::newRow("Two groups with group one one right and group two two rights")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission></rights></group><group name=\"name_2\"><rights><permission>permission_2_1</permission><permission>permission_2_2</permission></rights></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>() << "permission_1_1")
                         << makeResult("name_2", QList<QString>() << "permission_2_1" << "permission_2_2"));
 
         QTest::newRow("Two groups with group one two rights and group two no right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission><permission>permission_1_2</permission></rights></group><group name=\"name_2\"><rights /></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>() << "permission_1_1" << "permission_1_2")
                         << makeResult("name_2", QList<QString>()));
 
         QTest::newRow("Two groups with group one two rights and group two one right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission><permission>permission_1_2</permission></rights></group><group name=\"name_2\"><rights><permission>permission_2_1</permission></rights></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>() << "permission_1_1" << "permission_1_2")
                         << makeResult("name_2", QList<QString>() << "permission_2_1"));
 
         QTest::newRow("Two groups with group one two rights and group two two rights")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission><permission>permission_1_2</permission></rights></group><group name=\"name_2\"><rights><permission>permission_2_1</permission><permission>permission_2_2</permission></rights></group></usergroups></query></api>"
                 << int(KJob::NoError)
-                << (QList<UserGroups::Result>()
+                << (QList<QuerySiteinfoUsergroups::Result>()
                         << makeResult("name_1", QList<QString>() << "permission_1_1" << "permission_1_2")
                         << makeResult("name_2", QList<QString>() << "permission_2_1" << "permission_2_2"));
     }
@@ -191,10 +191,10 @@ private:
     
     int usergroupsCount;
     
-    QList<UserGroups::Result> usergroupsResults;
+    QList<QuerySiteinfoUsergroups::Result> usergroupsResults;
 
 };
 
-QTEST_MAIN(UserGroupsTest);
+QTEST_MAIN(QuerySiteinfoUsergroupsTest);
 
 #include "usergroupstest.moc"

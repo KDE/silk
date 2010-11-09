@@ -11,7 +11,7 @@ set(mediawiki_SRCS
     mediawiki.cpp
     login.cpp
     general.cpp
-    usergroups.cpp
+    querysiteinfousergroups.cpp
 )
 
 kde4_add_library( mediawiki ${mediawiki_SRCS} )

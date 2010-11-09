@@ -25,14 +25,14 @@
 #include <QtNetwork/QNetworkRequest>
 
 #include "mediawiki.h"
-#include "usergroups.h"
+#include "querysiteinfousergroups.h"
 
 namespace mediawiki
 {
 
-struct UserGroupsPrivate {
+struct QuerySiteinfoUsergroupsPrivate {
 
-    UserGroupsPrivate(QNetworkAccessManager * const manager, MediaWiki const & mediawiki)
+    QuerySiteinfoUsergroupsPrivate(QNetworkAccessManager * const manager, MediaWiki const & mediawiki)
             : manager(manager)
             , mediawiki(mediawiki) {}
 
@@ -46,24 +46,24 @@ struct UserGroupsPrivate {
 
 using namespace mediawiki;
 
-UserGroups::UserGroups(MediaWiki const & mediawiki, QObject * parent)
+QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(MediaWiki const & mediawiki, QObject * parent)
         : KJob(parent)
-        , d(new UserGroupsPrivate(new QNetworkAccessManager(this), mediawiki))
+        , d(new QuerySiteinfoUsergroupsPrivate(new QNetworkAccessManager(this), mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);
 }
 
-UserGroups::~UserGroups()
+QuerySiteinfoUsergroups::~QuerySiteinfoUsergroups()
 {
     delete d;
 }
 
-void UserGroups::start()
+void QuerySiteinfoUsergroups::start()
 {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
-void UserGroups::doWorkSendRequest()
+void QuerySiteinfoUsergroups::doWorkSendRequest()
 {
     // Set the url
     QUrl url = d->mediawiki.url();
@@ -79,11 +79,11 @@ void UserGroups::doWorkSendRequest()
     connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
 }
 
-void UserGroups::doWorkProcessReply(QNetworkReply * reply)
+void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
 {
     if (reply->error() == QNetworkReply::NoError) {
-        QList<UserGroups::Result> results;
-        UserGroups::Result result;
+        QList<QuerySiteinfoUsergroups::Result> results;
+        QuerySiteinfoUsergroups::Result result;
         QXmlStreamReader reader(reply);
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();

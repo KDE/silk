@@ -36,7 +36,7 @@ class MediaWiki;
  *
  * Uses for fetch a list of all user groups and their permissions.
  */
-class UserGroups : public KJob
+class QuerySiteinfoUsergroups : public KJob
 {
 
     Q_OBJECT
@@ -65,12 +65,12 @@ public:
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit UserGroups(MediaWiki const & mediawiki, QObject * parent = 0);
+    explicit QuerySiteinfoUsergroups(MediaWiki const & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the UserGroups job.
      */
-    virtual ~UserGroups();
+    virtual ~QuerySiteinfoUsergroups();
 
     /**
      * @brief Starts the job asynchronously.
@@ -83,7 +83,7 @@ signals:
      * @brief Provides a list of all user groups.
      * @param usergroups list of all user groups
      */
-    void usergroups(QList<UserGroups::Result> const & usergroups);
+    void usergroups(QList<QuerySiteinfoUsergroups::Result> const & usergroups);
 
 private slots:
 
@@ -93,13 +93,13 @@ private slots:
 
 private:
 
-    struct UserGroupsPrivate * const d;
+    struct QuerySiteinfoUsergroupsPrivate * const d;
 
 private:
 
-    UserGroups(UserGroups const &);
+    QuerySiteinfoUsergroups(QuerySiteinfoUsergroups const &);
 
-    UserGroups & operator=(UserGroups const &);
+    QuerySiteinfoUsergroups & operator=(QuerySiteinfoUsergroups const &);
 
 };
 
