@@ -73,7 +73,7 @@ void QuerySiteinfoUsergroups::doWorkSendRequest()
     url.addQueryItem("siprop", "usergroups");
     // Set the request
     QNetworkRequest request(url);
-    request.setRawHeader("User-Agent", "mediawiki-silk");
+    request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
     d->manager->get(request);
     connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));

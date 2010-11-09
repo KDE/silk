@@ -82,7 +82,7 @@ private slots:
         QCOMPARE(requests.size(), 1);
 
         FakeServer::Request request = requests[0];
-        QCOMPARE(request.agent, QString("mediawiki-silk"));
+        QCOMPARE(request.agent, QString(MediaWiki::DEFAULT_USER_AGENT));
         QCOMPARE(request.type, QString("GET"));
         QCOMPARE(request.value, QString("?format=xml&action=query&meta=siteinfo&siprop=usergroups"));
 
