@@ -20,6 +20,7 @@
 #ifndef MEDIAWIKI_MEDIAWIKI_H
 #define MEDIAWIKI_MEDIAWIKI_H
 
+#include <QtCore/QString>
 #include <QtCore/QUrl>
 
 namespace mediawiki
@@ -36,14 +37,28 @@ public:
     /**
      * @brief Constructs a MediaWiki by its url api.
      * @param url the url api of the wiki
+     * @param customUserAgent you can specify the user agent to use
+                              wich will be concatenated with the default user agent
+     *                        else the default user agent is used only
      */
-    explicit MediaWiki(QUrl const & url);
+    explicit MediaWiki(QUrl const & url, QString const & customUserAgent = QString());
 
     /**
-     * @brief Returns the url api of the wiki
+     * @brief Returns the url api of the wiki.
      * @returns the url api of the wiki
      */
     QUrl url() const;
+
+    /**
+     * @brief Returns the user agent of the wiki.
+     * @return the user agent of the wiki
+     */
+    QString userAgent() const;
+
+    /**
+     * @brief The default user agent.
+     */
+    static QString const DEFAULT_USER_AGENT;
 
 private:
 

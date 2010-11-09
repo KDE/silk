@@ -24,9 +24,11 @@ namespace mediawiki
 
 struct MediaWikiPrivate {
 
-    MediaWikiPrivate(QUrl const &url) : url(url) {}
+    MediaWikiPrivate(QUrl const & url, QString const & userAgent) : url(url), userAgent(userAgent) {}
 
     QUrl const url;
+
+    QString const userAgent;
 
 };
 
@@ -34,11 +36,18 @@ struct MediaWikiPrivate {
 
 using namespace mediawiki;
 
-MediaWiki::MediaWiki(QUrl const & url)
-        : d(new MediaWikiPrivate(url))
+MediaWiki::MediaWiki(QUrl const & url, QString const & customUserAgent)
+    : d(new MediaWikiPrivate(url, customUserAgent.isEmpty() ? MediaWiki::DEFAULT_USER_AGENT : customUserAgent + "-" + MediaWiki::DEFAULT_USER_AGENT))
 {}
 
 QUrl MediaWiki::url() const
 {
     return d->url;
 }
+
+QString MediaWiki::userAgent() const
+{
+    return d->userAgent;
+}
+
+QString const MediaWiki::DEFAULT_USER_AGENT = "mediawiki-silk";

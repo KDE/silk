@@ -19,6 +19,8 @@
  */
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QUrl>
 #include <QtTest/QtTest>
 
 #include "mediawiki.h"
@@ -32,21 +34,27 @@ class MediaWikiTest : public QObject
 
 private slots:
 
-    void initTestCase() {
-        this->m_mediaWiki = new MediaWiki(QUrl("http://127.0.0.1:12566"));
+    void testConstructor() {
+        QFETCH(QUrl, url);
+        QFETCH(QString, customUserAgent);
+        QFETCH(QString, userAgent);
+
+        MediaWiki mediawiki(url, customUserAgent);
+
+        QCOMPARE(mediawiki.url(), url);
+        QCOMPARE(mediawiki.userAgent(), userAgent);
     }
 
-    void mediawikiUrlTest() {
-        Q_ASSERT(this->m_mediaWiki->url() == QUrl("http://127.0.0.1:12566"));
+    void testConstructor_data() {
+        QTest::addColumn<QUrl>("url");
+        QTest::addColumn<QString>("customUserAgent");
+        QTest::addColumn<QString>("userAgent");
+
+        QTest::newRow("") << QUrl("http://127.0.0.1:12566") << QString() << "mediawiki-silk";
+        QTest::newRow("") << QUrl("commons.wikimedia.org/w/api.php") << "" << "mediawiki-silk";
+        QTest::newRow("") << QUrl("http://commons.wikimedia.org/w/api.php") << "test1" << "test1-mediawiki-silk";
+        QTest::newRow("") << QUrl("http://commons.wikimedia.org/w/api.php/") << "test2" << "test2-mediawiki-silk";
     }
-
-    void cleanupTestCase() {
-        delete this->m_mediaWiki;
-    }
-
-private:
-
-    MediaWiki * m_mediaWiki;
 
 };
 
