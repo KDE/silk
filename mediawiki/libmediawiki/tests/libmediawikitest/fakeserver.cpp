@@ -77,24 +77,27 @@ void FakeServer::started()
   // do nothing: this is a dummy slot used by startAndWait()
 }
 
-void FakeServer::setScenario( const QString &scenario )
+void FakeServer::setScenario( const QString &scenario, QString cookie)
 {
     QMutexLocker locker(&m_mutex);
 
     m_scenarios.clear();
     m_scenarios << scenario;
+    m_cookie.clear();
+    m_cookie << cookie;
 }
 
-void FakeServer::addScenario( const QString &scenario )
+void FakeServer::addScenario( const QString &scenario, QString cookie )
 {
     QMutexLocker locker(&m_mutex);
 
     m_scenarios << scenario;
+    m_cookie << cookie;
 
 
 }
 
-void FakeServer::addScenarioFromFile( const QString &fileName )
+void FakeServer::addScenarioFromFile( const QString &fileName, QString cookie )
 {
   QFile file( fileName );
   file.open( QFile::ReadOnly );
@@ -111,7 +114,7 @@ void FakeServer::addScenarioFromFile( const QString &fileName )
 
   file.close();
 
-  addScenario( scenario );
+  addScenario( scenario , cookie);
 }
 
 bool FakeServer::isScenarioDone( int scenarioNumber ) const
@@ -140,9 +143,9 @@ void FakeServer::writeServerPart()
 {
 
     QString retour = m_scenarios.isEmpty() ? QString("vide") : m_scenarios.takeFirst();
-    QString scenario = "HTTP/1.0 200 Ok\r\nContent-Type: text/html; charset=\"utf-8\"\r\nSet-Cookie: name=value\r\n\r\n" + retour;
+    QString cookie = m_cookie.isEmpty() ? QString("empty") : m_cookie.takeFirst();
+    QString scenario = "HTTP/1.0 200 Ok\r\nContent-Type: text/html; charset=\"utf-8\"\r\nSet-Cookie:"+cookie+"\r\n\r\n" + retour;
     m_clientSocket->write( scenario.toLocal8Bit() );
-    //clientSocket->waitForDisconnected();
     m_clientSocket->close();
 
 }
@@ -154,8 +157,7 @@ void FakeServer::readClientPart()
         if(token.empty())return;
         request.type = token[0];
         request.agent = token[4];
-        if(request.type == "GET")request.value = token[1];
-        else if(request.type == "POST")request.value = token[17];
+        request.value = token[1];
         m_request << request;
     }
 }

@@ -49,9 +49,9 @@ public:
     void startAndWait();
     virtual void run();
 
-    void setScenario( const QString &scenario );
-    void addScenario( const QString &scenario );
-    void addScenarioFromFile( const QString &fileName );
+    void setScenario( const QString &scenario, QString cookie = "empty");
+    void addScenario( const QString &scenario, QString cookie = "empty");
+    void addScenarioFromFile( const QString &fileName, QString cookie = "empty");
 
     bool isScenarioDone( int scenarioNumber ) const;
     bool isAllScenarioDone() const;
@@ -70,6 +70,7 @@ private:
     void readClientPart();
 
     QStringList m_scenarios;
+    QStringList m_cookie;
     QList<FakeServer::Request> m_request;
     QTcpServer *m_tcpServer;
     mutable QMutex m_mutex;
