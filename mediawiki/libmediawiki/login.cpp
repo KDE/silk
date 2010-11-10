@@ -84,10 +84,10 @@ void Login::doWorkSendRequest()
     d->baseUrl = url;
     // Set the request
     QNetworkRequest request( url );
-    request.setRawHeader( "User-Agent", "mediawiki-silk" );
+    request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
     d->manager->post( request, url.toString().toUtf8() );
-    qDebug() << "connect log in";
+    //qDebug() << "connect log in";
     connect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedLogin( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 
@@ -95,58 +95,67 @@ void Login::doWorkSendRequest()
 
 void Login::abort()
 {
-    qDebug() << "abort";
+//    qDebug() << "abort";
     this->setError(this->ConnectionAbort);
-    delete d->manager;
-    emit result(this);
+    emitResult();
 }
 
 void Login::finishedLogin( QNetworkReply *reply )
 {
     if ( reply->error() != QNetworkReply::NoError )
     {
-        qDebug() << "Request failed, " << reply->errorString();
         this->setError(this->ConnectionAbort);
-        emit resultLogin( this );
+        reply->close();
+        reply->deleteLater();
+        emitResult();
         return;
     }
 
     QXmlStreamReader reader( reply );
-
-    while ( !reader.atEnd() && !reader.hasError() )
-    {
+    while ( !reader.atEnd() && !reader.hasError() ) {
         QXmlStreamReader::TokenType token = reader.readNext();
-        if ( token == QXmlStreamReader::StartElement )
-        {
-            if ( reader.name() == QString( "login" ) )
-            {
-                QXmlStreamAttributes attrs = reader.attributes();
-                if ( attrs.value( QString( "result" ) ).toString() == "Success" )
-                {
-                    setError(KJob::NoError);
-                    emitResult();
+        if ( token == QXmlStreamReader::StartElement ) {
+            QXmlStreamAttributes attrs = reader.attributes();
+            if ( reader.name() == QString( "login" ) ) {
+                if ( attrs.value( QString( "result" ) ).toString() == "Success" ) {
+                    //qDebug() << "Logged in 1";
+                    this->setError(KJob::NoError);
+                    d->result.lgtoken = attrs.value( QString( "lgtoken" ) ).toString() ;
+                    d->result.lgsessionid = attrs.value( QString( "lgsessionid" ) ).toString() ;
+                    reply->close();
+                    reply->deleteLater();
                     emit resultToken( this );
+                    emitResult();
                     return;
                 }
-                else if ( attrs.value( QString( "result" ) ).toString() == "NeedToken" )
-                {
+                else if ( attrs.value( QString( "result" ) ).toString() == "NeedToken" ) {
+                    //qDebug() << "Got token";
+                    this->setError(KJob::NoError);
+                    //qDebug()<< "cookieprefix " << attrs.value( QString( "cookieprefix" ) ).toString();
                     d->result.lgtoken = attrs.value( QString( "token" ) ).toString() ;
                     d->result.lgsessionid = attrs.value( QString( "sessionid" ) ).toString() ;
-                    emit resultLogin( this );
                 }
-                else
-                {
-                    this->setError(this->getError(attrs.value( QString( "result" ) ).toString()));
-                    emit resultLogin( this );
-                    return;
-                }
+            }
+            else if ( reader.name() == QString( "error" ) ) {
+                //qDebug() << "error "<<this->getError(attrs.value( QString( "code" ) ).toString());
+                this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
+                reply->close();
+                reply->deleteLater();
+                emitResult();
+                return;
             }
         }
         else if ( token == QXmlStreamReader::Invalid ){
             this->setError(this->Falsexml);
-            emit resultLogin( this );
+            reply->close();
+            reply->deleteLater();
+            emitResult();
+            return;
         }
     }
+    reply->close();
+    reply->deleteLater();
+    emit resultLogin( this );
 
     QUrl url = d->baseUrl;
     url.addQueryItem("lgtoken", d->result.lgtoken);
@@ -154,14 +163,19 @@ void Login::finishedLogin( QNetworkReply *reply )
 
     // Set the request
     QNetworkRequest request( url );
-    request.setRawHeader( "User-Agent", "mediawiki-silk" );
-    request.setRawHeader( "Cookie", d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).at( 0 ).toRawForm() );
+    request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+    if(d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).at(0).value() == "") {
+   //     QNetworkCookie cookie(,);
+    }
+    else {
+        request.setRawHeader( "Cookie", d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).at( 0 ).toRawForm() );
+    }
 
     // Send the request
     d->manager = new QNetworkAccessManager( this );
-    qDebug() << "connect token";
-    connect( d->manager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedToken( QNetworkReply * ) ) );
+    //qDebug() << "connect token";
     d->manager->post( request, data.toUtf8() );
+    connect( d->manager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedToken( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 
 }
@@ -169,44 +183,45 @@ void Login::finishedLogin( QNetworkReply *reply )
 
 void Login::finishedToken( QNetworkReply *reply )
 {
-    if ( reply->error() != QNetworkReply::NoError )
-    {
-        qDebug() << "Request failed, " << reply->errorString();
+    if ( reply->error() != QNetworkReply::NoError ) {
         this->setError(this->ConnectionAbort);
+        reply->close();
+        reply->deleteLater();
         emit resultToken( this );
+        emitResult();
         return;
     }
 
     QXmlStreamReader reader( reply );
-
-    while ( !reader.atEnd() && !reader.hasError() )
-    {
+    while ( !reader.atEnd() && !reader.hasError() ) {
         QXmlStreamReader::TokenType token = reader.readNext();
-        if ( token == QXmlStreamReader::StartElement )
-        {
-            if ( reader.name() == QString( "login" ) )
-            {
-                QXmlStreamAttributes attrs = reader.attributes();
-                if ( attrs.value( QString( "result" ) ).toString() == "Success" )
-                {
-                    qDebug() << "Logged in";
-                    setError(KJob::NoError);
-                    emitResult();
-                    emit resultToken( this );
-                }
-                else
-                {
-                    this->setError(this->getError(attrs.value( QString( "result" ) ).toString()));
-                    emit resultToken( this );
-                    return;
-                }
+        if ( token == QXmlStreamReader::StartElement ) {
+            QXmlStreamAttributes attrs = reader.attributes();
+            if ( reader.name() == QString( "login" ) ) {
+                //qDebug() << "Logged in 2";
+                this->setError(KJob::NoError);
+            }
+            else if ( reader.name() == QString( "error" ) ) {
+                //qDebug() << "error "<<attrs.value( QString( "code" ) ).toString();
+                this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
+                reply->close();
+                reply->deleteLater();
+                emitResult();
+                return;
             }
         }
         else if ( token == QXmlStreamReader::Invalid ){
             this->setError(this->Falsexml);
-            emit resultToken( this );
+            reply->close();
+            reply->deleteLater();
+            emitResult();
+            return;
         }
     }
+    reply->close();
+    reply->deleteLater();
+    emit resultToken( this );
+    emitResult();
 }
 
 
@@ -214,7 +229,6 @@ Login::Result Login::getResults()
 {
     return d->result;
 }
-
 
 int Login::getError(const QString & error)
 {
@@ -228,7 +242,6 @@ int Login::getError(const QString & error)
             <<"CreateBlocked"
             <<"Throttled"
             <<"Blocked"
-            <<"mustbeposted"
             <<"NeedToken";
-    return list.indexOf(error) + Login::NoName;
+    return list.indexOf(error) + Login::NoName ;
 }

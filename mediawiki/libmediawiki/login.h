@@ -42,7 +42,7 @@ class KDE_EXPORT Login : public KJob
 
 public:
 
-    enum error
+    enum
     {
         /**
          * @brief
@@ -67,7 +67,6 @@ public:
         /**
          * @brief The username you provided doesn't exist
          */
-
         NotExists,
 
         /**
@@ -75,42 +74,30 @@ public:
         */
         EmptyPass,
 
-
         /**
         * @brief The password you provided is incorrect
         */
         WrongPass,
-
 
         /**
         * @brief Same as WrongPass, returned when an authentication plugin rather than MediaWiki itself rejected the password
         */
         WrongPluginPass,
 
-
         /**
         * @brief The wiki tried to automatically create a new account for you, but your IP address has been blocked from account creation
         */
         CreateBlocked,
 
-
         /**
-        * @brief You've logged in too many times in a short time. See also throttling
+        * @brief You've logged in too many times in a short time.
         */
         Throttled,
-
 
         /**
         * @brief User is blocked
         */
         Blocked,
-
-
-        /**
-        * @brief The login module requires a POST request
-        */
-        Mustbeposted,
-
 
         /**
         * @brief Either you did not provide the login token or the sessionid cookie. Request again with the token and cookie given in this response
@@ -136,14 +123,14 @@ public:
         QString lgpassword;
 
         /**
-         * @brief The token.
-         */
-        QString lgtoken;
-
-        /**
          * @brief The session id.
          */
         QString lgsessionid;
+
+        /**
+         * @brief The token.
+         */
+        QString lgtoken;
 
     };
 
@@ -171,7 +158,12 @@ public:
      */
     virtual void start();
 
+    /**
+     * @brief Get the error number.
+     * @param error the error sent by the API.
+     */
     int getError(const QString & error);
+
 signals:
 
     /**
@@ -186,12 +178,6 @@ signals:
      */
     void resultToken( KJob * job );
 
-    /**
-     * @brief Emitted when a connection has been completed.
-     * @param success true if the connection was completed successfully.
-     */
-    void result( KJob * job );
-
 private slots:
 
     /**
@@ -199,6 +185,9 @@ private slots:
      */
     void abort();
 
+    /**
+     * @brief Send a request to get the token and the cookie.
+     */
     void doWorkSendRequest();
 
     /**
@@ -218,11 +207,10 @@ private slots:
 
 private:
 
+    /**
+     * @brief Contains the class attributes.
+     */
     struct LoginPrivate * const d;
-
-    Login(Login const &);
-
-    Login & operator=(Login const &);
 };
 
 }

@@ -22,6 +22,8 @@
 
 #include <QObject>
 #include <QtTest/QtTest>
+#include <KJob>
+
 #include "mediawiki.h"
 #include "login.h"
 #include "libmediawikitest/fakeserver.h"
@@ -32,35 +34,331 @@ using mediawiki::Login;
 class LoginTest : public QObject
 {
     Q_OBJECT
+
+public slots:
+
+    void loginHandle(KJob* job) {
+        loginCount++;
+        loginResults = ((Login*)job)->getResults();
+    }
+
 private slots:
+
     void initTestCase()
     {
+        loginCount = 0;
         this->m_mediaWiki = new MediaWiki(QUrl("http://127.0.0.1:12566"));
-        this->m_server = new FakeServer(0);
+        this->m_server = new FakeServer;
+        this->request = "?format=xml&action=login&lgname=alexTest&lgpassword=test";
     }
 
-    void loginConnect()
+    void loginTestConnectTrue()
     {
-        QString senario("<?xml version=\"1.0\" encoding=\"utf-8\"?><api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>");
+        loginCount = 0;
+        QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
+        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
+        m_server->addScenario(senario, cookie);
+        senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /></api>";
         m_server->addScenario(senario);
         m_server->startAndWait();
-        this->m_login = new Login(*m_mediaWiki, "alexTest", "test");
-        QSignalSpy spy(m_login, SIGNAL(finishedLogin(bool)));
-        QEventLoop loop;
-        connect(m_login, SIGNAL(finishedLogin(bool)),&loop,SLOT(quit()));
-        loop.exec();
-        QCOMPARE(spy.count(), 1);
-        QVERIFY(spy.takeFirst().at(0).toBool() == true);
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QVERIFY(login.error() == Login::NoError);
     }
 
+    void loginTestAttribute()
+    {
+        loginCount = 0;
+        QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
+        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
+        m_server->addScenario(senario, cookie);
+        senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /></api>";
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        Login::Result result = login.getResults();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QVERIFY(login.error()      == Login::NoError);
+        QVERIFY(result.lgname      == QString("alexTest"));
+        QVERIFY(result.lgpassword  == QString("test"));
+        QVERIFY(result.lgsessionid == QString("17ab96bd8ffbe8ca58a78657a918558e"));
+        QVERIFY(result.lgtoken     == QString("b5780b6e2f27e20b450921d9461010b4"));
+    }
+
+    void loginTestNoName()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"NoName\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::NoName);
+    }
+
+    void loginTestIllegal()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"Illegal\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::Illegal);
+    }
+
+    void loginTestNotExists()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"NotExists\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::NotExists);
+    }
+
+    void loginTestEmptyPass()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"EmptyPass\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::EmptyPass);
+    }
+
+    void loginTestWrongPass()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"WrongPass\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::WrongPass);
+    }
+
+    void loginTestWrongPluginPass()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"WrongPluginPass\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::WrongPluginPass);
+    }
+
+    void loginTestCreateBlocked()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"CreateBlocked\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::CreateBlocked);
+    }
+
+    void loginTestThrottled()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"Throttled\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::Throttled);
+    }
+
+    void loginTestBlocked()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"Blocked\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::Blocked);
+    }
+
+    void loginTestNeedToken()
+    {
+        loginCount = 0;
+        QString senario("<api><error code=\"NeedToken\" info=\"\" /> </api>" );
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        //qDebug()<<"error"<<login.error();
+        QCOMPARE(login.error(), (int)Login::NeedToken);
+    }
+
+
+    void loginTestConnectFalseXMLToken()
+    {
+        loginCount = 0;
+        QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
+        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
+        m_server->addScenario(senario, cookie);
+        senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"</api>";
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        Login::Result result = login.getResults();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QVERIFY(login.error() == Login::Falsexml);
+
+    }
+
+    void loginTestConnectFalseXMLLogin()
+    {
+        loginCount = 0;
+        QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" </api>" );
+        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
+        m_server->addScenario(senario, cookie);
+        senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /></api>";
+        m_server->addScenario(senario);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        Login::Result result = login.getResults();
+        FakeServer::Request serverrequest = m_server->getRequest()[0];
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QVERIFY(login.error() == Login::Falsexml);
+
+    }
+
+    void loginTestConnectAbort()
+    {
+        loginCount = 0;
+        Login login(mediawiki::MediaWiki(QUrl("http://127.0.0.2:910")), "alexTest", "test");
+
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        QCOMPARE(this->loginCount, 1);
+        QVERIFY(login.error() == Login::ConnectionAbort);
+
+    }
 
     void cleanupTestCase()
     {
         delete this->m_mediaWiki;
         delete this->m_server;
     }
+
 private:
-    Login* m_login;
+
+    int loginCount;
+    Login::Result loginResults;
+    QString request;
     MediaWiki* m_mediaWiki;
     FakeServer* m_server;
 };
@@ -69,7 +367,3 @@ private:
 QTEST_MAIN(LoginTest);
 #include "logintest.moc"
 #endif // TEST_LOGIN_H
-
-
-
-
