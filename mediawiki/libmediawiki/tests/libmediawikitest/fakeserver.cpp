@@ -76,8 +76,7 @@ void FakeServer::started()
 {
   // do nothing: this is a dummy slot used by startAndWait()
 }
-
-void FakeServer::setScenario( const QString &scenario, QString cookie)
+void FakeServer::setScenario( const QString &scenario, const QString &cookie)
 {
     QMutexLocker locker(&m_mutex);
 
@@ -86,8 +85,7 @@ void FakeServer::setScenario( const QString &scenario, QString cookie)
     m_cookie.clear();
     m_cookie << cookie;
 }
-
-void FakeServer::addScenario( const QString &scenario, QString cookie )
+void FakeServer::addScenario( const QString &scenario, const QString &cookie )
 {
     QMutexLocker locker(&m_mutex);
 
@@ -97,7 +95,7 @@ void FakeServer::addScenario( const QString &scenario, QString cookie )
 
 }
 
-void FakeServer::addScenarioFromFile( const QString &fileName, QString cookie )
+void FakeServer::addScenarioFromFile( const QString &fileName, const QString &cookie )
 {
   QFile file( fileName );
   file.open( QFile::ReadOnly );
