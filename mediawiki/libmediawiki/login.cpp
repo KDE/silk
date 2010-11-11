@@ -87,7 +87,6 @@ void Login::doWorkSendRequest()
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
     d->manager->post( request, url.toString().toUtf8() );
-    //qDebug() << "connect log in";
     connect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedLogin( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 
@@ -95,7 +94,6 @@ void Login::doWorkSendRequest()
 
 void Login::abort()
 {
-//    qDebug() << "abort";
     this->setError(this->ConnectionAbort);
     emitResult();
 }
@@ -118,7 +116,6 @@ void Login::finishedLogin( QNetworkReply *reply )
             QXmlStreamAttributes attrs = reader.attributes();
             if ( reader.name() == QString( "login" ) ) {
                 if ( attrs.value( QString( "result" ) ).toString() == "Success" ) {
-                    //qDebug() << "Logged in 1";
                     this->setError(KJob::NoError);
                     d->result.lgtoken = attrs.value( QString( "lgtoken" ) ).toString() ;
                     d->result.lgsessionid = attrs.value( QString( "lgsessionid" ) ).toString() ;
@@ -129,15 +126,12 @@ void Login::finishedLogin( QNetworkReply *reply )
                     return;
                 }
                 else if ( attrs.value( QString( "result" ) ).toString() == "NeedToken" ) {
-                    //qDebug() << "Got token";
                     this->setError(KJob::NoError);
-                    //qDebug()<< "cookieprefix " << attrs.value( QString( "cookieprefix" ) ).toString();
                     d->result.lgtoken = attrs.value( QString( "token" ) ).toString() ;
                     d->result.lgsessionid = attrs.value( QString( "sessionid" ) ).toString() ;
                 }
             }
             else if ( reader.name() == QString( "error" ) ) {
-                //qDebug() << "error "<<this->getError(attrs.value( QString( "code" ) ).toString());
                 this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
                 reply->close();
                 reply->deleteLater();
@@ -164,16 +158,15 @@ void Login::finishedLogin( QNetworkReply *reply )
     // Set the request
     QNetworkRequest request( url );
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
-    if(d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).at(0).value() == "") {
-   //     QNetworkCookie cookie(,);
+    if(d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).empty()) {
+        QNetworkCookie cookie(QString("enwiki_session").toUtf8(),QString(d->result.lgsessionid).toUtf8());
+        cookie.setName(QString("test").toUtf8());
+        d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).push_back(cookie);
     }
-    else {
-        request.setRawHeader( "Cookie", d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).at( 0 ).toRawForm() );
-    }
+    request.setRawHeader( "Cookie", d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).at( 0 ).toRawForm() );
 
     // Send the request
     d->manager = new QNetworkAccessManager( this );
-    //qDebug() << "connect token";
     d->manager->post( request, data.toUtf8() );
     connect( d->manager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedToken( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
@@ -187,7 +180,6 @@ void Login::finishedToken( QNetworkReply *reply )
         this->setError(this->ConnectionAbort);
         reply->close();
         reply->deleteLater();
-        emit resultToken( this );
         emitResult();
         return;
     }
@@ -198,11 +190,11 @@ void Login::finishedToken( QNetworkReply *reply )
         if ( token == QXmlStreamReader::StartElement ) {
             QXmlStreamAttributes attrs = reader.attributes();
             if ( reader.name() == QString( "login" ) ) {
-                //qDebug() << "Logged in 2";
                 this->setError(KJob::NoError);
+                QString cookieName = attrs.value( QString( "cookieprefix" ) ).toString();
+                d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url()).value(0).setName(cookieName.toUtf8());
             }
             else if ( reader.name() == QString( "error" ) ) {
-                //qDebug() << "error "<<attrs.value( QString( "code" ) ).toString();
                 this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
                 reply->close();
                 reply->deleteLater();
@@ -232,16 +224,23 @@ Login::Result Login::getResults()
 
 int Login::getError(const QString & error)
 {
+    int ret = 0;
     QStringList list;
-    list << "NoName"
-            <<"Illegal"
-            <<"NotExists"
-            <<"EmptyPass"
-            <<"WrongPass"
-            <<"WrongPluginPass"
-            <<"CreateBlocked"
-            <<"Throttled"
-            <<"Blocked"
-            <<"NeedToken";
-    return list.indexOf(error) + Login::NoName ;
+    list << "Falsexml"
+            << "ConnectionAbort"
+            << "NoName"
+            << "Illegal"
+            << "NotExists"
+            << "EmptyPass"
+            << "WrongPass"
+            << "WrongPluginPass"
+            << "CreateBlocked"
+            << "Throttled"
+            << "Blocked"
+            << "NeedToken";
+    ret = list.indexOf(error);
+    if(ret == -1){
+        ret = 0;
+    }
+    return  ret + (int)Login::Falsexml ;
 }
