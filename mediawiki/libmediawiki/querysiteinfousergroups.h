@@ -65,24 +65,78 @@ public:
      */
     struct Result {
 
-        /**
-         * @brief The name of the user group.
-         */
-        QString name;
+    public:
 
         /**
-         * @brief Rights of the user group.
+         * Constructs a user group.
+         * @param name the name of the user group
+         * @param rights rights of the user group
          */
-        QList<QString> rights;
+        Result(QString const & name, QList<QString> const & rights)
+                : m_name(name)
+                , m_rights(rights)
+                , m_hasNumber(false)
+        {}
+
+        /**
+         * Constructs a user group.
+         * @param name the name of the user group
+         * @param rights rights of the user group
+         * @param number the numbers of users in the user group
+         */
+        Result(QString const & name, QList<QString> const & rights, unsigned int const number)
+                : m_name(name)
+                , m_rights(rights)
+                , m_number(number)
+                , m_hasNumber(true)
+        {}
+
+        /**
+         * @brief Returns the name of the user group.
+         * @return the name of the user group
+         */
+        inline QString name() const { return m_name; }
+
+        /**
+         * @brief Returns rights of the user group.
+         * @return rights of the user group
+         */
+        inline QList<QString> const & rights() const { return m_rights; }
+
+        /**
+         * @brief Returns the numbers of users in the user group.
+         * @pre hasNumber() == true
+         * @return the numbers of users in the user group
+         * @see QuerySiteinfoUsergroups::Result::hasNumber()
+         */
+        inline unsigned int number() const { Q_ASSERT(hasNumber()); return m_number; }
+
+        /**
+         * @brief Returns true if number has defined else false.
+         * @return true if number has defined else false
+         * @see QuerySiteinfoUsergroups::Result::number()
+         */
+        inline bool hasNumber() const { return m_hasNumber; }
+
+    private:
+
+        QString m_name;
+
+        QList<QString> m_rights;
+
+        unsigned int m_number;
+
+        bool m_hasNumber;
 
     };
 
     /**
      * @brief Constructs a UserGroups job.
      * @param mediawiki the mediawiki concerned by the job
+     * @param includeNumber if true number of users of each user group is included
      * @param parent the QObject parent
      */
-    explicit QuerySiteinfoUsergroups(MediaWiki const & mediawiki, QObject * parent = 0);
+    explicit QuerySiteinfoUsergroups(MediaWiki const & mediawiki, bool includeNumber = false, QObject * parent = 0);
 
     /**
      * @brief Destroys the UserGroups job.
@@ -99,6 +153,7 @@ signals:
     /**
      * @brief Provides a list of all user groups.
      * @param usergroups list of all user groups
+     * @see QuerySiteinfoUsergroups::Result
      */
     void usergroups(QList<QuerySiteinfoUsergroups::Result> const & usergroups);
 

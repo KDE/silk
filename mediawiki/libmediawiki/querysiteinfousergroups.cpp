@@ -32,13 +32,17 @@ namespace mediawiki
 
 struct QuerySiteinfoUsergroupsPrivate {
 
-    QuerySiteinfoUsergroupsPrivate(QNetworkAccessManager * const manager, MediaWiki const & mediawiki)
+    QuerySiteinfoUsergroupsPrivate(QNetworkAccessManager * const manager, MediaWiki const & mediawiki, bool includeNumber)
             : manager(manager)
-            , mediawiki(mediawiki) {}
+            , mediawiki(mediawiki)
+            , includeNumber(includeNumber)
+    {}
 
     QNetworkAccessManager * const manager;
 
     MediaWiki const & mediawiki;
+
+    bool const includeNumber;
 
 };
 
@@ -46,9 +50,9 @@ struct QuerySiteinfoUsergroupsPrivate {
 
 using namespace mediawiki;
 
-QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(MediaWiki const & mediawiki, QObject * parent)
+QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(MediaWiki const & mediawiki, bool includeNumber, QObject * parent)
         : KJob(parent)
-        , d(new QuerySiteinfoUsergroupsPrivate(new QNetworkAccessManager(this), mediawiki))
+        , d(new QuerySiteinfoUsergroupsPrivate(new QNetworkAccessManager(this), mediawiki, includeNumber))
 {
     setCapabilities(KJob::NoCapabilities);
 }
@@ -71,6 +75,9 @@ void QuerySiteinfoUsergroups::doWorkSendRequest()
     url.addQueryItem("action", "query");
     url.addQueryItem("meta",   "siteinfo");
     url.addQueryItem("siprop", "usergroups");
+    if (d->includeNumber) {
+        url.addQueryItem("sinumberingroup", QString());
+    }
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
@@ -83,30 +90,34 @@ void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
 {
     if (reply->error() == QNetworkReply::NoError) {
         QList<QuerySiteinfoUsergroups::Result> results;
-        QuerySiteinfoUsergroups::Result result;
+        QString name;
+        QList<QString> rights;
+        unsigned int number;
         QXmlStreamReader reader(reply);
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {
                 if (reader.name() == "group") {
-                    result.name = reader.attributes().value("name").toString();
+                    name = reader.attributes().value("name").toString();
+                    if (d->includeNumber) {
+                        number = reader.attributes().value("number").toString().toUInt();
+                    }
                 } else if (reader.name() == "rights") {
-                    result.rights.clear();
+                    rights.clear();
                 } else if (reader.name() == "permission") {
                     reader.readNext();
-                    result.rights.push_back(reader.text().toString());
+                    rights.push_back(reader.text().toString());
                 }
             } else if (token == QXmlStreamReader::EndElement) {
                 if (reader.name() == "group") {
-                    results.push_back(result);
+                    results.push_back(d->includeNumber ? QuerySiteinfoUsergroups::Result(name, rights, number) : QuerySiteinfoUsergroups::Result(name, rights));
                 }
             }
         }
         if (!reader.hasError()) {
             setError(KJob::NoError);
             emit usergroups(results);
-        }
-        else {
+        } else {
             setError(QuerySiteinfoUsergroups::XmlError);
         }
     }
