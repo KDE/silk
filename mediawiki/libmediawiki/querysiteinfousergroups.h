@@ -44,6 +44,23 @@ class QuerySiteinfoUsergroups : public KJob
 public:
 
     /**
+     * @biref Indicates all possible error conditions found during the processing of the job.
+     */
+    enum {
+
+        /**
+         * @brief A network error has occured.
+         */
+        NetworkError = KJob::UserDefinedError + 1,
+
+        /**
+         * @brief A XML error has occured.
+         */
+        XmlError,
+
+    };
+
+    /**
      * @brief A user group result.
      */
     struct Result {

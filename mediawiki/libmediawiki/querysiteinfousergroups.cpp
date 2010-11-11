@@ -102,8 +102,16 @@ void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
                 }
             }
         }
-        emit usergroups(results);
-        setError(KJob::NoError);
-        emitResult();
+        if (!reader.hasError()) {
+            setError(KJob::NoError);
+            emit usergroups(results);
+        }
+        else {
+            setError(QuerySiteinfoUsergroups::XmlError);
+        }
     }
+    else {
+        setError(QuerySiteinfoUsergroups::NetworkError);
+    }
+    emitResult();
 }
