@@ -60,7 +60,7 @@ private slots:
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
         senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /></api>";
-        m_server->addScenario(senario);
+        m_server->addScenario(senario, cookie);
         m_server->startAndWait();
 
         Login login(*m_mediaWiki, "alexTest", "test");
@@ -71,6 +71,7 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(login.cookies().isEmpty(), false);
         QVERIFY(login.error() == Login::NoError);
     }
 
@@ -81,7 +82,7 @@ private slots:
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
         senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /></api>";
-        m_server->addScenario(senario);
+        m_server->addScenario(senario, cookie);
         m_server->startAndWait();
 
         Login login(*m_mediaWiki, "alexTest", "test");
@@ -93,11 +94,30 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(login.cookies().isEmpty(), false);
         QVERIFY(login.error()      == Login::NoError);
         QVERIFY(result.lgname      == QString("alexTest"));
         QVERIFY(result.lgpassword  == QString("test"));
         QVERIFY(result.lgsessionid == QString("17ab96bd8ffbe8ca58a78657a918558e"));
         QVERIFY(result.lgtoken     == QString("b5780b6e2f27e20b450921d9461010b4"));
+    }
+
+    void loginTestConnectTrueWithoutCookie()
+    {
+        loginCount = 0;
+        QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
+        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
+        m_server->setScenario(senario);
+        senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /></api>";
+        m_server->addScenario(senario, cookie);
+        m_server->startAndWait();
+
+        Login login(*m_mediaWiki, "alexTest", "test");
+        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+        login.exec();
+        QCOMPARE(this->loginCount, 1);
+        QCOMPARE(login.error(), (int)Login::NoError);
+        QCOMPARE(login.cookies().isEmpty(), false);
     }
 
     void loginTestFalseXMLLogin()

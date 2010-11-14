@@ -115,7 +115,7 @@ void Login::finishedLogin( QNetworkReply *reply )
             QXmlStreamAttributes attrs = reader.attributes();
             if ( reader.name() == QString( "login" ) ) {
                 if ( attrs.value( QString( "result" ) ).toString() == "Success" ) {
-                    qDebug()<<"Success Login";
+                    //qDebug()<<"Success Login";
                     this->setError(KJob::NoError);
                     d->result.lgtoken = attrs.value( QString( "lgtoken" ) ).toString() ;
                     d->result.lgsessionid = attrs.value( QString( "lgsessionid" ) ).toString() ;
@@ -160,9 +160,11 @@ void Login::finishedLogin( QNetworkReply *reply )
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     if(d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).isEmpty()) {
         QNetworkCookie cookie(QString("enwiki_session").toUtf8(),QString(d->result.lgsessionid).toUtf8());
-        d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).insert(0, cookie);
+        QList<QNetworkCookie> cookies;
+        cookies.append(cookie);
+        d->manager->cookieJar()->setCookiesFromUrl(cookies, d->mediawiki.url());
+        d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).append(cookie);
     }
-
     request.setRawHeader( "Cookie", d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).at( 0 ).toRawForm() );
     // Send the request
     d->manager = new QNetworkAccessManager();
@@ -189,9 +191,8 @@ void Login::finishedToken( QNetworkReply *reply )
         if ( token == QXmlStreamReader::StartElement ) {
             QXmlStreamAttributes attrs = reader.attributes();
             if ( reader.name() == QString( "login" ) ) {
-                qDebug()<<"Success Token";
+                //qDebug()<<"Success Token";
                 this->setError(KJob::NoError);
-                qDebug()<< "count " << d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url()).count();
             }
             else if ( reader.name() == QString( "error" ) ) {
                 this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
