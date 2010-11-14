@@ -10,6 +10,7 @@ add_subdirectory( tests )
 set(mediawiki_SRCS
     mediawiki.cpp
     login.cpp
+    logout.cpp
     general.cpp
     querysiteinfousergroups.cpp
 )
