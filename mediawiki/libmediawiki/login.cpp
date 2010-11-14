@@ -163,7 +163,6 @@ void Login::finishedLogin( QNetworkReply *reply )
         QList<QNetworkCookie> cookies;
         cookies.append(cookie);
         d->manager->cookieJar()->setCookiesFromUrl(cookies, d->mediawiki.url());
-        d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).append(cookie);
     }
     request.setRawHeader( "Cookie", d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).at( 0 ).toRawForm() );
     // Send the request
