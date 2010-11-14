@@ -23,6 +23,7 @@
 #include <QtCore/QString>
 #include <KDE/KJob>
 #include <kdemacros.h>
+#include <QtNetwork/QNetworkCookieJar>
 
 class QNetworkReply;
 
@@ -163,6 +164,11 @@ public:
      * @param error the error sent by the API.
      */
     int getError(const QString & error);
+
+    /**
+     * @brief Return cookies.
+     */
+    QList<QNetworkCookie>  cookies();
 
 signals:
 
