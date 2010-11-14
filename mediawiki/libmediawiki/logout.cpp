@@ -22,7 +22,6 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkCookieJar>
 #include <QtCore/QDebug>
 
 #include "logout.h"
@@ -98,4 +97,14 @@ void Logout::doWorkProcessReply(QNetworkReply * reply)
     reply->close();
     reply->deleteLater();
     emitResult();
+}
+
+QList<QNetworkCookie> Logout::cookies()
+{
+    if (d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url()).isEmpty()) {
+        return QList<QNetworkCookie>();
+    }
+    else {
+        return d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());
+    }
 }

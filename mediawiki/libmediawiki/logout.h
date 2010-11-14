@@ -23,6 +23,7 @@
 #include <QtCore/QString>
 #include <KDE/KJob>
 #include <kdemacros.h>
+#include <QtNetwork/QNetworkCookieJar>
 
 class QNetworkReply;
 
@@ -61,6 +62,11 @@ public:
      * @brief Starts the job asynchronously.
      */
     virtual void start();
+
+    /**
+     * @brief Return cookies.
+     */
+    QList<QNetworkCookie>  cookies();
 
 private slots:
 
