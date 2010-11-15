@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef MEDIAWIKI_USERGROUPS_H
-#define MEDIAWIKI_USERGROUPS_H
+#ifndef MEDIAWIKI_QUERYSITEINFOUSERGROUPS_H
+#define MEDIAWIKI_QUERYSITEINFOUSERGROUPS_H
 
 #include <QtCore/QList>
 #include <QtCore/QString>
