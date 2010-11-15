@@ -25,12 +25,10 @@
 #include <KJob>
 
 #include "mediawiki.h"
-#include "login.h"
 #include "logout.h"
 #include "libmediawikitest/fakeserver.h"
 
 using mediawiki::MediaWiki;
-using mediawiki::Login;
 using mediawiki::Logout;
 
 class LogoutTest : public QObject
@@ -41,10 +39,6 @@ public slots:
 
     void logoutHandle(KJob* job) {
         logoutCount++;
-    }
-
-    void loginHandle(KJob* job) {
-        loginCount++;
     }
 
 private slots:
@@ -59,23 +53,8 @@ private slots:
 
     void logoutTestConnectTrue()
     {
-/*        loginCount = 0;
-        QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
-        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
-        m_server->setScenario(senario);
-        senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /></api>";
-        cookie = "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"";
-        m_server->addScenario(senario, cookie);
-        m_server->startAndWait();
-
-        Login login(*m_mediaWiki, "iup", "isi");
-        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
-        login.exec();
-        QCOMPARE(this->loginCount, 1);
-        QCOMPARE(login.error(), (int)Login::NoError);
-        QCOMPARE(login.cookies().isEmpty(), false);*/
         QString senario("<api />" );
-        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
+        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" expires=\"Sat, 12-Feb-2011 21:39:30 GMT\"");
         m_server->setScenario(senario, cookie);
         m_server->startAndWait();
 
@@ -85,7 +64,7 @@ private slots:
         logout.exec();
         QCOMPARE(this->logoutCount, 1);
         QCOMPARE(logout.error(), (int)Logout::NoError);
-        QCOMPARE(logout.cookies().isEmpty(), false);
+        QCOMPARE(logout.cookies().isEmpty(), true);
     }
 /*
     void logoutTestConnectionAbortLogout()
@@ -107,7 +86,6 @@ private slots:
 
 private:
 
-    int loginCount;
     int logoutCount;
     QString request;
     MediaWiki* m_mediaWiki;
@@ -117,5 +95,5 @@ private:
 
 QTEST_MAIN(LogoutTest);
 #include "logouttest.moc"
-#endif // TEST_LOGIN_H
+#endif // TEST_LOGOUT_H
 

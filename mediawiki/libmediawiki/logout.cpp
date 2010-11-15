@@ -23,6 +23,7 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 #include <QtCore/QDebug>
+#include <QDateTime>
 
 #include "logout.h"
 #include "mediawiki.h"
@@ -91,9 +92,8 @@ void Logout::doWorkProcessReply(QNetworkReply * reply)
         return;
     }
     this->setError(KJob::NoError);
-    qDebug()<<"Logout";
-    d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).value(0) = QNetworkCookie();
-    //   d->manager->cookieJar()->cookiesForUrl( d->mediawiki.url() ).clear();
+    qDebug()<<"Logout ";
+    d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url()).clear();
     reply->close();
     reply->deleteLater();
     emitResult();
