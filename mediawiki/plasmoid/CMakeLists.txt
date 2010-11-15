@@ -1,1 +1,1 @@
-add_subdirectory( pictureoftheday )
+add_subdirectory( applet )

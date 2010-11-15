@@ -6,8 +6,10 @@
 #include <Plasma/Applet>
 #include <Plasma/Svg>
 
+
 class QSizeF;
 class Picture;
+class Setting;
 
 // Define our plasma Applet
 class PlasmaPictureOfTheDay : public Plasma::Applet
@@ -23,12 +25,18 @@ class PlasmaPictureOfTheDay : public Plasma::Applet
                 const QStyleOptionGraphicsItem *option,
                 const QRect& contentsRect);
         void init();
+    public slots:
+            void createConfigurationInterface(KConfigDialog *parent);
+            void configAccepted();
     private slots:
         void updatePicture();
         void reloadPicture();
 
     private:
         Picture* m_picture;
+        Setting* m_settingDialog;
+        QString m_provider;
+
 };
 
 #endif
