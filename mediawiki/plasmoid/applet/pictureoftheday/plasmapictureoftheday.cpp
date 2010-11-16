@@ -18,9 +18,9 @@ PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject *parent, const QVariantList
 {
     setHasConfigurationInterface(true);
     setBackgroundHints(DefaultBackground);
-    resize(200, 200);
+    resize(200, 300);
     connect(m_picture,SIGNAL(pictureUpdated()),this,SLOT(updatePicture()));
-    m_provider = QString("wcpotd:");
+    m_provider = QString("wppotd:");
 }
 
 void PlasmaPictureOfTheDay::updatePicture()
@@ -63,12 +63,26 @@ void PlasmaPictureOfTheDay::paintInterface(QPainter *p,
     QPixmap pix(m_picture->getPicture());
     // Now we draw the applet, starting with our svg
     // We place the icon and text
-    p->drawPixmap((int)contentsRect.left(), (int)contentsRect.top(),pix.scaled(QSize((int)contentsRect.width(), (int)contentsRect.height()),Qt::KeepAspectRatio));
-    p->save();
-    p->setPen(Qt::white);
     p->drawText(contentsRect,
-                Qt::AlignBottom | Qt::AlignHCenter,
-                "Hello!");
+                Qt::AlignTop | Qt::AlignHCenter,
+                m_picture->getCurrentDate().toString("dddd dd MMMM"));
+    p->drawPixmap((int)contentsRect.left()+17, (int)contentsRect.top()+17,pix.scaled(QSize((int)contentsRect.width()-34, (int)contentsRect.height()-34),Qt::KeepAspectRatio));
+    p->save();
+    QString text("Avec la sinistrose conjoncturelle, il faut de toute urgence se préoccuper de chacune des solutions s'offrant à nous.");
+
+    int nbCarac = ((int)contentsRect.width())/6;
+    int i=nbCarac;
+    while( i < text.length())
+    {
+        while(text.at(i) != ' ' && i > 0)i--;
+        text.insert(i,'\n');
+        i++;
+        i += nbCarac;
+    }
+
+    p->drawText(contentsRect,
+                Qt::AlignBottom | Qt::AlignJustify,
+                text);
     p->restore();
 }
 
@@ -98,7 +112,7 @@ void PlasmaPictureOfTheDay::configAccepted()
         engine->connectSource(identifier, m_picture);
 
     }
-    if( currentData == QString("Mediawiki") && m_provider != QString("wcpotd:"))
+    if( currentData == QString("Wikimedia") && m_provider != QString("wcpotd:"))
     {
         QString identifier = m_provider + m_picture->getCurrentDate().toString(Qt::ISODate);
         engine->disconnectSource(identifier, m_picture);
