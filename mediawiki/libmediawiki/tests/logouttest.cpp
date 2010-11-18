@@ -64,7 +64,14 @@ private slots:
         logout.exec();
         QCOMPARE(this->logoutCount, 1);
         QCOMPARE(logout.error(), (int)Logout::NoError);
-        QCOMPARE(logout.cookies().isEmpty(), true);
+
+        QList<FakeServer::Request> requests = m_server->getRequest();
+        QCOMPARE(requests.size(), 1);
+
+        FakeServer::Request request = requests[0];
+        QCOMPARE(request.agent, m_mediaWiki->userAgent());
+        QCOMPARE(request.type, QString("GET"));
+        QCOMPARE(request.value, QString("?format=xml&action=logout"));
     }
 /*
     void logoutTestConnectionAbortLogout()
