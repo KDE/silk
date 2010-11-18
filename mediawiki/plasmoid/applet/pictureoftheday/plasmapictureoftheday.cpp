@@ -61,28 +61,22 @@ void PlasmaPictureOfTheDay::paintInterface(QPainter *p,
     p->setRenderHint(QPainter::SmoothPixmapTransform);
     p->setRenderHint(QPainter::Antialiasing);
     QPixmap pix(m_picture->getPicture());
-    // Now we draw the applet, starting with our svg
-    // We place the icon and text
+    if(pix.width() > pix.height() && this->size().height() > this->size().width())
+    {
+        this->resize(this->size().height(),this->size().width());
+    }
+    pix = pix.scaled(QSize((int)contentsRect.width()-34, (int)contentsRect.height()-34),Qt::KeepAspectRatio);
+
     p->drawText(contentsRect,
                 Qt::AlignTop | Qt::AlignHCenter,
                 m_picture->getCurrentDate().toString("dddd dd MMMM"));
-    p->drawPixmap((int)contentsRect.left()+17, (int)contentsRect.top()+17,pix.scaled(QSize((int)contentsRect.width()-34, (int)contentsRect.height()-34),Qt::KeepAspectRatio));
+    p->drawPixmap((int)contentsRect.left()+(contentsRect.size().width()-pix.size().width())/2, (int)contentsRect.top()+17,pix);
     p->save();
-    QString text("Avec la sinistrose conjoncturelle, il faut de toute urgence se préoccuper de chacune des solutions s'offrant à nous.");
-
-    int nbCarac = ((int)contentsRect.width())/6;
-    int i=nbCarac;
-    while( i < text.length())
-    {
-        while(text.at(i) != ' ' && i > 0)i--;
-        text.insert(i,'\n');
-        i++;
-        i += nbCarac;
-    }
+    QString text("Légi, Patres colendissimi, in Arabum monumentis, interrogatum Abdalam 1 Sarracenum, quid in hac quasi mundana scaena");
 
     p->drawText(contentsRect,
-                Qt::AlignBottom | Qt::AlignJustify,
-                text);
+                Qt::AlignBottom | Qt::AlignJustify | Qt::TextWordWrap,
+                text.toUtf8());
     p->restore();
 }
 
@@ -103,7 +97,6 @@ void PlasmaPictureOfTheDay::configAccepted()
     QString currentData = m_settingDialog->settingUI.comboBox->itemText(m_settingDialog->settingUI.comboBox->currentIndex());
     if( currentData == QString("Wikipedia") && m_provider != QString("wppotd:"))
     {
-        qDebug()<<"martine";
         QString identifier = m_provider + m_picture->getCurrentDate().toString(Qt::ISODate);
         engine->disconnectSource(identifier, m_picture);
         m_provider = QString("wppotd:");
