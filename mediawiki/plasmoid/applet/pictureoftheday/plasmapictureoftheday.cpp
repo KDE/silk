@@ -65,7 +65,7 @@ void PlasmaPictureOfTheDay::paintInterface(QPainter *p,
     {
         this->resize(this->size().height(),this->size().width());
     }
-    pix = pix.scaled(QSize((int)contentsRect.width()-34, (int)contentsRect.height()-34),Qt::KeepAspectRatio);
+    pix = pix.scaled(QSize((int)contentsRect.width()-34, (int)contentsRect.height()-74),Qt::KeepAspectRatio);
 
     p->drawText(contentsRect,
                 Qt::AlignTop | Qt::AlignHCenter,
