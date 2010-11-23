@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef GENERAL_H
-#define GENERAL_H
+#ifndef QUERYSITEINFOGENERAL_H
+#define QUERYSITEINFOGENERAL_H
 #include <QObject>
 #include <QtCore/QList>
 #include <QtCore/QString>
@@ -33,11 +33,11 @@ namespace mediawiki {
 class MediaWiki;
 
 /**
- * @brief General job.
+ * @brief QuerySiteInfoGeneral job.
  *
  * Uses for fetch a generals information about the wiki.
  */
-class General : public KJob
+class QuerySiteInfoGeneral : public KJob
 {
 
     Q_OBJECT
@@ -50,22 +50,22 @@ public:
         includeAllDenied
     };
     /**
-     * @brief Constructs a General job.
+     * @brief Constructs a QuerySiteInfoGeneral job.
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit General(MediaWiki const & mediawiki, QObject * parent = 0);
+    explicit QuerySiteInfoGeneral(MediaWiki const & mediawiki, QObject * parent = 0);
 
     /**
-     * @brief Destroys the general job.
+     * @brief Destroys the QuerySiteInfoGeneral job.
      */
-    virtual ~General();
+    virtual ~QuerySiteInfoGeneral();
     /**
      * @brief Starts the job asynchronously.
      */
     virtual void start();
     /**
-     * @brief A general result.
+     * @brief A QuerySiteInfoGeneral result.
      */
     struct Result {
         QString mainpage;
@@ -95,9 +95,9 @@ public:
     };
     /**
      * @brief Result Getter.
-     * @return General::Result
+     * @return QuerySiteInfoGeneral::Result
      */
-    General::Result getResult();
+    QuerySiteInfoGeneral::Result getResult();
 
 private slots:
     void abort();
@@ -105,8 +105,8 @@ private slots:
     void doWorkProcessReply(QNetworkReply * reply);
 private:
 
-    struct GeneralPrivate * const d;
+    struct QuerySiteInfoGeneralPrivate * const d;
 
 };
 }
-#endif // GENERAL_H
+#endif // QUERYSITEINFOGENERAL_H

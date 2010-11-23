@@ -26,13 +26,13 @@
 
 
 #include "mediawiki.h"
-#include "general.h"
+#include "querysiteinfogeneral.h"
 #include "libmediawikitest/fakeserver.h"
 
 using mediawiki::MediaWiki;
-using mediawiki::General;
+using mediawiki::QuerySiteInfoGeneral;
 
-class GeneralTest : public QObject
+class QuerySiteInfoGeneralTest : public QObject
 {
     Q_OBJECT
 
@@ -40,7 +40,7 @@ public slots:
 
 void generalHandle(KJob* job) {
     generalCount++;
-    generalResults = ((General*)job)->getResult();
+    generalResults = ((QuerySiteInfoGeneral*)job)->getResult();
 }
 private slots:
 
@@ -51,14 +51,14 @@ void initTestCase()
     this->m_server = new FakeServer;
     this->request = "?format=xml&action=query&meta=siteinfo&siprop=general";
 }
-void generalTestConnectTrue()
+void QuerySiteInfoGeneralTestConnectTrue()
 {
     generalCount = 0;
     QString senario("<api><query><general mainpage=\"Main Page\" base=\"http://en.wikipedia.org/wiki/Main_Page\" sitename=\"Wikipedia\" generator=\"MediaWiki 1.16wmf4\" phpversion=\"5.2.4-2ubuntu5.12wm1\" phpsapi=\"apache2handler\" dbtype=\"mysql\" dbversion=\"5.1.46-facebook-r3489-log\" rev=\"75268\" case=\"first-letter\" rights=\"Creative Commons Attribution-Share Alike 3.0 Unported\" lang=\"en\" fallback8bitEncoding=\"windows-1252\" writeapi=\"\" timezone=\"UTC\" timeoffset=\"0\" articlepath=\"/wiki/$1\" scriptpath=\"/w\" script=\"/w/index.php\" variantarticlepath=\"\" server=\"http://en.wikipedia.org\" wikiid=\"enwiki\" time=\"2010-10-24T19:53:13Z\"/></query></api>");
     m_server->addScenario(senario);
     m_server->startAndWait();
 
-    General general(*m_mediaWiki);
+    QuerySiteInfoGeneral general(*m_mediaWiki);
 
     connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
     general.exec();
@@ -66,26 +66,26 @@ void generalTestConnectTrue()
     QCOMPARE(this->generalCount, 1);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == General::NoError);
+    QVERIFY(general.error() == QuerySiteInfoGeneral::NoError);
 
 }
-void generalTestAttribute()
+void QuerySiteInfoGeneralTestAttribute()
 {
     generalCount = 0;
     QString senario("<api><query><general mainpage=\"Main Page\" base=\"http://en.wikipedia.org/wiki/Main_Page\" sitename=\"Wikipedia\" generator=\"MediaWiki 1.16wmf4\" phpversion=\"5.2.4-2ubuntu5.12wm1\" phpsapi=\"apache2handler\" dbtype=\"mysql\" dbversion=\"5.1.46-facebook-r3489-log\" rev=\"75268\" case=\"first-letter\" rights=\"Creative Commons Attribution-Share Alike 3.0 Unported\" lang=\"en\" fallback8bitEncoding=\"windows-1252\" writeapi=\"\" timezone=\"UTC\" timeoffset=\"0\" articlepath=\"/wiki/$1\" scriptpath=\"/w\" script=\"/w/index.php\" variantarticlepath=\"\" server=\"http://en.wikipedia.org\" wikiid=\"enwiki\" time=\"2010-10-24T19:53:13Z\"/></query></api>");
     m_server->addScenario(senario);
     m_server->startAndWait();
 
-    General general(*m_mediaWiki);
+    QuerySiteInfoGeneral general(*m_mediaWiki);
 
     connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
     general.exec();
-    General::Result result = general.getResult();
+    QuerySiteInfoGeneral::Result result = general.getResult();
     FakeServer::Request serverrequest = m_server->getRequest()[0];
     QCOMPARE(this->generalCount, 1);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == General::NoError);
+    QVERIFY(general.error() == QuerySiteInfoGeneral::NoError);
     QVERIFY(result.mainpage             == QString("Main Page"));
     QVERIFY(result.base                 == QString("http://en.wikipedia.org/wiki/Main_Page"));
     QVERIFY(result.sitename             == QString("Wikipedia"));
@@ -110,14 +110,14 @@ void generalTestAttribute()
     QVERIFY(result.wikiid               == QString("enwiki"));
     QVERIFY(result.time                 == QString("2010-10-24T19:53:13Z"));
 }
-void generalTestConnectFalseXML()
+void QuerySiteInfoGeneralTestConnectFalseXML()
 {
     generalCount = 0;
     QString senario("<api><query<general mainpage=\"Main Page\" base=\"http://en.wikipedia.org/wiki/Main_Page\" sitename=\"Wikipedia\" generator=\"MediaWiki 1.16wmf4\" phpversion=\"5.2.4-2ubuntu5.12wm1\" phpsapi=\"apache2handler\" dbtype=\"mysql\" dbversion=\"5.1.46-facebook-r3489-log\" rev=\"75268\" case=\"first-letter\" rights=\"Creative Commons Attribution-Share Alike 3.0 Unported\" lang=\"en\" fallback8bitEncoding=\"windows-1252\" writeapi=\"\" timezone=\"UTC\" timeoffset=\"0\" articlepath=\"/wiki/$1\" scriptpath=\"/w\" script=\"/w/index.php\" variantarticlepath=\"\" server=\"http://en.wikipedia.org\" wikiid=\"enwiki\" time=\"2010-10-24T19:53:13Z\"/>");
     m_server->addScenario(senario);
     m_server->startAndWait();
 
-    General general(*m_mediaWiki);
+    QuerySiteInfoGeneral general(*m_mediaWiki);
 
     connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
     general.exec();
@@ -125,28 +125,28 @@ void generalTestConnectFalseXML()
     QCOMPARE(this->generalCount, 1);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == General::falsexml);
+    QVERIFY(general.error() == QuerySiteInfoGeneral::falsexml);
 
 }
-void generalTestConnectAbort()
+void QuerySiteInfoGeneralTestConnectAbort()
 {
     generalCount = 0;
-    General general(mediawiki::MediaWiki(QUrl("http://127.0.0.2:910")));
+    QuerySiteInfoGeneral general(mediawiki::MediaWiki(QUrl("http://127.0.0.2:910")));
 
     connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
     general.exec();
     QCOMPARE(this->generalCount, 1);
-    QVERIFY(general.error() == General::connectionAbort);
+    QVERIFY(general.error() == QuerySiteInfoGeneral::connectionAbort);
 
 }
-void generalTestErrortIncludeAllDenied()
+void QuerySiteInfoGeneralTestErrortIncludeAllDenied()
 {
     generalCount = 0;
     QString senario("<api><error code=\"includeAllDenied\" info=\"\"/></api>");
     m_server->addScenario(senario);
     m_server->startAndWait();
 
-    General general(*m_mediaWiki);
+    QuerySiteInfoGeneral general(*m_mediaWiki);
 
     connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
     general.exec();
@@ -154,7 +154,7 @@ void generalTestErrortIncludeAllDenied()
     QCOMPARE(this->generalCount, 1);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == General::includeAllDenied);
+    QVERIFY(general.error() == QuerySiteInfoGeneral::includeAllDenied);
 
 }
 void cleanupTestCase()
@@ -164,13 +164,13 @@ void cleanupTestCase()
 }
 private:
     int generalCount;
-    General::Result generalResults;
+    QuerySiteInfoGeneral::Result generalResults;
     QString request;
     MediaWiki* m_mediaWiki;
     FakeServer* m_server;
 };
-QTEST_MAIN(GeneralTest);
-#include "generaltest.moc"
+QTEST_MAIN(QuerySiteInfoGeneralTest);
+#include "QuerySiteInfoGeneralTest.moc"
 
 #endif // TEST_GENERAL_H
 

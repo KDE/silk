@@ -11,7 +11,7 @@ set(mediawiki_SRCS
     mediawiki.cpp
     login.cpp
     logout.cpp
-    general.cpp
+    querysiteinfogeneral.cpp
     querysiteinfousergroups.cpp
 )
 

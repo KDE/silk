@@ -27,18 +27,18 @@
 #include <QtNetwork/QNetworkRequest>
 
 #include "mediawiki.h"
-#include "general.h"
+#include "querysiteinfogeneral.h"
 
 namespace mediawiki {
 
-    struct GeneralPrivate
+    struct QuerySiteInfoGeneralPrivate
     {
-        GeneralPrivate(QNetworkAccessManager * const manager,General::Result* result, MediaWiki const & mediawiki)
+        QuerySiteInfoGeneralPrivate(QNetworkAccessManager * const manager,QuerySiteInfoGeneral::Result* result, MediaWiki const & mediawiki)
                 : manager(manager)
                 , result(result)
                 , mediawiki(mediawiki) {}
         QNetworkAccessManager * manager;
-        General::Result* result;
+        QuerySiteInfoGeneral::Result* result;
         MediaWiki const & mediawiki;
     };
 
@@ -46,22 +46,22 @@ namespace mediawiki {
 
 using namespace mediawiki;
 
-General::General(MediaWiki const & mediawiki, QObject * parent)
-    : KJob(parent),d(new GeneralPrivate(new QNetworkAccessManager(this),new Result,mediawiki))
+QuerySiteInfoGeneral::QuerySiteInfoGeneral(MediaWiki const & mediawiki, QObject * parent)
+    : KJob(parent),d(new QuerySiteInfoGeneralPrivate(new QNetworkAccessManager(this),new Result,mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);
 }
 
-General::~General()
+QuerySiteInfoGeneral::~QuerySiteInfoGeneral()
 {
     delete this->d->result;
     delete d;
 }
-void General::start()
+void QuerySiteInfoGeneral::start()
 {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
-void General::doWorkSendRequest()
+void QuerySiteInfoGeneral::doWorkSendRequest()
 {
     // Set the url
     QUrl url = d->mediawiki.url();
@@ -77,12 +77,12 @@ void General::doWorkSendRequest()
     connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
-void General::abort()
+void QuerySiteInfoGeneral::abort()
 {
     this->setError(this->connectionAbort);
     emitResult();
 }
-void General::doWorkProcessReply(QNetworkReply * reply)
+void QuerySiteInfoGeneral::doWorkProcessReply(QNetworkReply * reply)
 {
     if ( reply->error() != QNetworkReply::NoError )
     {
@@ -139,4 +139,4 @@ void General::doWorkProcessReply(QNetworkReply * reply)
     reply->deleteLater();
     emitResult();
 }
-mediawiki::General::Result General::getResult(){ return *d->result; }
+mediawiki::QuerySiteInfoGeneral::Result QuerySiteInfoGeneral::getResult(){ return *d->result; }

@@ -14,10 +14,10 @@ MACRO(MEDIAWIKI_UNIT_TESTS)
 ENDMACRO( MEDIAWIKI_UNIT_TESTS )
 
 MEDIAWIKI_UNIT_TESTS(
-    generaltest
     logintest
     logouttest
     querysiteinfousergroupstest
+    querysiteinfogeneraltest
     mediawikitest
 )
 
