@@ -8,7 +8,6 @@ MACRO(MEDIAWIKI_UNIT_TESTS)
     add_definitions( -DTEST_DATA="\"${CMAKE_CURRENT_SOURCE_DIR}\"" )
     kde4_add_unit_test( ${_testname} TESTNAME mediawiki-${_testname} NOGUI ${_testname}.cpp libmediawikitest/fakeserver.cpp )
     target_link_libraries( ${_testname} ${KDE4_KIO_LIBS} ${QT_QTTEST_LIBRARY} mediawiki -fprofile-arcs)
-
   ENDFOREACH( _testname )
 
 ENDMACRO( MEDIAWIKI_UNIT_TESTS )
@@ -20,7 +19,13 @@ MEDIAWIKI_UNIT_TESTS(
     querysiteinfousergroupstest
     querysiteinfogeneraltest
     mediawikitest
+    queryrevisiontest
 )
+set( ressources_RC
+    queryrevisiontest.rc
+    queryrevisiontest_content.rc
+)
+install(FILES ${ressources_RC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 
 endif( KDE4_BUILD_TESTS )
