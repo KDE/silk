@@ -20,6 +20,7 @@ MEDIAWIKI_UNIT_TESTS(
     querysiteinfogeneraltest
     mediawikitest
     queryrevisiontest
+    queryinfotest
 )
 set( ressources_RC
     queryrevisiontest.rc
