@@ -44,11 +44,15 @@ bool operator==(QueryInfo::Result const & lhs, QueryInfo::Result const & rhs) {
                          lhs.protections().at(i).source() == rhs.protections().at(i).source();
         }
     }
-
- /*   qDebug()<<"protection "<< protection;
+/*
+    qDebug()<<"protection "<< protection;
     qDebug()<<"protection "<< lhs.protections().size() << ", " << rhs.protections().size();
     qDebug()<<"m_pageid "<< (lhs.m_pageid == rhs.m_pageid) ;
+    qDebug()<<"m_pageid "<< (lhs.m_pageid) ;
+    qDebug()<<"m_pageid "<< (rhs.m_pageid) ;
     qDebug()<<"m_title "<<  (lhs.m_title == rhs.m_title) ;
+    qDebug()<<"m_title "<<  (lhs.m_title) ;
+    qDebug()<<"m_title "<<  (rhs.m_title) ;
     qDebug()<<"m_ns "<< (lhs.m_ns == rhs.m_ns );
     qDebug()<<"m_touched "<<(lhs.m_touched == rhs.m_touched );
     qDebug()<<"m_lastrevid "<< (lhs.m_lastrevid == rhs.m_lastrevid );
@@ -96,7 +100,7 @@ private slots:
         queryInfoCount = 0;
     }
 
-    void testResult() {
+    void testRevidsResult() {
         QFETCH(QString, scenario);
         QFETCH(int, error);
         QFETCH(QList<QueryInfo::Result>, results);
@@ -126,7 +130,7 @@ private slots:
         QVERIFY(fakeserver.isAllScenarioDone());
     }
 
-    void testResult_data() {
+    void testRevidsResult_data() {
         QTest::addColumn<QString>("scenario");
         QTest::addColumn<int>("error");
         QTest::addColumn< QList<QueryInfo::Result> >("results");
@@ -134,6 +138,9 @@ private slots:
         QList<QueryInfo::Protection> protections;
         protections.push_back(QueryInfo::Protection("edit", "sysop", "infinity", ""));
         protections.push_back(QueryInfo::Protection("move", "sysop", "infinity", ""));
+
+        QList<QueryInfo::Protection> protections1;
+        protections1.push_back(QueryInfo::Protection("edit", "sysop", "infinity", ""));
 
         QueryInfo::Result page;
         page.m_pageid = 27697087;
@@ -151,26 +158,389 @@ private slots:
         page.m_readable = "";
         page.m_preload = "";
 
-        //QList<QueryInfo::Result> pages;
-        //pages.push_back(page);
+        QueryInfo::Result page1;
+        page1.m_pageid = 27697087;
+        page1.m_title = "API";
+        page1.m_ns = 0;
+        page1.m_touched = QDateTime::fromString("2010-11-25T13:59:03Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page1.m_lastrevid = 367741756;
+        page1.m_counter = 0;
+        page1.m_length = 70;
+        page1.m_starttimestamp = QDateTime::fromString("2010-11-25T16:14:51Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page1.m_edittoken = "+\\";
+        page1.m_talkid = 5477418;
+        page1.m_fullurl = QUrl("http://en.wikipedia.org/wiki/API");
+        page1.m_editurl = QUrl("http://en.wikipedia.org/w/index.php?title=API&action=edit");
+        page1.m_readable = "";
+        page1.m_preload = "";
 
-        QTest::newRow("No protection")
+        QTest::newRow("Revids: No protection")
                 << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page></pages></query></api>"
                 << int(KJob::NoError)
                 << (QList<QueryInfo::Result>() << page);
 
         page.setProtections(protections);
-        QTest::newRow("One page with two protections")
+        QTest::newRow("Revids: One page with two protections")
                 << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
                 << int(KJob::NoError)
                 << (QList<QueryInfo::Result>()
                         << page);
 
-        QTest::newRow("Two pages with two protections")
+        QTest::newRow("Revids: Two pages with two protections")
                 << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
                 << int(KJob::NoError)
                 << (QList<QueryInfo::Result>()
                         << page << page);
+
+        QTest::newRow("Revids: Two pages with no protection for the first page and two protections for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page1 << page);
+
+        QTest::newRow("Revids: Two pages with two protections for the first page and no protection for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page << page1);
+
+        page1.setProtections(protections1);
+        QTest::newRow("Revids: Two pages with one protection for the first page and two protections for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page1 << page);
+
+        QTest::newRow("Revids: Two pages with two protections for the first page and one protection for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page << page1);
+    }
+
+    void testTitlesResult() {
+        QFETCH(QString, scenario);
+        QFETCH(int, error);
+        QFETCH(QList<QueryInfo::Result>, results);
+
+        FakeServer fakeserver;
+        fakeserver.setScenario(scenario);
+        fakeserver.startAndWait();
+
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        QueryInfo * job = new QueryInfo(mediawiki, "API", "edit");
+
+        connect(job, SIGNAL(infos(QList<QueryInfo::Result> const &)), this, SLOT(queryInfoHandle(QList<QueryInfo::Result> const &)));
+
+        job->exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+
+        FakeServer::Request request = requests[0];
+        QCOMPARE(request.agent, mediawiki.userAgent());
+        QCOMPARE(request.type, QString("GET"));
+        QCOMPARE(request.value, QString("?format=xml&action=query&intoken=edit&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&titles=API"));
+
+        QCOMPARE(job->error(), error);
+        QCOMPARE(queryInfoCount, 1);
+        QCOMPARE(queryInfoResults, results);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
+
+    void testTitlesResult_data() {
+        QTest::addColumn<QString>("scenario");
+        QTest::addColumn<int>("error");
+        QTest::addColumn< QList<QueryInfo::Result> >("results");
+
+        QList<QueryInfo::Protection> protections;
+        protections.push_back(QueryInfo::Protection("edit", "sysop", "infinity", ""));
+        protections.push_back(QueryInfo::Protection("move", "sysop", "infinity", ""));
+
+        QList<QueryInfo::Protection> protections1;
+        protections1.push_back(QueryInfo::Protection("edit", "sysop", "infinity", ""));
+
+        QueryInfo::Result page;
+        page.m_pageid = 27697087;
+        page.m_title = "API";
+        page.m_ns = 0;
+        page.m_touched = QDateTime::fromString("2010-11-25T13:59:03Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page.m_lastrevid = 367741756;
+        page.m_counter = 0;
+        page.m_length = 70;
+        page.m_starttimestamp = QDateTime::fromString("2010-11-25T16:14:51Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page.m_edittoken = "+\\";
+        page.m_talkid = 5477418;
+        page.m_fullurl = QUrl("http://en.wikipedia.org/wiki/API");
+        page.m_editurl = QUrl("http://en.wikipedia.org/w/index.php?title=API&action=edit");
+        page.m_readable = "";
+        page.m_preload = "";
+
+        QueryInfo::Result page1;
+        page1.m_pageid = 27697087;
+        page1.m_title = "API";
+        page1.m_ns = 0;
+        page1.m_touched = QDateTime::fromString("2010-11-25T13:59:03Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page1.m_lastrevid = 367741756;
+        page1.m_counter = 0;
+        page1.m_length = 70;
+        page1.m_starttimestamp = QDateTime::fromString("2010-11-25T16:14:51Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page1.m_edittoken = "+\\";
+        page1.m_talkid = 5477418;
+        page1.m_fullurl = QUrl("http://en.wikipedia.org/wiki/API");
+        page1.m_editurl = QUrl("http://en.wikipedia.org/w/index.php?title=API&action=edit");
+        page1.m_readable = "";
+        page1.m_preload = "";
+
+        QTest::newRow("Title: No protection")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>() << page);
+
+        page.setProtections(protections);
+        QTest::newRow("Title: One page with two protections")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page);
+
+        QTest::newRow("Title: Two pages with two protections")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page << page);
+
+        QTest::newRow("Title: Two pages with no protection for the first page and two protections for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page1 << page);
+
+        QTest::newRow("Title: Two pages with two protections for the first page and no protection for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page << page1);
+
+        page1.setProtections(protections1);
+        QTest::newRow("Title: Two pages with one protection for the first page and two protections for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page1 << page);
+
+        QTest::newRow("Title: Two pages with two protections for the first page and one protection for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page << page1);
+    }
+
+    void testIdsResult() {
+        QFETCH(QString, scenario);
+        QFETCH(int, error);
+        QFETCH(QList<QueryInfo::Result>, results);
+
+        FakeServer fakeserver;
+        fakeserver.setScenario(scenario);
+        fakeserver.startAndWait();
+
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::pageids, "edit");
+
+        connect(job, SIGNAL(infos(QList<QueryInfo::Result> const &)), this, SLOT(queryInfoHandle(QList<QueryInfo::Result> const &)));
+
+        job->exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+
+        FakeServer::Request request = requests[0];
+        QCOMPARE(request.agent, mediawiki.userAgent());
+        QCOMPARE(request.type, QString("GET"));
+        QCOMPARE(request.value, QString("?format=xml&action=query&intoken=edit&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&pageids=27697087"));
+
+        QCOMPARE(job->error(), error);
+        QCOMPARE(queryInfoCount, 1);
+        QCOMPARE(queryInfoResults, results);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
+
+    void testIdsResult_data() {
+        QTest::addColumn<QString>("scenario");
+        QTest::addColumn<int>("error");
+        QTest::addColumn< QList<QueryInfo::Result> >("results");
+
+        QList<QueryInfo::Protection> protections;
+        protections.push_back(QueryInfo::Protection("edit", "sysop", "infinity", ""));
+        protections.push_back(QueryInfo::Protection("move", "sysop", "infinity", ""));
+
+        QList<QueryInfo::Protection> protections1;
+        protections1.push_back(QueryInfo::Protection("edit", "sysop", "infinity", ""));
+
+        QueryInfo::Result page;
+        page.m_pageid = 27697087;
+        page.m_title = "API";
+        page.m_ns = 0;
+        page.m_touched = QDateTime::fromString("2010-11-25T13:59:03Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page.m_lastrevid = 367741756;
+        page.m_counter = 0;
+        page.m_length = 70;
+        page.m_starttimestamp = QDateTime::fromString("2010-11-25T16:14:51Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page.m_edittoken = "+\\";
+        page.m_talkid = 5477418;
+        page.m_fullurl = QUrl("http://en.wikipedia.org/wiki/API");
+        page.m_editurl = QUrl("http://en.wikipedia.org/w/index.php?title=API&action=edit");
+        page.m_readable = "";
+        page.m_preload = "";
+
+        QueryInfo::Result page1;
+        page1.m_pageid = 27697087;
+        page1.m_title = "API";
+        page1.m_ns = 0;
+        page1.m_touched = QDateTime::fromString("2010-11-25T13:59:03Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page1.m_lastrevid = 367741756;
+        page1.m_counter = 0;
+        page1.m_length = 70;
+        page1.m_starttimestamp = QDateTime::fromString("2010-11-25T16:14:51Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page1.m_edittoken = "+\\";
+        page1.m_talkid = 5477418;
+        page1.m_fullurl = QUrl("http://en.wikipedia.org/wiki/API");
+        page1.m_editurl = QUrl("http://en.wikipedia.org/w/index.php?title=API&action=edit");
+        page1.m_readable = "";
+        page1.m_preload = "";
+
+        QTest::newRow("Title: No protection")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>() << page);
+
+        page.setProtections(protections);
+        QTest::newRow("Title: One page with two protections")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page);
+
+        QTest::newRow("Title: Two pages with two protections")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page << page);
+
+        QTest::newRow("Title: Two pages with no protection for the first page and two protections for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page1 << page);
+
+        QTest::newRow("Title: Two pages with two protections for the first page and no protection for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page << page1);
+
+        page1.setProtections(protections1);
+        QTest::newRow("Title: Two pages with one protection for the first page and two protections for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page1 << page);
+
+        QTest::newRow("Title: Two pages with two protections for the first page and one protection for the second page")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query></api>"
+                << int(KJob::NoError)
+                << (QList<QueryInfo::Result>()
+                        << page << page1);
+
+    }
+
+    void testWarningResult() {
+        QFETCH(QString, scenario);
+        QFETCH(int, error);
+        QFETCH(QString, warning);
+        QFETCH(QList<QueryInfo::Result>, results);
+
+        FakeServer fakeserver;
+        fakeserver.setScenario(scenario);
+        fakeserver.startAndWait();
+
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::pageids, QString("edit|move|delete"));
+
+        connect(job, SIGNAL(infos(QList<QueryInfo::Result> const &)), this, SLOT(queryInfoHandle(QList<QueryInfo::Result> const &)));
+
+        job->exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+
+        FakeServer::Request request = requests[0];
+        QCOMPARE(request.agent, mediawiki.userAgent());
+        QCOMPARE(request.type, QString("GET"));
+        QCOMPARE(request.value, QString("?format=xml&action=query&intoken=edit|move|delete&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&pageids=27697087"));
+
+        QCOMPARE(job->error(), error);
+        QCOMPARE(job->warning(), warning);
+        QCOMPARE(queryInfoCount, 1);
+        QCOMPARE(queryInfoResults, results);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
+
+    void testWarningResult_data() {
+        QTest::addColumn<QString>("scenario");
+        QTest::addColumn<int>("error");
+        QTest::addColumn<QString>("warning");
+        QTest::addColumn< QList<QueryInfo::Result> >("results");
+
+        QList<QueryInfo::Protection> protections;
+        protections.push_back(QueryInfo::Protection("edit", "sysop", "infinity", ""));
+        protections.push_back(QueryInfo::Protection("move", "sysop", "infinity", ""));
+
+        QList<QueryInfo::Protection> protections1;
+        protections1.push_back(QueryInfo::Protection("edit", "sysop", "infinity", ""));
+
+        QueryInfo::Result page;
+        page.m_pageid = 27697087;
+        page.m_title = "API";
+        page.m_ns = 0;
+        page.m_touched = QDateTime::fromString("2010-11-25T13:59:03Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page.m_lastrevid = 367741756;
+        page.m_counter = 0;
+        page.m_length = 70;
+        page.m_starttimestamp = QDateTime::fromString("2010-11-25T16:14:51Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page.m_edittoken = "+\\";
+        page.m_talkid = 5477418;
+        page.m_fullurl = QUrl("http://en.wikipedia.org/wiki/API");
+        page.m_editurl = QUrl("http://en.wikipedia.org/w/index.php?title=API&action=edit");
+        page.m_readable = "";
+        page.m_preload = "";
+
+        QueryInfo::Result page1;
+        page1.m_pageid = 27697087;
+        page1.m_title = "API";
+        page1.m_ns = 0;
+        page1.m_touched = QDateTime::fromString("2010-11-25T13:59:03Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page1.m_lastrevid = 367741756;
+        page1.m_counter = 0;
+        page1.m_length = 70;
+        page1.m_starttimestamp = QDateTime::fromString("2010-11-25T16:14:51Z", "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
+        page1.m_edittoken = "+\\";
+        page1.m_talkid = 5477418;
+        page1.m_fullurl = QUrl("http://en.wikipedia.org/wiki/API");
+        page1.m_editurl = QUrl("http://en.wikipedia.org/w/index.php?title=API&action=edit");
+        page1.m_readable = "";
+        page1.m_preload = "";
+
+        page.setProtections(protections);
+        page1.setProtections(protections1);
+        QTest::newRow("Title: Two pages with two protections for the first page and one protection for the second page and a warning")
+                << "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/><pr type=\"move\" level=\"sysop\" expiry=\"infinity\"/></protection></page><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"+\\\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection><pr type=\"edit\" level=\"sysop\" expiry=\"infinity\"/></protection></page></pages></query><warnings><info xml:space=\"preserve\">Action \'delete\' is not allowed for the current user Action \'move\' is not allowed for the current user</info></warnings></api>"
+                << int(KJob::NoError)
+                << QString("Action \'delete\' is not allowed for the current user Action \'move\' is not allowed for the current user")
+                << (QList<QueryInfo::Result>()
+                        << page << page1);
+
     }
 
 private:

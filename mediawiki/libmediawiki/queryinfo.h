@@ -64,10 +64,6 @@ public:
          */
         ConnectionAbort,
 
-        /**
-         * @brief Warning
-         */
-        Warnings,
     };
 
     /**
@@ -153,11 +149,11 @@ public:
          * @brief Returns rights of the user group.
          * @return rights of the user group
          */
-        inline QList<QueryInfo::Protection> const & protections() const { return m_protections; }
         inline QString touched() const { return m_touched.toString("yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'"); }
         inline QString starttimestamp() const { return m_starttimestamp.toString("yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'"); }
 
         inline void setProtections(QList<QueryInfo::Protection> protection) { m_protections = protection; }
+        inline QList<QueryInfo::Protection> const & protections() const { return m_protections; }
 
         unsigned int m_pageid;
         QString m_title;
@@ -178,6 +174,10 @@ public:
 
         QList<QueryInfo::Protection> m_protections;
     };
+
+    QString const & warning () const { return m_warning; }
+
+    void setWarning (QString const & warning) {  m_warning = warning; }
 
 signals:
 
@@ -208,6 +208,8 @@ private:
      * @brief Contains the class attributes.
      */
     struct QueryInfoPrivate * const d;
+
+    QString m_warning;
 
 };
 

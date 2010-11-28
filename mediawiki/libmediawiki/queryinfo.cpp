@@ -105,7 +105,7 @@ void QueryInfo::doWorkSendRequest()
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "query");
-    url.addQueryItem("intoken", d->token);
+    url.addEncodedQueryItem("intoken", d->token.toUtf8());
     url.addQueryItem("prop", "info");
     url.addEncodedQueryItem("inprop", QString("protection|talkid|watched|subjectid|url|readable|preload").toUtf8());
 
@@ -156,11 +156,11 @@ void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
                     page.m_editurl = QUrl(attrs.value( QString( "editurl" ) ).toString());
                     page.m_readable = attrs.value( QString( "readable" ) ).toString();
                     page.m_preload = attrs.value( QString( "preload" ) ).toString();
-                } else if (reader.name() == "protection") {
+                }
+                else if (reader.name() == "protection") {
                     protections.clear();
                 }
                 else if (reader.name() == "pr") {
-                    attrs = reader.attributes();
                     QString expiry(attrs.value( QString( "expiry" ) ).toString());
                     QString level(attrs.value( QString( "level" ) ).toString());
                     QString type(attrs.value( QString( "type" ) ).toString());
@@ -171,6 +171,10 @@ void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
                         source = attrs.value( QString( "cascade" ) ).toString();
                     }
                     protections.push_back(QueryInfo::Protection(type, level, expiry, source));
+                }
+                else if (reader.name() == "info") {
+                    reader.readNext();
+                    m_warning = reader.text().toString();
                 }
             } else if (token == QXmlStreamReader::EndElement) {
                 if (reader.name() == "page") {
