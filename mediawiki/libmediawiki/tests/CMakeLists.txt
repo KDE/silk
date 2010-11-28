@@ -23,8 +23,13 @@ MEDIAWIKI_UNIT_TESTS(
     queryinfotest
 )
 set( ressources_RC
-    queryrevisiontest.rc
     queryrevisiontest_content.rc
+    queryrevisiontest_onetitle.rc
+    queryrevisiontest.rc
+    queryrevisiontest_cuted.rc
+    queryrevisiontest_timestamponly.rc
+    queryrevisiontest_useronly.rc
+
 )
 install(FILES ${ressources_RC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 

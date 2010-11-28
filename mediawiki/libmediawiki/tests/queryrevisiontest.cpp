@@ -57,6 +57,7 @@ QString QStringFromFile( const QString &fileName )
 }
 
 Q_DECLARE_METATYPE(QList<QueryRevision::Result>)
+Q_DECLARE_METATYPE(FakeServer::Request)
 
 bool operator==(QueryRevision::Result const & lhs, QueryRevision::Result const & rhs) {
     return lhs.revid == rhs.revid &&
@@ -82,24 +83,29 @@ public slots:
     }
 
 private slots:
-    
+
     void init() {
         revisionCount = 0;
     }
 
     void testrvpropall() {
+        QFETCH(QString, scenario);
+        QFETCH(FakeServer::Request, requestTrue);
+        QFETCH(QString, title);
+        QFETCH(int, error);
+        QFETCH(int, rvprop);
+        QFETCH(int, size);
+        QFETCH(QList<QueryRevision::Result>, results);
 
-        QString requestTrue = "?format=xml&action=query&prop=revisions&rvprop=ids|flags|timestamp|user|comment|size|content&titles=API|Main%20Page";
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QString title = "API|Main%20Page";
 
         FakeServer fakeserver;
-        fakeserver.addScenarioFromFile("./queryrevisiontest.rc");
+        fakeserver.addScenario(scenario);
         fakeserver.startAndWait();
 
         QueryRevision * job = new QueryRevision(mediawiki, title);
-        job->setRvProp( IDS|FLAGS|TIMESTAMP|USER|COMMENT|SIZE|CONTENT );
+        job->setRvProp( rvprop );
 
         connect(job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
 
@@ -109,33 +115,163 @@ private slots:
         QCOMPARE(requests.size(), 1);
 
         FakeServer::Request request = requests[0];
-        QCOMPARE(request.type, QString("GET"));
-        QCOMPARE(job->error(), (int)QueryRevision::NoError);
+        QCOMPARE( requestTrue.type, request.type);
+        QCOMPARE(job->error(), error);
         QCOMPARE(revisionCount, 1);
-        QCOMPARE(requestTrue, request.value);
-        QCOMPARE(revisionResults.size(), 2);
-        QueryRevision::Result resultone, resulttow;
-        resultone.revid     = 367741756;
-        resultone.parentId  = 367741564;
-        resultone.size      = 70;
-        resultone.minor     = "";
-        resultone.user      = "Graham87";
-        resultone.timeStamp = QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ");
-        resultone.comment   = "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))";
-        resultone.content   = "#REDIRECT [[Application programming interface]]{{R from abbreviation}}";
+        QCOMPARE(requestTrue.value, request.value);
+        QCOMPARE(revisionResults.size(), size);
 
-        resulttow.revid     = 387545037;
-        resulttow.parentId  = 387542946;
-        resulttow.size      = 5074;
-        resulttow.minor     = "";
-        resulttow.user      = "Rich Farmbrough";
-        resulttow.timeStamp = QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ");
-        resulttow.comment   = "[[Help:Reverting|Reverted]] edits by [[Special:Contributions/Rich Farmbrough|Rich Farmbrough]] ([[User talk:Rich Farmbrough|talk]]) to last version by David Levy";
-        resulttow.content   = QStringFromFile("./queryrevisiontest_content.rc");
-        QCOMPARE(revisionResults[0], resultone);
-        QCOMPARE(revisionResults[1], resulttow);
+        QCOMPARE(revisionResults, results);
         
         QVERIFY(fakeserver.isAllScenarioDone());
+    }
+    void testrvpropall_data() {
+        QTest::addColumn<QString>("scenario");
+        QTest::addColumn<FakeServer::Request>("requestTrue");
+        QTest::addColumn<QString>("title");
+        QTest::addColumn<int>("error");
+        QTest::addColumn<int>("rvprop");
+        QTest::addColumn<int>("size");
+        QTest::addColumn< QList<QueryRevision::Result> >("results");
+
+        QTest::newRow("All rvprop enable")
+                << QStringFromFile("./queryrevisiontest.rc")
+                << FakeServer::Request("GET","","?format=xml&action=query&prop=revisions&rvprop=ids|flags|timestamp|user|comment|size|content&titles=API|Main%20Page")
+                << QString("API|Main%20Page")
+                << int(KJob::NoError)
+                << int(IDS|FLAGS|TIMESTAMP|USER|COMMENT|SIZE|CONTENT)
+                << 2
+                << (QList<QueryRevision::Result>()
+                        << QueryRevision::Result(367741756, 367741564, 70, "", "Graham87",
+                                                           QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
+                                                           "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
+                                                           "#REDIRECT [[Application programming interface]]{{R from abbreviation}}")
+                        << QueryRevision::Result(387545037, 387542946, 5074, "", "Rich Farmbrough",
+                                                 QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"),
+                                                 "[[Help:Reverting|Reverted]] edits by [[Special:Contributions/Rich Farmbrough|Rich Farmbrough]] ([[User talk:Rich Farmbrough|talk]]) to last version by David Levy",
+                                                 QStringFromFile("./queryrevisiontest_content.rc")));
+
+        QTest::newRow("One title")
+                << QStringFromFile("./queryrevisiontest_onetitle.rc")
+                << FakeServer::Request("GET","","?format=xml&action=query&prop=revisions&rvprop=ids|flags|timestamp|user|comment|size|content&titles=API")
+                << QString("API")
+                << int(KJob::NoError)
+                << int(IDS|FLAGS|TIMESTAMP|USER|COMMENT|SIZE|CONTENT)
+                << 1
+                << (QList<QueryRevision::Result>()
+                        << QueryRevision::Result(367741756, 367741564, 70, "", "Graham87",
+                                                 QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
+                                                 "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
+                                                 "#REDIRECT [[Application programming interface]]{{R from abbreviation}}"));
+
+        QTest::newRow("Timestamp only")
+                << QStringFromFile("./queryrevisiontest_timestamponly.rc")
+                << FakeServer::Request("GET","","?format=xml&action=query&prop=revisions&rvprop=timestamp&titles=API|Main%20Page")
+                << QString("API|Main%20Page")
+                << int(KJob::NoError)
+                << int(TIMESTAMP)
+                << 2
+                << (QList<QueryRevision::Result>()
+                    << QueryRevision::Result(0, 0, 0, "", "",
+                                             QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
+                                             "",
+                                             "")
+                    << QueryRevision::Result(0, 0, 0, "", "",
+                                             QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"),
+                                             "",
+                                             ""));
+        QTest::newRow("User only")
+                << QStringFromFile("./queryrevisiontest_useronly.rc")
+                << FakeServer::Request("GET","","?format=xml&action=query&prop=revisions&rvprop=user&titles=API|Main%20Page")
+                << QString("API|Main%20Page")
+                << int(KJob::NoError)
+                << int(USER)
+                << 2
+                << (QList<QueryRevision::Result>()
+                    << QueryRevision::Result(0, 0, 0, "", "Graham87",
+                                             QDateTime(),
+                                             "",
+                                             "")
+                    << QueryRevision::Result(0, 0, 0, "", "Rich Farmbrough",
+                                             QDateTime(),
+                                             "",
+                                             ""));
+
+    }
+
+    void testerror()
+    {
+        QFETCH(QString, scenario);
+        QFETCH(int, error);
+
+
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        FakeServer fakeserver;
+        if(scenario != QString("error serveur"))
+        {
+            fakeserver.addScenario(scenario);
+            fakeserver.startAndWait();
+        }
+
+        QueryRevision * job = new QueryRevision(mediawiki, "NoTitle");
+        job->setRvProp( SIZE|CONTENT );
+
+        connect(job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job->exec();
+
+        if(scenario != QString("error serveur"))
+        {
+            QList<FakeServer::Request> requests = fakeserver.getRequest();
+            QCOMPARE(requests.size(), 1);
+        }
+        QCOMPARE(job->error(), error);
+        QCOMPARE(revisionCount, 1);
+        QCOMPARE(revisionResults.size(), 0);
+
+        if(scenario != QString("error serveur"))
+        {
+            QVERIFY(fakeserver.isAllScenarioDone());
+        }
+    }
+    void testerror_data()
+    {
+        QTest::addColumn<QString>("scenario");
+        QTest::addColumn<int>("error");
+
+        QTest::newRow("XML")
+                << QStringFromFile("./queryrevisiontest_cuted.rc")
+                << int(QueryRevision::XmlError);
+
+        QTest::newRow("Network")
+                << "error serveur"
+                << int(QueryRevision::NetworkError);
+
+        QTest::newRow("Revision Ids")
+                << "<api><error code=\"rvrevids\" info=\"\"/></api>"
+                << int(QueryRevision::RevIds);
+
+        QTest::newRow("Multilple pages")
+                << "<api><error code=\"rvmultpages\" info=\"\"/></api>"
+                << int(QueryRevision::MultPages);
+
+        QTest::newRow("Access Denied")
+                << "<api><error code=\"rvaccessdenied\" info=\"\"/></api>"
+                << int(QueryRevision::AccessDenied);
+
+        QTest::newRow("Add Parameters")
+                << "<api><error code=\"rvbadparams\" info=\"\"/></api>"
+                << int(QueryRevision::AddParams);
+
+        QTest::newRow("No Such Section")
+                << "<api><error code=\"rvnosuchsection\" info=\"\"/></api>"
+                << int(QueryRevision::NoSuchSection);
+
+    }
+
+    void testnetworkerror()
+    {
+
     }
 
 

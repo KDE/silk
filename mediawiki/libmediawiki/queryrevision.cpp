@@ -216,6 +216,25 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
                     }
             results << tempR;
             }
+            else if(reader.name() == "error")
+            {
+                if(reader.attributes().value("code").toString() == QString("rvrevids"))
+                    this->setError(this->RevIds);
+                else if(reader.attributes().value("code").toString() == QString("rvmultpages"))
+                    this->setError(this->MultPages);
+                else if(reader.attributes().value("code").toString() == QString("rvaccessdenied"))
+                    this->setError(this->AccessDenied);
+                else if(reader.attributes().value("code").toString() == QString("rvbadparams"))
+                    this->setError(this->AddParams);
+                else if(reader.attributes().value("code").toString() == QString("rvnosuchsection"))
+                    this->setError(this->NoSuchSection);
+
+                reply->close();
+                reply->deleteLater();
+                emit revision(QList<QueryRevision::Result>());
+                emitResult();
+                return;
+            }
         }
       }
         if (!reader.hasError()) {
@@ -223,10 +242,16 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
             emit revision(results);
         } else {
             setError(QueryRevision::XmlError);
+            reply->close();
+            reply->deleteLater();
+            emit revision(QList<QueryRevision::Result>());
         }
     }
     else {
         setError(QueryRevision::NetworkError);
+        reply->close();
+        reply->deleteLater();
+        emit revision(QList<QueryRevision::Result>());
     }
     emitResult();
 }

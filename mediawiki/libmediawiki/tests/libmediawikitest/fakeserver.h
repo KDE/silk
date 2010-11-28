@@ -40,6 +40,8 @@ class FakeServer : QThread
 
 public:
     struct Request{
+        Request(){}
+        Request(QString t, QString a, QString v){type=t;agent=a;value=v;}
         QString type;
         QString agent;
         QString value;

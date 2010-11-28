@@ -61,17 +61,47 @@ public:
          * @brief A network error has occured.
          */
         NetworkError = KJob::UserDefinedError + 1,
-
         /**
          * @brief A XML error has occured.
          */
         XmlError,
+        /**
+         * @brief The revids= parameter may not be used with the list options (limit, startid, endid, dirNewer, start, end).
+         */
+        RevIds,
+        /**
+         * @brief titles, pageids or a generator was used to supply multiple pages, but the limit, startid, endid, dirNewer, user, excludeuser, start and end parameters may only be used on a single page.
+         */
+        MultPages,
+        /**
+         * @brief The current user is not allowed to read title.
+         */
+        AccessDenied,
+        /**
+         * @brief start and startid or end and endid or user and excludeuser cannot be used together
+         */
+        AddParams,
+        /**
+         * @brief There is no section section in rrevid
+         */
+        NoSuchSection
 
     };
     /**
      * @brief A user group result.
      */
     struct Result {
+        Result(){}
+        Result(int r, int p, int s, QString m, QString u, QDateTime t, QString cm, QString ct){
+            revid=r;
+            parentId=p;
+            size=s;
+            minor=m;
+            user=u;
+            timeStamp=t;
+            comment=cm;
+            content=ct;
+        }
         int revid;
         int parentId;
         int size;
