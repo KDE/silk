@@ -45,6 +45,9 @@ class QueryInfo : public KJob
 
 public:
 
+    /**
+     * @brief type of the id
+     */
     enum IdType
     {
         revids,
@@ -55,12 +58,12 @@ public:
     enum
     {
         /**
-         * @brief
+         * @brief XML error
          */
         Falsexml = KJob::UserDefinedError+1,
 
         /**
-         * @brief
+         * @brief Connection aborted
          */
         ConnectionAbort,
 
@@ -78,7 +81,7 @@ public:
     /**
      * @brief Constructs a QueryInfo job.
      * @param mediawiki the mediawiki concerned by the job
-     * @param id the page id
+     * @param id the page id or the revision id
      * @param token the page token
      * @param parent the QObject parent
      */
@@ -100,9 +103,10 @@ public:
 
         /**
          * Constructs a protection.
-         * @param type the name of the user group
-         * @param level rights of the user group
-         * @param expiry rights of the user group
+         * @param type the protection type
+         * @param level the protection level
+         * @param expiry the protection expiry
+         * @param source the protection source
          */
         Protection(QString const & type, QString const & level, QString const & expiry, QString const & source)
                 : m_type(type)
@@ -111,9 +115,25 @@ public:
                 , m_source(source)
         {}
 
+
+        /**
+         * @brief Get the protection type.
+         */
         inline QString const & type() const { return m_type; }
+
+        /**
+         * @brief Get the protection level.
+         */
         inline QString const & level() const { return m_level; }
+
+        /**
+         * @brief Get the protection expiry.
+         */
         inline QString const & expiry() const { return m_expiry; }
+
+        /**
+         * @brief Get the protection source.
+         */
         inline QString const & source() const { return m_source; }
 
     private:
@@ -132,27 +152,38 @@ public:
     public:
 
         /**
-         * Constructs a user group.
+         * Constructs an info.
          */
         Result()
         {}
 
         /**
-         * Constructs a user group.
-         * @param name the name of the user group
+         * Constructs an info.
+         * @param protections the page protections
          */
         Result(QList<QueryInfo::Protection> const & protections)
                 : m_protections(protections)
         {}
 
         /**
-         * @brief Returns rights of the user group.
-         * @return rights of the user group
+         * @brief Get the last touched timestamp.
          */
         inline QString touched() const { return m_touched.toString("yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'"); }
+
+        /**
+         * @brief Get the timestamp when you obtained the token.
+         */
         inline QString starttimestamp() const { return m_starttimestamp.toString("yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'"); }
 
+        /**
+         * @brief Put a protections list.
+         * @param protections the page protections
+         */
         inline void setProtections(QList<QueryInfo::Protection> protection) { m_protections = protection; }
+
+        /**
+         * @brief Get the protections list.
+         */
         inline QList<QueryInfo::Protection> const & protections() const { return m_protections; }
 
         unsigned int m_pageid;
@@ -175,15 +206,22 @@ public:
         QList<QueryInfo::Protection> m_protections;
     };
 
+    /**
+     * @brief Get the warning.
+     */
     QString const & warning () const { return m_warning; }
 
+    /**
+     * @brief Put a warning.
+     * @param warning the warning
+     */
     void setWarning (QString const & warning) {  m_warning = warning; }
 
 signals:
 
     /**
-     * @brief
-     * @param info list of
+     * @brief Provides a pages list
+     * @param info list of pages
      * @see QueryInfo::Result
      */
     void infos(QList<QueryInfo::Result> const & info);
@@ -209,6 +247,9 @@ private:
      */
     struct QueryInfoPrivate * const d;
 
+    /**
+     * @brief Contains the warning.
+     */
     QString m_warning;
 
 };
