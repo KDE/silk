@@ -171,15 +171,27 @@ public:
 
     /**
      * @brief Timestamp to start listing from.
-     * @param int
+     * @param QDateTime
      */
     void setRvStart(QDateTime);
 
     /**
      * @brief Timestamp to stop listing at.
-     * @param int
+     * @param QDateTime
      */
     void setRvEnd(QDateTime);
+
+    /**
+     * @brief Only list revisions made by this user.
+     * @param QString
+     */
+    void setRvUser(QString);
+
+    /**
+     * @brief Do not list revisions made by this user.
+     * @param QString
+     */
+    void setRvExcludeUser(QString);
 
 signals:
 

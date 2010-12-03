@@ -172,6 +172,16 @@ void QueryRevision::setRvEnd(QDateTime param)
     d->requestParameter["rvend"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
+void QueryRevision::setRvUser(QString param)
+{
+    d->requestParameter["rvuser"] = param;
+}
+
+void QueryRevision::setRvExcludeUser(QString param)
+{
+    d->requestParameter["rvexcludeuser"] = param;
+}
+
 void QueryRevision::doWorkSendRequest()
 {
     // Set the url
