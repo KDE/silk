@@ -180,6 +180,16 @@ void QueryRevision::setRvEndId(int param)
     d->requestParameter["rvendid"] = QString::number(param);
 }
 
+void QueryRevision::setRvStart(QDateTime param)
+{
+    d->requestParameter["rvstart"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
+}
+
+void QueryRevision::setRvEnd(QDateTime param)
+{
+    d->requestParameter["rvend"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
+}
+
 void QueryRevision::doWorkSendRequest()
 {
     // Set the url

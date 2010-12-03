@@ -156,8 +156,30 @@ public:
      * @param int
      */
     void setRvLimit(int);
+
+    /**
+     * @brief Revision ID to stop listing at.
+     * @param int
+     */
     void setRvStartId(int);
+
+    /**
+     * @brief Revision ID to start listing from.
+     * @param int
+     */
     void setRvEndId(int);
+
+    /**
+     * @brief Timestamp to start listing from.
+     * @param int
+     */
+    void setRvStart(QDateTime);
+
+    /**
+     * @brief Timestamp to stop listing at.
+     * @param int
+     */
+    void setRvEnd(QDateTime);
 
 signals:
 

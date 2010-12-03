@@ -349,6 +349,48 @@ private slots:
         QCOMPARE(requests[0].type, requestSend.type);
         QVERIFY(fakeserver.isAllScenarioDone());
     }
+
+    void testRvStart()
+    {
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvstart=2010-09-28T15:21:07Z&titles=API");
+        QueryRevision job(mediawiki, "API");
+        job.setRvStart(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
+
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job.exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+        QCOMPARE(requests[0].value, requestSend.value);
+        QCOMPARE(requests[0].type, requestSend.type);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
+
+    void testRvEnd()
+    {
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvend=2010-09-28T15:21:07Z&titles=API");
+        QueryRevision job(mediawiki, "API");
+        job.setRvEnd(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
+
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job.exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+        QCOMPARE(requests[0].value, requestSend.value);
+        QCOMPARE(requests[0].type, requestSend.type);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
 private:
     
     int revisionCount;
