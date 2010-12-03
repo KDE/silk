@@ -58,6 +58,7 @@ QString QStringFromFile( const QString &fileName )
 
 Q_DECLARE_METATYPE(QList<QueryRevision::Result>)
 Q_DECLARE_METATYPE(FakeServer::Request)
+Q_DECLARE_METATYPE(QueryRevision*)
 
 bool operator==(QueryRevision::Result const & lhs, QueryRevision::Result const & rhs) {
     return lhs.revid == rhs.revid &&
@@ -268,12 +269,26 @@ private slots:
                 << int(QueryRevision::NoSuchSection);
 
     }
-
-    void testnetworkerror()
+    void testRvContinue()
     {
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvcontinue=5555&titles=API");
+        QueryRevision job(mediawiki, "API");
+        job.setRvContinue(5555);
 
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job.exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+        QCOMPARE(requests[0].value, requestSend.value);
+        QCOMPARE(requests[0].type, requestSend.type);
+        QVERIFY(fakeserver.isAllScenarioDone());
     }
-
 
 private:
     

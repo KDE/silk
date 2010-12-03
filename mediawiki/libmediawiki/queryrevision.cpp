@@ -161,6 +161,11 @@ void QueryRevision::setRvProp(int param)
     d->requestParameter["rvprop"] = buff;
 }
 
+void QueryRevision::setRvContinue(int param)
+{
+    d->requestParameter["rvcontinue"] = QString::number(param);
+}
+
 void QueryRevision::doWorkSendRequest()
 {
     // Set the url

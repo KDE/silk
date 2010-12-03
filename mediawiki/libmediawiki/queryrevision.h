@@ -145,6 +145,12 @@ public:
      */
     void setRvProp(int);
 
+    /**
+     * @brief  When more results are available, use this to continue.
+     * @param int
+     */
+    void setRvContinue(int);
+
 signals:
 
     /**
