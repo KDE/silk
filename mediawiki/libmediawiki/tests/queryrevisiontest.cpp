@@ -289,7 +289,66 @@ private slots:
         QCOMPARE(requests[0].type, requestSend.type);
         QVERIFY(fakeserver.isAllScenarioDone());
     }
+    void testRvLimit()
+    {
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvlimit=2&titles=API");
+        QueryRevision job(mediawiki, "API");
+        job.setRvLimit(2);
 
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job.exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+        QCOMPARE(requests[0].value, requestSend.value);
+        QCOMPARE(requests[0].type, requestSend.type);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
+    void testRvStartId()
+    {
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvstartid=2&titles=API");
+        QueryRevision job(mediawiki, "API");
+        job.setRvStartId(2);
+
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job.exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+        QCOMPARE(requests[0].value, requestSend.value);
+        QCOMPARE(requests[0].type, requestSend.type);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
+    void testRvEndId()
+    {
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvendid=2&titles=API");
+        QueryRevision job(mediawiki, "API");
+        job.setRvEndId(2);
+
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job.exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+        QCOMPARE(requests[0].value, requestSend.value);
+        QCOMPARE(requests[0].type, requestSend.type);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
 private:
     
     int revisionCount;

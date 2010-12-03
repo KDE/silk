@@ -146,10 +146,18 @@ public:
     void setRvProp(int);
 
     /**
-     * @brief  When more results are available, use this to continue.
+     * @brief When more results are available, use this to continue.
      * @param int
      */
     void setRvContinue(int);
+
+    /**
+     * @brief The maximum number of revisions to return.
+     * @param int
+     */
+    void setRvLimit(int);
+    void setRvStartId(int);
+    void setRvEndId(int);
 
 signals:
 

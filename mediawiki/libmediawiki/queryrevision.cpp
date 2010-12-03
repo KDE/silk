@@ -166,6 +166,20 @@ void QueryRevision::setRvContinue(int param)
     d->requestParameter["rvcontinue"] = QString::number(param);
 }
 
+void QueryRevision::setRvLimit(int param)
+{
+    d->requestParameter["rvlimit"] = QString::number(param);
+}
+
+void QueryRevision::setRvStartId(int param)
+{
+    d->requestParameter["rvstartid"] = QString::number(param);
+}
+void QueryRevision::setRvEndId(int param)
+{
+    d->requestParameter["rvendid"] = QString::number(param);
+}
+
 void QueryRevision::doWorkSendRequest()
 {
     // Set the url
