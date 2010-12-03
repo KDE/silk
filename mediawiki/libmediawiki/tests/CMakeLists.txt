@@ -21,6 +21,7 @@ MEDIAWIKI_UNIT_TESTS(
     mediawikitest
     queryrevisiontest
     queryinfotest
+    edittest
 )
 set( ressources_RC
     queryrevisiontest_content.rc
