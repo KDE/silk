@@ -182,6 +182,15 @@ void QueryRevision::setRvExcludeUser(QString param)
     d->requestParameter["rvexcludeuser"] = param;
 }
 
+void QueryRevision::setRvDir(QueryRevision::Dir param)
+{
+    if( param == QueryRevision::older)
+        d->requestParameter["rvdir"] = QString("older");
+
+    else if( param == QueryRevision::newer)
+        d->requestParameter["rvdir"] = QString("newer");
+}
+
 void QueryRevision::doWorkSendRequest()
 {
     // Set the url

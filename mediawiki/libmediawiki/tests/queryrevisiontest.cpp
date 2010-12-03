@@ -433,6 +433,48 @@ private slots:
         QCOMPARE(requests[0].type, requestSend.type);
         QVERIFY(fakeserver.isAllScenarioDone());
     }
+
+    void testRvDirOlder()
+    {
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvdir=older&titles=API");
+        QueryRevision job(mediawiki, "API");
+        job.setRvDir(QueryRevision::older);
+
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job.exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+        QCOMPARE(requests[0].value, requestSend.value);
+        QCOMPARE(requests[0].type, requestSend.type);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
+
+    void testRvDirNewer()
+    {
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvdir=newer&titles=API");
+        QueryRevision job(mediawiki, "API");
+        job.setRvDir(QueryRevision::newer);
+
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job.exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+        QCOMPARE(requests[0].value, requestSend.value);
+        QCOMPARE(requests[0].type, requestSend.type);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
 private:
     
     int revisionCount;

@@ -50,8 +50,9 @@ class QueryRevision : public KJob
     Q_OBJECT
 
 public:
-    enum IdType{ pageids , revids , noid };
+    enum IdType { pageids , revids , noid };
 
+    enum Dir {older, newer};
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
      */
@@ -192,6 +193,14 @@ public:
      * @param QString
      */
     void setRvExcludeUser(QString);
+
+    /**
+     * @brief Direction to list in.
+     * older: List newest revisions first.
+     * newer: List oldest revisions first.
+     * @param QString
+     */
+    void setRvDir(QueryRevision::Dir);
 
 signals:
 
