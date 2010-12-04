@@ -30,7 +30,7 @@ set( ressources_RC
     queryrevisiontest_cuted.rc
     queryrevisiontest_timestamponly.rc
     queryrevisiontest_useronly.rc
-
+    queryrevisiontest_parsetree.rc
 )
 install(FILES ${ressources_RC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 

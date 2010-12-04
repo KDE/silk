@@ -93,7 +93,7 @@ public:
      */
     struct Result {
         Result(){}
-        Result(int r, int p, int s, QString m, QString u, QDateTime t, QString cm, QString ct){
+        Result(int r, int p, int s, QString m, QString u, QDateTime t, QString cm, QString ct, QString pt){
             revid=r;
             parentId=p;
             size=s;
@@ -102,6 +102,7 @@ public:
             timeStamp=t;
             comment=cm;
             content=ct;
+            parseTree=pt;
         }
         int revid;
         int parentId;
@@ -111,6 +112,7 @@ public:
         QDateTime timeStamp;
         QString comment;
         QString content;
+        QString parseTree;
     };
     /**
      * @brief Constructs a Revision job.
@@ -198,9 +200,21 @@ public:
      * @brief Direction to list in.
      * older: List newest revisions first.
      * newer: List oldest revisions first.
-     * @param QString
+     * @param QueryRevision::Dir
      */
     void setRvDir(QueryRevision::Dir);
+
+    /**
+     * @brief Set XML generation to parse tree for revision content.
+     * @param bool
+     */
+    void setRvGenerateXML(bool);
+
+    /**
+     * @brief If rvprop=content is set, only retrieve the contents of this section. NOTE: Only implemented in MediaWiki versions 1.13 and above.
+     * @param int
+     */
+    void setRvSection(int);
 
 signals:
 

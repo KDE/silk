@@ -191,6 +191,17 @@ void QueryRevision::setRvDir(QueryRevision::Dir param)
         d->requestParameter["rvdir"] = QString("newer");
 }
 
+void QueryRevision::setRvGenerateXML(bool param)
+{
+    if( param )
+        d->requestParameter["rvgeneratexml"] = QString("on");
+}
+
+void QueryRevision::setRvSection(int param)
+{
+    d->requestParameter["rvsection"] = QString::number(param);
+}
+
 void QueryRevision::doWorkSendRequest()
 {
     // Set the url
@@ -227,10 +238,9 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
                     if(d->requestParameter.contains("rvprop"))
                     {
                         QString rvprop = d->requestParameter["rvprop"];
-                        if(rvprop.contains("ids"))
+                        if(rvprop.contains("ids")){
                             tempR.revid = reader.attributes().value("revid").toString().toInt();
-                        if(rvprop.contains("ids"))
-                            tempR.parentId = reader.attributes().value("parentid").toString().toInt();
+                            tempR.parentId = reader.attributes().value("parentid").toString().toInt();}
                         if(rvprop.contains("size"))
                             tempR.size = reader.attributes().value("size").toString().toInt();
                         if(rvprop.contains("minor"))
@@ -243,6 +253,8 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
                             tempR.comment = reader.attributes().value("comment").toString();
                         if(rvprop.contains("content"))
                             tempR.content = reader.readElementText();
+                        if(d->requestParameter.contains("rvgeneratexml"))
+                            tempR.parseTree = reader.attributes().value("parsetree").toString();
                     }
             results << tempR;
             }
