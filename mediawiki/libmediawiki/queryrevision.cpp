@@ -202,6 +202,12 @@ void QueryRevision::setRvSection(int param)
     d->requestParameter["rvsection"] = QString::number(param);
 }
 
+void QueryRevision::setRvToken(QueryRevision::Token t)
+{
+    if(QueryRevision::rollback == t)
+        d->requestParameter["rvtoken"] = QString("rollback");
+}
+
 void QueryRevision::doWorkSendRequest()
 {
     // Set the url
@@ -234,6 +240,9 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {
+                if (reader.name() == "page" && d->requestParameter.contains("rvtoken")) {
+                    tempR.rollback = reader.attributes().value("rollbacktoken").toString();
+                }
                 if (reader.name() == "rev") {
                     if(d->requestParameter.contains("rvprop"))
                     {

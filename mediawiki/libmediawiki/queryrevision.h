@@ -53,6 +53,8 @@ public:
     enum IdType { pageids , revids , noid };
 
     enum Dir {older, newer};
+
+    enum Token{rollback};
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
      */
@@ -92,9 +94,21 @@ public:
      * @brief A user group result.
      */
     struct Result {
-        Result(){}
-        Result(int r, int p, int s, QString m, QString u, QDateTime t, QString cm, QString ct, QString pt){
-            revid=r;
+        Result()
+        {
+            revid=0;
+            parentId=0;
+            size=0;
+            minor="";
+            user="";
+            timeStamp=QDateTime();
+            comment="";
+            content="";
+            parseTree="",
+            rollback="";
+        }
+        Result(int i, int p = 0, int s = 0, QString m = "", QString u = "", QDateTime t = QDateTime(), QString cm = "", QString ct = "", QString pt = "", QString r = ""){
+            revid=i;
             parentId=p;
             size=s;
             minor=m;
@@ -102,7 +116,8 @@ public:
             timeStamp=t;
             comment=cm;
             content=ct;
-            parseTree=pt;
+            parseTree=pt,
+            rollback=r;
         }
         int revid;
         int parentId;
@@ -113,6 +128,7 @@ public:
         QString comment;
         QString content;
         QString parseTree;
+        QString rollback;
     };
     /**
      * @brief Constructs a Revision job.
@@ -215,6 +231,12 @@ public:
      * @param int
      */
     void setRvSection(int);
+
+    /**
+     * @brief Tokens to get for each revision
+     * @param QueryRevision::Token
+     */
+    void setRvToken(QueryRevision::Token);
 
 signals:
 

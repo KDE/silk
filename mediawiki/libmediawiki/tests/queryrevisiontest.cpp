@@ -69,7 +69,21 @@ bool operator==(QueryRevision::Result const & lhs, QueryRevision::Result const &
             lhs.timeStamp == rhs.timeStamp &&
             lhs.comment == rhs.comment &&
             lhs.content == rhs.content &&
-            lhs.parseTree == rhs.parseTree;
+            lhs.parseTree == rhs.parseTree &&
+            lhs.rollback == rhs.rollback;
+}
+void debugRevision(QueryRevision::Result const & lhs)
+{
+    qDebug() << lhs.revid;
+    qDebug() << lhs.parentId;
+    qDebug() << lhs.size;
+    qDebug() << lhs.minor;
+    qDebug() << lhs.user;
+    qDebug() << lhs.timeStamp;
+    qDebug() << lhs.comment;
+    qDebug() << lhs.content;
+    qDebug() << lhs.parseTree;
+    qDebug() << lhs.rollback;
 }
 
 class QueryRevisionTest : public QObject
@@ -538,6 +552,49 @@ private slots:
         QCOMPARE(requests.size(), 1);
         QCOMPARE(requests[0].value, requestSend.value);
         QCOMPARE(requests[0].type, requestSend.type);
+        QVERIFY(fakeserver.isAllScenarioDone());
+    }
+    void testRvToken()
+    {
+        QString scenario = QStringFromFile("queryrevisiontest_rollback.rc");
+        FakeServer::Request requestTrue("GET","","?format=xml&action=query&prop=revisions&rvtoken=rollback&titles=API");
+        QString title = "API";
+        int error = 0;
+        int size = 1;
+        QList<QueryRevision::Result> results;
+        results << QueryRevision::Result(0, 0, 0, "", "",
+                                           QDateTime(),
+                                           "",
+                                           "",
+                                           ""
+                                           ,"094a45ddbbd5e90d55d79d2a23a8c921+\\");
+
+
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+
+        FakeServer fakeserver;
+        fakeserver.addScenario(scenario);
+        fakeserver.startAndWait();
+
+        QueryRevision * job = new QueryRevision(mediawiki, title);
+        job->setRvToken(QueryRevision::rollback);
+
+        connect(job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+
+        job->exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+
+        FakeServer::Request request = requests[0];
+        QCOMPARE( requestTrue.type, request.type);
+        QCOMPARE(revisionCount, 1);
+        QCOMPARE(requestTrue.value, request.value);
+
+        QCOMPARE(job->error(), error);
+        QCOMPARE(revisionResults.size(), size);
+        QCOMPARE(revisionResults, results);
+
         QVERIFY(fakeserver.isAllScenarioDone());
     }
 private:
