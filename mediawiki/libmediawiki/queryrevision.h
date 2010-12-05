@@ -26,9 +26,11 @@
 
 #include <KDE/KJob>
 
+//FIXME: Fait pas de define ça se met dans l'espace de nommage global et ça remplace PARTOUT TIMESTAMP par 4 !
 #define IDS         1
 #define FLAGS       2
-#define TIMESTAMP   4
+//#define TIMESTAMP   4
+static int const TIMESTAMP = 4;
 #define USER        8
 #define COMMENT     16
 #define SIZE        32
