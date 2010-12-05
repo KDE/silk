@@ -71,6 +71,7 @@ public:
      * @see NO_PROPERTY
      * @see TIMESTAMP
      * @see USER
+     * @see COMMENT
      * @see URL
      * @see ALL_PROPERTIES
      */
@@ -95,6 +96,12 @@ public:
     static property_type const USER = 1 << 1;
 
     /**
+     * @brief Comment of the image.
+     * @see paramProperties()
+     */
+    static property_type const COMMENT = 1 << 2;
+
+    /**
      * @brief URL of the image.
      * @see paramProperties()
      */
@@ -104,7 +111,7 @@ public:
      * @brief All properties.
      * @see paramProperties()
      */
-    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|URL;
+    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL;
 
     /**
      * @brief Starts the job asynchronously.
@@ -158,17 +165,20 @@ public:
          * @brief Constructs an image info.
          * @param timestamp the time and date of the revision
          * @param user the user who made the revision
+         * @param comment the edit comment
          * @param url the URL of the image
          * @param descriptionUrl the description URL of the image
          * @param properties properties has set
          */
         Imageinfo(QDateTime const & timestamp,
                   QString const & user,
+                  QString const & comment,
                   QUrl const & url,
                   QUrl const & descriptionUrl,
                   QueryImageinfo::property_type properties)
             : m_timestamp(timestamp)
             , m_user(user)
+            , m_comment(comment)
             , m_url(url)
             , m_descriptionUrl(descriptionUrl)
             , m_properties(properties)
@@ -182,7 +192,7 @@ public:
         inline QDateTime timestamp() const { Q_ASSERT(hasTimestamp()); return m_timestamp; }
 
         /**
-         * @brief Return true if timestamp has set, else false.
+         * @brief Returns true if timestamp has set, else false.
          * @return true if timestamp has set, else false
          */
         inline bool hasTimestamp() const { return m_properties & QueryImageinfo::TIMESTAMP; }
@@ -195,10 +205,23 @@ public:
         inline QString user() const { Q_ASSERT(hasUser()); return m_user; }
 
         /**
-         * @brief Return true if user has set, else false.
+         * @brief Returns true if user has set, else false.
          * @return true if user has set, else false
          */
         inline bool hasUser() const { return m_properties & QueryImageinfo::USER; }
+
+        /**
+         * @brief Returns the edit comment.
+         * @return the edit comment
+         * @pre #hasComment()
+         */
+        inline QString comment() const { Q_ASSERT(hasComment()); return m_comment; }
+
+        /**
+         * @brief Returns the edit comment.
+         * @return true if comment has set, else false
+         */
+        inline bool hasComment() const { return m_properties & QueryImageinfo::COMMENT; }
 
         /**
          * @brief Returns the URL of the image.
@@ -215,7 +238,7 @@ public:
         inline QUrl descriptionUrl() const { Q_ASSERT(hasUrl()); return m_descriptionUrl; }
 
         /**
-         * @brief Return true if URL has set, else false.
+         * @brief Returns true if URL has set, else false.
          * @return true if URL has set, else false
          */
         inline bool hasUrl() const { return m_properties & QueryImageinfo::URL; }
@@ -224,6 +247,7 @@ public:
 
         QDateTime m_timestamp;
         QString m_user;
+        QString m_comment;
         QUrl m_url;
         QUrl m_descriptionUrl;
         QueryImageinfo::property_type m_properties;
@@ -254,6 +278,8 @@ inline bool operator==(QueryImageinfo::Imageinfo const & lhs, QueryImageinfo::Im
            (lhs.hasTimestamp() /* && rhs.hasTimestamp() */ ? lhs.timestamp() == rhs.timestamp() : true) &&
            lhs.hasUser() == rhs.hasUser() &&
            (lhs.hasUser() /* && rhs.hasUser() */ ? lhs.user() == rhs.user() : true) &&
+           lhs.hasComment() == rhs.hasComment() &&
+           (lhs.hasComment() /* && rhs.hasComment() */ ? lhs.comment() == rhs.comment() : true) &&
            lhs.hasUrl() == rhs.hasUrl() &&
            (lhs.hasUrl() /* && rhs.hasUrl() */ ? lhs.url() == rhs.url() && lhs.descriptionUrl() == rhs.descriptionUrl() : true);
 }

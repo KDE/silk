@@ -104,6 +104,7 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                     imageinfosReceived.push_back(QueryImageinfo::Imageinfo(
                         QDateTime::fromString(reader.attributes().value("timestamp").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'"),
                         reader.attributes().value("user").toString(),
+                        reader.attributes().value("comment").toString(),
                         QUrl(reader.attributes().value("url").toString()),
                         QUrl(reader.attributes().value("descriptionurl").toString()),
                         d->properties
@@ -131,6 +132,9 @@ QString QueryImageinfo::iiprop() const {
     }
     if (d->properties & QueryImageinfo::USER) {
         iiprop.append("user|");
+    }
+    if (d->properties & QueryImageinfo::COMMENT) {
+        iiprop.append("comment|");
     }
     if (d->properties & QueryImageinfo::URL) {
         iiprop.append("url|");

@@ -33,7 +33,8 @@
 static int const TIMESTAMP = 4;
 //#define USER        8
 static int const USER = 8;
-#define COMMENT     16
+//#define COMMENT     16
+static int const COMMENT = 16;
 #define SIZE        32
 #define CONTENT     64
 
