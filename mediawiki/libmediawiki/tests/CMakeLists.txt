@@ -15,6 +15,7 @@ ENDMACRO( MEDIAWIKI_UNIT_TESTS )
 MEDIAWIKI_UNIT_TESTS(
     logintest
     logouttest
+    queryimageinfotest
     queryimagestest
     querysiteinfousergroupstest
     querysiteinfogeneraltest
