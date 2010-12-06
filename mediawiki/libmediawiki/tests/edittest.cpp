@@ -31,62 +31,96 @@
 using mediawiki::MediaWiki;
 using mediawiki::Edit;
 
+Q_DECLARE_METATYPE(FakeServer::Request)
+Q_DECLARE_METATYPE(QVariant)
+Q_DECLARE_METATYPE(Edit::Result)
+
 class EditTest : public QObject
 {
     Q_OBJECT
 
+signals:
+
+    void captchaSignal(QString  const & captchaword);
+
 public slots:
 
-    void editHandle(KJob* job) {
+    void editHandle(QVariant const & captcha) {
         editCount++;
-        editResults = ((Edit*)job)->getResults();
+        this->captchaquestionorurl = captcha;
+        emit captchaSignal(this->captchaword);
     }
 
 private slots:
 
-    void initTestCase()
-    {
+    void init() {
         editCount = 0;
-        this->m_mediaWiki = new MediaWiki(QUrl("http://127.0.0.1:12566"));
-        this->m_server = new FakeServer;
-        this->request = "?format=xml&action=edit&lgname=alexTest&lgpassword=test";
     }
 
-    void editTestConnectTrue()
-    {
-        editCount = 0;
-        QString senario("<api><edit result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
-        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
-        m_server->setScenario(senario, cookie);
-        senario = "<api><edit result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /></api>";
-        m_server->addScenario(senario, cookie);
-        m_server->startAndWait();
+    void testResult() {
+        QFETCH(QString, scenario1);
+        QFETCH(QString, scenario2);
+        QFETCH(FakeServer::Request, requestTrue);
+        QFETCH(int, error);
+        QFETCH(QVariant, word);
+        QFETCH(QString, answer);
 
-        Edit edit(*m_mediaWiki, "alexTest", "test");
+        FakeServer fakeserver;
+        fakeserver.setScenario(scenario1);
+        fakeserver.addScenario(scenario2);
+        fakeserver.startAndWait();
 
-        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
-        edit.exec();
-        FakeServer::Request serverrequest = m_server->getRequest()[0];
-        QCOMPARE(this->editCount, 1);
-        QCOMPARE(serverrequest.type, QString("POST"));
-        QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.cookies().isEmpty(), false);
-        QVERIFY(edit.error() == Edit::NoError);
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+        Edit * job = new Edit( mediawiki, "Talk:Main_Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!", "new", "Hello World" );
+
+        connect(job, SIGNAL( resultCaptcha(QVariant const &) ), this, SLOT( editHandle(QVariant const &) ));
+        connect(this, SIGNAL( captchaSignal(QString const &) ), job, SLOT( finishedCaptcha(QString const &) ));
+
+        job->exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 2);
+
+        FakeServer::Request request = requests[0];
+        QCOMPARE(request.agent, mediawiki.userAgent());
+        QCOMPARE(request.type, QString("POST"));
+
+        QCOMPARE(job->error(), error);
+        QCOMPARE(editCount, 1);
+        QCOMPARE(requestTrue.value, request.value);
+        QCOMPARE(captchaquestionorurl, word);
+        QCOMPARE(captchaword, answer);
+        QVERIFY(fakeserver.isAllScenarioDone());
     }
 
-    void cleanupTestCase()
-    {
-        delete this->m_mediaWiki;
-        delete this->m_server;
+    void testResult_data() {
+        QTest::addColumn<QString>("scenario1");
+        QTest::addColumn<QString>("scenario2");
+        QTest::addColumn<FakeServer::Request>("requestTrue");
+        QTest::addColumn<int>("error");
+        QTest::addColumn< QVariant >("word");
+        QTest::addColumn< QString >("answer");
+
+        Edit::Result captcha;
+        captcha.captchaid = QString("509895952").toUInt();
+        captcha.captchaquestionorurl = QVariant("36 + 4 = ");
+        captcha.captchaword = QString("40");
+        this->captchaword = captcha.captchaword;
+
+        QTest::newRow("Test: 1")
+                << "<api><edit result=\"Failure\"><captcha type=\"math\" mime=\"text/tex\" id=\"509895952\" question=\"36 + 4 = \" /></edit></api>"
+                << "<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>"
+                << FakeServer::Request("POST","","?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main_Page&token=cecded1f35005d22904a35cc7b736e18%2B%5C")
+                << int(KJob::NoError)
+                << captcha.captchaquestionorurl
+                << captcha.captchaword;
     }
 
 private:
 
     int editCount;
-    Edit::Result editResults;
-    QString request;
-    MediaWiki* m_mediaWiki;
-    FakeServer* m_server;
+    QVariant captchaquestionorurl;
+    QString captchaword;
 };
 
 

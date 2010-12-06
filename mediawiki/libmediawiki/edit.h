@@ -21,7 +21,9 @@
 #define MEDIAWIKI_EDIT_H
 
 #include <QtCore/QString>
+#include <QtCore/QVariant>
 #include <QtCore/QDateTime>
+#include <QtCore/QUrl>
 #include <KDE/KJob>
 #include <kdemacros.h>
 
@@ -34,7 +36,7 @@ class MediaWiki;
 /**
  * @brief Edit job.
  *
- * Uses for edit a wiki.
+ * Uses for create or edit a wiki.
  */
 class KDE_EXPORT Edit : public KJob
 {
@@ -88,7 +90,7 @@ public:
         /**
          * @brief
          */
-        cantcreateAnon,
+        cantcreateanon,
 
         /**
          * @brief
@@ -98,7 +100,7 @@ public:
         /**
          * @brief
          */
-        noimageredirectAnon,
+        noimageredirectanon,
 
         /**
          * @brief
@@ -123,7 +125,7 @@ public:
         /**
          * @brief
          */
-        noeditAnon,
+        noeditanon,
 
         /**
          * @brief
@@ -158,96 +160,29 @@ public:
         /**
          * @brief
          */
-        undoFailure,
+        undofailure,
 
     };
 
     /**
-     * @brief A login result.
+     * @brief An edit result.
      */
     struct Result
     {
-
-        /**
-         * @brief Page title.
-         */
-        QString title;
-        /**
-         * @brief Section number. 0 for the top section, 'new' for a new section.
-         */
-        QString section;
-        /**
-         * @brief Page content.
-         */
-        QString text;
-        /**
-         * @brief Edit token. You can get one of these through prop=info.
-         */
-        QString token;
-        /**
-         * @brief Edit summary. Also section title when section=new.
-         */
-        QString summary;
-        /**
-         * @brief Minor edit.
-         */
-        bool minor;
-        /**
-         * @brief Non-minor edit.
-         */
-        bool notminor;
-        /**
-         * @brief Timestamp of the base revision (gotten through prop=revisions&rvprop=timestamp).
-         */
-        QDateTime basetimestamp;
-        /**
-         * @brief Timestamp when you obtained the edit token.
-         */
-        QDateTime starttimestamp;
-        /**
-         * @brief Override any errors about the article having been deleted in the meantime.
-         */
-        bool recreate;
-        /**
-         * @brief Don't edit the page if it exists already.
-         */
-        bool createonly;
-        /**
-         * @brief Throw an error if the page doesn't exist.
-         */
-        bool nocreate;
-        /**
-         * @brief Unconditionally add or remove the page from your watchlist, use preferences or do not change watch.
-         */
-        QString watchlist;
         /**
          * @brief CAPTCHA ID from previous request.
          */
         unsigned int captchaid;
+
+        /**
+         * @brief Question from the CAPTCHA.
+         */
+        QVariant captchaquestionorurl;
+
         /**
          * @brief Answer to the CAPTCHA.
          */
         QString captchaword;
-        /**
-         * @brief The MD5 hash of the text parameter, or the prependtext and appendtext parameters concatenated. If set, the edit won't be done unless the hash is correct.
-         */
-        QString md5;
-        /**
-         * @brief Add this text to the beginning of the page. Overrides text.
-         */
-        QString prependtext;
-        /**
-         * @brief Add this text to the end of the page. Overrides text.
-         */
-        QString appendtext;
-        /**
-         * @brief Undo this revision. Overrides text, prependtext and appendtext.
-         */
-        unsigned int undo;
-        /**
-         * @brief Undo all revisions from undo to this one. If not set, just undo one revision.
-         */
-        unsigned int undoafter;
     };
 
     /**
@@ -257,10 +192,43 @@ public:
 
     /**
      * @brief Constructs an Edit job.
-     * @param mediawiki the mediawiki concerned by the job
+     * @param media the mediawiki concerned by the job
+     * @param title the page title
+     * @param token the edit token. Gotten through prop=info.
+     * @param basetimestamp the timestamp of the base revision. Gotten through prop=revisions&rvprop=timestamp.
+     * @param starttimestamp the timestamp when you obtained the edit token.
+     * @param text the page content
+     * @param section the section number. 0 for the top section, 'new' for a new section.
+     * @param summary the edit summary. Also section title when section=new.
      * @param parent the QObject parent
      */
-    explicit Edit( MediaWiki const & media, QString const & title, QString const & token, QString const & params, QObject *parent = 0);
+    explicit Edit( MediaWiki const & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & text, QString const & section = QString(), QString const & summary = QString(), QObject *parent = 0);
+
+    /**
+     * @brief Constructs an Edit job.
+     * @param media the mediawiki concerned by the job
+     * @param title the page title
+     * @param token the edit token. Gotten through prop=info.
+     * @param basetimestamp the timestamp of the base revision. Gotten through prop=revisions&rvprop=timestamp.
+     * @param starttimestamp the timestamp when you obtained the edit token.
+     * @param appendtext the text added to the end of the page. Overrides text.
+     * @param prependtext the text added to the beginning of the page. Overrides text.
+     * @param parent the QObject parent
+     */
+    explicit Edit( MediaWiki const & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & appendtext, QString const & prependtext, QObject *parent = 0);
+
+    /**
+     * @brief Constructs an Edit job.
+     * @param media the mediawiki concerned by the job
+     * @param title the page title
+     * @param token the edit token. Gotten through prop=info.
+     * @param basetimestamp the timestamp of the base revision. Gotten through prop=revisions&rvprop=timestamp.
+     * @param starttimestamp the timestamp when you obtained the edit token.
+     * @param undo Undo this revision. Overrides text, prependtext and appendtext.
+     * @param undoafter Undo all revisions from undo to this one. If not set, just undo one revision.
+     * @param parent the QObject parent
+     */
+    explicit Edit( MediaWiki const & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString, unsigned int undo, unsigned int undoafter = 0, QObject *parent = 0);
 
     /**
      * @brief Destroys the Edit job.
@@ -279,6 +247,41 @@ public:
     int getError(const QString & error);
 
 
+    /**
+     * @brief Specify how the watchlist is affected by this edit.
+     */
+    enum Watchlist {        
+        /**
+         * @brief Add the page to the watchlist
+         */
+        watch,
+
+        /**
+         * @brief Remove the page from the watchlist
+         */
+        unwatch,
+
+        /**
+         * @brief Use the preference settings
+         */
+        preferences,
+
+        /**
+         * @brief Don't change the watchlist
+         */
+        nochange
+    };
+
+    /**
+     * @brief Which properties to get for each revision.
+     * @param watchlist Specify how the watchlist is affected by this edit
+     * @param recreate If set, suppress errors about the page having been deleted in the meantime and recreate it
+     * @param createonly If set, throw an error if the page already exists
+     * @param nocreate If set, throw a missingtitle error if the page doesn't exist.
+     * @param minor If set to true, mark the edit as minor
+     */
+    void setParams(Edit::Watchlist watchlist, bool recreate = false, bool createonly = false, bool nocreate = false, bool minor = false, bool notminor = false);
+
 signals:
 
     /**
@@ -291,7 +294,7 @@ signals:
      * @brief Emitted when a connection has been completed.
      * @param success true if the connection was completed successfully.
      */
-    void resultCaptcha( KJob * job );
+    void resultCaptcha(QVariant const & captcha);
 
 private slots:
 
@@ -307,18 +310,16 @@ private slots:
 
     /**
      * @brief Reads the xml
-     * if the attribute value is equal to "NeedToken", try to log in the user
-     * else if the attribute value is equal to "Success", the user is logged in
      * @param success true if the connection was completed successfully.
      */
     void finishedEdit( QNetworkReply *reply );
 
+public slots:
     /**
      * @brief Reads the xml
-     * if the attribute value is equal to "Success", the user is logged in
      * @param success true if the connection was completed successfully.
      */
-    void finishedCaptcha( QNetworkReply *reply );
+    void finishedCaptcha( QString  const & captcha );
 
 private:
 
