@@ -155,6 +155,12 @@ public:
     void paramLimit(unsigned int limit, bool stop);
 
     /**
+     * @brief Set timestamp to start listing from.
+     * @param start timestamp to start listing from
+     */
+    void paramStart(QDateTime const & start);
+
+    /**
      * @brief Starts the job asynchronously.
      */
     virtual void start();

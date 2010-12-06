@@ -88,6 +88,10 @@ void QueryImageinfo::paramLimit(unsigned int limit, bool stop) {
     d->stop = stop;
 }
 
+void QueryImageinfo::paramStart(QDateTime const & start) {
+    d->start = start.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
+}
+
 void QueryImageinfo::start() {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
