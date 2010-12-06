@@ -75,6 +75,7 @@ public:
      * @see URL
      * @see SIZE
      * @see SHA1
+     * @see MIME
      * @see ALL_PROPERTIES
      */
     void paramProperties(property_type properties);
@@ -122,10 +123,16 @@ public:
     static property_type const SHA1 = 1 << 5;
 
     /**
+     * @brief MIME of the image.
+     * @see paramProperties()
+     */
+    static property_type const MIME = 1 << 6;
+
+    /**
      * @brief All properties.
      * @see paramProperties()
      */
-    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE|SHA1;
+    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE|SHA1|MIME;
 
     /**
      * @brief Starts the job asynchronously.
@@ -186,6 +193,7 @@ public:
          * @param width the image's width
          * @param height the image's height
          * @param sha1 the image's SHA-1 hash
+         * @param mime the image's MIME type
          * @param properties properties has set
          */
         Imageinfo(QDateTime const & timestamp,
@@ -197,6 +205,7 @@ public:
                   unsigned int width,
                   unsigned int height,
                   QString const & sha1,
+                  QString const & mime,
                   QueryImageinfo::property_type properties)
             : m_timestamp(timestamp)
             , m_user(user)
@@ -207,6 +216,7 @@ public:
             , m_width(width)
             , m_height(height)
             , m_sha1(sha1)
+            , m_mime(mime)
             , m_properties(properties)
         {}
 
@@ -309,6 +319,19 @@ public:
          */
         inline bool hasSha1() const { return m_properties & QueryImageinfo::SHA1; }
 
+        /**
+         * @brief Returns the image's MIME type.
+         * @return the image's MIME type
+         * @pre #hasMime()
+         */
+        inline QString mime() const { Q_ASSERT(hasMime()); return m_mime; }
+
+        /**
+         * @brief Returns true if MIME has set, else false.
+         * @return true if MIME has set, else false
+         */
+        inline bool hasMime() const { return m_properties & QueryImageinfo::MIME; }
+
     private:
 
         QDateTime m_timestamp;
@@ -320,6 +343,7 @@ public:
         unsigned int m_width;
         unsigned int m_height;
         QString m_sha1;
+        QString m_mime;
         QueryImageinfo::property_type m_properties;
 
     };
@@ -355,7 +379,9 @@ inline bool operator==(QueryImageinfo::Imageinfo const & lhs, QueryImageinfo::Im
            lhs.hasSize() == rhs.hasSize() &&
            (lhs.hasSize() /* && rhs.hasSize() */ ? lhs.size() == rhs.size() && lhs.width() == rhs.width() && lhs.height() == rhs.height() : true) &&
            lhs.hasSha1() == rhs.hasSha1() &&
-           (lhs.hasSha1() /* && rhs.hasSha1() */ ? lhs.sha1() == rhs.sha1() : true);
+           (lhs.hasSha1() /* && rhs.hasSha1() */ ? lhs.sha1() == rhs.sha1() : true) &&
+           lhs.hasMime() == rhs.hasMime() &&
+           (lhs.hasMime() /* && rhs.hasMime() */ ? lhs.mime() == rhs.mime() : true);
 }
 
 }
