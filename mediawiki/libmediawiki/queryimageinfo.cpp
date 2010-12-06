@@ -95,25 +95,54 @@ void QueryImageinfo::doWorkSendRequest() {
 
 void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
     if (reply->error() == QNetworkReply::NoError) {
-        QList<QueryImageinfo::Imageinfo> imageinfosReceived;
         QXmlStreamReader reader(reply);
+        QList<QueryImageinfo::Imageinfo> imageinfosReceived;
+        QDateTime timestamp;
+        QString user;
+        QString comment;
+        QUrl url;
+        QUrl descriptionUrl;
+        unsigned int size;
+        unsigned int width;
+        unsigned int height;
+        QString sha1;
+        QString mime;
+        QHash<QString, QVariant> metadata;
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {
                 if (reader.name() == "ii") {
-                    imageinfosReceived.push_back(QueryImageinfo::Imageinfo(
-                        QDateTime::fromString(reader.attributes().value("timestamp").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'"),
-                        reader.attributes().value("user").toString(),
-                        reader.attributes().value("comment").toString(),
-                        QUrl(reader.attributes().value("url").toString()),
-                        QUrl(reader.attributes().value("descriptionurl").toString()),
-                        reader.attributes().value("size").toString().toUInt(),
-                        reader.attributes().value("width").toString().toUInt(),
-                        reader.attributes().value("height").toString().toUInt(),
-                        reader.attributes().value("sha1").toString(),
-                        reader.attributes().value("mime").toString(),
-                        d->properties
-                    ));
+                    timestamp = QDateTime::fromString(reader.attributes().value("timestamp").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'");
+                    user = reader.attributes().value("user").toString();
+                    comment = reader.attributes().value("comment").toString();
+                    url = QUrl(reader.attributes().value("url").toString());
+                    descriptionUrl = QUrl(reader.attributes().value("descriptionurl").toString());
+                    size = reader.attributes().value("size").toString().toUInt();
+                    width = reader.attributes().value("width").toString().toUInt();
+                    height = reader.attributes().value("height").toString().toUInt();
+                    sha1 = reader.attributes().value("sha1").toString();
+                    mime = reader.attributes().value("mime").toString();
+                } else if (reader.name() == "metadata") {
+                    if (reader.attributes().isEmpty()) {
+                        metadata.clear();
+                    } else {
+                        metadata[reader.attributes().value("name").toString()] = reader.attributes().value("value").toString();
+                    }
+                }
+            } else if (token == QXmlStreamReader::EndElement) {
+                if (reader.name() == "ii") {
+                    imageinfosReceived.push_back(QueryImageinfo::Imageinfo(timestamp,
+                                                                           user,
+                                                                           comment,
+                                                                           url,
+                                                                           descriptionUrl,
+                                                                           size,
+                                                                           width,
+                                                                           height,
+                                                                           sha1,
+                                                                           mime,
+                                                                           metadata,
+                                                                           d->properties));
                 }
             }
         }
@@ -152,6 +181,9 @@ QString QueryImageinfo::iiprop() const {
     }
     if (d->properties & QueryImageinfo::MIME) {
         iiprop.append("mime|");
+    }
+    if (d->properties & QueryImageinfo::METADATA) {
+        iiprop.append("metadata|");
     }
     iiprop.chop(1);
     return iiprop;

@@ -47,7 +47,7 @@ private slots:
     void testConstructorTitle() {
         // Constructs the fakeserver
         FakeServer fakeserver;
-        fakeserver.setScenario("<?xml version=\"1.0\"?><api><query><pages><page ns=\"6\" title=\"File:Image.bmp\" missing=\"\" imagerepository=\"shared\"><imageinfo><ii timestamp=\"2008-06-06T22:27:45Z\" user=\"User\" size=\"448798\" width=\"924\" height=\"1203\" url=\"http://url/File:Image.bmp\" descriptionurl=\"http://descriptionurl/File:Image.bmp\" comment=\"Comment\" sha1=\"00be23585fde01190a0f8c60fc4267ea00f3745d\" mime=\"image/bmp\" /></imageinfo></page></pages></query></api>");
+        fakeserver.setScenario("<?xml version=\"1.0\"?><api><query><pages><page ns=\"6\" title=\"File:Image.bmp\" missing=\"\" imagerepository=\"shared\"><imageinfo><ii timestamp=\"2008-06-06T22:27:45Z\" user=\"User\" size=\"448798\" width=\"924\" height=\"1203\" url=\"http://url/File:Image.bmp\" descriptionurl=\"http://descriptionurl/File:Image.bmp\" comment=\"Comment\" sha1=\"00be23585fde01190a0f8c60fc4267ea00f3745d\" mime=\"image/bmp\"><metadata><metadata name=\"Name1\" value=\"Value1\" /><metadata name=\"Name2\" value=\"Value2\" /></metadata></ii></imageinfo></page></pages></query></api>");
         fakeserver.startAndWait();
 
         // Prepare the job
@@ -68,10 +68,13 @@ private slots:
         QCOMPARE(requests.size(), 1);
         QCOMPARE(requests[0].agent, mediawiki.userAgent());
         QCOMPARE(requests[0].type, QString("GET"));
-        QCOMPARE(requests[0].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime"));
+        QCOMPARE(requests[0].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata"));
 
         // Test pages received
         QList<QList<QueryImageinfo::Imageinfo> > imageinfosExpected;
+        QHash<QString, QVariant> metadata;
+        metadata["Name1"] = "Value1";
+        metadata["Name2"] = "Value2";
         imageinfosExpected.push_back(QList<QueryImageinfo::Imageinfo>()
             << QueryImageinfo::Imageinfo(QDateTime(QDate(2008, 06, 06), QTime(22, 27, 45, 0)),
                                          QString("User"),
@@ -83,6 +86,7 @@ private slots:
                                          1203u,
                                          QString("00be23585fde01190a0f8c60fc4267ea00f3745d"),
                                          QString("image/bmp"),
+                                         metadata,
                                          QueryImageinfo::ALL_PROPERTIES)
         );
         QCOMPARE(imageinfosReceived, imageinfosExpected);

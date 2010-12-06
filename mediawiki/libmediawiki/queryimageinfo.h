@@ -21,8 +21,11 @@
 #define MEDIAWIKI_QUERYIMAGEINFO_H
 
 #include <QtCore/QDateTime>
+#include <QtCore/QHash>
 #include <QtCore/QList>
+#include <QtCore/QString>
 #include <QtCore/QUrl>
+#include <QtCore/QVariant>
 
 #include <KDE/KJob>
 
@@ -76,6 +79,7 @@ public:
      * @see SIZE
      * @see SHA1
      * @see MIME
+     * @see METADATA
      * @see ALL_PROPERTIES
      */
     void paramProperties(property_type properties);
@@ -129,10 +133,16 @@ public:
     static property_type const MIME = 1 << 6;
 
     /**
+     * @brief Metadata of the image.
+     * @see paramProperties()
+     */
+    static property_type const METADATA = 1 << 7;
+
+    /**
      * @brief All properties.
      * @see paramProperties()
      */
-    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE|SHA1|MIME;
+    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE|SHA1|MIME|METADATA;
 
     /**
      * @brief Starts the job asynchronously.
@@ -194,6 +204,7 @@ public:
          * @param height the image's height
          * @param sha1 the image's SHA-1 hash
          * @param mime the image's MIME type
+         * @param metadata image metadata
          * @param properties properties has set
          */
         Imageinfo(QDateTime const & timestamp,
@@ -206,6 +217,7 @@ public:
                   unsigned int height,
                   QString const & sha1,
                   QString const & mime,
+                  QHash<QString, QVariant> const & metadata,
                   QueryImageinfo::property_type properties)
             : m_timestamp(timestamp)
             , m_user(user)
@@ -217,6 +229,7 @@ public:
             , m_height(height)
             , m_sha1(sha1)
             , m_mime(mime)
+            , m_metadata(metadata)
             , m_properties(properties)
         {}
 
@@ -332,6 +345,19 @@ public:
          */
         inline bool hasMime() const { return m_properties & QueryImageinfo::MIME; }
 
+        /**
+         * @brief Returns image metadata.
+         * @return image metadata
+         * @pre #hasMetadata()
+         */
+        inline QHash<QString, QVariant> const & metadata() const { Q_ASSERT(hasMetadata()); return m_metadata; }
+
+        /**
+         * @brief Returns true if metadata has set, else false.
+         * @return true if metadata has set, else false
+         */
+        inline bool hasMetadata() const { return m_properties & QueryImageinfo::METADATA; }
+
     private:
 
         QDateTime m_timestamp;
@@ -344,6 +370,7 @@ public:
         unsigned int m_height;
         QString m_sha1;
         QString m_mime;
+        QHash<QString, QVariant> m_metadata;
         QueryImageinfo::property_type m_properties;
 
     };
@@ -381,7 +408,9 @@ inline bool operator==(QueryImageinfo::Imageinfo const & lhs, QueryImageinfo::Im
            lhs.hasSha1() == rhs.hasSha1() &&
            (lhs.hasSha1() /* && rhs.hasSha1() */ ? lhs.sha1() == rhs.sha1() : true) &&
            lhs.hasMime() == rhs.hasMime() &&
-           (lhs.hasMime() /* && rhs.hasMime() */ ? lhs.mime() == rhs.mime() : true);
+           (lhs.hasMime() /* && rhs.hasMime() */ ? lhs.mime() == rhs.mime() : true) &&
+           lhs.hasMetadata() == rhs.hasMetadata() &&
+           (lhs.hasMetadata() /* && rhs.hasMetadata() */ ? lhs.metadata() == rhs.metadata() : true);
 }
 
 }
