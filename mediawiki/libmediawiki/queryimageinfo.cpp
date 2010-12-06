@@ -110,6 +110,7 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                         reader.attributes().value("size").toString().toUInt(),
                         reader.attributes().value("width").toString().toUInt(),
                         reader.attributes().value("height").toString().toUInt(),
+                        reader.attributes().value("sha1").toString(),
                         d->properties
                     ));
                 }
@@ -144,6 +145,9 @@ QString QueryImageinfo::iiprop() const {
     }
     if (d->properties & QueryImageinfo::SIZE) {
         iiprop.append("size|");
+    }
+    if (d->properties & QueryImageinfo::SHA1) {
+        iiprop.append("sha1|");
     }
     iiprop.chop(1);
     return iiprop;

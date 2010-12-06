@@ -74,6 +74,7 @@ public:
      * @see COMMENT
      * @see URL
      * @see SIZE
+     * @see SHA1
      * @see ALL_PROPERTIES
      */
     void paramProperties(property_type properties);
@@ -115,10 +116,16 @@ public:
     static property_type const SIZE = 1 << 4;
 
     /**
+     * @brief SHA-1 of the image.
+     * @see paramProperties()
+     */
+    static property_type const SHA1 = 1 << 5;
+
+    /**
      * @brief All properties.
      * @see paramProperties()
      */
-    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE;
+    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE|SHA1;
 
     /**
      * @brief Starts the job asynchronously.
@@ -178,6 +185,7 @@ public:
          * @param size the image's size in bytes
          * @param width the image's width
          * @param height the image's height
+         * @param sha1 the image's SHA-1 hash
          * @param properties properties has set
          */
         Imageinfo(QDateTime const & timestamp,
@@ -188,6 +196,7 @@ public:
                   unsigned int size,
                   unsigned int width,
                   unsigned int height,
+                  QString const & sha1,
                   QueryImageinfo::property_type properties)
             : m_timestamp(timestamp)
             , m_user(user)
@@ -197,6 +206,7 @@ public:
             , m_size(size)
             , m_width(width)
             , m_height(height)
+            , m_sha1(sha1)
             , m_properties(properties)
         {}
 
@@ -286,6 +296,19 @@ public:
          */
         inline bool hasSize() const { return m_properties & QueryImageinfo::SIZE; }
 
+        /**
+         * @brief Returns the image's SHA-1 hash.
+         * @return the image's SHA-1 hash
+         * @pre #hasSha1()
+         */
+        inline QString sha1() const { Q_ASSERT(hasSha1()); return m_sha1; }
+
+        /**
+         * @brief Returns true if SHA-1 has set, else false.
+         * @return true if SHA-1 has set, else false
+         */
+        inline bool hasSha1() const { return m_properties & QueryImageinfo::SHA1; }
+
     private:
 
         QDateTime m_timestamp;
@@ -296,6 +319,7 @@ public:
         unsigned int m_size;
         unsigned int m_width;
         unsigned int m_height;
+        QString m_sha1;
         QueryImageinfo::property_type m_properties;
 
     };
@@ -329,7 +353,9 @@ inline bool operator==(QueryImageinfo::Imageinfo const & lhs, QueryImageinfo::Im
            lhs.hasUrl() == rhs.hasUrl() &&
            (lhs.hasUrl() /* && rhs.hasUrl() */ ? lhs.url() == rhs.url() && lhs.descriptionUrl() == rhs.descriptionUrl() : true) &&
            lhs.hasSize() == rhs.hasSize() &&
-           (lhs.hasSize() /* && rhs.hasSize() */ ? lhs.size() == rhs.size() && lhs.width() == rhs.width() && lhs.height() == rhs.height() : true);
+           (lhs.hasSize() /* && rhs.hasSize() */ ? lhs.size() == rhs.size() && lhs.width() == rhs.width() && lhs.height() == rhs.height() : true) &&
+           lhs.hasSha1() == rhs.hasSha1() &&
+           (lhs.hasSha1() /* && rhs.hasSha1() */ ? lhs.sha1() == rhs.sha1() : true);
 }
 
 }
