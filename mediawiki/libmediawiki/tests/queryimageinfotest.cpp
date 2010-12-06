@@ -57,6 +57,7 @@ private slots:
         job->paramProperties(QueryImageinfo::ALL_PROPERTIES);
         job->paramLimit(1u, false);
         job->paramStart(QDateTime(QDate(2008, 06, 06), QTime(22, 27, 45, 0)));
+        job->paramEnd(QDateTime(QDate(2007, 06, 06), QTime(22, 27, 45, 0)));
         connect(job, SIGNAL(imageinfos(QList<QueryImageinfo::Imageinfo> const &)), this, SLOT(imageinfosHandle(QList<QueryImageinfo::Imageinfo> const &)));
         job->exec();
 
@@ -73,8 +74,8 @@ private slots:
             QCOMPARE(requests[i].agent, mediawiki.userAgent());
             QCOMPARE(requests[i].type, QString("GET"));
         }
-        QCOMPARE(requests[0].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata&iilimit=1&iistart=2008-06-06T22:27:45Z"));
-        QCOMPARE(requests[1].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata&iilimit=1&iistart=2007-06-06T22:27:45Z"));
+        QCOMPARE(requests[0].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata&iilimit=1&iistart=2008-06-06T22:27:45Z&iiend=2007-06-06T22:27:45Z"));
+        QCOMPARE(requests[1].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata&iilimit=1&iistart=2007-06-06T22:27:45Z&iiend=2007-06-06T22:27:45Z"));
 
         // Test pages received
         QList<QList<QueryImageinfo::Imageinfo> > imageinfosExpected;

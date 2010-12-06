@@ -35,9 +35,10 @@ struct QueryImageinfoPrivate {
                           MediaWiki const & mediawiki,
                           QString const & title,
                           QueryImageinfo::property_type properties,
-                          QString limit,
+                          QString const & limit,
                           bool stop,
-                          QString start)
+                          QString const & start,
+                          QString const & end)
         : manager(manager)
         , mediawiki(mediawiki)
         , title(title)
@@ -45,6 +46,7 @@ struct QueryImageinfoPrivate {
         , limit(limit)
         , stop(stop)
         , start(start)
+        , end(end)
     {}
 
     QNetworkAccessManager * const manager;
@@ -54,6 +56,7 @@ struct QueryImageinfoPrivate {
     QString limit;
     bool stop;
     QString start;
+    QString end;
 
 };
 
@@ -69,6 +72,7 @@ QueryImageinfo::QueryImageinfo(MediaWiki const & mediawiki, QString const & titl
                                   QueryImageinfo::NO_PROPERTY,
                                   QString("1"),
                                   true,
+                                  QString(),
                                   QString()))
 {
     setCapabilities(KJob::NoCapabilities);
@@ -92,6 +96,10 @@ void QueryImageinfo::paramStart(QDateTime const & start) {
     d->start = start.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
 }
 
+void QueryImageinfo::paramEnd(QDateTime const & end) {
+    d->end = end.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
+}
+
 void QueryImageinfo::start() {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
@@ -107,6 +115,9 @@ void QueryImageinfo::doWorkSendRequest() {
     url.addQueryItem("iilimit", d->limit);
     if (!d->start.isNull()) {
         url.addQueryItem("iistart", d->start);
+    }
+    if (!d->end.isNull()) {
+        url.addQueryItem("iiend", d->end);
     }
     // Set the request
     QNetworkRequest request(url);

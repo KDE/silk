@@ -150,6 +150,7 @@ public:
      * @brief Set how many image revisions to return.
      * @param limit how many image revisions to return
      * @param stop stop the job when the limit is reached
+     * @pre to call just before start()
      * @pre limit >= 1
      */
     void paramLimit(unsigned int limit, bool stop);
@@ -157,8 +158,16 @@ public:
     /**
      * @brief Set timestamp to start listing from.
      * @param start timestamp to start listing from
+     * @pre to call just before start()
      */
     void paramStart(QDateTime const & start);
+
+    /**
+     * @brief Set timestamp to stop listing at.
+     * @param end timestamp to stop listing at
+     * @pre to call just before start()
+     */
+    void paramEnd(QDateTime const & end);
 
     /**
      * @brief Starts the job asynchronously.
