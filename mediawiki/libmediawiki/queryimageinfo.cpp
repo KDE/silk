@@ -34,20 +34,26 @@ struct QueryImageinfoPrivate {
     QueryImageinfoPrivate(QNetworkAccessManager * const manager,
                           MediaWiki const & mediawiki,
                           QString const & title,
-                          QueryImageinfo::property_type properties)
+                          QueryImageinfo::property_type properties,
+                          QString limit,
+                          bool stop,
+                          QString start)
         : manager(manager)
         , mediawiki(mediawiki)
         , title(title)
         , properties(properties)
+        , limit(limit)
+        , stop(stop)
+        , start(start)
     {}
 
     QNetworkAccessManager * const manager;
-
     MediaWiki const & mediawiki;
-
     QString const title;
-
     QueryImageinfo::property_type properties;
+    QString limit;
+    bool stop;
+    QString start;
 
 };
 
@@ -60,7 +66,10 @@ QueryImageinfo::QueryImageinfo(MediaWiki const & mediawiki, QString const & titl
     , d(new QueryImageinfoPrivate(new QNetworkAccessManager(this),
                                   mediawiki,
                                   title,
-                                  QueryImageinfo::NO_PROPERTY))
+                                  QueryImageinfo::NO_PROPERTY,
+                                  QString("1"),
+                                  true,
+                                  QString()))
 {
     setCapabilities(KJob::NoCapabilities);
 }
@@ -71,6 +80,12 @@ QueryImageinfo::~QueryImageinfo() {
 
 void QueryImageinfo::paramProperties(property_type properties) {
     d->properties = properties;
+}
+
+void QueryImageinfo::paramLimit(unsigned int limit, bool stop) {
+    Q_ASSERT(limit >= 1u);
+    d->limit = QString::number(limit);
+    d->stop = stop;
 }
 
 void QueryImageinfo::start() {
@@ -85,6 +100,10 @@ void QueryImageinfo::doWorkSendRequest() {
     url.addQueryItem("titles", d->title);
     url.addQueryItem("prop", "imageinfo");
     url.addQueryItem("iiprop", iiprop());
+    url.addQueryItem("iilimit", d->limit);
+    if (!d->start.isNull()) {
+        url.addQueryItem("iistart", d->start);
+    }
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
@@ -108,10 +127,15 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
         QString sha1;
         QString mime;
         QHash<QString, QVariant> metadata;
+        d->start = QString();
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {
-                if (reader.name() == "ii") {
+                if (reader.name() == "imageinfo") {
+                    if (!reader.attributes().value("iistart").isNull()) {
+                        d->start = reader.attributes().value("iistart").toString();
+                    }
+                } else if (reader.name() == "ii") {
                     timestamp = QDateTime::fromString(reader.attributes().value("timestamp").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'");
                     user = reader.attributes().value("user").toString();
                     comment = reader.attributes().value("comment").toString();
@@ -147,8 +171,15 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
             }
         }
         if (!reader.hasError()) {
+            disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
             emit imageinfos(imageinfosReceived);
-            setError(KJob::NoError);
+            if (d->start.isNull() || d->stop) {
+                setError(KJob::NoError);
+            }
+            else {
+                QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
+                return;
+            }
         } else {
             setError(QueryImageinfo::XmlError);
         }

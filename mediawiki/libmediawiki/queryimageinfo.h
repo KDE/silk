@@ -51,6 +51,8 @@ public:
      *
      * You can set parameters of the query after.
      *
+     * By default, a single image info is returned.
+     *
      * @param mediawiki the mediawiki concerned by the job
      * @param title the title of the image
      * @param parent the QObject parent
@@ -143,6 +145,14 @@ public:
      * @see paramProperties()
      */
     static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE|SHA1|MIME|METADATA;
+
+    /**
+     * @brief Set how many image revisions to return.
+     * @param limit how many image revisions to return
+     * @param stop stop the job when the limit is reached
+     * @pre limit >= 1
+     */
+    void paramLimit(unsigned int limit, bool stop);
 
     /**
      * @brief Starts the job asynchronously.
