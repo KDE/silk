@@ -24,6 +24,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
+#include <QDebug>
 
 #include "mediawiki.h"
 #include "queryrevision.h"
@@ -208,6 +209,11 @@ void QueryRevision::setRvToken(QueryRevision::Token t)
         d->requestParameter["rvtoken"] = QString("rollback");
 }
 
+void QueryRevision::setRvExpandTemplates(bool param)
+{
+    if( param )
+        d->requestParameter["rvexpandtemplates"] = QString("on");
+}
 void QueryRevision::doWorkSendRequest()
 {
     // Set the url
@@ -234,9 +240,20 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
     if (reply->error() == QNetworkReply::NoError) {
         QList<QueryRevision::Result> results;
         QueryRevision::Result tempR;
-        QList<QString> rights;
-        unsigned int number;
-        QXmlStreamReader reader(reply);
+        QString replytmp = reply->readAll();
+        if(d->requestParameter.contains("rvgeneratexml"))
+        {
+            int i = replytmp.indexOf("parsetree");
+            int count = 0;
+            while(count < 2)
+            {
+                if(replytmp[i] == '"' && replytmp[i-1] != '\\')count++;
+                if(replytmp[i] == '<')replytmp[i]=char(255);
+                if(replytmp[i] == '>')replytmp[i]=char(254);
+                i++;
+            }
+        }
+        QXmlStreamReader reader(replytmp);
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {
@@ -260,10 +277,10 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
                             tempR.timeStamp = QDateTime::fromString(reader.attributes().value("timestamp").toString(),"yyyy-MM-ddThh:mm:ssZ");
                         if(rvprop.contains("comment"))
                             tempR.comment = reader.attributes().value("comment").toString();
-                        if(rvprop.contains("content"))
-                            tempR.content = reader.readElementText();
                         if(d->requestParameter.contains("rvgeneratexml"))
                             tempR.parseTree = reader.attributes().value("parsetree").toString();
+                        if(rvprop.contains("content"))
+                            tempR.content = reader.readElementText();
                     }
             results << tempR;
             }
@@ -290,6 +307,12 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
       }
         if (!reader.hasError()) {
             setError(KJob::NoError);
+            for(int i = 0; i < results.length(); i++)
+            {
+                results[i].parseTree.replace(char(254),'>');
+                results[i].parseTree.replace(char(255),'<');
+            }
+
             emit revision(results);
         } else {
             setError(QueryRevision::XmlError);

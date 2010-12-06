@@ -243,6 +243,12 @@ public:
      */
     void setRvToken(QueryRevision::Token);
 
+    /**
+     * @brief Expand templates in rvprop=content output
+     * @param bool
+     */
+    void setRvExpandTemplates(bool);
+
 signals:
 
     /**
