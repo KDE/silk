@@ -26,7 +26,7 @@
 
 #include <KDE/KJob>
 
-//FIXME: Fait pas de define ça se met dans l'espace de nommage global et ça remplace PARTOUT TIMESTAMP par 4 !
+//FIXME: Fait pas de define ça se met dans l'espace de nommage global et ça remplace PARTOUT TIMESTAMP par 4, ... !
 #define IDS         1
 #define FLAGS       2
 //#define TIMESTAMP   4
@@ -35,7 +35,8 @@ static int const TIMESTAMP = 4;
 static int const USER = 8;
 //#define COMMENT     16
 static int const COMMENT = 16;
-#define SIZE        32
+//#define SIZE        32
+static int const SIZE = 32;
 #define CONTENT     64
 
 class QNetworkReply;

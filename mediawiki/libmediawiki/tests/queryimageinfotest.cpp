@@ -47,7 +47,7 @@ private slots:
     void testConstructorTitle() {
         // Constructs the fakeserver
         FakeServer fakeserver;
-        fakeserver.setScenario("<?xml version=\"1.0\"?><api><query><pages><page ns=\"6\" title=\"File:Image.bmp\" missing=\"\" imagerepository=\"shared\"><imageinfo><ii timestamp=\"2008-06-06T22:27:45Z\" user=\"User\" url=\"http://url/File:Image.bmp\" descriptionurl=\"http://descriptionurl/File:Image.bmp\" comment=\"Comment\" /></imageinfo></page></pages></query></api>");
+        fakeserver.setScenario("<?xml version=\"1.0\"?><api><query><pages><page ns=\"6\" title=\"File:Image.bmp\" missing=\"\" imagerepository=\"shared\"><imageinfo><ii timestamp=\"2008-06-06T22:27:45Z\" user=\"User\" size=\"448798\" width=\"924\" height=\"1203\" url=\"http://url/File:Image.bmp\" descriptionurl=\"http://descriptionurl/File:Image.bmp\" comment=\"Comment\" /></imageinfo></page></pages></query></api>");
         fakeserver.startAndWait();
 
         // Prepare the job
@@ -68,7 +68,7 @@ private slots:
         QCOMPARE(requests.size(), 1);
         QCOMPARE(requests[0].agent, mediawiki.userAgent());
         QCOMPARE(requests[0].type, QString("GET"));
-        QCOMPARE(requests[0].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl"));
+        QCOMPARE(requests[0].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize"));
 
         // Test pages received
         QList<QList<QueryImageinfo::Imageinfo> > imageinfosExpected;
@@ -78,6 +78,9 @@ private slots:
                                          QString("Comment"),
                                          QUrl("http://url/File:Image.bmp"),
                                          QUrl("http://descriptionurl/File:Image.bmp"),
+                                         448798u,
+                                         924u,
+                                         1203u,
                                          QueryImageinfo::ALL_PROPERTIES)
         );
         QCOMPARE(imageinfosReceived, imageinfosExpected);

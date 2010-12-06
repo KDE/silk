@@ -73,6 +73,7 @@ public:
      * @see USER
      * @see COMMENT
      * @see URL
+     * @see SIZE
      * @see ALL_PROPERTIES
      */
     void paramProperties(property_type properties);
@@ -108,10 +109,16 @@ public:
     static property_type const URL = 1 << 3;
 
     /**
+     * @brief Size of the image.
+     * @see paramProperties()
+     */
+    static property_type const SIZE = 1 << 4;
+
+    /**
      * @brief All properties.
      * @see paramProperties()
      */
-    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL;
+    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE;
 
     /**
      * @brief Starts the job asynchronously.
@@ -168,6 +175,9 @@ public:
          * @param comment the edit comment
          * @param url the URL of the image
          * @param descriptionUrl the description URL of the image
+         * @param size the image's size in bytes
+         * @param width the image's width
+         * @param height the image's height
          * @param properties properties has set
          */
         Imageinfo(QDateTime const & timestamp,
@@ -175,12 +185,18 @@ public:
                   QString const & comment,
                   QUrl const & url,
                   QUrl const & descriptionUrl,
+                  unsigned int size,
+                  unsigned int width,
+                  unsigned int height,
                   QueryImageinfo::property_type properties)
             : m_timestamp(timestamp)
             , m_user(user)
             , m_comment(comment)
             , m_url(url)
             , m_descriptionUrl(descriptionUrl)
+            , m_size(size)
+            , m_width(width)
+            , m_height(height)
             , m_properties(properties)
         {}
 
@@ -218,7 +234,7 @@ public:
         inline QString comment() const { Q_ASSERT(hasComment()); return m_comment; }
 
         /**
-         * @brief Returns the edit comment.
+         * @brief Returns true if comment has set, else false.
          * @return true if comment has set, else false
          */
         inline bool hasComment() const { return m_properties & QueryImageinfo::COMMENT; }
@@ -243,6 +259,33 @@ public:
          */
         inline bool hasUrl() const { return m_properties & QueryImageinfo::URL; }
 
+        /**
+         * @brief Returns the image's size in bytes.
+         * @return the image's size in bytes
+         * @pre #hasSize()
+         */
+        inline unsigned int size() const { Q_ASSERT(hasSize()); return m_size; }
+
+        /**
+         * @brief Returns the image's width.
+         * @return the image's width
+         * @pre #hasSize()
+         */
+        inline unsigned int width() const { Q_ASSERT(hasSize()); return m_width; }
+
+        /**
+         * @brief Returns the image's height.
+         * @return the image's height
+         * @pre #hasSize()
+         */
+        inline unsigned int height() const { Q_ASSERT(hasSize()); return m_height; }
+
+        /**
+         * @brief Returns true if size has set, else false.
+         * @return true if size has set, else false
+         */
+        inline bool hasSize() const { return m_properties & QueryImageinfo::SIZE; }
+
     private:
 
         QDateTime m_timestamp;
@@ -250,6 +293,9 @@ public:
         QString m_comment;
         QUrl m_url;
         QUrl m_descriptionUrl;
+        unsigned int m_size;
+        unsigned int m_width;
+        unsigned int m_height;
         QueryImageinfo::property_type m_properties;
 
     };
@@ -281,7 +327,9 @@ inline bool operator==(QueryImageinfo::Imageinfo const & lhs, QueryImageinfo::Im
            lhs.hasComment() == rhs.hasComment() &&
            (lhs.hasComment() /* && rhs.hasComment() */ ? lhs.comment() == rhs.comment() : true) &&
            lhs.hasUrl() == rhs.hasUrl() &&
-           (lhs.hasUrl() /* && rhs.hasUrl() */ ? lhs.url() == rhs.url() && lhs.descriptionUrl() == rhs.descriptionUrl() : true);
+           (lhs.hasUrl() /* && rhs.hasUrl() */ ? lhs.url() == rhs.url() && lhs.descriptionUrl() == rhs.descriptionUrl() : true) &&
+           lhs.hasSize() == rhs.hasSize() &&
+           (lhs.hasSize() /* && rhs.hasSize() */ ? lhs.size() == rhs.size() && lhs.width() == rhs.width() && lhs.height() == rhs.height() : true);
 }
 
 }

@@ -107,6 +107,9 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                         reader.attributes().value("comment").toString(),
                         QUrl(reader.attributes().value("url").toString()),
                         QUrl(reader.attributes().value("descriptionurl").toString()),
+                        reader.attributes().value("size").toString().toUInt(),
+                        reader.attributes().value("width").toString().toUInt(),
+                        reader.attributes().value("height").toString().toUInt(),
                         d->properties
                     ));
                 }
@@ -138,6 +141,9 @@ QString QueryImageinfo::iiprop() const {
     }
     if (d->properties & QueryImageinfo::URL) {
         iiprop.append("url|");
+    }
+    if (d->properties & QueryImageinfo::SIZE) {
+        iiprop.append("size|");
     }
     iiprop.chop(1);
     return iiprop;
