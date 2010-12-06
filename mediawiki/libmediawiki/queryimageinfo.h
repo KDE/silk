@@ -170,6 +170,30 @@ public:
     void paramEnd(QDateTime const & end);
 
     /**
+     * @brief Set image scale parameters for an URL will be returned.
+     *
+     * Only for the first image info and the property URL will be set.
+     *
+     * @param width width parameter
+     * @pre to call just before start()
+     * @pre width >= 1
+     */
+    void paramScale(unsigned int width);
+
+    /**
+     * @brief Set image scale parameters for an URL will be returned.
+     *
+     * Only for the first image info and the property URL will be set.
+     *
+     * @param width width parameter
+     * @param height height paramter
+     * @pre to call just before start()
+     * @pre width >= 1
+     * @pre height >= 1
+     */
+    void paramScale(unsigned int width, unsigned int height);
+
+    /**
      * @brief Starts the job asynchronously.
      */
     virtual void start();
@@ -224,6 +248,9 @@ public:
          * @param comment the edit comment
          * @param url the URL of the image
          * @param descriptionUrl the description URL of the image
+         * @param thumbUrl the thumb URL of the image
+         * @param thumbWidth the thumb width of the image
+         * @param thumbHeight the thumb height of the image
          * @param size the image's size in bytes
          * @param width the image's width
          * @param height the image's height
@@ -237,6 +264,9 @@ public:
                   QString const & comment,
                   QUrl const & url,
                   QUrl const & descriptionUrl,
+                  QUrl const & thumbUrl,
+                  unsigned int thumbWidth,
+                  unsigned int thumbHeight,
                   unsigned int size,
                   unsigned int width,
                   unsigned int height,
@@ -249,6 +279,9 @@ public:
             , m_comment(comment)
             , m_url(url)
             , m_descriptionUrl(descriptionUrl)
+            , m_thumbUrl(thumbUrl)
+            , m_thumbWidth(thumbWidth)
+            , m_thumbHeight(thumbHeight)
             , m_size(size)
             , m_width(width)
             , m_height(height)
@@ -316,6 +349,33 @@ public:
          * @return true if URL has set, else false
          */
         inline bool hasUrl() const { return m_properties & QueryImageinfo::URL; }
+
+        /**
+         * @brief Returns the thumb URL of the image.
+         * @return the thumb URL of the image
+         * @pre #hasThumbUrl()
+         */
+        inline QUrl thumbUrl() const { Q_ASSERT(hasThumbUrl()); return m_thumbUrl; }
+
+        /**
+         * @brief Returns the thumb width of the image.
+         * @return the thumb width of the image
+         * @pre #hasThumbUrl()
+         */
+        inline unsigned int thumbWidth() const { Q_ASSERT(hasThumbUrl()); return m_thumbWidth; }
+
+        /**
+         * @brief Returns the thumb height of the image.
+         * @return the thumb height of the image
+         * @pre #hasThumbUrl()
+         */
+        inline unsigned int thumbHeight() const { Q_ASSERT(hasThumbUrl()); return m_thumbHeight; }
+
+        /**
+         * @brief Returns true if thumb URL has set, else false.
+         * @return true if thumb URL has set, else false
+         */
+        inline bool hasThumbUrl() const { return m_thumbUrl.isEmpty(); }
 
         /**
          * @brief Returns the image's size in bytes.
@@ -390,6 +450,9 @@ public:
         QString m_comment;
         QUrl m_url;
         QUrl m_descriptionUrl;
+        QUrl m_thumbUrl;
+        unsigned int m_thumbWidth;
+        unsigned int m_thumbHeight;
         unsigned int m_size;
         unsigned int m_width;
         unsigned int m_height;
@@ -428,6 +491,8 @@ inline bool operator==(QueryImageinfo::Imageinfo const & lhs, QueryImageinfo::Im
            (lhs.hasComment() /* && rhs.hasComment() */ ? lhs.comment() == rhs.comment() : true) &&
            lhs.hasUrl() == rhs.hasUrl() &&
            (lhs.hasUrl() /* && rhs.hasUrl() */ ? lhs.url() == rhs.url() && lhs.descriptionUrl() == rhs.descriptionUrl() : true) &&
+           lhs.hasThumbUrl() == rhs.hasThumbUrl() &&
+           (lhs.hasThumbUrl() /* && rhs.hasThumbUrl() */ ? lhs.thumbUrl() == rhs.thumbUrl() && lhs.thumbWidth() == rhs.thumbWidth() && lhs.thumbHeight() == rhs.thumbHeight(): true) &&
            lhs.hasSize() == rhs.hasSize() &&
            (lhs.hasSize() /* && rhs.hasSize() */ ? lhs.size() == rhs.size() && lhs.width() == rhs.width() && lhs.height() == rhs.height() : true) &&
            lhs.hasSha1() == rhs.hasSha1() &&

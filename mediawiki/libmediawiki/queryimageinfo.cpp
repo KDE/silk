@@ -38,7 +38,9 @@ struct QueryImageinfoPrivate {
                           QString const & limit,
                           bool stop,
                           QString const & start,
-                          QString const & end)
+                          QString const & end,
+                          QString width,
+                          QString height)
         : manager(manager)
         , mediawiki(mediawiki)
         , title(title)
@@ -47,6 +49,8 @@ struct QueryImageinfoPrivate {
         , stop(stop)
         , start(start)
         , end(end)
+        , width(width)
+        , height(height)
     {}
 
     QNetworkAccessManager * const manager;
@@ -57,6 +61,8 @@ struct QueryImageinfoPrivate {
     bool stop;
     QString start;
     QString end;
+    QString width;
+    QString height;
 
 };
 
@@ -73,7 +79,9 @@ QueryImageinfo::QueryImageinfo(MediaWiki const & mediawiki, QString const & titl
                                   QString("1"),
                                   true,
                                   QString(),
-                                  QString()))
+                                  QString(),
+                                  QString("0"),
+                                  QString("0")))
 {
     setCapabilities(KJob::NoCapabilities);
 }
@@ -100,6 +108,19 @@ void QueryImageinfo::paramEnd(QDateTime const & end) {
     d->end = end.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
 }
 
+void QueryImageinfo::paramScale(unsigned int width) {
+    Q_ASSERT(width >= 1u);
+    d->width = QString::number(width);
+    d->height = QString::number(0u);
+}
+
+void QueryImageinfo::paramScale(unsigned int width, unsigned int height) {
+    Q_ASSERT(width >= 1u);
+    Q_ASSERT(height >= 1u);
+    d->width = QString::number(width);
+    d->height = QString::number(height);
+}
+
 void QueryImageinfo::start() {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
@@ -119,6 +140,12 @@ void QueryImageinfo::doWorkSendRequest() {
     if (!d->end.isNull()) {
         url.addQueryItem("iiend", d->end);
     }
+    if (d->width != QString("0")) {
+        url.addQueryItem("iiurlwidth", d->width);
+        if (d->height != QString("0")) {
+            url.addQueryItem("iiurlheight", d->height);
+        }
+    }
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
@@ -136,6 +163,9 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
         QString comment;
         QUrl url;
         QUrl descriptionUrl;
+        QUrl thumbUrl;
+        unsigned int thumbWidth;
+        unsigned int thumbHeight;
         unsigned int size;
         unsigned int width;
         unsigned int height;
@@ -156,6 +186,9 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                     comment = reader.attributes().value("comment").toString();
                     url = QUrl(reader.attributes().value("url").toString());
                     descriptionUrl = QUrl(reader.attributes().value("descriptionurl").toString());
+                    thumbUrl = QUrl(reader.attributes().value("thumburl").toString());
+                    thumbWidth = reader.attributes().value("widthurl").toString().toUInt();
+                    thumbHeight = reader.attributes().value("heighturl").toString().toUInt();
                     size = reader.attributes().value("size").toString().toUInt();
                     width = reader.attributes().value("width").toString().toUInt();
                     height = reader.attributes().value("height").toString().toUInt();
@@ -175,6 +208,9 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                                                                            comment,
                                                                            url,
                                                                            descriptionUrl,
+                                                                           thumbUrl,
+                                                                           thumbWidth,
+                                                                           thumbHeight,
                                                                            size,
                                                                            width,
                                                                            height,

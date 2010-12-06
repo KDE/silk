@@ -47,7 +47,7 @@ private slots:
     void testConstructorTitle() {
         // Constructs the fakeserver
         FakeServer fakeserver;
-        fakeserver.setScenario("<?xml version=\"1.0\"?><api><query><pages><page ns=\"6\" title=\"File:Image.bmp\" missing=\"\" imagerepository=\"shared\"><imageinfo><ii timestamp=\"2008-06-06T22:27:45Z\" user=\"User1\" size=\"448798\" width=\"924\" height=\"1203\" url=\"http://url/File:Image.bmp\" descriptionurl=\"http://descriptionurl/File:Image.bmp\" comment=\"Comment1\" sha1=\"00be23585fde01190a0f8c60fc4267ea00f3745d\" mime=\"image/bmp\"><metadata><metadata name=\"Name1\" value=\"Value1\" /><metadata name=\"Name2\" value=\"Value2\" /></metadata></ii></imageinfo></page></pages></query><query-continue><imageinfo iistart=\"2007-06-06T22:27:45Z\" /></query-continue></api>");
+        fakeserver.setScenario("<?xml version=\"1.0\"?><api><query><pages><page ns=\"6\" title=\"File:Image.bmp\" missing=\"\" imagerepository=\"shared\"><imageinfo><ii timestamp=\"2008-06-06T22:27:45Z\" user=\"User1\" size=\"448798\" width=\"924\" height=\"1203\" url=\"http://url/File:Image.bmp\" thumburl=\"http://thumburl/File:Image.bmp\" thumbwidth=\"78\" thumbheight=\"102\" descriptionurl=\"http://descriptionurl/File:Image.bmp\" comment=\"Comment1\" sha1=\"00be23585fde01190a0f8c60fc4267ea00f3745d\" mime=\"image/bmp\"><metadata><metadata name=\"Name1\" value=\"Value1\" /><metadata name=\"Name2\" value=\"Value2\" /></metadata></ii></imageinfo></page></pages></query><query-continue><imageinfo iistart=\"2007-06-06T22:27:45Z\" /></query-continue></api>");
         fakeserver.addScenario("<?xml version=\"1.0\"?><api><query><pages><page ns=\"6\" title=\"File:Image.bmp\" missing=\"\" imagerepository=\"shared\"><imageinfo><ii timestamp=\"2007-06-06T22:27:45Z\" user=\"User2\" size=\"448798\" width=\"924\" height=\"1203\" url=\"http://url/File:Image.bmp\" descriptionurl=\"http://descriptionurl/File:Image.bmp\" comment=\"Comment2\" sha1=\"00be23585fde01190a0f8c60fc4267ea00f3745d\" mime=\"image/bmp\"><metadata><metadata name=\"Name1\" value=\"Value1\" /><metadata name=\"Name2\" value=\"Value2\" /></metadata></ii></imageinfo></page></pages></query></api>");
         fakeserver.startAndWait();
 
@@ -58,6 +58,7 @@ private slots:
         job->paramLimit(1u, false);
         job->paramStart(QDateTime(QDate(2008, 06, 06), QTime(22, 27, 45, 0)));
         job->paramEnd(QDateTime(QDate(2007, 06, 06), QTime(22, 27, 45, 0)));
+        job->paramScale(78u, 102u);
         connect(job, SIGNAL(imageinfos(QList<QueryImageinfo::Imageinfo> const &)), this, SLOT(imageinfosHandle(QList<QueryImageinfo::Imageinfo> const &)));
         job->exec();
 
@@ -74,8 +75,8 @@ private slots:
             QCOMPARE(requests[i].agent, mediawiki.userAgent());
             QCOMPARE(requests[i].type, QString("GET"));
         }
-        QCOMPARE(requests[0].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata&iilimit=1&iistart=2008-06-06T22:27:45Z&iiend=2007-06-06T22:27:45Z"));
-        QCOMPARE(requests[1].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata&iilimit=1&iistart=2007-06-06T22:27:45Z&iiend=2007-06-06T22:27:45Z"));
+        QCOMPARE(requests[0].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata&iilimit=1&iistart=2008-06-06T22:27:45Z&iiend=2007-06-06T22:27:45Z&iiurlwidth=78&iiurlheight=102"));
+        QCOMPARE(requests[1].value, QString("?format=xml&action=query&titles=File:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata&iilimit=1&iistart=2007-06-06T22:27:45Z&iiend=2007-06-06T22:27:45Z&iiurlwidth=78&iiurlheight=102"));
 
         // Test pages received
         QList<QList<QueryImageinfo::Imageinfo> > imageinfosExpected;
@@ -88,6 +89,9 @@ private slots:
                                          QString("Comment1"),
                                          QUrl("http://url/File:Image.bmp"),
                                          QUrl("http://descriptionurl/File:Image.bmp"),
+                                         QUrl("http://thumburl/File:Image.bmp"),
+                                         78u,
+                                         102u,
                                          448798u,
                                          924u,
                                          1203u,
@@ -102,6 +106,9 @@ private slots:
                                          QString("Comment2"),
                                          QUrl("http://url/File:Image.bmp"),
                                          QUrl("http://descriptionurl/File:Image.bmp"),
+                                         QUrl(),
+                                         0u,
+                                         0u,
                                          448798u,
                                          924u,
                                          1203u,
