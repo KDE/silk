@@ -26,6 +26,7 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
+#include <QtCore/QVector>
 
 #include <KDE/KJob>
 
@@ -463,16 +464,101 @@ public:
 
     };
 
+    /**
+     * @brief An image.
+     */
+    struct Image {
+
+    public:
+
+        /**
+         * @brief Construct an image.
+         * @param namespaceId the image's namespace id
+         * @param title the image's title
+         * @param titleNoNormalized he image's title no normalized
+         * @param imageRepository the image's repository
+         * @param imageinfos the image's info
+         */
+        Image(unsigned int namespaceId,
+              QString const & title,
+              QString const & titleNoNormalized,
+              QString const & imageRepository,
+              QVector<Imageinfo> const & imageinfos)
+              : m_namespaceId(namespaceId)
+              , m_title(title)
+              , m_titleNoNormalized(titleNoNormalized)
+              , m_imageRepository(imageRepository)
+              , m_imageinfos(imageinfos)
+        {}
+
+        /**
+         * @brief Returns the image's namespace id.
+         * @return the image's namespace id
+         */
+        inline unsigned int namespaceId() const { return m_namespaceId; }
+
+        /**
+         * @brief Returns the image's title.
+         * @return the image's title
+         */
+        inline QString title() const { return m_title; }
+
+        /**
+         * @brief Returns the image's title no normalized.
+         * @return the image's title no normalized
+         * @post #isNormalized() ? return != #title() : return == #title()
+         */
+        inline QString titleNoNormalized() const {
+            Q_ASSERT(isNormalized() ? m_titleNoNormalized != title() : m_titleNoNormalized == title());
+            return m_titleNoNormalized;
+        }
+
+        /**
+         * @brief Returns true if is normalized, else false.
+         * @return true if is normalized, else false
+         */
+        inline bool isNormalized() const { return m_title != m_titleNoNormalized; }
+
+        /**
+         * @brief Returns the image's repository.
+         * @return the image's repository
+         * @pre !isMissing()
+         */
+        inline QString imageRepository() const { Q_ASSERT(!isMissing()); return m_imageRepository; }
+
+        /**
+         * @brief Returns the image's info.
+         * @return the image's info
+         * @pre !isMissing()
+         */
+        inline QVector<Imageinfo> const & imageinfos() const { Q_ASSERT(!isMissing()); return m_imageinfos; }
+
+        /**
+         * @brief Returns true if is missing, else false.
+         * @return true if is missing, else false
+         */
+        inline bool isMissing() const { return m_imageRepository.isEmpty(); }
+
+    private:
+
+        unsigned int m_namespaceId;
+        QString m_title;
+        QString m_titleNoNormalized;
+        QString m_imageRepository;
+        QVector<Imageinfo> m_imageinfos;
+
+    };
+
 signals:
 
     /**
-     * @brief Provides a list of all imageinfos.
+     * @brief Provides a list of image.
      *
      * This signal can be emited several times.
      *
-     * @param imageinfos list of all imageinfos
+     * @param imageinfos a list of image
      */
-    void imageinfos(QList<QueryImageinfo::Imageinfo> const & imageinfos);
+    void images(QList<QueryImageinfo::Image> const & images);
 
 };
 
@@ -501,6 +587,21 @@ inline bool operator==(QueryImageinfo::Imageinfo const & lhs, QueryImageinfo::Im
            (lhs.hasMime() /* && rhs.hasMime() */ ? lhs.mime() == rhs.mime() : true) &&
            lhs.hasMetadata() == rhs.hasMetadata() &&
            (lhs.hasMetadata() /* && rhs.hasMetadata() */ ? lhs.metadata() == rhs.metadata() : true);
+}
+
+/**
+ * @brief Returns true if lhs and rhs are equal, else false.
+ * @param lhs left-hand side image info
+ * @param rhs right-hand side image info
+ * @return true if lhs and rhs are equal, else false
+ */
+inline bool operator==(QueryImageinfo::Image const & lhs, QueryImageinfo::Image const & rhs) {
+    return lhs.namespaceId() == rhs.namespaceId() &&
+           lhs.title() == rhs.title() &&
+           lhs.titleNoNormalized() == rhs.titleNoNormalized() &&
+           lhs.isNormalized() == rhs.isNormalized() &&
+           lhs.isMissing() == rhs.isMissing() &&
+           (!lhs.isMissing() /* && rhs.isMissing() */ ? lhs.imageRepository() == rhs.imageRepository() && lhs.imageinfos() == rhs.imageinfos() : true);
 }
 
 }

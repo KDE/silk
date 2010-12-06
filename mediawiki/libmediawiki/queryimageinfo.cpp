@@ -157,7 +157,11 @@ void QueryImageinfo::doWorkSendRequest() {
 void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
     if (reply->error() == QNetworkReply::NoError) {
         QXmlStreamReader reader(reply);
-        QList<QueryImageinfo::Imageinfo> imageinfosReceived;
+        QList<QueryImageinfo::Image> imagesReceived;
+        unsigned int namespaceId;
+        QString title;
+        QString imageRepository;
+        QList<QueryImageinfo::Imageinfo> imageinfos;
         QDateTime timestamp;
         QString user;
         QString comment;
@@ -172,12 +176,21 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
         QString sha1;
         QString mime;
         QHash<QString, QVariant> metadata;
+        QMap<QString, QString> normalized;
         d->start = QString();
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {
-                if (reader.name() == "imageinfo") {
-                    if (!reader.attributes().value("iistart").isNull()) {
+                if (reader.name() == "n") {
+                    normalized[reader.attributes().value("to").toString()] = reader.attributes().value("from").toString();
+                } else if (reader.name() == "page") {
+                    namespaceId = reader.attributes().value("ns").toString().toUInt();
+                    title = reader.attributes().value("title").toString();
+                    imageRepository = reader.attributes().value("imagerepository").toString();
+                } else if (reader.name() == "imageinfo") {
+                    if (reader.attributes().value("iistart").isNull()) {
+                        imageinfos.clear();
+                    } else {
                         d->start = reader.attributes().value("iistart").toString();
                     }
                 } else if (reader.name() == "ii") {
@@ -202,28 +215,34 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                     }
                 }
             } else if (token == QXmlStreamReader::EndElement) {
-                if (reader.name() == "ii") {
-                    imageinfosReceived.push_back(QueryImageinfo::Imageinfo(timestamp,
-                                                                           user,
-                                                                           comment,
-                                                                           url,
-                                                                           descriptionUrl,
-                                                                           thumbUrl,
-                                                                           thumbWidth,
-                                                                           thumbHeight,
-                                                                           size,
-                                                                           width,
-                                                                           height,
-                                                                           sha1,
-                                                                           mime,
-                                                                           metadata,
-                                                                           d->properties));
+                if (reader.name() == "page") {
+                    imagesReceived.push_back(QueryImageinfo::Image(namespaceId,
+                                                           title,
+                                                           normalized.contains(title) ? normalized[title] : title,
+                                                           imageRepository,
+                                                           QVector<QueryImageinfo::Imageinfo>::fromList(imageinfos)));
+                } else if (reader.name() == "ii") {
+                    imageinfos.push_back(QueryImageinfo::Imageinfo(timestamp,
+                                                                   user,
+                                                                   comment,
+                                                                   url,
+                                                                   descriptionUrl,
+                                                                   thumbUrl,
+                                                                   thumbWidth,
+                                                                   thumbHeight,
+                                                                   size,
+                                                                   width,
+                                                                   height,
+                                                                   sha1,
+                                                                   mime,
+                                                                   metadata,
+                                                                   d->properties));
                 }
             }
         }
         if (!reader.hasError()) {
             disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-            emit imageinfos(imageinfosReceived);
+            emit images(imagesReceived);
             if (d->start.isNull() || d->stop) {
                 setError(KJob::NoError);
             }
