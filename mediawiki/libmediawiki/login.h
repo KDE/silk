@@ -147,7 +147,7 @@ public:
      * @param lgpassword the QObject parent
      * @param parent the QObject parent
      */
-    explicit Login( MediaWiki const & media, const QString & lgname, const QString & lgpassword, QObject * parent = 0 );
+    explicit Login( MediaWiki & media, const QString & lgname, const QString & lgpassword, QObject * parent = 0 );
 
     /**
      * @brief Destroys the Login job.
@@ -164,25 +164,6 @@ public:
      * @param error the error sent by the API.
      */
     int getError(const QString & error);
-
-    /**
-     * @brief Return cookies.
-     */
-    QList<QNetworkCookie>  cookies();
-
-signals:
-
-    /**
-     * @brief Emitted when a connection request has been completed.
-     * @param success true if the request was completed successfully.
-     */
-    void resultLogin( KJob * job );
-
-    /**
-     * @brief Emitted when a connection has been completed.
-     * @param success true if the connection was completed successfully.
-     */
-    void resultToken( KJob * job );
 
 private slots:
 
@@ -202,14 +183,7 @@ private slots:
      * else if the attribute value is equal to "Success", the user is logged in
      * @param success true if the connection was completed successfully.
      */
-    void finishedLogin( QNetworkReply *reply );
-
-    /**
-     * @brief Reads the xml
-     * if the attribute value is equal to "Success", the user is logged in
-     * @param success true if the connection was completed successfully.
-     */
-    void finishedToken( QNetworkReply *reply );
+    void doWorkProcessReply(QNetworkReply * reply);
 
 private:
 

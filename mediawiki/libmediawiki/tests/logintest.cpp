@@ -59,7 +59,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /></api>";
+        senario = "<api><login result=\"Success\" lguserid=\"12345\" lgusername=\"alexTest\" lgtoken=\"b5780b6e2f27e20b450921d9461010b4\" cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>";
         m_server->addScenario(senario, cookie);
         m_server->startAndWait();
 
@@ -71,8 +71,8 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(login.cookies().isEmpty(), false);
-        QVERIFY(login.error() == Login::NoError);
+        QCOMPARE(m_mediaWiki->cookies().isEmpty(), false);
+        QCOMPARE(login.error(), (int)Login::NoError);
     }
 
     void loginTestAttribute()
@@ -94,11 +94,11 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(login.cookies().isEmpty(), false);
-        QVERIFY(login.error()      == Login::NoError);
+        QCOMPARE(m_mediaWiki->cookies().isEmpty(), false);
+        QCOMPARE(login.error(), (int)Login::NoError);
         QVERIFY(result.lgname      == QString("alexTest"));
         QVERIFY(result.lgpassword  == QString("test"));
-        QVERIFY(result.lgsessionid == QString("17ab96bd8ffbe8ca58a78657a918558e"));
+        QCOMPARE(result.lgsessionid, QString("17ab96bd8ffbe8ca58a78657a918558e"));
         QVERIFY(result.lgtoken     == QString("b5780b6e2f27e20b450921d9461010b4"));
     }
 
@@ -117,7 +117,7 @@ private slots:
         login.exec();
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(login.error(), (int)Login::NoError);
-        QCOMPARE(login.cookies().isEmpty(), false);
+        QCOMPARE(m_mediaWiki->cookies().isEmpty(), false);
     }
 
     void loginTestFalseXMLLogin()
@@ -145,7 +145,8 @@ private slots:
     void loginTestConnectionAbortLogin()
     {
         loginCount = 0;
-        Login login(mediawiki::MediaWiki(QUrl("http://127.0.0.2:910")), "alexTest", "test");
+        MediaWiki media(QUrl("http://127.0.0.2:910"));
+        Login login(media, "alexTest", "test");
 
         connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
         login.exec();
@@ -157,7 +158,7 @@ private slots:
     void loginTestNoNameLogin()
     {
         loginCount = 0;
-        QString senario("<api><error code=\"NoName\" info=\"\" /> </api>" );
+        QString senario("<api><login result=\"NoName\" info=\"\" /> </api>" );
         m_server->setScenario(senario);
         m_server->startAndWait();
 
@@ -176,7 +177,7 @@ private slots:
     void loginTestIllegalLogin()
     {
         loginCount = 0;
-        QString senario("<api><error code=\"Illegal\" info=\"\" /> </api>" );
+        QString senario("<api><login result=\"Illegal\" info=\"\" /> </api>" );
         m_server->setScenario(senario);
         m_server->startAndWait();
 
@@ -195,7 +196,7 @@ private slots:
     void loginTestNotExistsLogin()
     {
         loginCount = 0;
-        QString senario("<api><error code=\"NotExists\" info=\"\" /> </api>" );
+        QString senario("<api><login result=\"NotExists\" info=\"\" /> </api>" );
         m_server->setScenario(senario);
         m_server->startAndWait();
 
@@ -214,7 +215,7 @@ private slots:
     void loginTestEmptyPassLogin()
     {
         loginCount = 0;
-        QString senario("<api><error code=\"EmptyPass\" info=\"\" /> </api>" );
+        QString senario("<api><login result=\"EmptyPass\" info=\"\" /> </api>" );
         m_server->setScenario(senario);
         m_server->startAndWait();
 
@@ -233,7 +234,7 @@ private slots:
     void loginTestWrongPassLogin()
     {
         loginCount = 0;
-        QString senario("<api><error code=\"WrongPass\" info=\"\" /> </api>" );
+        QString senario("<api><login result=\"WrongPass\" info=\"\" /> </api>" );
         m_server->setScenario(senario);
         m_server->startAndWait();
 
@@ -252,7 +253,7 @@ private slots:
     void loginTestWrongPluginPassLogin()
     {
         loginCount = 0;
-        QString senario("<api><error code=\"WrongPluginPass\" info=\"\" /> </api>" );
+        QString senario("<api><login result=\"WrongPluginPass\" info=\"\" /> </api>" );
         m_server->setScenario(senario);
         m_server->startAndWait();
 
@@ -271,7 +272,7 @@ private slots:
     void loginTestCreateBlockedLogin()
     {
         loginCount = 0;
-        QString senario("<api><error code=\"CreateBlocked\" info=\"\" /> </api>" );
+        QString senario("<api><login result=\"CreateBlocked\" info=\"\" /> </api>" );
         m_server->setScenario(senario);
         m_server->startAndWait();
 
@@ -290,7 +291,7 @@ private slots:
     void loginTestThrottledLogin()
     {
         loginCount = 0;
-        QString senario("<api><error code=\"Throttled\" info=\"\" /> </api>" );
+        QString senario("<api><login result=\"Throttled\" info=\"\" /> </api>" );
         m_server->setScenario(senario);
         m_server->startAndWait();
 
@@ -309,7 +310,7 @@ private slots:
     void loginTestBlockedLogin()
     {
         loginCount = 0;
-        QString senario("<api><error code=\"Blocked\" info=\"\" /> </api>" );
+        QString senario("<api><login result=\"Blocked\" info=\"\" /> </api>" );
         m_server->setScenario(senario);
         m_server->startAndWait();
 
@@ -323,25 +324,6 @@ private slots:
         QCOMPARE(serverrequest.value, this->request);
 
         QCOMPARE(login.error(), (int)Login::Blocked);
-    }
-
-    void loginTestNeedTokenLogin()
-    {
-        loginCount = 0;
-        QString senario("<api><error code=\"NeedToken\" info=\"\" /> </api>" );
-        m_server->setScenario(senario);
-        m_server->startAndWait();
-
-        Login login(*m_mediaWiki, "alexTest", "test");
-
-        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
-        login.exec();
-        FakeServer::Request serverrequest = m_server->getRequest()[0];
-        QCOMPARE(this->loginCount, 1);
-        QCOMPARE(serverrequest.type, QString("POST"));
-        QCOMPARE(serverrequest.value, this->request);
-
-        QCOMPARE(login.error(), (int)Login::NeedToken);
     }
 
     void loginTestFalseXMLToken()
@@ -372,7 +354,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"NoName\" info=\"\" /> </api>" ;
+        senario = "<api><login result=\"NoName\" info=\"\" /> </api>" ;
         m_server->addScenario(senario);
         m_server->startAndWait();
 
@@ -394,7 +376,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"Illegal\" info=\"\" /> </api>" ;
+        senario = "<api><login result=\"Illegal\" info=\"\" /> </api>" ;
         m_server->addScenario(senario);
         m_server->startAndWait();
 
@@ -416,7 +398,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"NotExists\" info=\"\" /> </api>" ;
+        senario = "<api><login result=\"NotExists\" info=\"\" /> </api>" ;
         m_server->addScenario(senario);
         m_server->startAndWait();
 
@@ -438,7 +420,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"EmptyPass\" info=\"\" /> </api>" ;
+        senario = "<api><login result=\"EmptyPass\" info=\"\" /> </api>" ;
         m_server->addScenario(senario);
         m_server->startAndWait();
 
@@ -460,7 +442,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"WrongPass\" info=\"\" /> </api>" ;
+        senario = "<api><login result=\"WrongPass\" info=\"\" /> </api>" ;
         m_server->addScenario(senario);
         m_server->startAndWait();
 
@@ -482,7 +464,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"WrongPluginPass\" info=\"\" /> </api>" ;
+        senario = "<api><login result=\"WrongPluginPass\" info=\"\" /> </api>" ;
         m_server->addScenario(senario);
         m_server->startAndWait();
 
@@ -504,7 +486,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"CreateBlocked\" info=\"\" /> </api>" ;
+        senario = "<api><login result=\"CreateBlocked\" info=\"\" /> </api>" ;
         m_server->addScenario(senario);
         m_server->startAndWait();
 
@@ -526,7 +508,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"Throttled\" info=\"\" /> </api>" ;
+        senario = "<api><login result=\"Throttled\" info=\"\" /> </api>" ;
         m_server->addScenario(senario);
         m_server->startAndWait();
 
@@ -548,7 +530,7 @@ private slots:
         QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
         QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
         m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"Blocked\" info=\"\" /> </api>" ;
+        senario = "<api><login result=\"Blocked\" info=\"\" /> </api>" ;
         m_server->addScenario(senario);
         m_server->startAndWait();
 
@@ -562,28 +544,6 @@ private slots:
         QCOMPARE(serverrequest.value, this->request);
 
         QCOMPARE(login.error(), (int)Login::Blocked);
-    }
-
-    void loginTestNeedTokenToken()
-    {
-        loginCount = 0;
-        QString senario("<api><login result=\"NeedToken\" token=\"b5780b6e2f27e20b450921d9461010b4\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\" /> </api>" );
-        QString cookie( "cookieprefix=\"enwiki\" sessionid=\"17ab96bd8ffbe8ca58a78657a918558e\"");
-        m_server->setScenario(senario, cookie);
-        senario = "<api><error code=\"NeedToken\" info=\"\" /> </api>" ;
-        m_server->addScenario(senario);
-        m_server->startAndWait();
-
-        Login login(*m_mediaWiki, "alexTest", "test");
-
-        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
-        login.exec();
-        FakeServer::Request serverrequest = m_server->getRequest()[0];
-        QCOMPARE(this->loginCount, 1);
-        QCOMPARE(serverrequest.type, QString("POST"));
-        QCOMPARE(serverrequest.value, this->request);
-
-        QCOMPARE(login.error(), (int)Login::NeedToken);
     }
 
     void cleanupTestCase()
