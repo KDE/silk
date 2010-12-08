@@ -77,7 +77,7 @@ QueryImageinfo::QueryImageinfo(MediaWiki const & mediawiki, QString const & titl
                                   title,
                                   QueryImageinfo::NO_PROPERTY,
                                   QString("1"),
-                                  true,
+                                  false,
                                   QString(),
                                   QString(),
                                   QString("0"),
