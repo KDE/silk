@@ -42,6 +42,9 @@ bool PictureOfTheDayEngine::sourceRequestEvent(QString const & name) {
 }
 
 bool PictureOfTheDayEngine::updateSourceEvent(QString const & source) {
+    if (sources().contains(source)) {
+        return true;
+    }
     QStringList sourceSplit = source.split(':');
     if (sourceSplit.size() != 2 || !m_mediawiki.contains(sourceSplit[0])) {
         return false;
