@@ -22,16 +22,17 @@
 
 #include <QtCore/QString>
 #include <QtCore/QUrl>
-
+#include <QNetworkAccessManager>
+#include <QNetworkCookieJar>
 namespace mediawiki
 {
 
 /**
  * @brief Provides access to wiki powered by MediaWiki.
  */
-class MediaWiki
+    class MediaWiki:QObject
 {
-
+Q_OBJECT
 public:
 
     /**
@@ -59,6 +60,18 @@ public:
      * @brief The default user agent.
      */
     static QString const DEFAULT_USER_AGENT;
+
+    /**
+     * @brief Returns the connection manager.
+     * @return the connection manager
+     */
+    QNetworkAccessManager* manager();
+
+    /**
+     * @brief Returns the cookies created by the login.
+     * @return the cookies created by the login
+     */
+    QList<QNetworkCookie>  cookies() const;
 
 private:
 

@@ -24,12 +24,12 @@ namespace mediawiki
 
 struct MediaWikiPrivate {
 
-    MediaWikiPrivate(QUrl const & url, QString const & userAgent) : url(url), userAgent(userAgent) {}
+    MediaWikiPrivate(QNetworkAccessManager *  manager, QUrl const & url, QString const & userAgent) : manager(manager), url(url), userAgent(userAgent) {}
 
     QUrl const url;
 
     QString const userAgent;
-
+    QNetworkAccessManager * manager;
 };
 
 }
@@ -37,7 +37,7 @@ struct MediaWikiPrivate {
 using namespace mediawiki;
 
 MediaWiki::MediaWiki(QUrl const & url, QString const & customUserAgent)
-    : d(new MediaWikiPrivate(url, customUserAgent.isEmpty() ? MediaWiki::DEFAULT_USER_AGENT : customUserAgent + "-" + MediaWiki::DEFAULT_USER_AGENT))
+    : d(new MediaWikiPrivate(new QNetworkAccessManager(this), url, customUserAgent.isEmpty() ? MediaWiki::DEFAULT_USER_AGENT : customUserAgent + "-" + MediaWiki::DEFAULT_USER_AGENT))
 {}
 
 QUrl MediaWiki::url() const
@@ -50,4 +50,16 @@ QString MediaWiki::userAgent() const
     return d->userAgent;
 }
 
+QNetworkAccessManager* MediaWiki::manager()
+{
+    return d->manager;
+}
+
+QList<QNetworkCookie> MediaWiki::cookies() const
+{
+    return d->manager->cookieJar()->cookiesForUrl(d->url);
+}
+
 QString const MediaWiki::DEFAULT_USER_AGENT = "mediawiki-silk";
+
+
