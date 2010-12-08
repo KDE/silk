@@ -35,9 +35,8 @@ namespace mediawiki
     struct QueryInfoPrivate
     {
 
-        QueryInfoPrivate(QNetworkAccessManager * const manager, int id, QueryInfo::IdType type, QString token, MediaWiki const & mediawiki)
-            : manager(manager)
-            , mediawiki(mediawiki)
+        QueryInfoPrivate(int id, QueryInfo::IdType type, QString token, MediaWiki & mediawiki)
+            : mediawiki(mediawiki)
             , id(id)
             , type(type)
             , token(token)
@@ -48,9 +47,8 @@ namespace mediawiki
                 requestParameter["revids"] = QString::number(id);
         }
 
-        QueryInfoPrivate(QNetworkAccessManager * const manager, QString title, QString token, MediaWiki const & mediawiki)
-            : manager(manager)
-            , mediawiki(mediawiki)
+        QueryInfoPrivate(QString title, QString token, MediaWiki & mediawiki)
+            : mediawiki(mediawiki)
             , id(0)
             , type(QueryInfo::noid)
             , token(token)
@@ -58,8 +56,7 @@ namespace mediawiki
             requestParameter["titles"] = title;
         }
 
-        QNetworkAccessManager *manager;
-        MediaWiki const & mediawiki;
+        MediaWiki & mediawiki;
         QMap<QString, QString> requestParameter;
         int id;
         QueryInfo::IdType type;
@@ -68,17 +65,17 @@ namespace mediawiki
 }
 
 using namespace mediawiki;
-QueryInfo::QueryInfo(MediaWiki const & mediawiki, QString const & titre, QString const & token, QObject *parent)
+QueryInfo::QueryInfo(MediaWiki & mediawiki, QString const & titre, QString const & token, QObject *parent)
     : KJob(parent)
-    , d(new QueryInfoPrivate(new QNetworkAccessManager(this), titre, token, mediawiki))
+    , d(new QueryInfoPrivate(titre, token, mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);
 }
 
 
-QueryInfo::QueryInfo(MediaWiki const & mediawiki, unsigned int id, QueryInfo::IdType type, QString const & token, QObject *parent)
+QueryInfo::QueryInfo(MediaWiki & mediawiki, unsigned int id, QueryInfo::IdType type, QString const & token, QObject *parent)
     : KJob(parent)
-    , d(new QueryInfoPrivate(new QNetworkAccessManager(this), id, type, token, mediawiki))
+    , d(new QueryInfoPrivate(id, type, token, mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);
 }
@@ -118,9 +115,15 @@ void QueryInfo::doWorkSendRequest()
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+    QByteArray cookie = "";
+    for(int i = 0 ; i<d->mediawiki.cookies().size();i++){
+        cookie += d->mediawiki.cookies().at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
+        cookie += ";";
+    }
+    request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->manager->get(request);
-    connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->mediawiki.manager()->get(request);
+    connect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 

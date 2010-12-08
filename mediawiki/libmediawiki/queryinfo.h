@@ -76,7 +76,7 @@ public:
      * @param token the page token
      * @param parent the QObject parent
      */
-    explicit QueryInfo(MediaWiki const & mediawiki, QString const & name, QString const & token, QObject *parent = 0);
+    explicit QueryInfo(MediaWiki & mediawiki, QString const & name, QString const & token, QObject *parent = 0);
 
     /**
      * @brief Constructs a QueryInfo job.
@@ -85,7 +85,7 @@ public:
      * @param token the page token
      * @param parent the QObject parent
      */
-    explicit QueryInfo(MediaWiki const & mediawiki, unsigned int id, IdType type, QString const & token, QObject *parent = 0);
+    explicit QueryInfo(MediaWiki & mediawiki, unsigned int id, IdType type, QString const & token, QObject *parent = 0);
 
     /**
      * @brief Destroys the QuerySiteInfoGeneral job.
