@@ -1,10 +1,15 @@
 #ifndef PictureOfTheDay_HEADER
 #define PictureOfTheDay_HEADER
 // We need the Plasma Applet headers
+#include "containwidget.h"
+
 #include <KIcon>
 
 #include <Plasma/Applet>
 #include <Plasma/Svg>
+
+#include <QGraphicsLinearLayout>
+#include <QGraphicsWidget>
 
 
 class QSizeF;
@@ -35,8 +40,8 @@ class PlasmaPictureOfTheDay : public Plasma::Applet
     private:
         Picture* m_picture;
         Setting* m_settingDialog;
-        QString m_provider;
-
+        ContainWidget* m_containWidget;
+        QString m_provider;               
 };
 
 #endif

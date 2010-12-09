@@ -4,23 +4,31 @@
 #include <QSizeF>
 #include <QTimer>
 #include <QDebug>
+#include <QGraphicsProxyWidget>
 
 #include <KConfigDialog>
 
 #include <plasma/svg.h>
 #include <plasma/theme.h>
+#include <plasma/widgets/label.h>
 #include "picture.h"
 #include "setting.h"
 
+#include <QGraphicsScene>
+
 
 PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject *parent, const QVariantList &args)
-    : Plasma::Applet(parent, args),m_picture(new Picture(this))
+    : Plasma::Applet(parent, args),m_picture(new Picture(this, false)),m_containWidget(new ContainWidget(this))
 {
     setHasConfigurationInterface(true);
     setBackgroundHints(DefaultBackground);
-    resize(200, 300);
+
+    resize(250,300);
+    this->m_containWidget->resize(this->size());    
+
     connect(m_picture,SIGNAL(pictureUpdated()),this,SLOT(updatePicture()));
-    m_provider = QString("wppotd:");
+    m_provider = QString("wppotd:");    
+
 }
 
 void PlasmaPictureOfTheDay::updatePicture()
@@ -52,37 +60,21 @@ void PlasmaPictureOfTheDay::reloadPicture()
     identifier = m_provider + QDate::currentDate().toString(Qt::ISODate);
     m_picture->setCurrentDate(QDate::currentDate());
     engine->connectSource(identifier, m_picture);
+
+    this->m_containWidget->setDate(m_picture->getCurrentDate().toString("dddd dd MMMM"));
+    this->m_containWidget->setImage(m_picture);
+    this->m_containWidget->setText(QString::fromUtf8("Légi, Patres colendissimi, in Arabum monumentis, interrogatum Abdalam 1 Sarracenum, quid in hac quasi mundana scaena"));
 }
 
 void PlasmaPictureOfTheDay::paintInterface(QPainter *p,
         const QStyleOptionGraphicsItem *option, const QRect &contentsRect)
-{
-    Q_UNUSED(option)
-    p->setRenderHint(QPainter::SmoothPixmapTransform);
-    p->setRenderHint(QPainter::Antialiasing);
-    QPixmap pix(m_picture->getPicture());
-    if(pix.width() > pix.height() && this->size().height() > this->size().width())
-    {
-        this->resize(this->size().height(),this->size().width());
-    }
-    pix = pix.scaled(QSize((int)contentsRect.width()-34, (int)contentsRect.height()-74),Qt::KeepAspectRatio);
-
-    p->drawText(contentsRect,
-                Qt::AlignTop | Qt::AlignHCenter,
-                m_picture->getCurrentDate().toString("dddd dd MMMM"));
-    p->drawPixmap((int)contentsRect.left()+(contentsRect.size().width()-pix.size().width())/2, (int)contentsRect.top()+17,pix);
-    p->save();
-    QString text("Légi, Patres colendissimi, in Arabum monumentis, interrogatum Abdalam 1 Sarracenum, quid in hac quasi mundana scaena");
-
-    p->drawText(contentsRect,
-                Qt::AlignBottom | Qt::AlignJustify | Qt::TextWordWrap,
-                text.toUtf8());
-    p->restore();
+{    
+    m_containWidget->resize(this->size());
+    m_containWidget->paint(p,option,0);
 }
 
 void PlasmaPictureOfTheDay::createConfigurationInterface(KConfigDialog *parent)
 {
-    qDebug()<<"createConfigurationInterface";
     m_settingDialog = new Setting(parent);
     parent->addPage(m_settingDialog->settingWidget, i18n("Picture of the day sources"), icon());
     parent->setDefaultButton(KDialog::Ok);
