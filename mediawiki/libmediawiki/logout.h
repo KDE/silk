@@ -51,7 +51,7 @@ public:
      * @brief Constructs a Logout job.
      * @param parent the QObject parent
      */
-    explicit Logout(MediaWiki const & mediawiki, QObject *parent = 0);
+    explicit Logout(MediaWiki & mediawiki, QObject *parent = 0);
 
     /**
      * @brief Destroys the Logout job.
@@ -62,11 +62,6 @@ public:
      * @brief Starts the job asynchronously.
      */
     virtual void start();
-
-    /**
-     * @brief Return cookies.
-     */
-    QList<QNetworkCookie>  cookies();
 
 private slots:
 

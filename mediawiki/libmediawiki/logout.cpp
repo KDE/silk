@@ -33,22 +33,20 @@ namespace mediawiki
     struct LogoutPrivate
     {
 
-        LogoutPrivate(QNetworkAccessManager * const manager, MediaWiki const & mediawiki)
-            : manager(manager)
-            , mediawiki(mediawiki)
+        LogoutPrivate(MediaWiki & mediawiki)
+            : mediawiki(mediawiki)
         {}
 
-        QNetworkAccessManager *manager;
-        MediaWiki const & mediawiki;
+        MediaWiki & mediawiki;
 
     };
 }
 
 using namespace mediawiki;
 
-Logout::Logout(MediaWiki const & mediawiki, QObject *parent)
+Logout::Logout(MediaWiki & mediawiki, QObject *parent)
     : KJob(parent)
-    , d(new LogoutPrivate(new QNetworkAccessManager(this), mediawiki))
+    , d(new LogoutPrivate(mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);
 }
@@ -75,12 +73,18 @@ void Logout::doWorkSendRequest()
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "logout");
+    QByteArray cookie = "";
+    for(int i = 0 ; i<d->mediawiki.cookies().size();i++){
+        cookie += d->mediawiki.cookies().at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
+        cookie += ";";
+    }
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+    request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->manager->get(request);
-    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->mediawiki.manager()->get(request);
+    connect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 
@@ -92,19 +96,9 @@ void Logout::doWorkProcessReply(QNetworkReply * reply)
         return;
     }
     this->setError(KJob::NoError);
-    qDebug()<<"Logout ";
-    d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url()).clear();
+    //qDebug()<<"Logout ";
+    d->mediawiki.manager()->cookieJar()->cookiesForUrl(d->mediawiki.url()).clear();
     reply->close();
     reply->deleteLater();
     emitResult();
-}
-
-QList<QNetworkCookie> Logout::cookies()
-{
-    if (d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url()).isEmpty()) {
-        return QList<QNetworkCookie>();
-    }
-    else {
-        return d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());
-    }
 }
