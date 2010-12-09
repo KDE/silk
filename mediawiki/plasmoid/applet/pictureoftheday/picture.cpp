@@ -28,7 +28,6 @@ void Picture::dataUpdated(const QString &name, const Plasma::DataEngine::Data &d
 void Picture::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->drawPixmap(0,0,this->getPicture().scaled(this->size().width(),this->size().height(),Qt::KeepAspectRatio));
-
 }
 
 void Picture::firstPicture(){}

@@ -81,6 +81,8 @@ void PlasmaPictureOfTheDay::paintInterface(QPainter *p,
 void PlasmaPictureOfTheDay::createConfigurationInterface(KConfigDialog *parent)
 {
     m_settingDialog = new Setting(parent);
+    Plasma::DataEngine *engine = dataEngine("pictureoftheday");
+    engine->connectSource(QString("mediawiki"), m_settingDialog);
     parent->addPage(m_settingDialog->settingWidget, i18n("Picture of the day sources"), icon());
     parent->setDefaultButton(KDialog::Ok);
     parent->showButtonSeparator(true);
@@ -90,28 +92,13 @@ void PlasmaPictureOfTheDay::createConfigurationInterface(KConfigDialog *parent)
 
 void PlasmaPictureOfTheDay::configAccepted()
 {
-    Plasma::DataEngine *engine = dataEngine("potd");
-    QString currentData = m_settingDialog->settingUI.comboBox->itemText(m_settingDialog->settingUI.comboBox->currentIndex());
-    if( currentData == QString("Wikipedia") && m_provider != QString("wppotd:"))
-    {
-        QString identifier = m_provider + m_picture->getCurrentDate().toString(Qt::ISODate);
-        engine->disconnectSource(identifier, m_picture);
-        m_provider = QString("wppotd:");
-        identifier = m_provider + QDate::currentDate().toString(Qt::ISODate);
-        m_picture->setCurrentDate(QDate::currentDate());
-        engine->connectSource(identifier, m_picture);
-
-    }
-    if( currentData == QString("Wikimedia") && m_provider != QString("wcpotd:"))
-    {
-        QString identifier = m_provider + m_picture->getCurrentDate().toString(Qt::ISODate);
-        engine->disconnectSource(identifier, m_picture);
-        m_provider = QString("wcpotd:");
-        identifier = m_provider + QDate::currentDate().toString(Qt::ISODate);
-        m_picture->setCurrentDate(QDate::currentDate());
-        engine->connectSource(identifier, m_picture);
-
-    }
+    Plasma::DataEngine *engine = dataEngine("pictureoftheday");
+    QString identifier = m_provider + ':' + m_picture->getCurrentDate().toString(Qt::ISODate);
+    engine->disconnectSource(identifier, m_picture);
+    m_provider = m_settingDialog->settingUI.comboBox->itemData(m_settingDialog->settingUI.comboBox->currentIndex()).toString();
+    identifier = m_provider + ':' + QDate::currentDate().toString(Qt::ISODate);
+    m_picture->setCurrentDate(QDate::currentDate());
+    engine->connectSource(identifier, m_picture);
     update(rect());
 }
 

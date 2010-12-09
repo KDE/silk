@@ -2,6 +2,7 @@
 #define SETTING_H
 
 #include <QWidget>
+#include <Plasma/DataEngine>
 
 #include "ui_setting.h"
 
@@ -16,6 +17,7 @@ public:
 signals:
 
 public slots:
+    void dataUpdated(const QString &name, const Plasma::DataEngine::Data &data);
 private:
 };
 

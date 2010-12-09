@@ -52,6 +52,13 @@ private slots:
 
 private:
 
+    struct MediaWikiInfo {
+        MediaWikiInfo() {}
+        MediaWikiInfo(QUrl const & url, QString const & page) : url(url), page(page) {}
+        QUrl url;
+        QString page;
+    };
+
     bool searchImages(MediaWiki const & mediawiki, QString const & date);
 
     bool searchImageinfo(MediaWiki const & mediawiki);
@@ -64,7 +71,7 @@ private:
 
     QueryImageinfo::Imageinfo m_imageinfo;
 
-    QMap<QString, QUrl> m_mediawiki;
+    QMap<QString, MediaWikiInfo> m_mediawiki;
 
 };
 

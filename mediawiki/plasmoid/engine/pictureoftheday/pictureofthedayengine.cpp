@@ -30,12 +30,14 @@ PictureOfTheDayEngine::PictureOfTheDayEngine(QObject * parent, QVariantList cons
     , m_mediawiki()
 {
     setMinimumPollingInterval(3600000);
-    m_mediawiki["commons.wikimedia.org"] = QUrl("http://commons.wikimedia.org/w/api.php");
+    m_mediawiki["commons.wikimedia.org"] = MediaWikiInfo(QUrl("http://commons.wikimedia.org/w/api.php"), QString("Template:Potd/"));
+    m_mediawiki["en.wikipedia.org"] = MediaWikiInfo(QUrl("http://en.wikipedia.org/w/api.php"), QString("Template:POTD/"));
 }
 
 void PictureOfTheDayEngine::init() {
     Plasma::DataEngine::Data data;
     data["Wikimedia Commons"] = QString("commons.wikimedia.org");
+    data["Wikipedia"] = QString("en.wikipedia.org");
     setData(QString("mediawiki"), data);
 }
 
@@ -49,8 +51,8 @@ bool PictureOfTheDayEngine::updateSourceEvent(QString const & source) {
     QStringList sourceSplit = source.split(':');
     if (sourceSplit.size() != 2 || !m_mediawiki.contains(sourceSplit[0])) return false;
 
-    MediaWiki mediawiki(m_mediawiki[sourceSplit[0]], QString("pictureofthedayengine"));
-    if (!searchImages(mediawiki, sourceSplit[1])) return false;
+    MediaWiki mediawiki(m_mediawiki[sourceSplit[0]].url, QString("pictureofthedayengine"));
+    if (!searchImages(mediawiki, m_mediawiki[sourceSplit[0]].page + sourceSplit[1])) return false;
     if (!searchImageinfo(mediawiki)) return false;
 
     Plasma::DataEngine::Data data;
@@ -72,8 +74,8 @@ void PictureOfTheDayEngine::images(QList<QueryImageinfo::Image> const & images) 
     m_images.append(images);
 }
 
-bool PictureOfTheDayEngine::searchImages(MediaWiki const & mediawiki, QString const & date) {
-    QueryImages * const queryimages(new QueryImages(mediawiki, QString("Template:Potd/") + date));
+bool PictureOfTheDayEngine::searchImages(MediaWiki const & mediawiki, QString const & page) {
+    QueryImages * const queryimages(new QueryImages(mediawiki, page));
     connect(queryimages, SIGNAL(pages(QList<QueryImages::Page> const &)), this, SLOT(pages(QList<QueryImages::Page> const &)));
     if (!queryimages->exec() || m_pages.size() == 0) {
         return false;
@@ -86,7 +88,7 @@ bool PictureOfTheDayEngine::searchImageinfo(MediaWiki const & mediawiki) {
     QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki, m_page.images()[0].title()));
     queryimageinfo->paramLimit(1u, true);
     queryimageinfo->paramProperties(QueryImageinfo::URL);
-    queryimageinfo->paramScale(800u, 600u);
+    queryimageinfo->paramScale(400u, 300u);
     connect(queryimageinfo, SIGNAL(images(QList<QueryImageinfo::Image> const &)), this, SLOT(images(QList<QueryImageinfo::Image> const &)));
     if (!queryimageinfo->exec() || m_images.size() == 0) {
         return false;

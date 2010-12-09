@@ -15,18 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="2">
-    <widget class="QComboBox" name="comboBox">
-     <item>
-      <property name="text">
-       <string>Wikipedia</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Wikimedia</string>
-      </property>
-     </item>
-    </widget>
+    <widget class="QComboBox" name="comboBox"/>
    </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label">
