@@ -243,14 +243,16 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
         QString replytmp = reply->readAll();
         if(d->requestParameter.contains("rvgeneratexml"))
         {
-            int i = replytmp.indexOf("parsetree");
-            int count = 0;
-            while(count < 2)
+            for(int i = replytmp.indexOf("parsetree"); i != -1; i = replytmp.indexOf("parsetree", i+1))
             {
-                if(replytmp[i] == '"' && replytmp[i-1] != '\\')count++;
-                if(replytmp[i] == '<')replytmp[i]=char(255);
-                if(replytmp[i] == '>')replytmp[i]=char(254);
-                i++;
+                int count = 0;
+                while(count < 2)
+                {
+                    if(replytmp[i] == '"' && replytmp[i-1] != '\\')count++;
+                    if(replytmp[i] == '<')replytmp[i]=char(255);
+                    if(replytmp[i] == '>')replytmp[i]=char(254);
+                    i++;
+                }
             }
         }
         QXmlStreamReader reader(replytmp);

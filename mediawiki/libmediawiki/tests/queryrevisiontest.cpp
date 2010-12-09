@@ -497,9 +497,14 @@ private slots:
         QString title = "API";
         int error = 0;
         int rvprop = TIMESTAMP|USER|COMMENT|CONTENT;
-        int size = 1;
+        int size = 2;
         QList<QueryRevision::Result> results;
-        results << QueryRevision::Result(0, 0, 0, "", "Graham87",
+        results << QueryRevision::Result(0, 0, 0, "", "martine",
+                                         QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
+                                         "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
+                                         "#REDIRECT [[Application programming interface]]{{R from abbreviation}}",
+                                         "<root>#REDIRECT [[Application programming interface]]<template><title>R from abbreviation</title></template></root>")
+                << QueryRevision::Result(0, 0, 0, "", "Graham87",
                                            QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                            "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
                                            "#REDIRECT [[Application programming interface]]{{R from abbreviation}}",
