@@ -200,8 +200,8 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                     url = QUrl(reader.attributes().value("url").toString());
                     descriptionUrl = QUrl(reader.attributes().value("descriptionurl").toString());
                     thumbUrl = QUrl(reader.attributes().value("thumburl").toString());
-                    thumbWidth = reader.attributes().value("widthurl").toString().toUInt();
-                    thumbHeight = reader.attributes().value("heighturl").toString().toUInt();
+                    thumbWidth = reader.attributes().value("thumbwidth").toString().toUInt();
+                    thumbHeight = reader.attributes().value("thumbheight").toString().toUInt();
                     size = reader.attributes().value("size").toString().toUInt();
                     width = reader.attributes().value("width").toString().toUInt();
                     height = reader.attributes().value("height").toString().toUInt();

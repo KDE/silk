@@ -21,7 +21,7 @@ void Picture::dataUpdated(const QString &name, const Plasma::DataEngine::Data &d
     if (data.isEmpty()) {
         return;
     }
-    m_picture = data[name].value<QPixmap>();
+    m_picture = data["image"].value<QPixmap>();
     emit pictureUpdated();
 }
 ;

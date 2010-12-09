@@ -54,10 +54,10 @@ bool PictureOfTheDayEngine::updateSourceEvent(QString const & source) {
     if (!searchImageinfo(mediawiki)) return false;
 
     Plasma::DataEngine::Data data;
-    data["url"] = m_imageinfo.url();
-    KIO::StoredTransferJob * pixmap = KIO::storedGet(KUrl(m_imageinfo.url()), KIO::NoReload, KIO::HideProgressInfo);
-    pixmap->exec();
-    data["pixmap"] = QImage::fromData(pixmap->data());
+    data["url"] = m_imageinfo.thumbUrl();
+    KIO::StoredTransferJob * image = KIO::storedGet(KUrl(m_imageinfo.thumbUrl()), KIO::NoReload, KIO::HideProgressInfo);
+    image->exec();
+    data["image"] = QImage::fromData(image->data());
     setData(source, data);
     m_pages.clear();
     m_images.clear();
@@ -86,6 +86,7 @@ bool PictureOfTheDayEngine::searchImageinfo(MediaWiki const & mediawiki) {
     QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki, m_page.images()[0].title()));
     queryimageinfo->paramLimit(1u, true);
     queryimageinfo->paramProperties(QueryImageinfo::URL);
+    queryimageinfo->paramScale(800u, 600u);
     connect(queryimageinfo, SIGNAL(images(QList<QueryImageinfo::Image> const &)), this, SLOT(images(QList<QueryImageinfo::Image> const &)));
     if (!queryimageinfo->exec() || m_images.size() == 0) {
         return false;

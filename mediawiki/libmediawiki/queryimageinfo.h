@@ -376,7 +376,7 @@ public:
          * @brief Returns true if thumb URL has set, else false.
          * @return true if thumb URL has set, else false
          */
-        inline bool hasThumbUrl() const { return m_thumbUrl.isEmpty(); }
+        inline bool hasThumbUrl() const { return !m_thumbUrl.isEmpty(); }
 
         /**
          * @brief Returns the image's size in bytes.

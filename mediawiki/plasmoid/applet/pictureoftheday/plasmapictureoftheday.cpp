@@ -27,7 +27,7 @@ PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject *parent, const QVariantList
     this->m_containWidget->resize(this->size());    
 
     connect(m_picture,SIGNAL(pictureUpdated()),this,SLOT(updatePicture()));
-    m_provider = QString("wppotd:");    
+    m_provider = QString("commons.wikimedia.org");
 
 }
 
@@ -52,12 +52,12 @@ void PlasmaPictureOfTheDay::init()
 
 void PlasmaPictureOfTheDay::reloadPicture()
 {
-    Plasma::DataEngine *engine = dataEngine("potd");
+    Plasma::DataEngine *engine = dataEngine("pictureoftheday");
     //disconnect yesterday's source
-    QString identifier = m_provider + m_picture->getCurrentDate().toString(Qt::ISODate);
+    QString identifier = m_provider + ':' + m_picture->getCurrentDate().toString(Qt::ISODate);
     engine->disconnectSource(identifier, m_picture);
     //connect today's source
-    identifier = m_provider + QDate::currentDate().toString(Qt::ISODate);
+    identifier = m_provider + ':' + QDate::currentDate().toString(Qt::ISODate);
     m_picture->setCurrentDate(QDate::currentDate());
     engine->connectSource(identifier, m_picture);
     m_containWidget->setDate(m_picture->getCurrentDate().toString("dddd dd MMMM"));
