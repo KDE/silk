@@ -17,6 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <KDE/KIO/Job>
+
 #include "mediawiki.h"
 
 #include "pictureofthedayengine.h"
@@ -28,12 +30,12 @@ PictureOfTheDayEngine::PictureOfTheDayEngine(QObject * parent, QVariantList cons
     , m_mediawiki()
 {
     setMinimumPollingInterval(3600000);
-    m_mediawiki["wikimediacommons"] = QUrl("http://commons.wikimedia.org/w/api.php");
+    m_mediawiki["commons.wikimedia.org"] = QUrl("http://commons.wikimedia.org/w/api.php");
 }
 
 void PictureOfTheDayEngine::init() {
     Plasma::DataEngine::Data data;
-    data["Wikimedia Commons"] = QString("wikimediacommons");
+    data["Wikimedia Commons"] = QString("commons.wikimedia.org");
     setData(QString("mediawiki"), data);
 }
 
@@ -42,43 +44,20 @@ bool PictureOfTheDayEngine::sourceRequestEvent(QString const & name) {
 }
 
 bool PictureOfTheDayEngine::updateSourceEvent(QString const & source) {
-    if (sources().contains(source)) {
-        return true;
-    }
+    if (sources().contains(source)) return true;
+
     QStringList sourceSplit = source.split(':');
-    if (sourceSplit.size() != 2 || !m_mediawiki.contains(sourceSplit[0])) {
-        return false;
-    }
+    if (sourceSplit.size() != 2 || !m_mediawiki.contains(sourceSplit[0])) return false;
+
     MediaWiki mediawiki(m_mediawiki[sourceSplit[0]], QString("pictureofthedayengine"));
-    QueryImages * const queryimages(new QueryImages(mediawiki, QString("Template:Potd/") + sourceSplit[1]));
-    connect(queryimages, SIGNAL(pages(QList<QueryImages::Page> const &)), this, SLOT(pages(QList<QueryImages::Page> const &)));
-    if (!queryimages->exec()) {
-        return false;
-    }
-    if (m_pages.size() == 0) {
-        return false;
-    }
-    QueryImages::Page page(m_pages[0]);
-    if (page.isMissing() || page.images().size() == 0) {
-        return false;
-    }
-    QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki, page.images()[0].title()));
-    queryimageinfo->paramLimit(1u, true);
-    queryimageinfo->paramProperties(QueryImageinfo::URL);
-    connect(queryimageinfo, SIGNAL(images(QList<QueryImageinfo::Image> const &)), this, SLOT(images(QList<QueryImageinfo::Image> const &)));
-    if (!queryimageinfo->exec()) {
-        return false;
-    }
-    if (m_images.size() == 0) {
-        return false;
-    }
-    QueryImageinfo::Image image(m_images[0]);
-    if (image.isMissing() || image.imageinfos().size() == 0) {
-        return false;
-    }
-    QueryImageinfo::Imageinfo imageinfo(image.imageinfos()[0]);
+    if (!searchImages(mediawiki, sourceSplit[1])) return false;
+    if (!searchImageinfo(mediawiki)) return false;
+
     Plasma::DataEngine::Data data;
-    data["url"] = imageinfo.url();
+    data["url"] = m_imageinfo.url();
+    KIO::StoredTransferJob * pixmap = KIO::storedGet(KUrl(m_imageinfo.url()), KIO::NoReload, KIO::HideProgressInfo);
+    pixmap->exec();
+    data["pixmap"] = QImage::fromData(pixmap->data());
     setData(source, data);
     m_pages.clear();
     m_images.clear();
@@ -91,6 +70,32 @@ void PictureOfTheDayEngine::pages(QList<QueryImages::Page> const & pages) {
 
 void PictureOfTheDayEngine::images(QList<QueryImageinfo::Image> const & images) {
     m_images.append(images);
+}
+
+bool PictureOfTheDayEngine::searchImages(MediaWiki const & mediawiki, QString const & date) {
+    QueryImages * const queryimages(new QueryImages(mediawiki, QString("Template:Potd/") + date));
+    connect(queryimages, SIGNAL(pages(QList<QueryImages::Page> const &)), this, SLOT(pages(QList<QueryImages::Page> const &)));
+    if (!queryimages->exec() || m_pages.size() == 0) {
+        return false;
+    }
+    m_page = m_pages[0];
+    return !m_page.isMissing() && m_page.images().size() > 0;
+}
+
+bool PictureOfTheDayEngine::searchImageinfo(MediaWiki const & mediawiki) {
+    QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki, m_page.images()[0].title()));
+    queryimageinfo->paramLimit(1u, true);
+    queryimageinfo->paramProperties(QueryImageinfo::URL);
+    connect(queryimageinfo, SIGNAL(images(QList<QueryImageinfo::Image> const &)), this, SLOT(images(QList<QueryImageinfo::Image> const &)));
+    if (!queryimageinfo->exec() || m_images.size() == 0) {
+        return false;
+    }
+    QueryImageinfo::Image image(m_images[0]);
+    if (image.isMissing() || image.imageinfos().size() == 0) {
+        return false;
+    }
+    m_imageinfo = image.imageinfos()[0];
+    return true;
 }
 
 K_EXPORT_PLASMA_DATAENGINE(pictureoftheday, PictureOfTheDayEngine)

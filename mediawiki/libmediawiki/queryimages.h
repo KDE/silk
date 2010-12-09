@@ -84,6 +84,11 @@ public:
     public:
 
         /**
+         * @brief Construct a page not initialized.
+         */
+        Page() {}
+
+        /**
          * @brief Construct a page.
          * @param pageId the page id
          * @param namespaceId the namespace id of the page

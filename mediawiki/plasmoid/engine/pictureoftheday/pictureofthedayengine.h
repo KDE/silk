@@ -52,9 +52,17 @@ private slots:
 
 private:
 
+    bool searchImages(MediaWiki const & mediawiki, QString const & date);
+
+    bool searchImageinfo(MediaWiki const & mediawiki);
+
     QList<QueryImages::Page> m_pages;
 
+    QueryImages::Page m_page;
+
     QList<QueryImageinfo::Image> m_images;
+
+    QueryImageinfo::Imageinfo m_imageinfo;
 
     QMap<QString, QUrl> m_mediawiki;
 
