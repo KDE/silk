@@ -33,7 +33,6 @@ using mediawiki::Edit;
 
 Q_DECLARE_METATYPE(FakeServer::Request)
 Q_DECLARE_METATYPE(QVariant)
-Q_DECLARE_METATYPE(Edit::Result)
 
 class EditTest : public QObject
 {
@@ -45,6 +44,10 @@ signals:
 
 public slots:
 
+    void editHandle(KJob* ) {
+        editCount++;
+    }
+
     void editHandle(QVariant const & captcha) {
         editCount++;
         this->captchaquestionorurl = captcha;
@@ -52,68 +55,755 @@ public slots:
     }
 
 private slots:
-
-    void init() {
+    void initTestCase()
+    {
         editCount = 0;
+        this->m_mediaWiki = new MediaWiki(QUrl("http://127.0.0.1:12566"));
     }
 
-    void testResult() {
-        QFETCH(QString, scenario1);
-        QFETCH(QString, scenario2);
-        QFETCH(FakeServer::Request, requestTrue);
-        QFETCH(int, error);
-        QFETCH(QVariant, word);
-        QFETCH(QString, answer);
-
+    void editTestTextTrue()
+    {
+        editCount = 0;
         FakeServer fakeserver;
-        fakeserver.setScenario(scenario1);
-        fakeserver.addScenario(scenario2);
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>");
+
+        fakeserver.setScenario(senario);
         fakeserver.startAndWait();
 
-        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        Edit * job = new Edit( mediawiki, "Talk:Main_Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!", "new", "Hello World" );
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
 
-        connect(job, SIGNAL( resultCaptcha(QVariant const &) ), this, SLOT( editHandle(QVariant const &) ));
-        connect(this, SIGNAL( captchaSignal(QString const &) ), job, SLOT( finishedCaptcha(QString const &) ));
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
 
-        job->exec();
-
-        QList<FakeServer::Request> requests = fakeserver.getRequest();
-        QCOMPARE(requests.size(), 2);
-
-        FakeServer::Request request = requests[0];
-        QCOMPARE(request.agent, mediawiki.userAgent());
-        QCOMPARE(request.type, QString("POST"));
-
-        QCOMPARE(job->error(), error);
-        QCOMPARE(editCount, 1);
-        QCOMPARE(requestTrue.value, request.value);
-        QCOMPARE(captchaquestionorurl, word);
-        QCOMPARE(captchaword, answer);
-        QVERIFY(fakeserver.isAllScenarioDone());
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 1);
     }
 
-    void testResult_data() {
-        QTest::addColumn<QString>("scenario1");
-        QTest::addColumn<QString>("scenario2");
-        QTest::addColumn<FakeServer::Request>("requestTrue");
-        QTest::addColumn<int>("error");
-        QTest::addColumn< QVariant >("word");
-        QTest::addColumn< QString >("answer");
+    void editTestApendPrependTrue()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+        this->request = "?format=xml&action=edit&appendtext=Hello%20everyone!&basetimestamp=2008-03-20T17:26:39Z&md5=4ade2c502d52ad05e7449c2470ba29d9&prependtext=Hello%20everyone!&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>");
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
 
-        Edit::Result captcha;
-        captcha.captchaid = QString("509895952").toUInt();
-        captcha.captchaquestionorurl = QVariant("36 + 4 = ");
-        captcha.captchaword = QString("40");
-        this->captchaword = captcha.captchaword;
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
 
-        QTest::newRow("Test: 1")
-                << "<api><edit result=\"Failure\"><captcha type=\"math\" mime=\"text/tex\" id=\"509895952\" question=\"36 + 4 = \" /></edit></api>"
-                << "<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>"
-                << FakeServer::Request("POST","","?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main_Page&token=cecded1f35005d22904a35cc7b736e18%2B%5C")
-                << int(KJob::NoError)
-                << captcha.captchaquestionorurl
-                << captcha.captchaword;
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        //connect(&edit, SIGNAL( resultCaptcha(QVariant const &) ), this, SLOT( editHandle(QVariant const &) ));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestPrependTrue()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&prependtext=Hello%20everyone!&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>");
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "", "Hello everyone!" );
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestApendTrue()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+        this->request = "?format=xml&action=edit&appendtext=Hello%20everyone!&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>");
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!", "");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestUndoTrue()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&title=Talk:Main%20Page&undo=13585&undoafter=13579&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>");
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", 13585, 13579);
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestNotext()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=d41d8cd98f00b204e9800998ecf8427e&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"notext\" info=\"\" /> </api>");
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::notext);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestInvalidsection()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"invalidsection\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::invalidsection);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestProtectedtitle()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"protectedtitle\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::protectedtitle);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestCantcreate()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"cantcreate\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::cantcreate);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestCantcreateanon()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"cantcreate-anon\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::cantcreateanon);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestArticleexists()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"articleexists\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::articleexists);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestNoimageredirectanon()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"noimageredirect-anon\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::noimageredirectanon);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestNoimageredirect()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"noimageredirect\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::noimageredirect);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestspamdetected()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"spamdetected\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::spamdetected);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestfiltered()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"filtered\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::filtered);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestcontenttoobig()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"contenttoobig\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::contenttoobig);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestnoeditanon()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"noedit-anon\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::noeditanon);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestnoedit()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"noedit\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::noedit);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestpagedeleted()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"pagedeleted\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::pagedeleted);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestemptypage()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"emptypage\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::emptypage);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestemptynewsection()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"emptynewsection\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::emptynewsection);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTesteditconflict()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"editconflict\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::editconflict);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestrevwrongpage()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"revwrongpage\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::revwrongpage);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestundofailure()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><error code=\"undofailure\" info=\"\" /> </api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::undofailure);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestSetsWatch()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&createonly&md5=4d184ec6e8fe61abccb8ff62c4583cd0&minor&nocreate&recreate&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&watchlist=watch&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+        edit.setRecreate();
+        edit.setCreateonly();
+        edit.setNocreate();
+        edit.setMinor(true);
+        edit.setWatchlist(Edit::watch);
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestSetsUnwatch()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&createonly&md5=4d184ec6e8fe61abccb8ff62c4583cd0&minor&nocreate&recreate&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&watchlist=unwatch&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+        edit.setRecreate();
+        edit.setCreateonly();
+        edit.setNocreate();
+        edit.setMinor(true);
+        edit.setWatchlist(Edit::unwatch);
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestSetsPreferences()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&createonly&md5=4d184ec6e8fe61abccb8ff62c4583cd0&minor&nocreate&recreate&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&watchlist=preferences&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+        edit.setRecreate();
+        edit.setCreateonly();
+        edit.setNocreate();
+        edit.setMinor(true);
+        edit.setWatchlist(Edit::preferences);
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 1);
+    }
+
+    void editTestSetsNochange()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&createonly&md5=4d184ec6e8fe61abccb8ff62c4583cd0&minor&nocreate&recreate&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&watchlist=nochange&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>");
+
+        fakeserver.setScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+        edit.setRecreate();
+        edit.setCreateonly();
+        edit.setNocreate();
+        edit.setMinor(true);
+        edit.setWatchlist(Edit::nochange);
+
+        connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 1);
+    }
+
+
+    void editTestTextCaptchaTrue()
+    {
+        editCount = 0;
+        FakeServer fakeserver;
+
+        this->request = "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B%255C";
+        QString senario("<api><edit result=\"Failure\"><captcha type=\"math\" mime=\"text/tex\" id=\"509895952\" question=\"36 + 4 = \" /></edit></api>");
+
+        fakeserver.setScenario(senario);
+        senario = "<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>";
+        fakeserver.addScenario(senario);
+        fakeserver.startAndWait();
+
+        Edit edit( *m_mediaWiki, "Talk:Main Page", "cecded1f35005d22904a35cc7b736e18+\\", "2008-03-20T17:26:39Z", "2008-03-27T21:15:39Z", "Hello everyone!");
+        edit.setSection("new");
+        edit.setSummary("Hello World");
+
+        connect(&edit, SIGNAL( resultCaptcha(QVariant const &) ), this, SLOT( editHandle(QVariant const &) ));
+        connect(this, SIGNAL( captchaSignal(QString const &) ), &edit, SLOT( finishedCaptcha(QString const &) ));
+        edit.exec();
+
+        FakeServer::Request serverrequest = fakeserver.getRequest()[0];
+        QCOMPARE(serverrequest.type, QString("POST"));
+        QCOMPARE(serverrequest.value, this->request);
+        QCOMPARE(edit.error(), (int)Edit::NoError);
+        QCOMPARE(this->editCount, 2);
+    }
+
+    void cleanupTestCase()
+    {
+        delete this->m_mediaWiki;
     }
 
 private:
@@ -121,6 +811,8 @@ private:
     int editCount;
     QVariant captchaquestionorurl;
     QString captchaword;
+    QString request;
+    MediaWiki* m_mediaWiki;
 };
 
 

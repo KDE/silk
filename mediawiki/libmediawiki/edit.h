@@ -23,6 +23,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 #include <QtCore/QDateTime>
+#include <QtNetwork/QNetworkCookieJar>
 #include <QtCore/QUrl>
 #include <KDE/KJob>
 #include <kdemacros.h>
@@ -60,17 +61,7 @@ public:
         /**
          * @brief
          */
-        notitle,
-
-        /**
-         * @brief
-         */
         notext,
-
-        /**
-         * @brief
-         */
-        notoken,
 
         /**
          * @brief
@@ -186,11 +177,6 @@ public:
     };
 
     /**
-     * @brief Return all parameters defined in the result struct.
-     */
-    Edit::Result getResults();
-
-    /**
      * @brief Constructs an Edit job.
      * @param media the mediawiki concerned by the job
      * @param title the page title
@@ -198,11 +184,11 @@ public:
      * @param basetimestamp the timestamp of the base revision. Gotten through prop=revisions&rvprop=timestamp.
      * @param starttimestamp the timestamp when you obtained the edit token.
      * @param text the page content
-     * @param section the section number. 0 for the top section, 'new' for a new section.
-     * @param summary the edit summary. Also section title when section=new.
      * @param parent the QObject parent
+     * @pre !title.isEmpty()
+     * @pre !token.isEmpty()
      */
-    explicit Edit( MediaWiki const & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & text, QString const & section = QString(), QString const & summary = QString(), QObject *parent = 0);
+    explicit Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & text, QObject *parent = 0);
 
     /**
      * @brief Constructs an Edit job.
@@ -214,8 +200,10 @@ public:
      * @param appendtext the text added to the end of the page. Overrides text.
      * @param prependtext the text added to the beginning of the page. Overrides text.
      * @param parent the QObject parent
+     * @pre !title.isEmpty()
+     * @pre !token.isEmpty()
      */
-    explicit Edit( MediaWiki const & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & appendtext, QString const & prependtext, QObject *parent = 0);
+    explicit Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & appendtext, QString const & prependtext, QObject *parent = 0);
 
     /**
      * @brief Constructs an Edit job.
@@ -227,8 +215,10 @@ public:
      * @param undo Undo this revision. Overrides text, prependtext and appendtext.
      * @param undoafter Undo all revisions from undo to this one. If not set, just undo one revision.
      * @param parent the QObject parent
+     * @pre !title.isEmpty()
+     * @pre !token.isEmpty()
      */
-    explicit Edit( MediaWiki const & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString, unsigned int undo, unsigned int undoafter = 0, QObject *parent = 0);
+    explicit Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, unsigned int undo, unsigned int undoafter = 0, QObject *parent = 0);
 
     /**
      * @brief Destroys the Edit job.
@@ -273,22 +263,44 @@ public:
     };
 
     /**
-     * @brief Which properties to get for each revision.
+     * @brief Specify how the watchlist is affected by this edit.
      * @param watchlist Specify how the watchlist is affected by this edit
-     * @param recreate If set, suppress errors about the page having been deleted in the meantime and recreate it
-     * @param createonly If set, throw an error if the page already exists
-     * @param nocreate If set, throw a missingtitle error if the page doesn't exist.
-     * @param minor If set to true, mark the edit as minor
      */
-    void setParams(Edit::Watchlist watchlist, bool recreate = false, bool createonly = false, bool nocreate = false, bool minor = false, bool notminor = false);
-
-signals:
+    void setWatchlist(Edit::Watchlist watchlist);
 
     /**
-     * @brief Emitted when a connection request has been completed.
-     * @param success true if the request was completed successfully.
+     * @brief If set, suppress errors about the page having been deleted in the meantime and recreate it.
      */
-    void resultEdit( KJob * job );
+    void setRecreate();
+
+    /**
+     * @brief If set, throw an error if the page already exists.
+     */
+    void setCreateonly();
+
+    /**
+     * @brief If set, throw a missingtitle error if the page doesn't exist.
+     */
+    void setNocreate();
+
+    /**
+     * @brief If set to true, mark the edit as minor
+     * @param minor If set to true, mark the edit as minor
+     */
+    void setMinor(bool minor);
+
+    /**
+     * @brief Set the section.
+     * @param section Set the section. New or integer
+     */
+    void setSection(QString const & section);
+
+    /**
+     * @brief Set the summary.
+     * @param summary Set the summary
+     */
+    void setSummary(QString const & summary);
+signals:
 
     /**
      * @brief Emitted when a connection has been completed.

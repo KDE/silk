@@ -24,6 +24,7 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 #include <QtCore/QCryptographicHash>
+#include <QtNetwork/QNetworkCookieJar>
 #include <QStringList>
 #include <QDebug>
 #include <Q3Url>
@@ -35,7 +36,7 @@ namespace mediawiki
 {
     struct EditPrivate
     {
-        EditPrivate(QNetworkAccessManager * const manager, QString const & title, QString const & token, QString const & basetimestamp, QString const & starttimestamp, QString const & text, QString const & section, QString const & summary, MediaWiki const & mediawiki)
+        EditPrivate(QNetworkAccessManager *  manager, QString const & title, QString const & token, QString const & basetimestamp, QString const & starttimestamp, QString const & text, MediaWiki  & mediawiki)
             : manager(manager)
             , mediawiki(mediawiki)
         {
@@ -44,13 +45,11 @@ namespace mediawiki
             requestParameter["starttimestamp"] = starttimestamp;
             requestParameter["basetimestamp"] = basetimestamp;
             requestParameter["text"] = text;
-            requestParameter["section"] = section;
-            requestParameter["summary"] = summary;
             QByteArray hash = QCryptographicHash::hash(text.toUtf8(),QCryptographicHash::Md5);
             requestParameter["md5"] = hash.toHex();
         }
 
-        EditPrivate(QNetworkAccessManager * const manager, QString const & title, QString const & token, QString const & basetimestamp, QString const & starttimestamp, QString const & appendtext, QString const & prependtext, MediaWiki const & mediawiki)
+        EditPrivate(QNetworkAccessManager * const manager, QString const & title, QString const & token, QString const & basetimestamp, QString const & starttimestamp, QString const & appendtext, QString const & prependtext, MediaWiki  & mediawiki)
             : manager(manager)
             , mediawiki(mediawiki)
         {
@@ -58,14 +57,16 @@ namespace mediawiki
             requestParameter["token"] = token;
             requestParameter["starttimestamp"] = starttimestamp;
             requestParameter["basetimestamp"] = basetimestamp;
-            requestParameter["appendtext"] = appendtext;
-            requestParameter["prependtext"] = prependtext;
+            if(appendtext != "")
+                requestParameter["appendtext"] = appendtext;
+            if(prependtext != "")
+                requestParameter["prependtext"] = prependtext;
             QString text = prependtext+appendtext;
             QByteArray hash = QCryptographicHash::hash(text.toUtf8(),QCryptographicHash::Md5);
             requestParameter["md5"] = hash.toHex();
         }
 
-        EditPrivate(QNetworkAccessManager * const manager, QString const & title, QString const & token, QString const & basetimestamp, QString const & starttimestamp, unsigned int undo, unsigned int undoafter, MediaWiki const & mediawiki)
+        EditPrivate(QNetworkAccessManager * const manager, QString const & title, QString const & token, QString const & basetimestamp, QString const & starttimestamp, unsigned int undo, unsigned int undoafter, MediaWiki  & mediawiki)
             : manager(manager)
             , mediawiki(mediawiki)
         {
@@ -79,7 +80,7 @@ namespace mediawiki
 
         QNetworkAccessManager *manager;
         QUrl baseUrl;
-        MediaWiki const & mediawiki;
+        MediaWiki  & mediawiki;
         QMap<QString, QString> requestParameter;
         Edit::Result result;
     };
@@ -87,28 +88,34 @@ namespace mediawiki
 
 using namespace mediawiki;
 
-Edit::Edit( MediaWiki const & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & text, QString const & section, QString const & summary, QObject *parent)
+Edit::Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & text, QObject *parent)
     : KJob(parent)
-    , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, text, section, summary, media))
+    , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, text, media))
 {
+    Q_ASSERT(!title.isEmpty());
+    Q_ASSERT(!token.isEmpty());
     setCapabilities(KJob::NoCapabilities);
 }
 
-Edit::Edit( MediaWiki const & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & appendtext, QString const & prependtext, QObject *parent)
+Edit::Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & appendtext, QString const & prependtext, QObject *parent)
     : KJob(parent)
     , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, appendtext, prependtext, media))
 {
+    Q_ASSERT(!title.isEmpty());
+    Q_ASSERT(!token.isEmpty());
     setCapabilities(KJob::NoCapabilities);
 }
 
-Edit::Edit( MediaWiki const & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString, unsigned int undo, unsigned int undoafter, QObject *parent)
+Edit::Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, unsigned int undo, unsigned int undoafter, QObject *parent)
     : KJob(parent)
     , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, undo, undoafter, media))
 {
+    Q_ASSERT(!title.isEmpty());
+    Q_ASSERT(!token.isEmpty());
     setCapabilities(KJob::NoCapabilities);
 }
 
-void Edit::setParams(Edit::Watchlist watchlist, bool recreate, bool createonly,bool nocreate, bool minor, bool notminor)
+void Edit::setWatchlist(Edit::Watchlist watchlist)
 {
     switch(watchlist) {
     case Edit::watch:
@@ -124,16 +131,38 @@ void Edit::setParams(Edit::Watchlist watchlist, bool recreate, bool createonly,b
         d->requestParameter["watchlist"] = QString("preferences");
         break;
     }
-    if(recreate)
-        d->requestParameter["recreate"] = QString();
-    if(createonly)
-        d->requestParameter["createonly"] = QString();
-    if(nocreate)
-        d->requestParameter["nocreate"] = QString();
+}
+
+void Edit::setRecreate()
+{
+    d->requestParameter["recreate"] = QString();
+}
+
+void Edit::setCreateonly()
+{
+    d->requestParameter["createonly"] = QString();
+}
+
+void Edit::setNocreate()
+{
+    d->requestParameter["nocreate"] = QString();
+}
+
+void Edit::setMinor(bool minor)
+{
     if(minor)
         d->requestParameter["minor"] = QString();
-    if(notminor)
+    else
         d->requestParameter["notminor"] = QString();
+}
+void Edit::setSection(QString const & section)
+{
+    d->requestParameter["section"] = section;
+}
+
+void Edit::setSummary(QString const & summary)
+{
+    d->requestParameter["summary"] = summary;
 }
 
 Edit::~Edit()
@@ -158,27 +187,33 @@ void Edit::doWorkSendRequest()
         if(i.key() != "token") {
             QString param("&");
             param += i.key();
-            if(i.key() != "recreate" && i.key() != "createonly" && i.key() != "recreate" && i.key() != "nocreate" && i.key() != "notminor") {
+            if(i.key() != "recreate" && i.key() != "createonly" && i.key() != "recreate" && i.key() != "nocreate" && i.key() != "notminor" && i.key() != "minor") {
                 param += "=";
                 param += i.value();
             }
             url += param;
         }
     }
+    QByteArray cookie = "";
+    for(int i = 0 ; i<d->mediawiki.cookies().size();i++){
+        cookie += d->mediawiki.cookies().at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
+        cookie += ";";
+    }
     QUrl urlEncoded(url, QUrl::TolerantMode);
     // Add the token
     QString token = d->requestParameter["token"];
     token.replace("+", "%2B");
     token.replace("\\", "%5C");
-    urlEncoded.addEncodedQueryItem(QString("token").toUtf8(), token.toUtf8());
+    urlEncoded.addQueryItem(QString("token"), token);
     d->baseUrl = urlEncoded;
     // Set the request
     QNetworkRequest request( urlEncoded );
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->manager->post( request, urlEncoded.toString().toUtf8() );
-    connect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
+    d->mediawiki.manager()->post( request, urlEncoded.toString().toUtf8() );
+    connect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 
@@ -198,7 +233,6 @@ void Edit::finishedEdit( QNetworkReply *reply )
         emitResult();
         return;
     }
-
     QXmlStreamReader reader( reply );
     while ( !reader.atEnd() && !reader.hasError() ) {
         QXmlStreamReader::TokenType token = reader.readNext();
@@ -206,11 +240,9 @@ void Edit::finishedEdit( QNetworkReply *reply )
             QXmlStreamAttributes attrs = reader.attributes();
             if ( reader.name() == QString( "edit" ) ) {
                 if ( attrs.value( QString( "result" ) ).toString() == "Success" ) {
-                    //qDebug()<<"Success Login";
                     this->setError(KJob::NoError);
                     reply->close();
                     reply->deleteLater();
-                    emit resultEdit( this );
                     emitResult();
                     return;
                 }
@@ -233,7 +265,7 @@ void Edit::finishedEdit( QNetworkReply *reply )
                 return;
             }
         }
-        else if ( token == QXmlStreamReader::Invalid ){
+        else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
             this->setError(this->Falsexml);
             reply->close();
             reply->deleteLater();
@@ -253,20 +285,20 @@ void Edit::finishedCaptcha( QString  const & captcha )
     url.addQueryItem("captchaid", QString::number(d->result.captchaid));
     url.addQueryItem("captchaword", d->result.captchaword);
     QString data = url.toString();
+    QByteArray cookie = "";
+    for(int i = 0 ; i<d->mediawiki.cookies().size();i++){
+        cookie += d->mediawiki.cookies().at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
+        cookie += ";";
+    }
 
     // Set the request
     QNetworkRequest request( url );
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+    request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->manager = new QNetworkAccessManager();
-    d->manager->post( request, data.toUtf8() );
-    connect( d->manager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
+    d->mediawiki.manager()->post( request, data.toUtf8() );
+    connect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
-}
-
-Edit::Result Edit::getResults()
-{
-    return d->result;
 }
 
 int Edit::getError(const QString & error)
@@ -276,9 +308,7 @@ int Edit::getError(const QString & error)
     QStringList list;
     list << "Falsexml"
             << "ConnectionAbort"
-            << "notitle"
             << "notext"
-            << "notoken"
             << "invalidsection"
             << "protectedtitle"
             << "cantcreate"
