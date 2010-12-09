@@ -28,8 +28,6 @@ void ContainWidget::setImage(Picture *picture)
 //    this->m_picture = new Picture(this, false);
 //    this->m_image->setAlignment(Qt::AlignCenter);
 //    this->m_image->setMinimumSize(110,135);
-    QSize sizeR = picture->getPicture().scaled(this->size().width(),this->size().height(),Qt::KeepAspectRatio).size();
-    picture->setMinimumSize(sizeR.width()-30, sizeR.height());
     this->m_layout->addItem(picture);
 }
 
