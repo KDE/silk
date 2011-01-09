@@ -11,3 +11,10 @@ set(CTEST_DROP_METHOD "http")
 set(CTEST_DROP_SITE "my.cdash.org")
 set(CTEST_DROP_LOCATION "/submit.php?project=libmediawiki")
 set(CTEST_DROP_SITE_CDASH TRUE)
+
+set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
+set(CTEST_BUILD_CONFIGURATION "Profiling")
+set(CTEST_BUILD_OPTIONS "-DKDE4_BUILD_TESTS=ON")
+
+set(WITH_MEMCHECK TRUE)
+set(WITH_COVERAGE TRUE)
