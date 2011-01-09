@@ -1,5 +1,6 @@
 if( KDE4_BUILD_TESTS )
-include_directories( ${CMAKE_SOURCE_DIR}/mediawiki/libmediawiki ${KDE4_INCLUDES} )
+
+include_directories( ../ ${KDE4_INCLUDES} )
 
 MACRO(MEDIAWIKI_UNIT_TESTS)
 
