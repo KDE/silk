@@ -26,7 +26,7 @@
 #include <QtNetwork/QNetworkCookieJar>
 #include <QtCore/QUrl>
 #include <KDE/KJob>
-#include <kdemacros.h>
+#include "mediawiki_export.h"
 
 class QNetworkReply;
 
@@ -39,7 +39,7 @@ class MediaWiki;
  *
  * Uses for create or edit a wiki.
  */
-class KDE_EXPORT Edit : public KJob
+class MEDIAWIKI_EXPORT Edit : public KJob
 {
 
 Q_OBJECT

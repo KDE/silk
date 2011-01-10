@@ -23,6 +23,7 @@
 #include <QtCore/QList>
 #include <QtCore/QString>
 #include <KDE/KJob>
+#include "mediawiki_export.h"
 
 class QNetworkReply;
 
@@ -36,7 +37,7 @@ class MediaWiki;
  *
  * Uses for fetch a list of all user groups and their permissions.
  */
-class QuerySiteinfoUsergroups : public KJob
+class MEDIAWIKI_EXPORT QuerySiteinfoUsergroups : public KJob
 {
 
     Q_OBJECT

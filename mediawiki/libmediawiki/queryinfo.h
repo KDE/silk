@@ -26,6 +26,8 @@
 #include <QtCore/QDateTime>
 #include <KDE/KJob>
 
+#include "mediawiki_export.h"
+
 class QNetworkReply;
 
 namespace mediawiki
@@ -38,7 +40,7 @@ class MediaWiki;
  *
  * Uses to send a request to get basic page information.
  */
-class QueryInfo : public KJob
+class MEDIAWIKI_EXPORT QueryInfo : public KJob
 {
 
     Q_OBJECT

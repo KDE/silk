@@ -24,13 +24,15 @@
 #include <QtCore/QUrl>
 #include <QNetworkAccessManager>
 #include <QNetworkCookieJar>
+#include "mediawiki_export.h"
+
 namespace mediawiki
 {
 
 /**
  * @brief Provides access to wiki powered by MediaWiki.
  */
-    class MediaWiki:QObject
+    class MEDIAWIKI_EXPORT MediaWiki:QObject
 {
 Q_OBJECT
 public:

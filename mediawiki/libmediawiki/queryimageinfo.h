@@ -30,6 +30,8 @@
 
 #include <KDE/KJob>
 
+#include "mediawiki_export.h"
+
 class QNetworkReply;
 
 namespace mediawiki {
@@ -41,7 +43,7 @@ class MediaWiki;
  *
  * Gets image information for an image.
  */
-class QueryImageinfo : public KJob {
+class MEDIAWIKI_EXPORT QueryImageinfo : public KJob {
 
     Q_OBJECT
 

@@ -26,6 +26,8 @@
 
 #include <KDE/KJob>
 
+#include "mediawiki_export.h"
+
 //FIXME: Fait pas de define ça se met dans l'espace de nommage global et ça remplace PARTOUT TIMESTAMP par 4, ... !
 #define IDS         1
 #define FLAGS       2
@@ -50,7 +52,7 @@ class MediaWiki;
  *
  * Uses for fetch a revision information about one pages of the wiki.
  */
-class QueryRevision : public KJob
+class MEDIAWIKI_EXPORT QueryRevision : public KJob
 {
     Q_OBJECT
 

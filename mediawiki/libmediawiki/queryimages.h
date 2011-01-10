@@ -22,6 +22,8 @@
 
 #include <KDE/KJob>
 
+#include "mediawiki_export.h"
+
 class QNetworkReply;
 
 namespace mediawiki {
@@ -33,7 +35,7 @@ class MediaWiki;
  *
  * Gets a list of all images used on pages.
  */
-class QueryImages : public KJob {
+class MEDIAWIKI_EXPORT QueryImages : public KJob {
 
     Q_OBJECT
 

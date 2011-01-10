@@ -26,6 +26,8 @@
 
 #include <KDE/KJob>
 
+#include "mediawiki_export.h"
+
 class QNetworkReply;
 
 namespace mediawiki {
@@ -37,7 +39,7 @@ class MediaWiki;
  *
  * Uses for fetch a generals information about the wiki.
  */
-class QuerySiteInfoGeneral : public KJob
+class MEDIAWIKI_EXPORT QuerySiteInfoGeneral : public KJob
 {
 
     Q_OBJECT
