@@ -5,6 +5,17 @@ set( CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage" )
 include( KDE4Defaults )
 include_directories( ${KDE4_INCLUDES} )
 
+#FIXME: True by default because the engine doesn't compile.
+option( STATIC_LIBRARY "Build libmediawiki as static libraries." TRUE )
+
+if( STATIC_LIBRARY )
+    set( LIBRARY_TYPE STATIC )
+    add_definitions( -DMEDIAWIKI_STATIC_LIBS )
+    message( STATUS "Building libmediawiki as static libraries" )
+else( STATIC_LIBRARY )
+    set( LIBRARY_TYPE SHARED )
+endif( STATIC_LIBRARY )
+
 add_subdirectory( tests )
 
 set(mediawiki_SRCS
@@ -21,7 +32,7 @@ set(mediawiki_SRCS
     mediawikijob.cpp
 )
 
-kde4_add_library( mediawiki ${mediawiki_SRCS} )
+kde4_add_library( mediawiki ${LIBRARY_TYPE} ${mediawiki_SRCS} )
 target_link_libraries( mediawiki ${KDE4_KIO_LIBS} -fprofile-arcs )
 
 install( TARGETS mediawiki ${INSTALL_TARGETS_DEFAULT_ARGS} )
