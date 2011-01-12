@@ -17,47 +17,42 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "mediawiki_p.h"
+
 #include "mediawiki.h"
-
-namespace mediawiki
-{
-
-struct MediaWikiPrivate {
-
-    MediaWikiPrivate(QNetworkAccessManager *  manager, QUrl const & url, QString const & userAgent) : manager(manager), url(url), userAgent(userAgent) {}
-
-    QUrl const url;
-
-    QString const userAgent;
-    QNetworkAccessManager * manager;
-};
-
-}
 
 using namespace mediawiki;
 
 MediaWiki::MediaWiki(QUrl const & url, QString const & customUserAgent)
-    : d(new MediaWikiPrivate(new QNetworkAccessManager(), url, customUserAgent.isEmpty() ? MediaWiki::DEFAULT_USER_AGENT : customUserAgent + "-" + MediaWiki::DEFAULT_USER_AGENT))
+    : d_ptr(new MediaWikiPrivate(url,
+                                 (customUserAgent.isEmpty() ? "" : customUserAgent + "-") + MediaWiki::DEFAULT_USER_AGENT,
+                                 new QNetworkAccessManager()))
 {}
+
+MediaWiki::~MediaWiki()
+{
+    delete d_ptr->manager;
+    delete d_ptr;
+}
 
 QUrl MediaWiki::url() const
 {
-    return d->url;
+    return d_ptr->url;
 }
 
 QString MediaWiki::userAgent() const
 {
-    return d->userAgent;
+    return d_ptr->userAgent;
 }
 
-QNetworkAccessManager* MediaWiki::manager()
+QNetworkAccessManager * const MediaWiki::manager()
 {
-    return d->manager;
+    return d_ptr->manager;
 }
 
 QList<QNetworkCookie> MediaWiki::cookies() const
 {
-    return d->manager->cookieJar()->cookiesForUrl(d->url);
+    return d_ptr->manager->cookieJar()->cookiesForUrl(d_ptr->url);
 }
 
 QString const MediaWiki::DEFAULT_USER_AGENT = "mediawiki-silk";

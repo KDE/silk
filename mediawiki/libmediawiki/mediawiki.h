@@ -29,11 +29,16 @@
 namespace mediawiki
 {
 
+class MediaWikiPrivate;
+
 /**
  * @brief Provides access to wiki powered by MediaWiki.
  */
-class MediaWiki
+class MEDIAWIKI_EXPORT MediaWiki
 {
+
+    Q_DECLARE_PRIVATE(MediaWiki)
+
 public:
 
     /**
@@ -44,6 +49,11 @@ public:
      *                        else the default user agent is used only
      */
     explicit MediaWiki(QUrl const & url, QString const & customUserAgent = QString());
+
+    /**
+     * @brief Destructs the MediaWiki.
+     */
+    ~MediaWiki();
 
     /**
      * @brief Returns the url api of the wiki.
@@ -66,17 +76,17 @@ public:
      * @brief Returns the connection manager.
      * @return the connection manager
      */
-    QNetworkAccessManager* manager();
+    QNetworkAccessManager * const manager();
 
     /**
      * @brief Returns the cookies created by the login.
      * @return the cookies created by the login
      */
-    QList<QNetworkCookie>  cookies() const;
+    QList<QNetworkCookie> cookies() const;
 
 private:
 
-    struct MediaWikiPrivate * const d;
+    MediaWikiPrivate * const d_ptr;
 
 private:
 
