@@ -45,9 +45,9 @@ struct QueryRevisionPrivate {
             , id(id)
             , type(type)
     {
-        if(type == QueryRevision::pageids)
+        if(type == QueryRevision::PageId)
             requestParameter["pageids"] = QString::number(id);
-        else if(type == QueryRevision::revids)
+        else if(type == QueryRevision::RevisionId)
             requestParameter["revids"] = QString::number(id);
     }
     QueryRevisionPrivate(QNetworkAccessManager * const manager,
@@ -57,7 +57,7 @@ struct QueryRevisionPrivate {
             : manager(manager)
             , mediawiki(mediawiki)
             , id(0)
-            , type(QueryRevision::noid)
+            , type(QueryRevision::NoId)
     {
         requestParameter["titles"] = title;
     }
@@ -186,10 +186,10 @@ void QueryRevision::setRvExcludeUser(QString param)
 
 void QueryRevision::setRvDir(QueryRevision::Dir param)
 {
-    if( param == QueryRevision::older)
+    if( param == QueryRevision::Older)
         d->requestParameter["rvdir"] = QString("older");
 
-    else if( param == QueryRevision::newer)
+    else if( param == QueryRevision::Newer)
         d->requestParameter["rvdir"] = QString("newer");
 }
 
@@ -206,7 +206,7 @@ void QueryRevision::setRvSection(int param)
 
 void QueryRevision::setRvToken(QueryRevision::Token t)
 {
-    if(QueryRevision::rollback == t)
+    if(QueryRevision::Rollback == t)
         d->requestParameter["rvtoken"] = QString("rollback");
 }
 

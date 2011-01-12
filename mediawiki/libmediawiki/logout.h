@@ -44,7 +44,7 @@ class MEDIAWIKI_EXPORT Logout : public KJob
 public:
     enum
     {
-        ConnectionAbort = KJob::UserDefinedError+1
+        ConnectionAborted = KJob::UserDefinedError+1
     };
 
     /**

@@ -52,9 +52,9 @@ public:
      */
     enum IdType
     {
-        revids,
-        pageids,
-        noid
+        RevisionId,
+        PageId,
+        NoId
     };
 
     enum

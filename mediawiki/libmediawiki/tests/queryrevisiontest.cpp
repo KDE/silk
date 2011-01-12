@@ -455,7 +455,7 @@ private slots:
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvdir=older&titles=API");
         QueryRevision job(mediawiki, "API");
-        job.setRvDir(QueryRevision::older);
+        job.setRvDir(QueryRevision::Older);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -476,7 +476,7 @@ private slots:
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvdir=newer&titles=API");
         QueryRevision job(mediawiki, "API");
-        job.setRvDir(QueryRevision::newer);
+        job.setRvDir(QueryRevision::Newer);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -583,7 +583,7 @@ private slots:
         fakeserver.startAndWait();
 
         QueryRevision * job = new QueryRevision(mediawiki, title);
-        job->setRvToken(QueryRevision::rollback);
+        job->setRvToken(QueryRevision::Rollback);
 
         connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 

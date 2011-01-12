@@ -41,16 +41,16 @@ namespace mediawiki
             , type(type)
             , token(token)
         {
-            if(type == QueryInfo::pageids)
+            if(type == QueryInfo::PageId)
                 requestParameter["pageids"] = QString::number(id);
-            else if(type == QueryInfo::revids)
+            else if(type == QueryInfo::RevisionId)
                 requestParameter["revids"] = QString::number(id);
         }
 
         QueryInfoPrivate(QString title, QString token, MediaWiki & mediawiki)
             : mediawiki(mediawiki)
             , id(0)
-            , type(QueryInfo::noid)
+            , type(QueryInfo::NoId)
             , token(token)
         {
             requestParameter["titles"] = title;

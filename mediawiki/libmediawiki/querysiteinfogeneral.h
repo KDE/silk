@@ -70,29 +70,29 @@ public:
      * @brief A QuerySiteInfoGeneral result.
      */
     struct Result {
-        QString MainPage;
-        QString Url;
-        QString SiteName;
-        QString Generator;
-        QString PhpVersion;
-        QString PhpApi;
-        QString DataBaseType;
-        QString DataBaseVersion;
-        QString Rev;
-        QString Case;
-        QString Rights;
-        QString Language;
-        QString FallBack8bitEncoding;
-        QString WriteApi;
-        QString TimeZone;
-        QString TimeOffset;
-        QString ArticlePath;
-        QString ScriptPath;
-        QString Script;
-        QString VariantArticlePath;
-        QString ServerUrl;
-        QString WikiId;
-        QString Time;
+        QString mainPage;
+        QString url;
+        QString siteName;
+        QString generator;
+        QString phpVersion;
+        QString phpApi;
+        QString dataBaseType;
+        QString dataBaseVersion;
+        QString rev;
+        QString cas;
+        QString rights;
+        QString language;
+        QString fallBack8bitEncoding;
+        QString writeApi;
+        QString timeZone;
+        QString timeOffset;
+        QString articlePath;
+        QString scriptPath;
+        QString script;
+        QString variantArticlePath;
+        QString serverUrl;
+        QString wikiId;
+        QString time;
 
     };
     /**

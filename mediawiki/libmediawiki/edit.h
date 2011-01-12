@@ -164,17 +164,17 @@ public:
         /**
          * @brief CAPTCHA ID from previous request.
          */
-        unsigned int CaptchaId;
+        unsigned int captchaId;
 
         /**
          * @brief Question from the CAPTCHA.
          */
-        QVariant CaptchaQuestion;
+        QVariant captchaQuestion;
 
         /**
          * @brief Answer to the CAPTCHA.
          */
-        QString CaptchaAnswer;
+        QString captchaAnswer;
     };
 
     /**

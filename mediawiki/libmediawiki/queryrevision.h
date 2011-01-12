@@ -58,11 +58,11 @@ class MEDIAWIKI_EXPORT QueryRevision : public KJob
     Q_OBJECT
 
 public:
-    enum IdType { pageids , revids , noid };
+    enum IdType { PageId , RevisionId , NoId };
 
-    enum Dir {older, newer};
+    enum Dir {Older, Newer};
 
-    enum Token{rollback};
+    enum Token{Rollback};
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
      */

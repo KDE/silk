@@ -82,7 +82,7 @@ private slots:
         connect(&logout, SIGNAL(result(KJob* )),this, SLOT(logoutHandle(KJob*)));
         logout.exec();
         QCOMPARE(this->logoutCount, 1);
-        QCOMPARE(logout.error(), (int)Logout::ConnectionAbort);
+        QCOMPARE(logout.error(), (int)Logout::ConnectionAborted);
     }*/
 
     void cleanupTestCase()

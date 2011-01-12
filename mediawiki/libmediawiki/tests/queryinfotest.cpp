@@ -110,7 +110,7 @@ private slots:
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryInfo * job = new QueryInfo(mediawiki, 367741564, QueryInfo::revids, "edit");
+        QueryInfo * job = new QueryInfo(mediawiki, 367741564, QueryInfo::RevisionId, "edit");
 
         connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
@@ -346,7 +346,7 @@ private slots:
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::pageids, "edit");
+        QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::PageId, "edit");
 
         connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
@@ -466,7 +466,7 @@ private slots:
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::pageids, QString("edit|move|delete"));
+        QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::PageId, QString("edit|move|delete"));
 
         connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 

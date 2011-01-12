@@ -63,7 +63,7 @@ void Logout::start()
 
 void Logout::abort()
 {
-    this->setError(this->ConnectionAbort);
+    this->setError(this->ConnectionAborted);
     emitResult();
 }
 
@@ -92,7 +92,7 @@ void Logout::doWorkProcessReply(QNetworkReply * reply)
 {
     if ( reply->error() != QNetworkReply::NoError )
     {
-        this->setError(this->ConnectionAbort);
+        this->setError(this->ConnectionAborted);
         return;
     }
     this->setError(KJob::NoError);
