@@ -60,18 +60,19 @@ void PlasmaPictureOfTheDay::reloadPicture()
     identifier = m_provider + ':' + QDate::currentDate().toString(Qt::ISODate);
     m_picture->setCurrentDate(QDate::currentDate());
     engine->connectSource(identifier, m_picture);
+
     m_containWidget->setDate(m_picture->getCurrentDate().toString("dddd dd MMMM"));
     m_containWidget->setImage(m_picture);
     m_containWidget->setText(QString::fromUtf8("Légi, Patres colendissimi, in Arabum monumentis, interrogatum Abdalam 1 Sarracenum, quid in hac quasi mundana scaena"));
-
-
 }
 
 void PlasmaPictureOfTheDay::paintInterface(QPainter *p,
         const QStyleOptionGraphicsItem *option, const QRect &contentsRect)
 {    
-
+    //get image size scalled
     QSize sizeR = m_picture->getPicture().scaled(this->size().width(),this->size().height(),Qt::KeepAspectRatio).size();
+    //set minimum size of the image
+    //30 = double margin of 15
     m_picture->setMinimumSize(sizeR.width()-30, sizeR.height()-30);
 
     m_containWidget->resize(this->size());

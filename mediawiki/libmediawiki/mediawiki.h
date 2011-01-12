@@ -32,9 +32,8 @@ namespace mediawiki
 /**
  * @brief Provides access to wiki powered by MediaWiki.
  */
-    class MEDIAWIKI_EXPORT MediaWiki:QObject
+class MediaWiki
 {
-Q_OBJECT
 public:
 
     /**

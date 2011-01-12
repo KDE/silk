@@ -37,7 +37,7 @@ struct MediaWikiPrivate {
 using namespace mediawiki;
 
 MediaWiki::MediaWiki(QUrl const & url, QString const & customUserAgent)
-    : d(new MediaWikiPrivate(new QNetworkAccessManager(this), url, customUserAgent.isEmpty() ? MediaWiki::DEFAULT_USER_AGENT : customUserAgent + "-" + MediaWiki::DEFAULT_USER_AGENT))
+    : d(new MediaWikiPrivate(new QNetworkAccessManager(), url, customUserAgent.isEmpty() ? MediaWiki::DEFAULT_USER_AGENT : customUserAgent + "-" + MediaWiki::DEFAULT_USER_AGENT))
 {}
 
 QUrl MediaWiki::url() const
