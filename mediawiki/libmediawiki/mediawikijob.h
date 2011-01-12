@@ -26,9 +26,16 @@
 namespace mediawiki
 {
 
+class MediaWiki;
+class MediaWikiJobPrivate;
+
+/**
+ * @brief The base class for all MediaWiki jobs.
+ */
 class MEDIAWIKI_EXPORT MediaWikiJob : public KJob {
 
     Q_OBJECT
+    Q_DECLARE_PRIVATE(MediaWikiJob)
 
 public:
 
@@ -45,7 +52,21 @@ public:
 
     };
 
-    MediaWikiJob(QObject * parent = 0);
+    /**
+     * @brief Constructs a MediaWikiJob.
+     * @param mediawiki the mediawiki receiving the request
+     * @param parent the QObject parent
+     */
+    MediaWikiJob(const MediaWiki & mediawiki, QObject * parent = 0);
+
+    /**
+     * @brief Destructs the MediaWikiJob.
+     */
+    virtual ~MediaWikiJob();
+
+private:
+
+    MediaWikiJobPrivate * const d_ptr;
 
 };
 

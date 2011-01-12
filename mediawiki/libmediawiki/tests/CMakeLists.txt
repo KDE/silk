@@ -25,7 +25,6 @@ MEDIAWIKI_UNIT_TESTS(
     queryrevisiontest
     queryinfotest
     edittest
-    mediawikijobtest
 )
 set( ressources_RC
     queryrevisiontest_content.rc
