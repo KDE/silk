@@ -32,6 +32,19 @@ class MEDIAWIKI_EXPORT MediaWikiJob : public KJob {
 
 public:
 
+    /**
+     * @brief Indicates all possible error conditions found during the processing of the job.
+     */
+    enum {
+
+        NetworkError = KJob::UserDefinedError + 1,
+
+        XmlError,
+
+        UserRequestDefinedError = KJob::UserDefinedError + 100,
+
+    };
+
     MediaWikiJob(QObject * parent = 0);
 
 };
