@@ -62,12 +62,12 @@ public:
         /**
          * @brief XML error
          */
-        Falsexml = KJob::UserDefinedError+1,
+        BadXml = KJob::UserDefinedError+1,
 
         /**
          * @brief Connection aborted
          */
-        ConnectionAbort,
+        ConnectionAborted,
 
     };
 

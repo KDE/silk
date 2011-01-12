@@ -86,29 +86,29 @@ void QuerySiteInfoGeneralTestAttribute()
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
     QVERIFY(general.error() == QuerySiteInfoGeneral::NoError);
-    QVERIFY(result.mainpage             == QString("Main Page"));
-    QVERIFY(result.base                 == QString("http://en.wikipedia.org/wiki/Main_Page"));
-    QVERIFY(result.sitename             == QString("Wikipedia"));
-    QVERIFY(result.generator            == QString("MediaWiki 1.16wmf4"));
-    QVERIFY(result.phpversion           == QString("5.2.4-2ubuntu5.12wm1"));
-    QVERIFY(result.phpsapi              == QString("apache2handler"));
-    QVERIFY(result.dbtype               == QString("mysql"));
-    QVERIFY(result.dbversion            == QString("5.1.46-facebook-r3489-log"));
-    QVERIFY(result.rev                  == QString("75268"));
-    QVERIFY(result.cas                  == QString("first-letter"));
-    QVERIFY(result.rights               == QString("Creative Commons Attribution-Share Alike 3.0 Unported"));
-    QVERIFY(result.lang                 == QString("en"));
-    QVERIFY(result.fallback8bitencoding == QString("windows-1252"));
-    QVERIFY(result.writeapi             == QString(""));
-    QVERIFY(result.timezone             == QString("UTC"));
-    QVERIFY(result.timeoffset           == QString("0"));
-    QVERIFY(result.articlepath          == QString("/wiki/$1"));
-    QVERIFY(result.scriptpath           == QString("/w"));
-    QVERIFY(result.script               == QString("/w/index.php"));
-    QVERIFY(result.variantarticlepath   == QString(""));
-    QVERIFY(result.server               == QString("http://en.wikipedia.org"));
-    QVERIFY(result.wikiid               == QString("enwiki"));
-    QVERIFY(result.time                 == QString("2010-10-24T19:53:13Z"));
+    QVERIFY(result.MainPage             == QString("Main Page"));
+    QVERIFY(result.Url                 == QString("http://en.wikipedia.org/wiki/Main_Page"));
+    QVERIFY(result.SiteName             == QString("Wikipedia"));
+    QVERIFY(result.Generator            == QString("MediaWiki 1.16wmf4"));
+    QVERIFY(result.PhpVersion           == QString("5.2.4-2ubuntu5.12wm1"));
+    QVERIFY(result.PhpApi              == QString("apache2handler"));
+    QVERIFY(result.DataBaseType               == QString("mysql"));
+    QVERIFY(result.DataBaseVersion            == QString("5.1.46-facebook-r3489-log"));
+    QVERIFY(result.Rev                  == QString("75268"));
+    QVERIFY(result.Case                  == QString("first-letter"));
+    QVERIFY(result.Rights               == QString("Creative Commons Attribution-Share Alike 3.0 Unported"));
+    QVERIFY(result.Language                 == QString("en"));
+    QVERIFY(result.FallBack8bitEncoding == QString("windows-1252"));
+    QVERIFY(result.WriteApi             == QString(""));
+    QVERIFY(result.TimeZone             == QString("UTC"));
+    QVERIFY(result.TimeOffset           == QString("0"));
+    QVERIFY(result.ArticlePath          == QString("/wiki/$1"));
+    QVERIFY(result.ScriptPath           == QString("/w"));
+    QVERIFY(result.Script               == QString("/w/index.php"));
+    QVERIFY(result.VariantArticlePath   == QString(""));
+    QVERIFY(result.ServerUrl               == QString("http://en.wikipedia.org"));
+    QVERIFY(result.WikiId               == QString("enwiki"));
+    QVERIFY(result.Time                 == QString("2010-10-24T19:53:13Z"));
 }
 void QuerySiteInfoGeneralTestConnectFalseXML()
 {
@@ -125,7 +125,7 @@ void QuerySiteInfoGeneralTestConnectFalseXML()
     QCOMPARE(this->generalCount, 1);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == QuerySiteInfoGeneral::falsexml);
+    QVERIFY(general.error() == QuerySiteInfoGeneral::BadXml);
 
 }
 void QuerySiteInfoGeneralTestConnectAbort()
@@ -136,7 +136,7 @@ void QuerySiteInfoGeneralTestConnectAbort()
     connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
     general.exec();
     QCOMPARE(this->generalCount, 1);
-    QVERIFY(general.error() == QuerySiteInfoGeneral::connectionAbort);
+    QVERIFY(general.error() == QuerySiteInfoGeneral::ConnectionAborted);
 
 }
 void QuerySiteInfoGeneralTestErrortIncludeAllDenied()
@@ -154,7 +154,7 @@ void QuerySiteInfoGeneralTestErrortIncludeAllDenied()
     QCOMPARE(this->generalCount, 1);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == QuerySiteInfoGeneral::includeAllDenied);
+    QVERIFY(general.error() == QuerySiteInfoGeneral::IncludeAllDenied);
 
 }
 void cleanupTestCase()

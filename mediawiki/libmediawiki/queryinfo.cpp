@@ -92,7 +92,7 @@ void QueryInfo::start()
 
 void QueryInfo::abort()
 {
-    this->setError(this->ConnectionAbort);
+    this->setError(this->ConnectionAborted);
     emitResult();
 }
 
@@ -190,11 +190,11 @@ void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
             setError(KJob::NoError);
             emit infos(results);
         } else {
-            setError(QueryInfo::Falsexml);
+            setError(QueryInfo::BadXml);
         }
     }
     else {
-        setError(QueryInfo::ConnectionAbort);
+        setError(QueryInfo::ConnectionAborted);
     }
     emitResult();
 }

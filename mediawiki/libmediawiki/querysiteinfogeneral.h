@@ -47,9 +47,9 @@ class MEDIAWIKI_EXPORT QuerySiteInfoGeneral : public KJob
 public:
     enum
     {
-        falsexml = KJob::UserDefinedError+1,
-        connectionAbort,
-        includeAllDenied
+        BadXml = KJob::UserDefinedError+1,
+        ConnectionAborted,
+        IncludeAllDenied
     };
     /**
      * @brief Constructs a QuerySiteInfoGeneral job.
@@ -70,29 +70,29 @@ public:
      * @brief A QuerySiteInfoGeneral result.
      */
     struct Result {
-        QString mainpage;
-        QString base;
-        QString sitename;
-        QString generator;
-        QString phpversion;
-        QString phpsapi;
-        QString dbtype;
-        QString dbversion;
-        QString rev;
-        QString cas;
-        QString rights;
-        QString lang;
-        QString fallback8bitencoding;
-        QString writeapi;
-        QString timezone;
-        QString timeoffset;
-        QString articlepath;
-        QString scriptpath;
-        QString script;
-        QString variantarticlepath;
-        QString server;
-        QString wikiid;
-        QString time;
+        QString MainPage;
+        QString Url;
+        QString SiteName;
+        QString Generator;
+        QString PhpVersion;
+        QString PhpApi;
+        QString DataBaseType;
+        QString DataBaseVersion;
+        QString Rev;
+        QString Case;
+        QString Rights;
+        QString Language;
+        QString FallBack8bitEncoding;
+        QString WriteApi;
+        QString TimeZone;
+        QString TimeOffset;
+        QString ArticlePath;
+        QString ScriptPath;
+        QString Script;
+        QString VariantArticlePath;
+        QString ServerUrl;
+        QString WikiId;
+        QString Time;
 
     };
     /**

@@ -79,14 +79,14 @@ void QuerySiteInfoGeneral::doWorkSendRequest()
 }
 void QuerySiteInfoGeneral::abort()
 {
-    this->setError(this->connectionAbort);
+    this->setError(this->ConnectionAborted);
     emitResult();
 }
 void QuerySiteInfoGeneral::doWorkProcessReply(QNetworkReply * reply)
 {
     if ( reply->error() != QNetworkReply::NoError )
     {
-        this->setError(this->connectionAbort);
+        this->setError(this->ConnectionAborted);
         reply->close();
         reply->deleteLater();
         emitResult();
@@ -98,33 +98,33 @@ void QuerySiteInfoGeneral::doWorkProcessReply(QNetworkReply * reply)
         QXmlStreamReader::TokenType token = reader.readNext();
         if(token == QXmlStreamReader::StartElement) {
             if(reader.name() == "general") {
-                d->result->mainpage = reader.attributes().value("mainpage").toString();
-                d->result->base = reader.attributes().value("base").toString();
-                d->result->sitename = reader.attributes().value("sitename").toString();
-                d->result->generator = reader.attributes().value("generator").toString();
-                d->result->phpversion = reader.attributes().value("phpversion").toString();
-                d->result->phpsapi = reader.attributes().value("phpsapi").toString();
-                d->result->dbtype = reader.attributes().value("dbtype").toString();
-                d->result->dbversion = reader.attributes().value("dbversion").toString();
-                d->result->rev = reader.attributes().value("rev").toString();
-                d->result->cas = reader.attributes().value("case").toString();
-                d->result->rights = reader.attributes().value("rights").toString();
-                d->result->lang = reader.attributes().value("lang").toString();
-                d->result->fallback8bitencoding = reader.attributes().value("fallback8bitEncoding").toString();
-                d->result->writeapi = reader.attributes().value("writeapi").toString();
-                d->result->timezone = reader.attributes().value("timezone").toString();
-                d->result->timeoffset = reader.attributes().value("timeoffset").toString();
-                d->result->articlepath = reader.attributes().value("articlepath").toString();
-                d->result->scriptpath = reader.attributes().value("scriptpath").toString();
-                d->result->script = reader.attributes().value("script").toString();
-                d->result->variantarticlepath = reader.attributes().value("variantarticlepath").toString();
-                d->result->server = reader.attributes().value("server").toString();
-                d->result->wikiid = reader.attributes().value("wikiid").toString();
-                d->result->time = reader.attributes().value("time").toString();
+                d->result->MainPage = reader.attributes().value("mainpage").toString();
+                d->result->Url = reader.attributes().value("base").toString();
+                d->result->SiteName = reader.attributes().value("sitename").toString();
+                d->result->Generator = reader.attributes().value("generator").toString();
+                d->result->PhpVersion = reader.attributes().value("phpversion").toString();
+                d->result->PhpApi = reader.attributes().value("phpsapi").toString();
+                d->result->DataBaseType = reader.attributes().value("dbtype").toString();
+                d->result->DataBaseVersion = reader.attributes().value("dbversion").toString();
+                d->result->Rev = reader.attributes().value("rev").toString();
+                d->result->Case = reader.attributes().value("case").toString();
+                d->result->Rights = reader.attributes().value("rights").toString();
+                d->result->Language = reader.attributes().value("lang").toString();
+                d->result->FallBack8bitEncoding = reader.attributes().value("fallback8bitEncoding").toString();
+                d->result->WriteApi = reader.attributes().value("writeapi").toString();
+                d->result->TimeZone = reader.attributes().value("timezone").toString();
+                d->result->TimeOffset = reader.attributes().value("timeoffset").toString();
+                d->result->ArticlePath = reader.attributes().value("articlepath").toString();
+                d->result->ScriptPath = reader.attributes().value("scriptpath").toString();
+                d->result->Script = reader.attributes().value("script").toString();
+                d->result->VariantArticlePath = reader.attributes().value("variantarticlepath").toString();
+                d->result->ServerUrl = reader.attributes().value("server").toString();
+                d->result->WikiId = reader.attributes().value("wikiid").toString();
+                d->result->Time = reader.attributes().value("time").toString();
             }
             else if(reader.name() == "error")
             {
-                this->setError(this->includeAllDenied);
+                this->setError(this->IncludeAllDenied);
                 reply->close();
                 reply->deleteLater();
                 emitResult();
@@ -132,7 +132,7 @@ void QuerySiteInfoGeneral::doWorkProcessReply(QNetworkReply * reply)
             }
         }
     }
-    if(reader.hasError())this->setError(this->falsexml);
+    if(reader.hasError())this->setError(this->BadXml);
 
 
     reply->close();

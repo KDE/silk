@@ -1,6 +1,7 @@
 /*
  *   Copyright 2010 by Ludovic Delfau <ludovicdelfau@gmail.com>
  *   Copyright 2010 by Guillaume Hormiere <hormiere.guillaume@gmail.com>
+ *   Copyright 2011 by Manuel Campomanes <campomanes.manuel@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -265,23 +266,23 @@ private slots:
 
         QTest::newRow("Revision Ids")
                 << "<api><error code=\"rvrevids\" info=\"\"/></api>"
-                << int(QueryRevision::RevIds);
+                << int(QueryRevision::WrongRevisionId);
 
         QTest::newRow("Multilple pages")
                 << "<api><error code=\"rvmultpages\" info=\"\"/></api>"
-                << int(QueryRevision::MultPages);
+                << int(QueryRevision::MultiPagesNotAllowed);
 
         QTest::newRow("Access Denied")
                 << "<api><error code=\"rvaccessdenied\" info=\"\"/></api>"
-                << int(QueryRevision::AccessDenied);
+                << int(QueryRevision::TitleAccessDenied);
 
         QTest::newRow("Add Parameters")
                 << "<api><error code=\"rvbadparams\" info=\"\"/></api>"
-                << int(QueryRevision::AddParams);
+                << int(QueryRevision::TooManyParams);
 
         QTest::newRow("No Such Section")
                 << "<api><error code=\"rvnosuchsection\" info=\"\"/></api>"
-                << int(QueryRevision::NoSuchSection);
+                << int(QueryRevision::SectionNotFound);
 
     }
     void testRvContinue()

@@ -37,7 +37,7 @@ struct QueryImageinfoPrivate {
                           QueryImageinfo::property_type properties,
                           QString const & limit,
                           bool stop,
-                          QString const & start,
+                          QString const & begin,
                           QString const & end,
                           QString width,
                           QString height)
@@ -47,7 +47,7 @@ struct QueryImageinfoPrivate {
         , properties(properties)
         , limit(limit)
         , stop(stop)
-        , start(start)
+        , begin(begin)
         , end(end)
         , width(width)
         , height(height)
@@ -59,7 +59,7 @@ struct QueryImageinfoPrivate {
     QueryImageinfo::property_type properties;
     QString limit;
     bool stop;
-    QString start;
+    QString begin;
     QString end;
     QString width;
     QString height;
@@ -100,8 +100,8 @@ void QueryImageinfo::paramLimit(unsigned int limit, bool stop) {
     d->stop = stop;
 }
 
-void QueryImageinfo::paramStart(QDateTime const & start) {
-    d->start = start.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
+void QueryImageinfo::paramStart(QDateTime const & begin) {
+    d->begin = begin.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
 }
 
 void QueryImageinfo::paramEnd(QDateTime const & end) {
@@ -134,8 +134,8 @@ void QueryImageinfo::doWorkSendRequest() {
     url.addQueryItem("prop", "imageinfo");
     url.addQueryItem("iiprop", iiprop());
     url.addQueryItem("iilimit", d->limit);
-    if (!d->start.isNull()) {
-        url.addQueryItem("iistart", d->start);
+    if (!d->begin.isNull()) {
+        url.addQueryItem("iistart", d->begin);
     }
     if (!d->end.isNull()) {
         url.addQueryItem("iiend", d->end);
@@ -177,7 +177,7 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
         QString mime;
         QHash<QString, QVariant> metadata;
         QMap<QString, QString> normalized;
-        d->start = QString();
+        d->begin = QString();
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {
@@ -191,7 +191,7 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                     if (reader.attributes().value("iistart").isNull()) {
                         imageinfos.clear();
                     } else {
-                        d->start = reader.attributes().value("iistart").toString();
+                        d->begin = reader.attributes().value("iistart").toString();
                     }
                 } else if (reader.name() == "ii") {
                     timestamp = QDateTime::fromString(reader.attributes().value("timestamp").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'");
@@ -243,7 +243,7 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
         if (!reader.hasError()) {
             disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
             emit images(imagesReceived);
-            if (d->start.isNull() || d->stop) {
+            if (d->begin.isNull() || d->stop) {
                 setError(KJob::NoError);
             }
             else {

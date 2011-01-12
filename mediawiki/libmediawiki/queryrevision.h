@@ -1,5 +1,6 @@
 /*
  *   Copyright 2010 by Hormiere Guillaume <hormiere.guillaume@gmail.com>
+ *   Copyright 2011 by Manuel Campomanes <campomanes.manuel@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -78,23 +79,23 @@ public:
         /**
          * @brief The revids= parameter may not be used with the list options (limit, startid, endid, dirNewer, start, end).
          */
-        RevIds,
+        WrongRevisionId,
         /**
          * @brief titles, pageids or a generator was used to supply multiple pages, but the limit, startid, endid, dirNewer, user, excludeuser, start and end parameters may only be used on a single page.
          */
-        MultPages,
+        MultiPagesNotAllowed,
         /**
          * @brief The current user is not allowed to read title.
          */
-        AccessDenied,
+        TitleAccessDenied,
         /**
          * @brief start and startid or end and endid or user and excludeuser cannot be used together
          */
-        AddParams,
+        TooManyParams,
         /**
          * @brief There is no section section in rrevid
          */
-        NoSuchSection
+        SectionNotFound
 
     };
     /**

@@ -1,5 +1,6 @@
 /*
  *   Copyright 2010 by Alexandre Mendes <alex.mendes1988@gmail.com>
+ *   Copyright 2011 by Manuel Campomanes <campomanes.manuel@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as

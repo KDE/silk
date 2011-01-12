@@ -163,7 +163,7 @@ public:
      * @param start timestamp to start listing from
      * @pre to call just before start()
      */
-    void paramStart(QDateTime const & start);
+    void paramStart(QDateTime const & begin);
 
     /**
      * @brief Set timestamp to stop listing at.

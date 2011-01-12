@@ -1,5 +1,6 @@
 /*
  *   Copyright 2010 by Hormiere Guillaume <hormiere.guillaume@gmail.com>
+ *   Copyright 2011 by Manuel Campomanes <campomanes.manuel@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -289,15 +290,15 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
             else if(reader.name() == "error")
             {
                 if(reader.attributes().value("code").toString() == QString("rvrevids"))
-                    this->setError(this->RevIds);
+                    this->setError(this->WrongRevisionId);
                 else if(reader.attributes().value("code").toString() == QString("rvmultpages"))
-                    this->setError(this->MultPages);
+                    this->setError(this->MultiPagesNotAllowed);
                 else if(reader.attributes().value("code").toString() == QString("rvaccessdenied"))
-                    this->setError(this->AccessDenied);
+                    this->setError(this->TitleAccessDenied);
                 else if(reader.attributes().value("code").toString() == QString("rvbadparams"))
-                    this->setError(this->AddParams);
+                    this->setError(this->TooManyParams);
                 else if(reader.attributes().value("code").toString() == QString("rvnosuchsection"))
-                    this->setError(this->NoSuchSection);
+                    this->setError(this->SectionNotFound);
 
                 reply->close();
                 reply->deleteLater();
