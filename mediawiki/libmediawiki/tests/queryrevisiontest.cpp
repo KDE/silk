@@ -61,7 +61,7 @@ Q_DECLARE_METATYPE(QList<QueryRevision::Result>)
 Q_DECLARE_METATYPE(FakeServer::Request)
 Q_DECLARE_METATYPE(QueryRevision*)
 
-bool operator==(QueryRevision::Result const & lhs, QueryRevision::Result const & rhs) {
+bool operator==(const QueryRevision::Result & lhs, const QueryRevision::Result & rhs) {
     return lhs.revid == rhs.revid &&
             lhs.parentId == rhs.parentId &&
             lhs.size == rhs.size &&
@@ -73,7 +73,7 @@ bool operator==(QueryRevision::Result const & lhs, QueryRevision::Result const &
             lhs.parseTree == rhs.parseTree &&
             lhs.rollback == rhs.rollback;
 }
-void debugRevision(QueryRevision::Result const & lhs)
+void debugRevision(const QueryRevision::Result & lhs)
 {
     qDebug() << lhs.revid;
     qDebug() << lhs.parentId;
@@ -94,7 +94,7 @@ class QueryRevisionTest : public QObject
     
 public slots:
     
-    void revisionHandle(QList<QueryRevision::Result> const & revision) {
+    void revisionHandle(const QList<QueryRevision::Result> & revision) {
         ++revisionCount;
         revisionResults = revision;
     }
@@ -124,7 +124,7 @@ private slots:
         QueryRevision * job = new QueryRevision(mediawiki, title);
         job->setRvProp( rvprop );
 
-        connect(job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job->exec();
 
@@ -233,7 +233,7 @@ private slots:
         QueryRevision * job = new QueryRevision(mediawiki, "NoTitle");
         job->setRvProp( SIZE|CONTENT );
 
-        connect(job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job->exec();
 
@@ -295,7 +295,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -315,7 +315,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -335,7 +335,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -355,7 +355,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -376,7 +376,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -397,7 +397,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -418,7 +418,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -439,7 +439,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -460,7 +460,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -481,7 +481,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -522,7 +522,7 @@ private slots:
         job->setRvProp( rvprop );
         job->setRvGenerateXML(true);
 
-        connect(job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job->exec();
 
@@ -550,7 +550,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 
@@ -585,7 +585,7 @@ private slots:
         QueryRevision * job = new QueryRevision(mediawiki, title);
         job->setRvToken(QueryRevision::rollback);
 
-        connect(job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job->exec();
 
@@ -613,7 +613,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(QList<QueryRevision::Result> const &)), this, SLOT(revisionHandle(QList<QueryRevision::Result> const &)));
+        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
         job.exec();
 

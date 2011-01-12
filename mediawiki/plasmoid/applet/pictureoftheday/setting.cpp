@@ -8,7 +8,7 @@ Setting::Setting(QWidget *parent) :
 }
 
 
-void Setting::dataUpdated(QString const &, Plasma::DataEngine::Data const & data) {
+void Setting::dataUpdated(const QString&, const Plasma::DataEngine::Data & data) {
     this->settingUI.comboBox->clear();
     for (Plasma::DataEngine::Data::const_iterator it = data.begin(); it != data.end(); ++it) {
             this->settingUI.comboBox->addItem(it.key(), it.value());

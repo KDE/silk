@@ -35,10 +35,10 @@ Q_DECLARE_METATYPE(QList<QList<QueryImages::Page> >);
 
 QueryImages::Page constructsPage(unsigned int pageId,
                                  unsigned int namespaceId,
-                                 QString const & title,
-                                 QList<QueryImages::Image> const & images)
+                                 const QString & title,
+                                 const QList<QueryImages::Image> & images)
 {
-    QueryImages::Page const page(pageId, namespaceId, title, title, images, false);
+    const QueryImages::Page page(pageId, namespaceId, title, title, images, false);
     Q_ASSERT(!page.isMissing());
     Q_ASSERT(!page.isNormalized());
     return page;
@@ -46,43 +46,43 @@ QueryImages::Page constructsPage(unsigned int pageId,
 
 QueryImages::Page constructsPageNormalized(unsigned int pageId,
                                            unsigned int namespaceId,
-                                           QString const & title,
-                                           QString const & titleNoNormalized,
-                                           QList<QueryImages::Image> const & images)
+                                           const QString& title,
+                                           const QString& titleNoNormalized,
+                                           const QList<QueryImages::Image> & images)
 {
-    QueryImages::Page const page(pageId, namespaceId, title, titleNoNormalized, images, false);
+    const QueryImages::Page page(pageId, namespaceId, title, titleNoNormalized, images, false);
     Q_ASSERT(!page.isMissing());
     Q_ASSERT(page.isNormalized());
     return page;
 }
 
 QueryImages::Page constructsPageMissing(unsigned int namespaceId,
-                                        QString const & title)
+                                        const QString & title)
 {
     unsigned int pageId;
-    QueryImages::Page const page(pageId, namespaceId, title, title, QList<QueryImages::Image>(), true);
+    const QueryImages::Page page(pageId, namespaceId, title, title, QList<QueryImages::Image>(), true);
     Q_ASSERT(page.isMissing());
     Q_ASSERT(!page.isNormalized());
     return page;
 }
 
 QueryImages::Page constructsPageMissingNormalized(unsigned int namespaceId,
-                                                  QString const & title,
-                                                  QString const & titleNoNormalized)
+                                                  const QString& title,
+                                                  const QString& titleNoNormalized)
 {
     unsigned int pageId;
-    QueryImages::Page const page(pageId, namespaceId, title, titleNoNormalized, QList<QueryImages::Image>(), true);
+    const QueryImages::Page page(pageId, namespaceId, title, titleNoNormalized, QList<QueryImages::Image>(), true);
     Q_ASSERT(page.isMissing());
     Q_ASSERT(page.isNormalized());
     return page;
 }
 
-bool operator==(QueryImages::Image const & lhs, QueryImages::Image const & rhs) {
+bool operator==(const QueryImages::Image & lhs, const QueryImages::Image & rhs) {
     return lhs.namespaceId() == rhs.namespaceId() &&
            lhs.title() == rhs.title();
 }
 
-bool operator==(QueryImages::Page const & lhs, QueryImages::Page const & rhs) {
+bool operator==(const QueryImages::Page & lhs, const QueryImages::Page & rhs) {
     return lhs.isNormalized() == rhs.isNormalized() &&
            lhs.title() == rhs.title() &&
            lhs.images() == rhs.images() &&
@@ -98,7 +98,7 @@ class QueryImagesTest : public QObject {
 
 public slots:
 
-    void pagesHandle(QList<QueryImages::Page> const & pages) {
+    void pagesHandle(const QList<QueryImages::Page> & pages) {
         pagesReceivedList.push_back(pages);
     }
 
@@ -120,13 +120,13 @@ private slots:
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         QueryImages * job = new QueryImages(mediawiki, title);
 
-        connect(job, SIGNAL(pages(QList<QueryImages::Page> const &)), this, SLOT(pagesHandle(QList<QueryImages::Page> const &)));
+        connect(job, SIGNAL(pages(const QList<QueryImages::Page> &)), this, SLOT(pagesHandle(const QList<QueryImages::Page> &)));
 
         job->exec();
 
         QCOMPARE(job->error(), int(KJob::NoError));
 
-        QList<FakeServer::Request> const requests = fakeserver.getRequest();
+        const QList<FakeServer::Request> requests = fakeserver.getRequest();
         QCOMPARE(requests.size(), 1);
 
         FakeServer::Request const request = requests[0];
@@ -213,14 +213,14 @@ private slots:
         // Prepare the job
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         QueryImages * job = new QueryImages(mediawiki, title, limit);
-        connect(job, SIGNAL(pages(QList<QueryImages::Page> const &)), this, SLOT(pagesHandle(QList<QueryImages::Page> const &)));
+        connect(job, SIGNAL(pages(const QList<QueryImages::Page> &)), this, SLOT(pagesHandle(const QList<QueryImages::Page> &)));
         job->exec();
 
         // Test job
         QCOMPARE(job->error(), int(KJob::NoError));
 
         // Test requests sent
-        QList<FakeServer::Request> const requests = fakeserver.getRequest();
+        const QList<FakeServer::Request> requests = fakeserver.getRequest();
         QCOMPARE(requests.size(), pagesExpectedList.size());
         for (int i = 0; i < requests.size(); ++i) {
             QCOMPARE(requests[i].agent, mediawiki.userAgent());

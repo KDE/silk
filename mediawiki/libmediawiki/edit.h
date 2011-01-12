@@ -189,7 +189,7 @@ public:
      * @pre !title.isEmpty()
      * @pre !token.isEmpty()
      */
-    explicit Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & text, QObject *parent = 0);
+    explicit Edit( MediaWiki  & media, const QString& title, const QString& token, const QString& basetimestamp, const QString& starttimestamp, const QString& text, QObject *parent = 0);
 
     /**
      * @brief Constructs an Edit job.
@@ -204,7 +204,7 @@ public:
      * @pre !title.isEmpty()
      * @pre !token.isEmpty()
      */
-    explicit Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & appendtext, QString const & prependtext, QObject *parent = 0);
+    explicit Edit( MediaWiki  & media, const QString& title, const QString& token, const QString& basetimestamp, const QString& starttimestamp, const QString& appendtext, const QString& prependtext, QObject *parent = 0);
 
     /**
      * @brief Constructs an Edit job.
@@ -219,7 +219,7 @@ public:
      * @pre !title.isEmpty()
      * @pre !token.isEmpty()
      */
-    explicit Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, unsigned int undo, unsigned int undoafter = 0, QObject *parent = 0);
+    explicit Edit( MediaWiki  & media, const QString& title, const QString& token, const QString& basetimestamp, const QString& starttimestamp, unsigned int undo, unsigned int undoafter = 0, QObject *parent = 0);
 
     /**
      * @brief Destroys the Edit job.
@@ -294,20 +294,20 @@ public:
      * @brief Set the section.
      * @param section Set the section. New or integer
      */
-    void setSection(QString const & section);
+    void setSection(const QString& section);
 
     /**
      * @brief Set the summary.
      * @param summary Set the summary
      */
-    void setSummary(QString const & summary);
+    void setSummary(const QString& summary);
 signals:
 
     /**
      * @brief Emitted when a connection has been completed.
      * @param success true if the connection was completed successfully.
      */
-    void resultCaptcha(QVariant const & captcha);
+    void resultCaptcha(const QVariant & captcha);
 
 private slots:
 
@@ -332,7 +332,7 @@ public slots:
      * @brief Reads the xml
      * @param success true if the connection was completed successfully.
      */
-    void finishedCaptcha( QString  const & captcha );
+    void finishedCaptcha( const QString & captcha );
 
 private:
 

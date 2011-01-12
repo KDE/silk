@@ -34,7 +34,7 @@ class QueryImageinfoTest : public QObject {
 
 public slots:
 
-    void imagesHandle(QList<QueryImageinfo::Image> const & images) {
+    void imagesHandle(const QList<QueryImageinfo::Image> & images) {
         imagesReceived.push_back(images);
     }
 
@@ -59,7 +59,7 @@ private slots:
         job->paramStart(QDateTime(QDate(2008, 06, 06), QTime(22, 27, 45, 0)));
         job->paramEnd(QDateTime(QDate(2007, 06, 06), QTime(22, 27, 45, 0)));
         job->paramScale(78u, 102u);
-        connect(job, SIGNAL(images(QList<QueryImageinfo::Image> const &)), this, SLOT(imagesHandle(QList<QueryImageinfo::Image> const &)));
+        connect(job, SIGNAL(images(const QList<QueryImageinfo::Image> &)), this, SLOT(imagesHandle(const QList<QueryImageinfo::Image> &)));
         job->exec();
 
         // Test job
@@ -69,7 +69,7 @@ private slots:
         QVERIFY(fakeserver.isAllScenarioDone());
 
         // Test requests sent
-        QList<FakeServer::Request> const requests = fakeserver.getRequest();
+        const QList<FakeServer::Request> requests = fakeserver.getRequest();
         QCOMPARE(requests.size(), 2);
         for (unsigned int i = 0; i < 2; ++i) {
             QCOMPARE(requests[i].agent, mediawiki.userAgent());

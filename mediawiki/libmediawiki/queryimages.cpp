@@ -30,7 +30,7 @@ namespace mediawiki {
 
 struct QueryImagesPrivate {
 
-    QueryImagesPrivate(QNetworkAccessManager * const manager, MediaWiki const & mediawiki, QString const & title, QString const & limit)
+    QueryImagesPrivate(QNetworkAccessManager * const manager, const MediaWiki & mediawiki, const QString & title, const QString & limit)
         : manager(manager)
         , mediawiki(mediawiki)
         , title(title)
@@ -40,9 +40,9 @@ struct QueryImagesPrivate {
 
     QNetworkAccessManager * const manager;
 
-    MediaWiki const & mediawiki;
+    const MediaWiki & mediawiki;
 
-    QString const title;
+    const QString title;
 
     QString limit;
 
@@ -54,7 +54,7 @@ struct QueryImagesPrivate {
 
 using namespace mediawiki;
 
-QueryImages::QueryImages(MediaWiki const & mediawiki, QString const & title, unsigned int limit, QObject * parent)
+QueryImages::QueryImages(const MediaWiki & mediawiki, const QString & title, unsigned int limit, QObject * parent)
     : KJob(parent)
     , d(new QueryImagesPrivate(new QNetworkAccessManager(this), mediawiki, title, QString::number(limit)))
 {

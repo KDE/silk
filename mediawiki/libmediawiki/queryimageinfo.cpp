@@ -32,13 +32,13 @@ namespace mediawiki {
 struct QueryImageinfoPrivate {
 
     QueryImageinfoPrivate(QNetworkAccessManager * const manager,
-                          MediaWiki const & mediawiki,
-                          QString const & title,
+                          const MediaWiki & mediawiki,
+                          const QString & title,
                           QueryImageinfo::property_type properties,
-                          QString const & limit,
+                          const QString & limit,
                           bool stop,
-                          QString const & begin,
-                          QString const & end,
+                          const QString & start,
+                          const QString & end,
                           QString width,
                           QString height)
         : manager(manager)
@@ -54,8 +54,8 @@ struct QueryImageinfoPrivate {
     {}
 
     QNetworkAccessManager * const manager;
-    MediaWiki const & mediawiki;
-    QString const title;
+    const MediaWiki & mediawiki;
+    const QString title;
     QueryImageinfo::property_type properties;
     QString limit;
     bool stop;
@@ -70,7 +70,7 @@ struct QueryImageinfoPrivate {
 
 using namespace mediawiki;
 
-QueryImageinfo::QueryImageinfo(MediaWiki const & mediawiki, QString const & title, QObject * parent)
+QueryImageinfo::QueryImageinfo(const MediaWiki & mediawiki, const QString & title, QObject * parent)
     : KJob(parent)
     , d(new QueryImageinfoPrivate(new QNetworkAccessManager(this),
                                   mediawiki,
@@ -100,11 +100,11 @@ void QueryImageinfo::paramLimit(unsigned int limit, bool stop) {
     d->stop = stop;
 }
 
-void QueryImageinfo::paramStart(QDateTime const & begin) {
-    d->begin = begin.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
+void QueryImageinfo::paramStart(const QDateTime & start) {
+    d->start = start.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
 }
 
-void QueryImageinfo::paramEnd(QDateTime const & end) {
+void QueryImageinfo::paramEnd(const QDateTime & end) {
     d->end = end.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
 }
 

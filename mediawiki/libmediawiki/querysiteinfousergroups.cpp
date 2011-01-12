@@ -32,7 +32,7 @@ namespace mediawiki
 
 struct QuerySiteinfoUsergroupsPrivate {
 
-    QuerySiteinfoUsergroupsPrivate(QNetworkAccessManager * const manager, MediaWiki const & mediawiki, bool includeNumber)
+    QuerySiteinfoUsergroupsPrivate(QNetworkAccessManager * const manager, const MediaWiki & mediawiki, bool includeNumber)
             : manager(manager)
             , mediawiki(mediawiki)
             , includeNumber(includeNumber)
@@ -40,7 +40,7 @@ struct QuerySiteinfoUsergroupsPrivate {
 
     QNetworkAccessManager * const manager;
 
-    MediaWiki const & mediawiki;
+    const MediaWiki & mediawiki;
 
     bool const includeNumber;
 
@@ -50,7 +50,7 @@ struct QuerySiteinfoUsergroupsPrivate {
 
 using namespace mediawiki;
 
-QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(MediaWiki const & mediawiki, bool includeNumber, QObject * parent)
+QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(const MediaWiki & mediawiki, bool includeNumber, QObject * parent)
         : KJob(parent)
         , d(new QuerySiteinfoUsergroupsPrivate(new QNetworkAccessManager(this), mediawiki, includeNumber))
 {

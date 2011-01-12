@@ -35,7 +35,7 @@ using mediawiki::QuerySiteinfoUsergroups;
 
 Q_DECLARE_METATYPE(QList<QuerySiteinfoUsergroups::Result>)
 
-bool operator==(QuerySiteinfoUsergroups::Result const & lhs, QuerySiteinfoUsergroups::Result const & rhs) {
+bool operator==(const QuerySiteinfoUsergroups::Result & lhs, const QuerySiteinfoUsergroups::Result & rhs) {
     return lhs.name() == rhs.name() &&
            lhs.rights() == rhs.rights() &&
            lhs.hasNumber() == rhs.hasNumber() &&
@@ -49,7 +49,7 @@ class QuerySiteinfoUsergroupsTest : public QObject
     
 public slots:
     
-    void usergroupsHandle(QList<QuerySiteinfoUsergroups::Result> const & usergroups) {
+    void usergroupsHandle(const QList<QuerySiteinfoUsergroups::Result> & usergroups) {
         ++usergroupsCount;
         usergroupsResults = usergroups;
     }
@@ -73,7 +73,7 @@ private slots:
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         QuerySiteinfoUsergroups * job = new QuerySiteinfoUsergroups(mediawiki, includeNumber);
 
-        connect(job, SIGNAL(usergroups(QList<QuerySiteinfoUsergroups::Result> const &)), this, SLOT(usergroupsHandle(QList<QuerySiteinfoUsergroups::Result> const &)));
+        connect(job, SIGNAL(usergroups(const QList<QuerySiteinfoUsergroups::Result> &)), this, SLOT(usergroupsHandle(const QList<QuerySiteinfoUsergroups::Result> &)));
 
         job->exec();
 

@@ -33,20 +33,20 @@ namespace mediawiki {
 
     struct QuerySiteInfoGeneralPrivate
     {
-        QuerySiteInfoGeneralPrivate(QNetworkAccessManager * const manager,QuerySiteInfoGeneral::Result* result, MediaWiki const & mediawiki)
+        QuerySiteInfoGeneralPrivate(QNetworkAccessManager * const manager,QuerySiteInfoGeneral::Result* result, const MediaWiki & mediawiki)
                 : manager(manager)
                 , result(result)
                 , mediawiki(mediawiki) {}
         QNetworkAccessManager * manager;
         QuerySiteInfoGeneral::Result* result;
-        MediaWiki const & mediawiki;
+        const MediaWiki & mediawiki;
     };
 
 }
 
 using namespace mediawiki;
 
-QuerySiteInfoGeneral::QuerySiteInfoGeneral(MediaWiki const & mediawiki, QObject * parent)
+QuerySiteInfoGeneral::QuerySiteInfoGeneral(const MediaWiki & mediawiki, QObject * parent)
     : KJob(parent),d(new QuerySiteInfoGeneralPrivate(new QNetworkAccessManager(this),new Result,mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);

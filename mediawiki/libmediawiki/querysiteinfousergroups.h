@@ -73,7 +73,7 @@ public:
          * @param name the name of the user group
          * @param rights rights of the user group
          */
-        Result(QString const & name, QList<QString> const & rights)
+        Result(const QString & name, const QList<QString> & rights)
                 : m_name(name)
                 , m_rights(rights)
                 , m_hasNumber(false)
@@ -85,7 +85,7 @@ public:
          * @param rights rights of the user group
          * @param number the numbers of users in the user group
          */
-        Result(QString const & name, QList<QString> const & rights, unsigned int const number)
+        Result(const QString & name, const QList<QString> & rights, unsigned int number)
                 : m_name(name)
                 , m_rights(rights)
                 , m_number(number)
@@ -102,7 +102,7 @@ public:
          * @brief Returns rights of the user group.
          * @return rights of the user group
          */
-        inline QList<QString> const & rights() const { return m_rights; }
+        inline const QList<QString> & rights() const { return m_rights; }
 
         /**
          * @brief Returns the numbers of users in the user group.
@@ -137,7 +137,7 @@ public:
      * @param includeNumber if true number of users of each user group is included
      * @param parent the QObject parent
      */
-    explicit QuerySiteinfoUsergroups(MediaWiki const & mediawiki, bool includeNumber = false, QObject * parent = 0);
+    explicit QuerySiteinfoUsergroups(const MediaWiki & mediawiki, bool includeNumber = false, QObject * parent = 0);
 
     /**
      * @brief Destroys the UserGroups job.
@@ -156,7 +156,7 @@ signals:
      * @param usergroups list of all user groups
      * @see QuerySiteinfoUsergroups::Result
      */
-    void usergroups(QList<QuerySiteinfoUsergroups::Result> const & usergroups);
+    void usergroups(const QList<QuerySiteinfoUsergroups::Result> & usergroups);
 
 private slots:
 
@@ -170,9 +170,9 @@ private:
 
 private:
 
-    QuerySiteinfoUsergroups(QuerySiteinfoUsergroups const &);
+    QuerySiteinfoUsergroups(const QuerySiteinfoUsergroups &);
 
-    QuerySiteinfoUsergroups & operator=(QuerySiteinfoUsergroups const &);
+    QuerySiteinfoUsergroups & operator=(const QuerySiteinfoUsergroups &);
 
 };
 

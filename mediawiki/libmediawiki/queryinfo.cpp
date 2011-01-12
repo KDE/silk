@@ -65,7 +65,7 @@ namespace mediawiki
 }
 
 using namespace mediawiki;
-QueryInfo::QueryInfo(MediaWiki & mediawiki, QString const & titre, QString const & token, QObject *parent)
+QueryInfo::QueryInfo(MediaWiki & mediawiki, const QString & titre, const QString & token, QObject *parent)
     : KJob(parent)
     , d(new QueryInfoPrivate(titre, token, mediawiki))
 {
@@ -73,7 +73,7 @@ QueryInfo::QueryInfo(MediaWiki & mediawiki, QString const & titre, QString const
 }
 
 
-QueryInfo::QueryInfo(MediaWiki & mediawiki, unsigned int id, QueryInfo::IdType type, QString const & token, QObject *parent)
+QueryInfo::QueryInfo(MediaWiki & mediawiki, unsigned int id, QueryInfo::IdType type, const QString & token, QObject *parent)
     : KJob(parent)
     , d(new QueryInfoPrivate(id, type, token, mediawiki))
 {

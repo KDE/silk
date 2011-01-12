@@ -33,7 +33,7 @@ using mediawiki::QueryInfo;
 
 Q_DECLARE_METATYPE(QList<QueryInfo::Result>)
 
-bool operator==(QueryInfo::Result const & lhs, QueryInfo::Result const & rhs) {
+bool operator==(const QueryInfo::Result & lhs, const QueryInfo::Result & rhs) {
     bool protection = lhs.protections().size() == rhs.protections().size();
 
     if(protection) {
@@ -89,7 +89,7 @@ class QueryInfoTest : public QObject
 
 public slots:
 
-    void queryInfoHandle(QList<QueryInfo::Result> const & infos) {
+    void queryInfoHandle(const QList<QueryInfo::Result> & infos) {
         ++queryInfoCount;
         queryInfoResults = infos;
     }
@@ -112,7 +112,7 @@ private slots:
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         QueryInfo * job = new QueryInfo(mediawiki, 367741564, QueryInfo::revids, "edit");
 
-        connect(job, SIGNAL(infos(QList<QueryInfo::Result> const &)), this, SLOT(queryInfoHandle(QList<QueryInfo::Result> const &)));
+        connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
         job->exec();
 
@@ -230,7 +230,7 @@ private slots:
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         QueryInfo * job = new QueryInfo(mediawiki, "API", "edit");
 
-        connect(job, SIGNAL(infos(QList<QueryInfo::Result> const &)), this, SLOT(queryInfoHandle(QList<QueryInfo::Result> const &)));
+        connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
         job->exec();
 
@@ -348,7 +348,7 @@ private slots:
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::pageids, "edit");
 
-        connect(job, SIGNAL(infos(QList<QueryInfo::Result> const &)), this, SLOT(queryInfoHandle(QList<QueryInfo::Result> const &)));
+        connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
         job->exec();
 
@@ -468,7 +468,7 @@ private slots:
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::pageids, QString("edit|move|delete"));
 
-        connect(job, SIGNAL(infos(QList<QueryInfo::Result> const &)), this, SLOT(queryInfoHandle(QList<QueryInfo::Result> const &)));
+        connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
         job->exec();
 

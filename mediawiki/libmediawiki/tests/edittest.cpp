@@ -41,7 +41,7 @@ class EditTest : public QObject
 
 signals:
 
-    void captchaSignal(QString  const & CaptchaAnswer);
+    void captchaSignal( const QString & captchaword);
 
 public slots:
 
@@ -49,7 +49,7 @@ public slots:
         editCount++;
     }
 
-    void editHandle(QVariant const & captcha) {
+    void editHandle(const QVariant & captcha) {
         editCount++;
         this->CaptchaQuestion = captcha;
         emit captchaSignal(this->CaptchaAnswer);
@@ -101,7 +101,7 @@ private slots:
         edit.setSummary("Hello World");
 
         connect(&edit, SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
-        //connect(&edit, SIGNAL( resultCaptcha(QVariant const &) ), this, SLOT( editHandle(QVariant const &) ));
+        //connect(&edit, SIGNAL( resultCaptcha(const QVariant &) ), this, SLOT( editHandle(const QVariant &) ));
         edit.exec();
 
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
@@ -791,8 +791,8 @@ private slots:
         edit.setSection("new");
         edit.setSummary("Hello World");
 
-        connect(&edit, SIGNAL( resultCaptcha(QVariant const &) ), this, SLOT( editHandle(QVariant const &) ));
-        connect(this, SIGNAL( captchaSignal(QString const &) ), &edit, SLOT( finishedCaptcha(QString const &) ));
+        connect(&edit, SIGNAL( resultCaptcha(const QVariant &) ), this, SLOT( editHandle(const QVariant &) ));
+        connect(this, SIGNAL( captchaSignal(const QString &) ), &edit, SLOT( finishedCaptcha(const QString &) ));
         edit.exec();
 
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];

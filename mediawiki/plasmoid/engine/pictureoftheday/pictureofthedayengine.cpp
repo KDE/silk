@@ -23,7 +23,7 @@
 
 #include "pictureofthedayengine.h"
 
-PictureOfTheDayEngine::PictureOfTheDayEngine(QObject * parent, QVariantList const & args)
+PictureOfTheDayEngine::PictureOfTheDayEngine(QObject * parent, const QVariantList & args)
     : Plasma::DataEngine(parent, args)
     , m_pages()
     , m_images()
@@ -41,11 +41,11 @@ void PictureOfTheDayEngine::init() {
     setData(QString("mediawiki"), data);
 }
 
-bool PictureOfTheDayEngine::sourceRequestEvent(QString const & name) {
+bool PictureOfTheDayEngine::sourceRequestEvent(const QString& name) {
     return updateSourceEvent(name);
 }
 
-bool PictureOfTheDayEngine::updateSourceEvent(QString const & source) {
+bool PictureOfTheDayEngine::updateSourceEvent(const QString& source) {
     if (sources().contains(source)) return true;
 
     QStringList sourceSplit = source.split(':');
@@ -66,17 +66,17 @@ bool PictureOfTheDayEngine::updateSourceEvent(QString const & source) {
     return true;
 }
 
-void PictureOfTheDayEngine::pages(QList<QueryImages::Page> const & pages) {
+void PictureOfTheDayEngine::pages(const QList<QueryImages::Page> & pages) {
     m_pages.append(pages);
 }
 
-void PictureOfTheDayEngine::images(QList<QueryImageinfo::Image> const & images) {
+void PictureOfTheDayEngine::images(const QList<QueryImageinfo::Image> & images) {
     m_images.append(images);
 }
 
-bool PictureOfTheDayEngine::searchImages(MediaWiki const & mediawiki, QString const & page) {
+bool PictureOfTheDayEngine::searchImages(const MediaWiki & mediawiki, const QString& page) {
     QueryImages * const queryimages(new QueryImages(mediawiki, page));
-    connect(queryimages, SIGNAL(pages(QList<QueryImages::Page> const &)), this, SLOT(pages(QList<QueryImages::Page> const &)));
+    connect(queryimages, SIGNAL(pages(const QList<QueryImages::Page> &)), this, SLOT(pages( const QList<QueryImages::Page>&)));
     if (!queryimages->exec() || m_pages.size() == 0) {
         return false;
     }
@@ -84,12 +84,12 @@ bool PictureOfTheDayEngine::searchImages(MediaWiki const & mediawiki, QString co
     return !m_page.isMissing() && m_page.images().size() > 0;
 }
 
-bool PictureOfTheDayEngine::searchImageinfo(MediaWiki const & mediawiki) {
+bool PictureOfTheDayEngine::searchImageinfo(const MediaWiki & mediawiki) {
     QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki, m_page.images()[0].title()));
     queryimageinfo->paramLimit(1u, true);
     queryimageinfo->paramProperties(QueryImageinfo::URL);
     queryimageinfo->paramScale(400u, 300u);
-    connect(queryimageinfo, SIGNAL(images(QList<QueryImageinfo::Image> const &)), this, SLOT(images(QList<QueryImageinfo::Image> const &)));
+    connect(queryimageinfo, SIGNAL(images(const QList<QueryImageinfo::Image> &)), this, SLOT(images(const QList<QueryImageinfo::Image> &)));
     if (!queryimageinfo->exec() || m_images.size() == 0) {
         return false;
     }

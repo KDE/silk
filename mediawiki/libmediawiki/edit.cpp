@@ -37,7 +37,7 @@ namespace mediawiki
 {
     struct EditPrivate
     {
-        EditPrivate(QNetworkAccessManager *  manager, QString const & title, QString const & token, QString const & basetimestamp, QString const & starttimestamp, QString const & text, MediaWiki  & mediawiki)
+        EditPrivate(QNetworkAccessManager *  manager, const QString & title,const QString & token, const QString & basetimestamp, const QString & starttimestamp, const QString & text, MediaWiki  & mediawiki)
             : manager(manager)
             , mediawiki(mediawiki)
         {
@@ -50,7 +50,7 @@ namespace mediawiki
             requestParameter["md5"] = hash.toHex();
         }
 
-        EditPrivate(QNetworkAccessManager * const manager, QString const & title, QString const & token, QString const & basetimestamp, QString const & starttimestamp, QString const & appendtext, QString const & prependtext, MediaWiki  & mediawiki)
+        EditPrivate(QNetworkAccessManager * const manager, const QString & title, const QString & token, const QString & basetimestamp, const QString & starttimestamp, const QString & appendtext, const QString & prependtext, MediaWiki  & mediawiki)
             : manager(manager)
             , mediawiki(mediawiki)
         {
@@ -67,7 +67,7 @@ namespace mediawiki
             requestParameter["md5"] = hash.toHex();
         }
 
-        EditPrivate(QNetworkAccessManager * const manager, QString const & title, QString const & token, QString const & basetimestamp, QString const & starttimestamp, unsigned int undo, unsigned int undoafter, MediaWiki  & mediawiki)
+        EditPrivate(QNetworkAccessManager * const manager, const QString & title, const QString & token, const QString & basetimestamp, const QString & starttimestamp, unsigned int undo, unsigned int undoafter, MediaWiki  & mediawiki)
             : manager(manager)
             , mediawiki(mediawiki)
         {
@@ -89,7 +89,7 @@ namespace mediawiki
 
 using namespace mediawiki;
 
-Edit::Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & text, QObject *parent)
+Edit::Edit( MediaWiki  & media, const QString & title, const QString & token, const QString &  basetimestamp, const QString &  starttimestamp, const QString & text, QObject *parent)
     : KJob(parent)
     , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, text, media))
 {
@@ -98,7 +98,7 @@ Edit::Edit( MediaWiki  & media, QString const & title, QString const & token, QS
     setCapabilities(KJob::NoCapabilities);
 }
 
-Edit::Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, QString const & appendtext, QString const & prependtext, QObject *parent)
+Edit::Edit( MediaWiki  & media, const QString& title, const QString& token, const QString &  basetimestamp, const QString &  starttimestamp, const QString& appendtext, const QString& prependtext, QObject *parent)
     : KJob(parent)
     , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, appendtext, prependtext, media))
 {
@@ -107,7 +107,7 @@ Edit::Edit( MediaWiki  & media, QString const & title, QString const & token, QS
     setCapabilities(KJob::NoCapabilities);
 }
 
-Edit::Edit( MediaWiki  & media, QString const & title, QString const & token, QString basetimestamp, QString starttimestamp, unsigned int undo, unsigned int undoafter, QObject *parent)
+Edit::Edit( MediaWiki  & media, const QString& title, const QString& token, const QString &  basetimestamp, const QString &  starttimestamp, unsigned int undo, unsigned int undoafter, QObject *parent)
     : KJob(parent)
     , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, undo, undoafter, media))
 {
@@ -156,12 +156,12 @@ void Edit::setMinor(bool minor)
     else
         d->requestParameter["notminor"] = QString();
 }
-void Edit::setSection(QString const & section)
+void Edit::setSection(const QString& section)
 {
     d->requestParameter["section"] = section;
 }
 
-void Edit::setSummary(QString const & summary)
+void Edit::setSummary(const QString & summary)
 {
     d->requestParameter["summary"] = summary;
 }
@@ -279,7 +279,7 @@ void Edit::finishedEdit( QNetworkReply *reply )
     emit resultCaptcha( d->result.CaptchaQuestion );
 }
 
-void Edit::finishedCaptcha( QString  const & captcha )
+void Edit::finishedCaptcha( const QString & captcha )
 {
     d->result.CaptchaAnswer = captcha;
     QUrl url = d->baseUrl;

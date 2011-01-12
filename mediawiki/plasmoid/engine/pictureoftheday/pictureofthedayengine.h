@@ -34,34 +34,34 @@ class PictureOfTheDayEngine : public Plasma::DataEngine {
 
 public:
 
-    PictureOfTheDayEngine(QObject* parent, QVariantList const & args);
+    PictureOfTheDayEngine(QObject* parent, const QVariantList & args);
 
 protected:
 
     virtual void init();
 
-    virtual bool sourceRequestEvent(QString const & name);
+    virtual bool sourceRequestEvent(const QString& name);
 
-    virtual bool updateSourceEvent(QString const & source);
+    virtual bool updateSourceEvent(const QString& source);
 
 private slots:
 
-    void pages(QList<QueryImages::Page> const & pages);
+    void pages(const QList<QueryImages::Page> & pages);
 
-    void images(QList<QueryImageinfo::Image> const & images);
+    void images(const QList<QueryImageinfo::Image> & images);
 
 private:
 
     struct MediaWikiInfo {
         MediaWikiInfo() {}
-        MediaWikiInfo(QUrl const & url, QString const & page) : url(url), page(page) {}
+        MediaWikiInfo(const QUrl & url, const QString & page) : url(url), page(page) {}
         QUrl url;
         QString page;
     };
 
-    bool searchImages(MediaWiki const & mediawiki, QString const & date);
+    bool searchImages(const MediaWiki & mediawiki, const QString & date);
 
-    bool searchImageinfo(MediaWiki const & mediawiki);
+    bool searchImageinfo(const MediaWiki & mediawiki);
 
     QList<QueryImages::Page> m_pages;
 

@@ -36,7 +36,7 @@ namespace mediawiki
 struct QueryRevisionPrivate {
 
     QueryRevisionPrivate(QNetworkAccessManager * const manager,
-                         MediaWiki const & mediawiki,
+                         const MediaWiki & mediawiki,
                          int id,
                          QueryRevision::IdType type
                          )
@@ -51,7 +51,7 @@ struct QueryRevisionPrivate {
             requestParameter["revids"] = QString::number(id);
     }
     QueryRevisionPrivate(QNetworkAccessManager * const manager,
-                         MediaWiki const & mediawiki,
+                         const MediaWiki & mediawiki,
                          QString title
                          )
             : manager(manager)
@@ -64,7 +64,7 @@ struct QueryRevisionPrivate {
 
     QNetworkAccessManager * const manager;
 
-    MediaWiki const & mediawiki;
+    const MediaWiki & mediawiki;
 
     QMap<QString, QString> requestParameter;
 
@@ -78,13 +78,13 @@ struct QueryRevisionPrivate {
 
 using namespace mediawiki;
 
-QueryRevision::QueryRevision(MediaWiki const & mediawiki, QString title, QObject * parent)
+QueryRevision::QueryRevision(const MediaWiki & mediawiki, QString title, QObject * parent)
         : KJob(parent)
         , d(new QueryRevisionPrivate(new QNetworkAccessManager(this), mediawiki, title))
 {
     setCapabilities(KJob::NoCapabilities);
 }
-QueryRevision::QueryRevision(MediaWiki const & mediawiki, int id, QueryRevision::IdType idType, QObject * parent)
+QueryRevision::QueryRevision(const MediaWiki & mediawiki, int id, QueryRevision::IdType idType, QObject * parent)
     : KJob(parent)
     , d(new QueryRevisionPrivate(new QNetworkAccessManager(this), mediawiki, id, idType))
 {

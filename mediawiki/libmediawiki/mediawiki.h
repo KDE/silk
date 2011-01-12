@@ -48,7 +48,7 @@ public:
                               wich will be concatenated with the default user agent
      *                        else the default user agent is used only
      */
-    explicit MediaWiki(QUrl const & url, QString const & customUserAgent = QString());
+    explicit MediaWiki(const QUrl & url,const QString & customUserAgent = QString());
 
     /**
      * @brief Destructs the MediaWiki.
@@ -70,7 +70,7 @@ public:
     /**
      * @brief The default user agent.
      */
-    static QString const DEFAULT_USER_AGENT;
+    static const QString DEFAULT_USER_AGENT;
 
     /**
      * @brief Returns the connection manager.
@@ -90,9 +90,9 @@ private:
 
 private:
 
-    MediaWiki(MediaWiki const &);
+    MediaWiki(const MediaWiki &);
 
-    MediaWiki & operator=(MediaWiki const &);
+    MediaWiki & operator=(const MediaWiki &);
 
 };
 

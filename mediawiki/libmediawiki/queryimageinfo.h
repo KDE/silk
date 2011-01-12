@@ -60,7 +60,7 @@ public:
      * @param title the title of the image
      * @param parent the QObject parent
      */
-    QueryImageinfo(MediaWiki const & mediawiki, QString const & title, QObject * parent = 0);
+    QueryImageinfo(const MediaWiki & mediawiki, const QString & title, QObject * parent = 0);
 
     /**
      * @brief Destructs a query image info job.
@@ -93,61 +93,61 @@ public:
      * @brief No property.
      * @see paramProperties()
      */
-    static property_type const NO_PROPERTY = 0;
+    static const property_type NO_PROPERTY = 0;
 
     /**
      * @brief Timestamp of the image.
      * @see paramProperties()
      */
-    static property_type const TIMESTAMP = 1 << 0;
+    static const property_type TIMESTAMP = 1 << 0;
 
     /**
      * @brief User of the image.
      * @see paramProperties()
      */
-    static property_type const USER = 1 << 1;
+    static const property_type USER = 1 << 1;
 
     /**
      * @brief Comment of the image.
      * @see paramProperties()
      */
-    static property_type const COMMENT = 1 << 2;
+    static const property_type COMMENT = 1 << 2;
 
     /**
      * @brief URL of the image.
      * @see paramProperties()
      */
-    static property_type const URL = 1 << 3;
+    static const property_type URL = 1 << 3;
 
     /**
      * @brief Size of the image.
      * @see paramProperties()
      */
-    static property_type const SIZE = 1 << 4;
+    static const property_type SIZE = 1 << 4;
 
     /**
      * @brief SHA-1 of the image.
      * @see paramProperties()
      */
-    static property_type const SHA1 = 1 << 5;
+    static const property_type SHA1 = 1 << 5;
 
     /**
      * @brief MIME of the image.
      * @see paramProperties()
      */
-    static property_type const MIME = 1 << 6;
+    static const property_type MIME = 1 << 6;
 
     /**
      * @brief Metadata of the image.
      * @see paramProperties()
      */
-    static property_type const METADATA = 1 << 7;
+    static const property_type METADATA = 1 << 7;
 
     /**
      * @brief All properties.
      * @see paramProperties()
      */
-    static property_type const ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE|SHA1|MIME|METADATA;
+    static const property_type ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE|SHA1|MIME|METADATA;
 
     /**
      * @brief Set how many image revisions to return.
@@ -163,14 +163,14 @@ public:
      * @param start timestamp to start listing from
      * @pre to call just before start()
      */
-    void paramStart(QDateTime const & begin);
+    void paramStart(const QDateTime & start);
 
     /**
      * @brief Set timestamp to stop listing at.
      * @param end timestamp to stop listing at
      * @pre to call just before start()
      */
-    void paramEnd(QDateTime const & end);
+    void paramEnd(const QDateTime & end);
 
     /**
      * @brief Set image scale parameters for an URL will be returned.
@@ -262,20 +262,20 @@ public:
          * @param metadata image metadata
          * @param properties properties has set
          */
-        Imageinfo(QDateTime const & timestamp,
-                  QString const & user,
-                  QString const & comment,
-                  QUrl const & url,
-                  QUrl const & descriptionUrl,
-                  QUrl const & thumbUrl,
+        Imageinfo(const QDateTime & timestamp,
+                  const QString & user,
+                  const QString & comment,
+                  const QUrl & url,
+                  const QUrl & descriptionUrl,
+                  const QUrl & thumbUrl,
                   unsigned int thumbWidth,
                   unsigned int thumbHeight,
                   unsigned int size,
                   unsigned int width,
                   unsigned int height,
-                  QString const & sha1,
-                  QString const & mime,
-                  QHash<QString, QVariant> const & metadata,
+                  const QString & sha1,
+                  const QString & mime,
+                  const QHash<QString, QVariant> & metadata,
                   QueryImageinfo::property_type properties)
             : m_timestamp(timestamp)
             , m_user(user)
@@ -438,7 +438,7 @@ public:
          * @return image metadata
          * @pre #hasMetadata()
          */
-        inline QHash<QString, QVariant> const & metadata() const { Q_ASSERT(hasMetadata()); return m_metadata; }
+        inline const QHash<QString, QVariant> & metadata() const { Q_ASSERT(hasMetadata()); return m_metadata; }
 
         /**
          * @brief Returns true if metadata has set, else false.
@@ -482,10 +482,10 @@ public:
          * @param imageinfos the image's info
          */
         Image(unsigned int namespaceId,
-              QString const & title,
-              QString const & titleNoNormalized,
-              QString const & imageRepository,
-              QVector<Imageinfo> const & imageinfos)
+              const QString & title,
+              const QString & titleNoNormalized,
+              const QString & imageRepository,
+              const QVector<Imageinfo> & imageinfos)
               : m_namespaceId(namespaceId)
               , m_title(title)
               , m_titleNoNormalized(titleNoNormalized)
@@ -533,7 +533,7 @@ public:
          * @return the image's info
          * @pre !isMissing()
          */
-        inline QVector<Imageinfo> const & imageinfos() const { Q_ASSERT(!isMissing()); return m_imageinfos; }
+        inline const QVector<Imageinfo> & imageinfos() const { Q_ASSERT(!isMissing()); return m_imageinfos; }
 
         /**
          * @brief Returns true if is missing, else false.
@@ -560,7 +560,7 @@ signals:
      *
      * @param imageinfos a list of image
      */
-    void images(QList<QueryImageinfo::Image> const & images);
+    void images(const QList<QueryImageinfo::Image> & images);
 
 };
 
@@ -570,7 +570,7 @@ signals:
  * @param rhs right-hand side image info
  * @return true if lhs and rhs are equal, else false
  */
-inline bool operator==(QueryImageinfo::Imageinfo const & lhs, QueryImageinfo::Imageinfo const & rhs) {
+inline bool operator==(const QueryImageinfo::Imageinfo & lhs, const QueryImageinfo::Imageinfo & rhs) {
     return lhs.hasTimestamp() == rhs.hasTimestamp() &&
            (lhs.hasTimestamp() /* && rhs.hasTimestamp() */ ? lhs.timestamp() == rhs.timestamp() : true) &&
            lhs.hasUser() == rhs.hasUser() &&
@@ -597,7 +597,7 @@ inline bool operator==(QueryImageinfo::Imageinfo const & lhs, QueryImageinfo::Im
  * @param rhs right-hand side image info
  * @return true if lhs and rhs are equal, else false
  */
-inline bool operator==(QueryImageinfo::Image const & lhs, QueryImageinfo::Image const & rhs) {
+inline bool operator==( const QueryImageinfo::Image & lhs,  const QueryImageinfo::Image & rhs) {
     return lhs.namespaceId() == rhs.namespaceId() &&
            lhs.title() == rhs.title() &&
            lhs.titleNoNormalized() == rhs.titleNoNormalized() &&

@@ -145,7 +145,7 @@ public:
      * @param requestParameter map the parameter name and values
      * @param parent the QObject parent
      */
-    explicit QueryRevision(MediaWiki const & mediawiki, QString title, QObject * parent = 0);
+    explicit QueryRevision(const MediaWiki & mediawiki, QString title, QObject * parent = 0);
 
     /**
      * @brief Constructs a Revision job.
@@ -154,7 +154,7 @@ public:
      * @param requestParameter map the parameter name and values
      * @param parent the QObject parent
      */
-    explicit QueryRevision(MediaWiki const & mediawiki, int id, QueryRevision::IdType, QObject * parent = 0);
+    explicit QueryRevision(const MediaWiki & mediawiki, int id, QueryRevision::IdType, QObject * parent = 0);
 
     /**
      * @brief Destroys the QueryRevision job.
@@ -259,7 +259,7 @@ signals:
      * @param revision list of all user groups
      * @see QueryRevision::Result
      */
-    void revision(QList<QueryRevision::Result> const & revision);
+    void revision(const QList<QueryRevision::Result> & revision);
 
 private slots:
 
@@ -273,9 +273,9 @@ private:
 
 private:
 
-    QueryRevision(QueryRevision const &);
+    QueryRevision(const QueryRevision &);
 
-    QueryRevision & operator=(QueryRevision const &);
+    QueryRevision & operator=(const QueryRevision &);
 
 };
 }

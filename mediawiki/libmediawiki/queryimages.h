@@ -53,7 +53,7 @@ public:
          * @param namespaceId the namespace id of the image
          * @param title the title of the image
          */
-        Image(unsigned int namespaceId, QString const & title)
+        Image(unsigned int namespaceId,const QString & title)
             : m_namespaceId(namespaceId)
             , m_title(title)
         {}
@@ -101,9 +101,9 @@ public:
          */
         Page(unsigned int pageId,
              unsigned int namespaceId,
-             QString const & title,
-             QString const & titleNoNormalized,
-             QList<Image> const & images,
+             const QString & title,
+             const QString & titleNoNormalized,
+             const QList<Image> & images,
              bool isMissing
             )
             : m_pageId(pageId)
@@ -201,7 +201,7 @@ public:
      * @param limit number of images returned by one signal #pages()
      * @param parent the QObject parent
      */
-    explicit QueryImages(MediaWiki const & mediawiki, QString const & title, unsigned int limit = 10, QObject * parent = 0);
+    explicit QueryImages(const MediaWiki & mediawiki, const QString & title, unsigned int limit = 10, QObject * parent = 0);
 
     /**
      * @brief Destroys a query images job.
@@ -222,7 +222,7 @@ signals:
      *
      * @param pages list of all images used on pages
      */
-    void pages(QList<QueryImages::Page> const & pages);
+    void pages(const QList<QueryImages::Page> & pages);
 
 private slots:
 

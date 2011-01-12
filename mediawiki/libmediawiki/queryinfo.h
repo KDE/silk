@@ -78,7 +78,7 @@ public:
      * @param token the page token
      * @param parent the QObject parent
      */
-    explicit QueryInfo(MediaWiki & mediawiki, QString const & name, QString const & token, QObject *parent = 0);
+    explicit QueryInfo(MediaWiki & mediawiki, const QString & name, const QString & token, QObject *parent = 0);
 
     /**
      * @brief Constructs a QueryInfo job.
@@ -87,7 +87,7 @@ public:
      * @param token the page token
      * @param parent the QObject parent
      */
-    explicit QueryInfo(MediaWiki & mediawiki, unsigned int id, IdType type, QString const & token, QObject *parent = 0);
+    explicit QueryInfo(MediaWiki & mediawiki, unsigned int id, IdType type, const QString & token, QObject *parent = 0);
 
     /**
      * @brief Destroys the QuerySiteInfoGeneral job.
@@ -110,7 +110,7 @@ public:
          * @param expiry the protection expiry
          * @param source the protection source
          */
-        Protection(QString const & type, QString const & level, QString const & expiry, QString const & source)
+        Protection(const QString & type, const QString & level, const QString & expiry, const QString & source)
                 : m_type(type)
                 , m_level(level)
                 , m_expiry(expiry)
@@ -121,22 +121,22 @@ public:
         /**
          * @brief Get the protection type.
          */
-        inline QString const & type() const { return m_type; }
+        inline const QString & type() const { return m_type; }
 
         /**
          * @brief Get the protection level.
          */
-        inline QString const & level() const { return m_level; }
+        inline const QString & level() const { return m_level; }
 
         /**
          * @brief Get the protection expiry.
          */
-        inline QString const & expiry() const { return m_expiry; }
+        inline const QString & expiry() const { return m_expiry; }
 
         /**
          * @brief Get the protection source.
          */
-        inline QString const & source() const { return m_source; }
+        inline const QString & source() const { return m_source; }
 
     private:
 
@@ -163,7 +163,7 @@ public:
          * Constructs an info.
          * @param protections the page protections
          */
-        Result(QList<QueryInfo::Protection> const & protections)
+        Result(const QList<QueryInfo::Protection> & protections)
                 : m_protections(protections)
         {}
 
@@ -186,7 +186,7 @@ public:
         /**
          * @brief Get the protections list.
          */
-        inline QList<QueryInfo::Protection> const & protections() const { return m_protections; }
+        inline const QList<QueryInfo::Protection> & protections() const { return m_protections; }
 
         unsigned int m_pageid;
         QString m_title;
@@ -211,13 +211,13 @@ public:
     /**
      * @brief Get the warning.
      */
-    QString const & warning () const { return m_warning; }
+    const QString & warning () const { return m_warning; }
 
     /**
      * @brief Put a warning.
      * @param warning the warning
      */
-    void setWarning (QString const & warning) {  m_warning = warning; }
+    void setWarning (const QString & warning) {  m_warning = warning; }
 
 signals:
 
@@ -226,7 +226,7 @@ signals:
      * @param info list of pages
      * @see QueryInfo::Result
      */
-    void infos(QList<QueryInfo::Result> const & info);
+    void infos(const QList<QueryInfo::Result> & info);
 
 private slots:
 

@@ -17,16 +17,27 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "mediawiki_p.h"
-
 #include "mediawiki.h"
+
+namespace mediawiki
+{
+
+struct MediaWikiPrivate {
+
+    MediaWikiPrivate(QNetworkAccessManager *  manager, const QUrl & url, const QString & userAgent) : manager(manager), url(url), userAgent(userAgent) {}
+
+    const QUrl url;
+
+    const QString userAgent;
+    QNetworkAccessManager * manager;
+};
+
+}
 
 using namespace mediawiki;
 
-MediaWiki::MediaWiki(QUrl const & url, QString const & customUserAgent)
-    : d_ptr(new MediaWikiPrivate(url,
-                                 (customUserAgent.isEmpty() ? "" : customUserAgent + "-") + MediaWiki::DEFAULT_USER_AGENT,
-                                 new QNetworkAccessManager()))
+MediaWiki::MediaWiki(const QUrl & url, const QString & customUserAgent)
+    : d(new MediaWikiPrivate(new QNetworkAccessManager(), url, customUserAgent.isEmpty() ? MediaWiki::DEFAULT_USER_AGENT : customUserAgent + "-" + MediaWiki::DEFAULT_USER_AGENT))
 {}
 
 MediaWiki::~MediaWiki()
@@ -55,6 +66,6 @@ QList<QNetworkCookie> MediaWiki::cookies() const
     return d_ptr->manager->cookieJar()->cookiesForUrl(d_ptr->url);
 }
 
-QString const MediaWiki::DEFAULT_USER_AGENT = "mediawiki-silk";
+const QString MediaWiki::DEFAULT_USER_AGENT = "mediawiki-silk";
 
 
