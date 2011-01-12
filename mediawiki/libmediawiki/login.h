@@ -48,62 +48,62 @@ public:
         /**
          * @brief
          */
-        Falsexml = KJob::UserDefinedError+1,
+        BadXml = KJob::UserDefinedError+1,
 
         /**
          * @brief
          */
-        ConnectionAbort,
+        ConnectionAborted,
 
         /**
          * @brief You didn't set the lgname parameter
          */
-        NoName,
+        LoginMissing,
 
         /**
          * @brief You provided an illegal username
          */
-        Illegal,
+        IllegalUsername,
 
         /**
          * @brief The username you provided doesn't exist
          */
-        NotExists,
+        UsernameNotExists,
 
         /**
         * @brief You didn't set the lgpassword parameter or you left it empty
         */
-        EmptyPass,
+        PasswordMissing,
 
         /**
         * @brief The password you provided is incorrect
         */
-        WrongPass,
+        WrongPassword,
 
         /**
         * @brief Same as WrongPass, returned when an authentication plugin rather than MediaWiki itself rejected the password
         */
-        WrongPluginPass,
+        WrongPluginPassword,
 
         /**
         * @brief The wiki tried to automatically create a new account for you, but your IP address has been blocked from account creation
         */
-        CreateBlocked,
+        IPAddressBlocked,
 
         /**
         * @brief You've logged in too many times in a short time.
         */
-        Throttled,
+        TooManyConnections,
 
         /**
         * @brief User is blocked
         */
-        Blocked,
+        UserBlocked,
 
         /**
         * @brief Either you did not provide the login token or the sessionid cookie. Request again with the token and cookie given in this response
         */
-        NeedToken,
+        TokenNeeded,
 
     };
 

@@ -219,7 +219,7 @@ void Edit::doWorkSendRequest()
 
 void Edit::abort()
 {
-    this->setError(this->ConnectionAbort);
+    this->setError(this->ConnectionAborted);
     emitResult();
 }
 
@@ -227,7 +227,7 @@ void Edit::finishedEdit( QNetworkReply *reply )
 {
     if ( reply->error() != QNetworkReply::NoError )
     {
-        this->setError(this->ConnectionAbort);
+        this->setError(this->ConnectionAborted);
         reply->close();
         reply->deleteLater();
         emitResult();
@@ -250,11 +250,11 @@ void Edit::finishedEdit( QNetworkReply *reply )
                     this->setError(KJob::NoError);
                     reader.readNext();
                     attrs = reader.attributes();
-                    d->result.captchaid = attrs.value( QString( "id" ) ).toString().toUInt() ;
+                    d->result.CaptchaId = attrs.value( QString( "id" ) ).toString().toUInt() ;
                     if (!attrs.value( QString( "question" ) ).isEmpty())
-                        d->result.captchaquestionorurl = QVariant(attrs.value( QString( "question" ) ).toString()) ;
+                        d->result.CaptchaQuestion = QVariant(attrs.value( QString( "question" ) ).toString()) ;
                     else if (!attrs.value( QString( "url" ) ).isEmpty())
-                        d->result.captchaquestionorurl = QVariant(attrs.value( QString( "url" ) ).toString()) ;
+                        d->result.CaptchaQuestion = QVariant(attrs.value( QString( "url" ) ).toString()) ;
                 }
             }
             else if ( reader.name() == QString( "error" ) ) {
@@ -266,7 +266,7 @@ void Edit::finishedEdit( QNetworkReply *reply )
             }
         }
         else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
-            this->setError(this->Falsexml);
+            this->setError(this->BadXml);
             reply->close();
             reply->deleteLater();
             emitResult();
@@ -275,15 +275,15 @@ void Edit::finishedEdit( QNetworkReply *reply )
     }
     reply->close();
     reply->deleteLater();
-    emit resultCaptcha( d->result.captchaquestionorurl );
+    emit resultCaptcha( d->result.CaptchaQuestion );
 }
 
 void Edit::finishedCaptcha( QString  const & captcha )
 {
-    d->result.captchaword = captcha;
+    d->result.CaptchaAnswer = captcha;
     QUrl url = d->baseUrl;
-    url.addQueryItem("captchaid", QString::number(d->result.captchaid));
-    url.addQueryItem("captchaword", d->result.captchaword);
+    url.addQueryItem("CaptchaId", QString::number(d->result.CaptchaId));
+    url.addQueryItem("CaptchaAnswer", d->result.CaptchaAnswer);
     QString data = url.toString();
     QByteArray cookie = "";
     for(int i = 0 ; i<d->mediawiki.cookies().size();i++){
@@ -331,5 +331,5 @@ int Edit::getError(const QString & error)
     if(ret == -1){
         ret = 0;
     }
-    return  ret + (int)Edit::Falsexml ;
+    return  ret + (int)Edit::BadXml ;
 }

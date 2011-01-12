@@ -40,7 +40,7 @@ class EditTest : public QObject
 
 signals:
 
-    void captchaSignal(QString  const & captchaword);
+    void captchaSignal(QString  const & CaptchaAnswer);
 
 public slots:
 
@@ -50,8 +50,8 @@ public slots:
 
     void editHandle(QVariant const & captcha) {
         editCount++;
-        this->captchaquestionorurl = captcha;
-        emit captchaSignal(this->captchaword);
+        this->CaptchaQuestion = captcha;
+        emit captchaSignal(this->CaptchaAnswer);
     }
 
 private slots:
@@ -198,7 +198,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::notext);
+        QCOMPARE(edit.error(), (int)Edit::TextMissing);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -223,7 +223,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::invalidsection);
+        QCOMPARE(edit.error(), (int)Edit::InvalidSection);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -248,7 +248,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::protectedtitle);
+        QCOMPARE(edit.error(), (int)Edit::TitleProtected);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -273,7 +273,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::cantcreate);
+        QCOMPARE(edit.error(), (int)Edit::CreatePagePermissionMissing);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -298,7 +298,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::cantcreateanon);
+        QCOMPARE(edit.error(), (int)Edit::AnonymousCreatePagePermissionMissing);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -323,7 +323,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::articleexists);
+        QCOMPARE(edit.error(), (int)Edit::ArticleDuplication);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -348,7 +348,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::noimageredirectanon);
+        QCOMPARE(edit.error(), (int)Edit::AnonymousCreateImagePermissionMissing);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -373,7 +373,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::noimageredirect);
+        QCOMPARE(edit.error(), (int)Edit::CreateImagePermissionMissing);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -398,7 +398,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::spamdetected);
+        QCOMPARE(edit.error(), (int)Edit::SpamDetected);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -423,7 +423,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::filtered);
+        QCOMPARE(edit.error(), (int)Edit::Filtered);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -448,7 +448,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::contenttoobig);
+        QCOMPARE(edit.error(), (int)Edit::ArticleSizeExceed);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -473,7 +473,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::noeditanon);
+        QCOMPARE(edit.error(), (int)Edit::AnonymousEditPagePermissionMissing);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -498,7 +498,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::noedit);
+        QCOMPARE(edit.error(), (int)Edit::EditPagePermissionMissing);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -523,7 +523,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::pagedeleted);
+        QCOMPARE(edit.error(), (int)Edit::PageDeleted);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -548,7 +548,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::emptypage);
+        QCOMPARE(edit.error(), (int)Edit::EmptyPage);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -573,7 +573,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::emptynewsection);
+        QCOMPARE(edit.error(), (int)Edit::EmptySection);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -598,7 +598,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::editconflict);
+        QCOMPARE(edit.error(), (int)Edit::EditConflict);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -623,7 +623,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::revwrongpage);
+        QCOMPARE(edit.error(), (int)Edit::RevWrongPage);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -648,7 +648,7 @@ private slots:
         FakeServer::Request serverrequest = fakeserver.getRequest()[0];
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(edit.error(), (int)Edit::undofailure);
+        QCOMPARE(edit.error(), (int)Edit::UndoFailed);
         QCOMPARE(this->editCount, 1);
     }
 
@@ -809,8 +809,8 @@ private slots:
 private:
 
     int editCount;
-    QVariant captchaquestionorurl;
-    QString captchaword;
+    QVariant CaptchaQuestion;
+    QString CaptchaAnswer;
     QString request;
     MediaWiki* m_mediaWiki;
 };

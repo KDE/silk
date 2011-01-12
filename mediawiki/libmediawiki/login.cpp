@@ -91,7 +91,7 @@ void Login::doWorkSendRequest()
 
 void Login::abort()
 {
-    this->setError(this->ConnectionAbort);
+    this->setError(this->ConnectionAborted);
     emitResult();
 }
 
@@ -99,7 +99,7 @@ void Login::doWorkProcessReply( QNetworkReply *reply )
 {
     if ( reply->error() != QNetworkReply::NoError )
     {
-        this->setError(this->ConnectionAbort);
+        this->setError(this->ConnectionAborted);
         reply->close();
         reply->deleteLater();
         emitResult();
@@ -179,7 +179,7 @@ void Login::doWorkProcessReply( QNetworkReply *reply )
             }
         }
         else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
-            this->setError(this->Falsexml);
+            this->setError(this->BadXml);
             reply->close();
             reply->deleteLater();
             emitResult();
@@ -229,5 +229,5 @@ int Login::getError(const QString & error)
     if(ret == -1){
         ret = 0;
     }
-    return  ret + (int)Login::Falsexml ;
+    return  ret + (int)Login::BadXml ;
 }

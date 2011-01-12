@@ -51,107 +51,107 @@ public:
         /**
          * @brief
          */
-        Falsexml = KJob::UserDefinedError+1,
+        BadXml = KJob::UserDefinedError+1,
 
         /**
          * @brief
          */
-        ConnectionAbort,
+        ConnectionAborted,
 
         /**
          * @brief
          */
-        notext,
+        TextMissing,
 
         /**
          * @brief
          */
-        invalidsection,
+        InvalidSection,
 
         /**
          * @brief
          */
-        protectedtitle,
+        TitleProtected,
 
         /**
          * @brief
          */
-        cantcreate,
+        CreatePagePermissionMissing,
 
         /**
          * @brief
          */
-        cantcreateanon,
+        AnonymousCreatePagePermissionMissing,
 
         /**
          * @brief
          */
-        articleexists,
+        ArticleDuplication,
 
         /**
          * @brief
          */
-        noimageredirectanon,
+        AnonymousCreateImagePermissionMissing,
 
         /**
          * @brief
          */
-        noimageredirect,
+        CreateImagePermissionMissing,
 
         /**
          * @brief
          */
-        spamdetected,
+        SpamDetected,
 
         /**
          * @brief
          */
-        filtered,
+        Filtered,
 
         /**
          * @brief
          */
-        contenttoobig,
+        ArticleSizeExceed,
 
         /**
          * @brief
          */
-        noeditanon,
+        AnonymousEditPagePermissionMissing,
 
         /**
          * @brief
          */
-        noedit,
+        EditPagePermissionMissing,
 
         /**
          * @brief
          */
-        pagedeleted,
+        PageDeleted,
 
         /**
          * @brief
          */
-        emptypage,
+        EmptyPage,
 
         /**
          * @brief
          */
-        emptynewsection,
+        EmptySection,
 
         /**
          * @brief
          */
-        editconflict,
+        EditConflict,
 
         /**
          * @brief
          */
-        revwrongpage,
+        RevWrongPage,
 
         /**
          * @brief
          */
-        undofailure,
+        UndoFailed,
 
     };
 
@@ -163,17 +163,17 @@ public:
         /**
          * @brief CAPTCHA ID from previous request.
          */
-        unsigned int captchaid;
+        unsigned int CaptchaId;
 
         /**
          * @brief Question from the CAPTCHA.
          */
-        QVariant captchaquestionorurl;
+        QVariant CaptchaQuestion;
 
         /**
          * @brief Answer to the CAPTCHA.
          */
-        QString captchaword;
+        QString CaptchaAnswer;
     };
 
     /**

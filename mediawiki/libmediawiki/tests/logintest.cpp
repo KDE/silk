@@ -138,7 +138,7 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(login.error(), (int)Login::Falsexml);
+        QCOMPARE(login.error(), (int)Login::BadXml);
 
     }
 
@@ -151,7 +151,7 @@ private slots:
         connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
         login.exec();
         QCOMPARE(this->loginCount, 1);
-        QCOMPARE(login.error(), (int)Login::ConnectionAbort);
+        QCOMPARE(login.error(), (int)Login::ConnectionAborted);
 
     }
 
@@ -171,7 +171,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::NoName);
+        QCOMPARE(login.error(), (int)Login::LoginMissing);
     }
 
     void loginTestIllegalLogin()
@@ -190,7 +190,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::Illegal);
+        QCOMPARE(login.error(), (int)Login::IllegalUsername);
     }
 
     void loginTestNotExistsLogin()
@@ -209,7 +209,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::NotExists);
+        QCOMPARE(login.error(), (int)Login::UsernameNotExists);
     }
 
     void loginTestEmptyPassLogin()
@@ -228,7 +228,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::EmptyPass);
+        QCOMPARE(login.error(), (int)Login::PasswordMissing);
     }
 
     void loginTestWrongPassLogin()
@@ -247,7 +247,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::WrongPass);
+        QCOMPARE(login.error(), (int)Login::WrongPassword);
     }
 
     void loginTestWrongPluginPassLogin()
@@ -266,7 +266,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::WrongPluginPass);
+        QCOMPARE(login.error(), (int)Login::WrongPluginPassword);
     }
 
     void loginTestCreateBlockedLogin()
@@ -285,7 +285,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::CreateBlocked);
+        QCOMPARE(login.error(), (int)Login::IPAddressBlocked);
     }
 
     void loginTestThrottledLogin()
@@ -304,7 +304,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::Throttled);
+        QCOMPARE(login.error(), (int)Login::TooManyConnections);
     }
 
     void loginTestBlockedLogin()
@@ -323,7 +323,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::Blocked);
+        QCOMPARE(login.error(), (int)Login::UserBlocked);
     }
 
     void loginTestFalseXMLToken()
@@ -344,7 +344,7 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(login.error(), (int)Login::Falsexml);
+        QCOMPARE(login.error(), (int)Login::BadXml);
 
     }
 
@@ -367,7 +367,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::NoName);
+        QCOMPARE(login.error(), (int)Login::LoginMissing);
     }
 
     void loginTestIllegalToken()
@@ -389,7 +389,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::Illegal);
+        QCOMPARE(login.error(), (int)Login::IllegalUsername);
     }
 
     void loginTestNotExistsToken()
@@ -411,7 +411,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::NotExists);
+        QCOMPARE(login.error(), (int)Login::UsernameNotExists);
     }
 
     void loginTestEmptyPassToken()
@@ -433,7 +433,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::EmptyPass);
+        QCOMPARE(login.error(), (int)Login::PasswordMissing);
     }
 
     void loginTestWrongPassToken()
@@ -455,7 +455,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::WrongPass);
+        QCOMPARE(login.error(), (int)Login::WrongPassword);
     }
 
     void loginTestWrongPluginPassToken()
@@ -477,7 +477,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::WrongPluginPass);
+        QCOMPARE(login.error(), (int)Login::WrongPluginPassword);
     }
 
     void loginTestCreateBlockedToken()
@@ -499,7 +499,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::CreateBlocked);
+        QCOMPARE(login.error(), (int)Login::IPAddressBlocked);
     }
 
     void loginTestThrottledToken()
@@ -521,7 +521,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::Throttled);
+        QCOMPARE(login.error(), (int)Login::TooManyConnections);
     }
 
     void loginTestBlockedToken()
@@ -543,7 +543,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
 
-        QCOMPARE(login.error(), (int)Login::Blocked);
+        QCOMPARE(login.error(), (int)Login::UserBlocked);
     }
 
     void cleanupTestCase()
