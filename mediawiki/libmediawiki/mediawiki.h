@@ -22,9 +22,9 @@
 
 #include <QtCore/QString>
 #include <QtCore/QUrl>
-#include <QNetworkAccessManager>
+#include <QNetworkAccessManager>s
 #include <QNetworkCookieJar>
-#include "mediawiki_export.h"
+#include "mediawiki_export.h"s
 
 namespace mediawiki
 {
