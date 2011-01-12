@@ -241,7 +241,7 @@ public:
     /**
      * @brief Specify how the watchlist is affected by this edit.
      */
-    enum Watchlist {        
+    enum Watchlist {
         /**
          * @brief Add the page to the watchlist
          */
