@@ -1,5 +1,5 @@
 /*
- *
+ *   Copyright 2009 by Paolo de Vathaire <paolo.devathaire@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -21,17 +21,18 @@
 #define MEDIAWIKIJOB_H
 
 #include <KDE/KJob>
+#include "mediawiki_export.h"
 
 namespace mediawiki
 {
 
-class MediawikiJob : public KJob {
+class MEDIAWIKI_EXPORT MediaWikiJob : public KJob {
 
     Q_OBJECT
 
 public:
 
-    MediawikiJob();
+    MediaWikiJob(QObject * parent = 0);
 
 };
 
