@@ -38,6 +38,8 @@ target_link_libraries( mediawiki ${KDE4_KIO_LIBS} -fprofile-arcs )
 
 install( TARGETS mediawiki ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
+set( SILK_MEDIAWIKI_LIBS mediawiki ${KDE4_KIO_LIBS} PARENT_SCOPE )
+
 FIND_PATH(DOXYGEN_DIR doxygen
 /usr/local/bin
 /usr/bin
