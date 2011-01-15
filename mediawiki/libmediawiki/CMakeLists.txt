@@ -5,8 +5,7 @@ set( CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage" )
 include( KDE4Defaults )
 include_directories( ${KDE4_INCLUDES} )
 
-#FIXME: True by default because the engine doesn't compile.
-option( STATIC_LIBRARY "Build libmediawiki as static libraries." TRUE )
+option( STATIC_LIBRARY "Build libmediawiki as static libraries." FALSE )
 
 if( STATIC_LIBRARY )
     set( LIBRARY_TYPE STATIC )
