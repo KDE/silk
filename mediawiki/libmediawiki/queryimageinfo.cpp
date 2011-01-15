@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
@@ -154,6 +155,13 @@ void QueryImageinfo::doWorkSendRequest() {
     connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
 }
 
+qint64 toQInt64(const QString & qstring)
+{
+    bool ok;
+    qint64 result = qstring.toLongLong(&ok);
+    return ok ? result : -1;
+}
+
 void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
     if (reply->error() == QNetworkReply::NoError) {
         QXmlStreamReader reader(reply);
@@ -161,21 +169,8 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
         unsigned int namespaceId;
         QString title;
         QString imageRepository;
-        QList<QueryImageinfo::Imageinfo> imageinfos;
-        QDateTime timestamp;
-        QString user;
-        QString comment;
-        QUrl url;
-        QUrl descriptionUrl;
-        QUrl thumbUrl;
-        unsigned int thumbWidth;
-        unsigned int thumbHeight;
-        unsigned int size;
-        unsigned int width;
-        unsigned int height;
-        QString sha1;
-        QString mime;
-        QHash<QString, QVariant> metadata;
+        QList<Imageinfo> imageinfos;
+        Imageinfo imageinfo;
         QMap<QString, QString> normalized;
         d->begin = QString();
         while (!reader.atEnd() && !reader.hasError()) {
@@ -194,24 +189,24 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                         d->begin = reader.attributes().value("iistart").toString();
                     }
                 } else if (reader.name() == "ii") {
-                    timestamp = QDateTime::fromString(reader.attributes().value("timestamp").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'");
-                    user = reader.attributes().value("user").toString();
-                    comment = reader.attributes().value("comment").toString();
-                    url = QUrl(reader.attributes().value("url").toString());
-                    descriptionUrl = QUrl(reader.attributes().value("descriptionurl").toString());
-                    thumbUrl = QUrl(reader.attributes().value("thumburl").toString());
-                    thumbWidth = reader.attributes().value("thumbwidth").toString().toUInt();
-                    thumbHeight = reader.attributes().value("thumbheight").toString().toUInt();
-                    size = reader.attributes().value("size").toString().toUInt();
-                    width = reader.attributes().value("width").toString().toUInt();
-                    height = reader.attributes().value("height").toString().toUInt();
-                    sha1 = reader.attributes().value("sha1").toString();
-                    mime = reader.attributes().value("mime").toString();
+                    imageinfo.setTimestamp(QDateTime::fromString(reader.attributes().value("timestamp").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'"));
+                    imageinfo.setUser(reader.attributes().value("user").toString());
+                    imageinfo.setComment(reader.attributes().value("comment").toString());
+                    imageinfo.setUrl(QUrl(reader.attributes().value("url").toString()));
+                    imageinfo.setDescriptionUrl(QUrl(reader.attributes().value("descriptionurl").toString()));
+                    imageinfo.setThumbUrl(QUrl(reader.attributes().value("thumburl").toString()));
+                    imageinfo.setThumbWidth(toQInt64(reader.attributes().value("thumbwidth").toString()));
+                    imageinfo.setThumbHeight(toQInt64(reader.attributes().value("thumbheight").toString()));
+                    imageinfo.setSize(toQInt64(reader.attributes().value("size").toString()));
+                    imageinfo.setWidth(toQInt64(reader.attributes().value("width").toString()));
+                    imageinfo.setHeight(toQInt64(reader.attributes().value("height").toString()));
+                    imageinfo.setSha1(reader.attributes().value("sha1").toString());
+                    imageinfo.setMime(reader.attributes().value("mime").toString());
                 } else if (reader.name() == "metadata") {
                     if (reader.attributes().isEmpty()) {
-                        metadata.clear();
+                        imageinfo.metadata().clear();
                     } else {
-                        metadata[reader.attributes().value("name").toString()] = reader.attributes().value("value").toString();
+                        imageinfo.metadata()[reader.attributes().value("name").toString()] = reader.attributes().value("value").toString();
                     }
                 }
             } else if (token == QXmlStreamReader::EndElement) {
@@ -220,23 +215,9 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                                                            title,
                                                            normalized.contains(title) ? normalized[title] : title,
                                                            imageRepository,
-                                                           QVector<QueryImageinfo::Imageinfo>::fromList(imageinfos)));
+                                                           QVector<Imageinfo>::fromList(imageinfos)));
                 } else if (reader.name() == "ii") {
-                    imageinfos.push_back(QueryImageinfo::Imageinfo(timestamp,
-                                                                   user,
-                                                                   comment,
-                                                                   url,
-                                                                   descriptionUrl,
-                                                                   thumbUrl,
-                                                                   thumbWidth,
-                                                                   thumbHeight,
-                                                                   size,
-                                                                   width,
-                                                                   height,
-                                                                   sha1,
-                                                                   mime,
-                                                                   metadata,
-                                                                   d->properties));
+                    imageinfos.push_back(imageinfo);
                 }
             }
         }

@@ -18,6 +18,8 @@ endif( STATIC_LIBRARY )
 add_subdirectory( tests )
 
 set(mediawiki_SRCS
+    image.cpp
+    imageinfo.cpp
     mediawiki.cpp
     login.cpp
     logout.cpp

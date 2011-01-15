@@ -25,8 +25,7 @@
 #include "mediawiki.h"
 #include "queryimageinfo.h"
 
-using mediawiki::MediaWiki;
-using mediawiki::QueryImageinfo;
+using namespace mediawiki;
 
 class QueryImageinfoTest : public QObject {
 
@@ -80,45 +79,49 @@ private slots:
 
         // Test pages received
         QList<QList<QueryImageinfo::Image> > imagesExpected;
-        QHash<QString, QVariant> metadata;
-        metadata["Name1"] = "Value1";
-        metadata["Name2"] = "Value2";
-        imagesExpected.push_back(QList<QueryImageinfo::Image>()
-            << (QueryImageinfo::Image(6, "File:Image.bmp", "Image:Image.bmp", "shared", QVector<QueryImageinfo::Imageinfo>()
-                << (QueryImageinfo::Imageinfo(QDateTime(QDate(2008, 06, 06), QTime(22, 27, 45, 0)),
-                                             QString("User1"),
-                                             QString("Comment1"),
-                                             QUrl("http://url/File:Image.bmp"),
-                                             QUrl("http://descriptionurl/File:Image.bmp"),
-                                             QUrl("http://thumburl/File:Image.bmp"),
-                                             78u,
-                                             102u,
-                                             448798u,
-                                             924u,
-                                             1203u,
-                                             QString("00be23585fde01190a0f8c60fc4267ea00f3745d"),
-                                             QString("image/bmp"),
-                                             metadata,
-                                             QueryImageinfo::ALL_PROPERTIES))))
-        );
-        imagesExpected.push_back(QList<QueryImageinfo::Image>()
-            << (QueryImageinfo::Image(6, "File:Image.bmp", "Image:Image.bmp", "shared", QVector<QueryImageinfo::Imageinfo>()
-                << (QueryImageinfo::Imageinfo(QDateTime(QDate(2007, 06, 06), QTime(22, 27, 45, 0)),
-                                             QString("User2"),
-                                             QString("Comment2"),
-                                             QUrl("http://url/File:Image.bmp"),
-                                             QUrl("http://descriptionurl/File:Image.bmp"),
-                                             QUrl(),
-                                             0u,
-                                             0u,
-                                             448798u,
-                                             924u,
-                                             1203u,
-                                             QString("00be23585fde01190a0f8c60fc4267ea00f3745d"),
-                                             QString("image/bmp"),
-                                             metadata,
-                                             QueryImageinfo::ALL_PROPERTIES))))
-        );
+        {
+            QHash<QString, QVariant> metadata;
+            metadata["Name1"] = "Value1";
+            metadata["Name2"] = "Value2";
+            {
+                Imageinfo imageinfoExpected;
+                imageinfoExpected.setTimestamp(QDateTime(QDate(2008, 06, 06), QTime(22, 27, 45, 0)));
+                imageinfoExpected.setUser(QString("User1"));
+                imageinfoExpected.setComment(QString("Comment1"));
+                imageinfoExpected.setUrl(QUrl("http://url/File:Image.bmp"));
+                imageinfoExpected.setDescriptionUrl(QUrl("http://descriptionurl/File:Image.bmp"));
+                imageinfoExpected.setThumbUrl(QUrl("http://thumburl/File:Image.bmp"));
+                imageinfoExpected.setThumbWidth(78);
+                imageinfoExpected.setThumbHeight(102);
+                imageinfoExpected.setSize(448798);
+                imageinfoExpected.setWidth(924);
+                imageinfoExpected.setHeight(1203);
+                imageinfoExpected.setSha1(QString("00be23585fde01190a0f8c60fc4267ea00f3745d"));
+                imageinfoExpected.setMime(QString("image/bmp"));
+                imageinfoExpected.setMetadata(metadata);
+                imagesExpected.push_back(QList<QueryImageinfo::Image>()
+                    << (QueryImageinfo::Image(6, "File:Image.bmp", "Image:Image.bmp", "shared", QVector<Imageinfo>()
+                        << imageinfoExpected)));
+            }
+            {
+                Imageinfo imageinfoExpected;
+                imageinfoExpected.setTimestamp(QDateTime(QDate(2007, 06, 06), QTime(22, 27, 45, 0)));
+                imageinfoExpected.setUser(QString("User2"));
+                imageinfoExpected.setComment(QString("Comment2"));
+                imageinfoExpected.setUrl(QUrl("http://url/File:Image.bmp"));
+                imageinfoExpected.setDescriptionUrl(QUrl("http://descriptionurl/File:Image.bmp"));
+                imageinfoExpected.setSize(448798);
+                imageinfoExpected.setWidth(924);
+                imageinfoExpected.setHeight(1203);
+                imageinfoExpected.setSha1(QString("00be23585fde01190a0f8c60fc4267ea00f3745d"));
+                imageinfoExpected.setMime(QString("image/bmp"));
+                imageinfoExpected.setMetadata(metadata);
+                imagesExpected.push_back(QList<QueryImageinfo::Image>()
+                    << (QueryImageinfo::Image(6, "File:Image.bmp", "Image:Image.bmp", "shared", QVector<Imageinfo>()
+                        << imageinfoExpected))
+                );
+            }
+        }
         QCOMPARE(imagesReceived, imagesExpected);
     }
 

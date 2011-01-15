@@ -22,6 +22,7 @@
 
 #include <Plasma/DataEngine>
 
+#include "imageinfo.h"
 #include "queryimageinfo.h"
 #include "queryimages.h"
 
@@ -69,7 +70,7 @@ private:
 
     QList<QueryImageinfo::Image> m_images;
 
-    QueryImageinfo::Imageinfo m_imageinfo;
+    Imageinfo m_imageinfo;
 
     QMap<QString, MediaWikiInfo> m_mediawiki;
 
