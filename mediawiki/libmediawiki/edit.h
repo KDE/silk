@@ -170,48 +170,9 @@ public:
 
     /**
      * @brief Constructs an Edit job.
-     * @param media the mediawiki concerned by the job
-     * @param title the page title
-     * @param token the edit token. Gotten through prop=info.
-     * @param basetimestamp the timestamp of the base revision. Gotten through prop=revisions&rvprop=timestamp.
-     * @param starttimestamp the timestamp when you obtained the edit token.
-     * @param text the page content
      * @param parent the QObject parent
-     * @pre !title.isEmpty()
-     * @pre !token.isEmpty()
      */
-    explicit Edit( MediaWiki  & media, const QString& title, const QString& token, const QString& basetimestamp, const QString& starttimestamp, const QString& text, QObject *parent = 0);
-
-    /**
-     * @brief Constructs an Edit job.
-     * @param media the mediawiki concerned by the job
-     * @param title the page title
-     * @param token the edit token. Gotten through prop=info.
-     * @param basetimestamp the timestamp of the base revision. Gotten through prop=revisions&rvprop=timestamp.
-     * @param starttimestamp the timestamp when you obtained the edit token.
-     * @param appendtext the text added to the end of the page. Overrides text.
-     * @param prependtext the text added to the beginning of the page. Overrides text.
-     * @param parent the QObject parent
-     * @pre !title.isEmpty()
-     * @pre !token.isEmpty()
-     */
-    explicit Edit( MediaWiki  & media, const QString& title, const QString& token, const QString& basetimestamp, const QString& starttimestamp, const QString& appendtext, const QString& prependtext, QObject *parent = 0);
-
-    /**
-     * @brief Constructs an Edit job.
-     * @param media the mediawiki concerned by the job
-     * @param title the page title
-     * @param token the edit token. Gotten through prop=info.
-     * @param basetimestamp the timestamp of the base revision. Gotten through prop=revisions&rvprop=timestamp.
-     * @param starttimestamp the timestamp when you obtained the edit token.
-     * @param undo Undo this revision. Overrides text, prependtext and appendtext.
-     * @param undoafter Undo all revisions from undo to this one. If not set, just undo one revision.
-     * @param parent the QObject parent
-     * @pre !title.isEmpty()
-     * @pre !token.isEmpty()
-     */
-    explicit Edit( MediaWiki  & media, const QString& title, const QString& token, const QString& basetimestamp, const QString& starttimestamp, unsigned int undo, unsigned int undoafter = 0, QObject *parent = 0);
-
+    explicit Edit( MediaWiki  & media, QObject *parent = 0);
     /**
      * @brief Destroys the Edit job.
      */
@@ -263,35 +224,82 @@ public:
     /**
      * @brief If set, suppress errors about the page having been deleted in the meantime and recreate it.
      */
-    void setRecreate();
+    void setRecreate(bool);
 
     /**
      * @brief If set, throw an error if the page already exists.
      */
-    void setCreateonly();
+    void setCreateonly(bool);
 
     /**
      * @brief If set, throw a missingtitle error if the page doesn't exist.
      */
-    void setNocreate();
+    void setNocreate(bool);
 
     /**
      * @brief If set to true, mark the edit as minor
      * @param minor If set to true, mark the edit as minor
      */
-    void setMinor(bool minor);
+    void setMinor(bool);
 
     /**
      * @brief Set the section.
      * @param section Set the section. New or integer
      */
-    void setSection(const QString& section);
+    void setSection(const QString&);
 
     /**
      * @brief Set the summary.
      * @param summary Set the summary
      */
-    void setSummary(const QString& summary);
+    void setSummary(const QString&);
+
+    /**
+     * @brief Which properties .
+     * @param undoafter Undo all revisions from undo to this one. If not set, just undo one revision.
+     */
+    void setUndoAfter( int );
+    /**
+     * @brief Which properties .
+     * @param undo Undo this revision. Overrides text, prependtext and appendtext.
+     */
+    void setUndo( int );
+    /**
+     * @brief Which properties .
+     * @param prependtext the text added to the beginning of the page. Overrides text.
+     */
+    void setPrependText( const QString& );
+    /**
+     * @brief Which properties .
+     * @param appendtext the text added to the end of the page. Overrides text.
+     */
+    void setAppendText( const QString& );
+    /**
+     * @brief Which properties .
+     * @param title the page title
+     */
+    void setPageTitle( const QString&);
+    /**
+     * @brief Which properties .
+     * @param token the edit token. Gotten through prop=info.
+     */
+    void setToken( const QString&);
+    /**
+     * @brief Which properties .
+     * @param basetimestamp the timestamp of the base revision. Leave unset to ignore conflit.
+     */
+    void setBaseTimesStamp( const QDateTime&);
+    /**
+     * @brief Which properties .
+     * @param  starttimestamp the timestamp when you obtained the edit token.
+     */
+    void setStartTimesStamp( const QDateTime&);
+    /**
+     * @brief Which properties .
+     * @param text the page content.
+     */
+    void setText( const QString&);
+
 signals:
 
     /**

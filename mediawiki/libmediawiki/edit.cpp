@@ -37,47 +37,9 @@ namespace mediawiki
 {
     struct EditPrivate
     {
-        EditPrivate(QNetworkAccessManager *  manager, const QString & title,const QString & token, const QString & basetimestamp, const QString & starttimestamp, const QString & text, MediaWiki  & mediawiki)
+        EditPrivate(QNetworkAccessManager *  manager, MediaWiki  & mediawiki)
             : manager(manager)
-            , mediawiki(mediawiki)
-        {
-            requestParameter["title"] = title;
-            requestParameter["token"] = token;
-            requestParameter["starttimestamp"] = starttimestamp;
-            requestParameter["basetimestamp"] = basetimestamp;
-            requestParameter["text"] = text;
-            QByteArray hash = QCryptographicHash::hash(text.toUtf8(),QCryptographicHash::Md5);
-            requestParameter["md5"] = hash.toHex();
-        }
-
-        EditPrivate(QNetworkAccessManager * const manager, const QString & title, const QString & token, const QString & basetimestamp, const QString & starttimestamp, const QString & appendtext, const QString & prependtext, MediaWiki  & mediawiki)
-            : manager(manager)
-            , mediawiki(mediawiki)
-        {
-            requestParameter["title"] = title;
-            requestParameter["token"] = token;
-            requestParameter["starttimestamp"] = starttimestamp;
-            requestParameter["basetimestamp"] = basetimestamp;
-            if(appendtext != "")
-                requestParameter["appendtext"] = appendtext;
-            if(prependtext != "")
-                requestParameter["prependtext"] = prependtext;
-            QString text = prependtext+appendtext;
-            QByteArray hash = QCryptographicHash::hash(text.toUtf8(),QCryptographicHash::Md5);
-            requestParameter["md5"] = hash.toHex();
-        }
-
-        EditPrivate(QNetworkAccessManager * const manager, const QString & title, const QString & token, const QString & basetimestamp, const QString & starttimestamp, unsigned int undo, unsigned int undoafter, MediaWiki  & mediawiki)
-            : manager(manager)
-            , mediawiki(mediawiki)
-        {
-            requestParameter["title"] = title;
-            requestParameter["token"] = token;
-            requestParameter["starttimestamp"] = starttimestamp;
-            requestParameter["basetimestamp"] = basetimestamp;
-            requestParameter["undo"] = QString::number(undo);
-            requestParameter["undoafter"] = QString::number(undoafter);
-        }
+            , mediawiki(mediawiki){}
 
         QNetworkAccessManager *manager;
         QUrl baseUrl;
@@ -89,72 +51,79 @@ namespace mediawiki
 
 using namespace mediawiki;
 
-Edit::Edit( MediaWiki  & media, const QString & title, const QString & token, const QString &  basetimestamp, const QString &  starttimestamp, const QString & text, QObject *parent)
-    : KJob(parent)
-    , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, text, media))
+Edit::Edit( MediaWiki  & media, QObject *parent)
+    : MediaWikiJob(media,parent)
+    , d(new EditPrivate(new QNetworkAccessManager(this), media))
 {
-    Q_ASSERT(!title.isEmpty());
-    Q_ASSERT(!token.isEmpty());
-    setCapabilities(KJob::NoCapabilities);
+}
+void Edit::setUndoAfter( int param )
+{
+    d->requestParameter["undoafter"] = QString::number(param);
 }
 
-Edit::Edit( MediaWiki  & media, const QString& title, const QString& token, const QString &  basetimestamp, const QString &  starttimestamp, const QString& appendtext, const QString& prependtext, QObject *parent)
-    : KJob(parent)
-    , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, appendtext, prependtext, media))
+void Edit::setUndo( int param )
 {
-    Q_ASSERT(!title.isEmpty());
-    Q_ASSERT(!token.isEmpty());
-    setCapabilities(KJob::NoCapabilities);
+    d->requestParameter["undo"] = QString::number(param);
 }
 
-Edit::Edit( MediaWiki  & media, const QString& title, const QString& token, const QString &  basetimestamp, const QString &  starttimestamp, unsigned int undo, unsigned int undoafter, QObject *parent)
-    : KJob(parent)
-    , d(new EditPrivate(new QNetworkAccessManager(this), title, token, basetimestamp, starttimestamp, undo, undoafter, media))
+void Edit::setPrependText( const QString& param )
 {
-    Q_ASSERT(!title.isEmpty());
-    Q_ASSERT(!token.isEmpty());
-    setCapabilities(KJob::NoCapabilities);
+    d->requestParameter["prependtext"] = param;
 }
 
-void Edit::setWatchlist(Edit::Watchlist watchlist)
+void Edit::setAppendText( const QString& param )
 {
-    switch(watchlist) {
-    case Edit::watch:
-        d->requestParameter["watchlist"] = QString("watch");
-        break;
-    case Edit::unwatch:
-        d->requestParameter["watchlist"] = QString("unwatch");
-        break;
-    case Edit::nochange:
-        d->requestParameter["watchlist"] = QString("nochange");
-        break;
-    case Edit::preferences:
-        d->requestParameter["watchlist"] = QString("preferences");
-        break;
-    }
+    d->requestParameter["appendtext"] = param;
 }
 
-void Edit::setRecreate()
+void Edit::setPageTitle( const QString& param )
 {
-    d->requestParameter["recreate"] = QString();
+    d->requestParameter["title"] = param;
 }
 
-void Edit::setCreateonly()
+void Edit::setToken( const QString& param )
 {
-    d->requestParameter["createonly"] = QString();
+    d->requestParameter["intoken"] = param;
+}
+void Edit::setBaseTimesStamp( const QDateTime& param )
+{
+    d->requestParameter["basetimestamp"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void Edit::setNocreate()
+void Edit::setStartTimesStamp( const QDateTime& param )
 {
-    d->requestParameter["nocreate"] = QString();
+    d->requestParameter["starttimestamp"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
+}
+
+void Edit::setText( const QString& param )
+{
+    d->requestParameter["text"] = param;
+}
+
+void Edit::setRecreate(bool param)
+{
+    if(param)
+        d->requestParameter["recreate"] = "on";
+}
+
+void Edit::setCreateonly(bool param)
+{
+    if(param)
+        d->requestParameter["createonly"] = "on";
+}
+
+void Edit::setNocreate(bool param)
+{
+    if(param)
+        d->requestParameter["nocreate"] = "on";
 }
 
 void Edit::setMinor(bool minor)
 {
     if(minor)
-        d->requestParameter["minor"] = QString();
+        d->requestParameter["minor"] = "on";
     else
-        d->requestParameter["notminor"] = QString();
+        d->requestParameter["notminor"] = "on";
 }
 void Edit::setSection(const QString& section)
 {
