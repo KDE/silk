@@ -23,7 +23,7 @@
 #include <QtCore/QString>
 #include <KDE/KJob>
 #include "mediawiki_export.h"
-#include "mediawikijob.h"
+#include "job.h"
 
 class QNetworkReply;
 
@@ -36,7 +36,7 @@ class MediaWiki;
  *
  * Uses for log out a user.
  */
-class MEDIAWIKI_EXPORT Logout : public MediaWikiJob
+class MEDIAWIKI_EXPORT Logout : public Job
 {
 
     Q_OBJECT

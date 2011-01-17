@@ -30,7 +30,7 @@ set(mediawiki_SRCS
     queryrevision.cpp
     queryinfo.cpp
     edit.cpp
-    mediawikijob.cpp
+    job.cpp
 )
 
 kde4_add_library( mediawiki ${LIBRARY_TYPE} ${mediawiki_SRCS} )

@@ -27,15 +27,15 @@ namespace mediawiki
 {
 
 class MediaWiki;
-class MediaWikiJobPrivate;
+class JobPrivate;
 
 /**
  * @brief The base class for all MediaWiki jobs.
  */
-class MEDIAWIKI_EXPORT MediaWikiJob : public KJob {
+class MEDIAWIKI_EXPORT Job : public KJob {
 
     Q_OBJECT
-    Q_DECLARE_PRIVATE(MediaWikiJob)
+    Q_DECLARE_PRIVATE(Job)
 
 public:
 
@@ -53,20 +53,20 @@ public:
     };
 
     /**
-     * @brief Constructs a MediaWikiJob.
+     * @brief Constructs a Job.
      * @param mediawiki the mediawiki receiving the request
      * @param parent the QObject parent
      */
-    MediaWikiJob(const MediaWiki & mediawiki, QObject * parent = 0);
+    Job(const MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
-     * @brief Destructs the MediaWikiJob.
+     * @brief Destructs the Job.
      */
-    virtual ~MediaWikiJob();
+    virtual ~Job();
 
 private:
 
-    MediaWikiJobPrivate * const d_ptr;
+    JobPrivate * const d_ptr;
 
 };
 

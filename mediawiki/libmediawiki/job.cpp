@@ -17,25 +17,19 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef MEDIAWIKIJOB_P_H
-#define MEDIAWIKIJOB_P_H
-
 #include "mediawiki.h"
+#include "job_p.h"
 
-namespace mediawiki {
+#include "job.h"
 
+using namespace mediawiki;
 
-class MediaWikiJobPrivate {
+Job::Job(const MediaWiki & mediawiki, QObject * parent)
+    : KJob(parent)
+    , d_ptr(new JobPrivate(mediawiki))
+{}
 
-public:
-
-    explicit MediaWikiJobPrivate(const MediaWiki & mediawiki)
-        : mediawiki(mediawiki)
-    {}
-
-    MediaWiki const & mediawiki;
-
-};
-
+Job::~Job()
+{
+    delete d_ptr;
 }
-#endif // MEDIAWIKIJOB_P_H

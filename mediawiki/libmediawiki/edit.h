@@ -28,7 +28,7 @@
 #include <QtCore/QUrl>
 #include <KDE/KJob>
 #include "mediawiki_export.h"
-#include "mediawikijob.h"
+#include "job.h"
 
 class QNetworkReply;
 
@@ -41,7 +41,7 @@ class MediaWiki;
  *
  * Uses for create or edit a wiki.
  */
-class MEDIAWIKI_EXPORT Edit : public MediaWikiJob
+class MEDIAWIKI_EXPORT Edit : public Job
 {
 
 Q_OBJECT
@@ -53,7 +53,7 @@ public:
         /**
          * @brief
          */
-        TextMissing = MediaWikiJob::UserDefinedError+1,
+        TextMissing = Job::UserDefinedError+1,
 
         /**
          * @brief

@@ -52,7 +52,7 @@ namespace mediawiki
 using namespace mediawiki;
 
 Edit::Edit( MediaWiki  & media, QObject *parent)
-    : MediaWikiJob(media,parent)
+    : Job(media,parent)
     , d(new EditPrivate(new QNetworkAccessManager(this), media))
 {
 }
