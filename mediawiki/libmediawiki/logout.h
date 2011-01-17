@@ -23,7 +23,7 @@
 #include <QtCore/QString>
 #include <KDE/KJob>
 #include "mediawiki_export.h"
-#include <QtNetwork/QNetworkCookieJar>
+#include "mediawikijob.h"
 
 class QNetworkReply;
 
@@ -36,16 +36,12 @@ class MediaWiki;
  *
  * Uses for log out a user.
  */
-class MEDIAWIKI_EXPORT Logout : public KJob
+class MEDIAWIKI_EXPORT Logout : public MediaWikiJob
 {
 
     Q_OBJECT
 
 public:
-    enum
-    {
-        ConnectionAborted = KJob::UserDefinedError+1
-    };
 
     /**
      * @brief Constructs a Logout job.
@@ -64,11 +60,6 @@ public:
     virtual void start();
 
 private slots:
-
-    /**
-     * @brief Destroy the connection.
-     */
-    void abort();
 
     /**
      * @brief Send a request to destroy the cookie.

@@ -45,7 +45,7 @@ namespace mediawiki
 using namespace mediawiki;
 
 Logout::Logout(MediaWiki & mediawiki, QObject *parent)
-    : KJob(parent)
+    : MediaWikiJob(mediawiki,parent)
     , d(new LogoutPrivate(mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);
@@ -59,12 +59,6 @@ Logout::~Logout()
 void Logout::start()
 {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
-}
-
-void Logout::abort()
-{
-    this->setError(this->ConnectionAborted);
-    emitResult();
 }
 
 void Logout::doWorkSendRequest()
@@ -82,22 +76,16 @@ void Logout::doWorkSendRequest()
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     request.setRawHeader( "Cookie", cookie );
+    // Delete cookies
+    d->mediawiki.manager()->setCookieJar(new QNetworkCookieJar);
     // Send the request
     d->mediawiki.manager()->get(request);
     connect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 
 void Logout::doWorkProcessReply(QNetworkReply * reply)
 {
-    if ( reply->error() != QNetworkReply::NoError )
-    {
-        this->setError(this->ConnectionAborted);
-        return;
-    }
     this->setError(KJob::NoError);
-    //qDebug()<<"Logout ";
-    d->mediawiki.manager()->cookieJar()->cookiesForUrl(d->mediawiki.url()).clear();
     reply->close();
     reply->deleteLater();
     emitResult();

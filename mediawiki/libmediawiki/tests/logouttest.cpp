@@ -73,17 +73,6 @@ private slots:
         QCOMPARE(request.type, QString("GET"));
         QCOMPARE(request.value, QString("?format=xml&action=logout"));
     }
-/*
-    void logoutTestConnectionAbortLogout()
-    {
-        logoutCount = 0;
-        Logout logout(mediawiki::MediaWiki(QUrl("http://127.0.0.2:910")));
-
-        connect(&logout, SIGNAL(result(KJob* )),this, SLOT(logoutHandle(KJob*)));
-        logout.exec();
-        QCOMPARE(this->logoutCount, 1);
-        QCOMPARE(logout.error(), (int)Logout::ConnectionAborted);
-    }*/
 
     void cleanupTestCase()
     {
