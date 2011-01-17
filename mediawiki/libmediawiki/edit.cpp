@@ -69,11 +69,13 @@ void Edit::setUndo( int param )
 void Edit::setPrependText( const QString& param )
 {
     d->requestParameter["prependtext"] = param;
+    d->requestParameter["md5"] = "";
 }
 
 void Edit::setAppendText( const QString& param )
 {
     d->requestParameter["appendtext"] = param;
+    d->requestParameter["md5"] = "";
 }
 
 void Edit::setPageTitle( const QString& param )
@@ -83,7 +85,7 @@ void Edit::setPageTitle( const QString& param )
 
 void Edit::setToken( const QString& param )
 {
-    d->requestParameter["intoken"] = param;
+    d->requestParameter["token"] = param;
 }
 void Edit::setBaseTimesStamp( const QDateTime& param )
 {
@@ -98,24 +100,34 @@ void Edit::setStartTimesStamp( const QDateTime& param )
 void Edit::setText( const QString& param )
 {
     d->requestParameter["text"] = param;
+    d->requestParameter["md5"] = "";
 }
 
 void Edit::setRecreate(bool param)
 {
     if(param)
+    {
         d->requestParameter["recreate"] = "on";
+        d->requestParameter["md5"] = "";
+    }
 }
 
 void Edit::setCreateonly(bool param)
 {
     if(param)
+    {
         d->requestParameter["createonly"] = "on";
+        d->requestParameter["md5"] = "";
+    }
 }
 
 void Edit::setNocreate(bool param)
 {
     if(param)
+    {
         d->requestParameter["nocreate"] = "on";
+        d->requestParameter["md5"] = "";
+    }
 }
 
 void Edit::setMinor(bool minor)
@@ -134,7 +146,23 @@ void Edit::setSummary(const QString & summary)
 {
     d->requestParameter["summary"] = summary;
 }
-
+void Edit::setWatchList(Edit::Watchlist watchlist)
+{
+    switch(watchlist) {
+    case Edit::watch:
+        d->requestParameter["watchlist"] = QString("watch");
+        break;
+    case Edit::unwatch:
+        d->requestParameter["watchlist"] = QString("unwatch");
+        break;
+    case Edit::nochange:
+        d->requestParameter["watchlist"] = QString("nochange");
+        break;
+    case Edit::preferences:
+        d->requestParameter["watchlist"] = QString("preferences");
+        break;
+    }
+}
 Edit::~Edit()
 {
     delete d;
@@ -148,48 +176,57 @@ void Edit::start()
 void Edit::doWorkSendRequest()
 {
     // Set the url
-    QString url = d->mediawiki.url().toString();
-    url.append("?format=xml&action=edit");
+    QUrl    url = d->mediawiki.url();
+            url.addQueryItem("format", "xml");
+            url.addQueryItem("action", "edit");
+
     // Add params
+    if(d->requestParameter.contains("md5"))
+    {
+        QString text = "";
+        if(d->requestParameter.contains("text"))
+            text = d->requestParameter["text"];
+        if(d->requestParameter.contains("prependtext"))
+            text += d->requestParameter["prependtext"];
+        if(d->requestParameter.contains("appendtext"))
+            text += d->requestParameter["appendtext"];
+        QByteArray hash = QCryptographicHash::hash(text.toUtf8(),QCryptographicHash::Md5);
+        d->requestParameter["md5"] = hash.toHex();
+    }
+
     QMapIterator<QString, QString> i(d->requestParameter);
     while (i.hasNext()) {
         i.next();
-        if(i.key() != "token") {
-            QString param("&");
-            param += i.key();
-            if(i.key() != "recreate" && i.key() != "createonly" && i.key() != "recreate" && i.key() != "nocreate" && i.key() != "notminor" && i.key() != "minor") {
-                param += "=";
-                param += i.value();
-            }
-            url += param;
-        }
+        if(i.key() != "token")
+            url.addQueryItem(i.key(),i.value());
     }
+
     QByteArray cookie = "";
     for(int i = 0 ; i<d->mediawiki.cookies().size();i++){
         cookie += d->mediawiki.cookies().at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
         cookie += ";";
     }
-    QUrl urlEncoded(url, QUrl::TolerantMode);
     // Add the token
     QString token = d->requestParameter["token"];
     token.replace("+", "%2B");
     token.replace("\\", "%5C");
-    urlEncoded.addQueryItem(QString("token"), token);
-    d->baseUrl = urlEncoded;
+    url.addQueryItem(QByteArray("token"), token);
+    d->baseUrl = url;
+
     // Set the request
-    QNetworkRequest request( urlEncoded );
+    QNetworkRequest request( url );
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->mediawiki.manager()->post( request, urlEncoded.toString().toUtf8() );
+    d->mediawiki.manager()->post( request, url.toString().toUtf8() );
     connect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 
 void Edit::abort()
 {
-    this->setError(this->ConnectionAborted);
+    this->setError(this->NetworkError);
     emitResult();
 }
 
@@ -197,7 +234,7 @@ void Edit::finishedEdit( QNetworkReply *reply )
 {
     if ( reply->error() != QNetworkReply::NoError )
     {
-        this->setError(this->ConnectionAborted);
+        this->setError(this->NetworkError);
         reply->close();
         reply->deleteLater();
         emitResult();
@@ -236,7 +273,7 @@ void Edit::finishedEdit( QNetworkReply *reply )
             }
         }
         else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
-            this->setError(this->BadXml);
+            this->setError(this->XmlError);
             reply->close();
             reply->deleteLater();
             emitResult();
@@ -276,9 +313,7 @@ int Edit::getError(const QString & error)
     QString temp = error;
     int ret = 0;
     QStringList list;
-    list << "Falsexml"
-            << "ConnectionAbort"
-            << "notext"
+    list    << "notext"
             << "invalidsection"
             << "protectedtitle"
             << "cantcreate"
@@ -301,5 +336,5 @@ int Edit::getError(const QString & error)
     if(ret == -1){
         ret = 0;
     }
-    return  ret + (int)Edit::BadXml ;
+    return  ret + (int)Edit::TextMissing ;
 }

@@ -28,7 +28,7 @@
 #include <QtCore/QUrl>
 #include <KDE/KJob>
 #include "mediawiki_export.h"
-#include "mediawikijob.h".h"
+#include "mediawikijob.h"
 
 class QNetworkReply;
 
@@ -219,7 +219,7 @@ public:
      * @brief Specify how the watchlist is affected by this edit.
      * @param watchlist Specify how the watchlist is affected by this edit
      */
-    void setWatchlist(Edit::Watchlist watchlist);
+    void setWatchList(Edit::Watchlist watchlist);
 
     /**
      * @brief If set, suppress errors about the page having been deleted in the meantime and recreate it.
