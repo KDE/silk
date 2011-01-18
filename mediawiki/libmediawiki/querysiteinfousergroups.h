@@ -120,7 +120,7 @@ public:
      * @param includeNumber if true number of users of each user group is included
      * @param parent the QObject parent
      */
-    explicit QuerySiteinfoUsergroups(const MediaWiki & mediawiki, bool includeNumber = false, QObject * parent = 0);
+    explicit QuerySiteinfoUsergroups(const MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the UserGroups job.
@@ -131,6 +131,12 @@ public:
      * @brief Starts the job asynchronously.
      */
     virtual void start();
+
+    /**
+     * @brief If true number of users of each user group is included
+     * @param includeNumber If true number of users of each user group is included
+     */
+    void setIncludeNumber(bool includeNumber);
 
 signals:
 

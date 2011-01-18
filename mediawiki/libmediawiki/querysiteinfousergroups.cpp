@@ -42,7 +42,7 @@ struct QuerySiteinfoUsergroupsPrivate {
 
     const MediaWiki & mediawiki;
 
-    bool const includeNumber;
+    bool includeNumber;
 
 };
 
@@ -50,9 +50,9 @@ struct QuerySiteinfoUsergroupsPrivate {
 
 using namespace mediawiki;
 
-QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(const MediaWiki & mediawiki, bool includeNumber, QObject * parent)
+QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(const MediaWiki & mediawiki, QObject * parent)
         : Job(mediawiki, parent)
-        , d(new QuerySiteinfoUsergroupsPrivate(new QNetworkAccessManager(this), mediawiki, includeNumber))
+        , d(new QuerySiteinfoUsergroupsPrivate(new QNetworkAccessManager(this), mediawiki, false))
 {
     setCapabilities(Job::NoCapabilities);
 }
@@ -125,4 +125,9 @@ void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
         setError(QuerySiteinfoUsergroups::NetworkError);
     }
     emitResult();
+}
+
+void QuerySiteinfoUsergroups::setIncludeNumber(bool includeNumber)
+{
+    d->includeNumber = includeNumber;
 }

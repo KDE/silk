@@ -71,7 +71,9 @@ private slots:
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QuerySiteinfoUsergroups * job = new QuerySiteinfoUsergroups(mediawiki, includeNumber);
+        QuerySiteinfoUsergroups * job = new QuerySiteinfoUsergroups(mediawiki);
+
+        job->setIncludeNumber(includeNumber);
 
         connect(job, SIGNAL(usergroups(const QList<QuerySiteinfoUsergroups::Result> &)), this, SLOT(usergroupsHandle(const QList<QuerySiteinfoUsergroups::Result> &)));
 
