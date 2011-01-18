@@ -37,11 +37,8 @@ namespace mediawiki
 {
     struct EditPrivate
     {
-        EditPrivate(QNetworkAccessManager *  manager, MediaWiki  & mediawiki)
-            : manager(manager)
-            , mediawiki(mediawiki){}
-
-        QNetworkAccessManager *manager;
+        EditPrivate(MediaWiki  & mediawiki)
+            : mediawiki(mediawiki){}
         QUrl baseUrl;
         MediaWiki  & mediawiki;
         QMap<QString, QString> requestParameter;
@@ -53,7 +50,7 @@ using namespace mediawiki;
 
 Edit::Edit( MediaWiki  & media, QObject *parent)
     : Job(media,parent)
-    , d(new EditPrivate(new QNetworkAccessManager(this), media))
+    , d(new EditPrivate(media))
 {
 }
 void Edit::setUndoAfter( int param )

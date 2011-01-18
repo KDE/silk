@@ -57,6 +57,7 @@ public slots:
     }
 
 private slots:
+
     void initTestCase()
     {
         editCount = 0;

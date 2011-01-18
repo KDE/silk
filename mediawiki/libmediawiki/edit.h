@@ -166,6 +166,12 @@ public:
          * @brief Answer to the CAPTCHA.
          */
         QString captchaAnswer;
+
+        unsigned int captchaId(){ return this->captchaId; }
+
+        QVariant captchaQuestion(){ return this->captchaQuestion; }
+
+        QString captchaAnswer(){ return this->captchaAnswer; }
     };
 
     /**
