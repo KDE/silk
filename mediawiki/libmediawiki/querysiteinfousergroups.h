@@ -22,7 +22,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QString>
-#include <KDE/KJob>
+#include <job.h>
 #include "mediawiki_export.h"
 
 class QNetworkReply;
@@ -37,29 +37,12 @@ class MediaWiki;
  *
  * Uses for fetch a list of all user groups and their permissions.
  */
-class MEDIAWIKI_EXPORT QuerySiteinfoUsergroups : public KJob
+class MEDIAWIKI_EXPORT QuerySiteinfoUsergroups : public Job
 {
 
     Q_OBJECT
 
 public:
-
-    /**
-     * @biref Indicates all possible error conditions found during the processing of the job.
-     */
-    enum {
-
-        /**
-         * @brief A network error has occured.
-         */
-        NetworkError = KJob::UserDefinedError + 1,
-
-        /**
-         * @brief A XML error has occured.
-         */
-        XmlError,
-
-    };
 
     /**
      * @brief A user group result.

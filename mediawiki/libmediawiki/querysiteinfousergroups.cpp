@@ -51,10 +51,10 @@ struct QuerySiteinfoUsergroupsPrivate {
 using namespace mediawiki;
 
 QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(const MediaWiki & mediawiki, bool includeNumber, QObject * parent)
-        : KJob(parent)
+        : Job(mediawiki, parent)
         , d(new QuerySiteinfoUsergroupsPrivate(new QNetworkAccessManager(this), mediawiki, includeNumber))
 {
-    setCapabilities(KJob::NoCapabilities);
+    setCapabilities(Job::NoCapabilities);
 }
 
 QuerySiteinfoUsergroups::~QuerySiteinfoUsergroups()
@@ -115,7 +115,7 @@ void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
             }
         }
         if (!reader.hasError()) {
-            setError(KJob::NoError);
+            setError(Job::NoError);
             emit usergroups(results);
         } else {
             setError(QuerySiteinfoUsergroups::XmlError);
