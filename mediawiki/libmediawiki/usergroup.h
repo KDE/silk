@@ -28,7 +28,7 @@
 namespace mediawiki {
 
 /**
- * @brief A user group
+ * @brief A user group.
  */
 class MEDIAWIKI_EXPORT UserGroup
 {
@@ -47,7 +47,7 @@ public:
     UserGroup(const UserGroup & other);
 
     /**
-     * @brief Destructs a user group .
+     * @brief Destructs a user group.
      */
     ~UserGroup();
 

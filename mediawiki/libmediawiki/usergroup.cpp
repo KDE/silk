@@ -23,12 +23,11 @@ namespace mediawiki {
 
 struct UserGroupPrivate
 {
-    QString m_name;
+    QString name;
 
-    QList<QString> m_rights;
+    QList<QString> rights;
 
-    unsigned int m_number;
-
+    unsigned int number;
 };
 
 }
@@ -38,7 +37,7 @@ using namespace mediawiki;
 UserGroup::UserGroup()
     : d(new UserGroupPrivate())
 {
-    d->m_number = -1;
+    d->number = -1;
 }
 
 UserGroup::UserGroup(const UserGroup & other)
@@ -58,37 +57,37 @@ UserGroup & UserGroup::operator=(UserGroup other)
 
 QString UserGroup::name() const
 {
-    return d->m_name;
+    return d->name;
 }
 
 void UserGroup::setName(const QString & name)
 {
-    d->m_name = name;
+    d->name = name;
 }
 
 const QList<QString> & UserGroup::rights() const
 {
-    return d->m_rights;
+    return d->rights;
 }
 
 QList<QString> & UserGroup::rights()
 {
-    return d->m_rights;
+    return d->rights;
 }
 
 void UserGroup::setRights(const QList<QString> & rights)
 {
-    d->m_rights = rights;
+    d->rights = rights;
 }
 
 qint64 UserGroup::number() const
 {
-    return d->m_number;
+    return d->number;
 }
 
 void UserGroup::setNumber(qint64 number)
 {
-    d->m_number = number;
+    d->number = number;
 }
 
 bool operator==(const UserGroup & lhs, const UserGroup & rhs)

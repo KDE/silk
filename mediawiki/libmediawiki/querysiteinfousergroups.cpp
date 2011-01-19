@@ -110,13 +110,13 @@ void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
                 }
             } else if (token == QXmlStreamReader::EndElement) {
                 if (reader.name() == "group") {
-                    UserGroup res;
-                    res.setName(name);
-                    res.setRights(rights);
+                    UserGroup usergroup;
+                    usergroup.setName(name);
+                    usergroup.setRights(rights);
                     if(d->includeNumber){
-                        res.setNumber(number);
+                        usergroup.setNumber(number);
                     }
-                    results.push_back(res);
+                    results.push_back(usergroup);
                 }
             }
         }

@@ -118,51 +118,45 @@ private slots:
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"/></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1);
+                << (QList<UserGroup>() << ug1);
 
         ug1.setRights(ug1.rights() << "permission_1_1");
         QTest::newRow("One group with one right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission></rights></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1);
+                << (QList<UserGroup>() << ug1);
 
         ug1.setRights(ug1.rights() << "permission_1_2");
         QTest::newRow("One group with two rights")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission><permission>permission_1_2</permission></rights></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1);
+                << (QList<UserGroup>() << ug1);
 
         ug1.setRights(QList<QString>());
         QTest::newRow("Two groups with group one no right and group two no right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"></group><group name=\"name_2\" /></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
+
 
         ug2.setRights(ug2.rights() << "permission_2_1");
         QTest::newRow("Two groups with group one no right and group two one right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"></group><group name=\"name_2\"><rights><permission>permission_2_1</permission></rights></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
+
 
         ug2.setRights(ug2.rights() << "permission_2_2");
         QTest::newRow("Two groups with group one no right and group two two rights")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"></group><group name=\"name_2\"><rights><permission>permission_2_1</permission><permission>permission_2_2</permission></rights></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
+
 
         ug1.setRights(ug1.rights() << "permission_1_1");
         ug2.setRights(QList<QString>());
@@ -170,27 +164,24 @@ private slots:
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission></rights></group><group name=\"name_2\"><rights></rights></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
+
 
         ug2.setRights(ug2.rights() << "permission_2_1");
         QTest::newRow("Two groups with group one one right and group two one right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission></rights></group><group name=\"name_2\"><rights><permission>permission_2_1</permission></rights></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
+
 
         ug2.setRights(ug2.rights() << "permission_2_2");
         QTest::newRow("Two groups with group one one right and group two two rights")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission></rights></group><group name=\"name_2\"><rights><permission>permission_2_1</permission><permission>permission_2_2</permission></rights></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
+
 
         ug1.setRights(ug1.rights() << "permission_1_2");
         ug2.setRights(QList<QString>());
@@ -198,27 +189,24 @@ private slots:
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission><permission>permission_1_2</permission></rights></group><group name=\"name_2\"><rights /></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
+
 
         ug2.setRights(ug2.rights() << "permission_2_1");
         QTest::newRow("Two groups with group one two rights and group two one right")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission><permission>permission_1_2</permission></rights></group><group name=\"name_2\"><rights><permission>permission_2_1</permission></rights></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
+
 
         ug2.setRights(ug2.rights() << "permission_2_2");
         QTest::newRow("Two groups with group one two rights and group two two rights")
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\"><rights><permission>permission_1_1</permission><permission>permission_1_2</permission></rights></group><group name=\"name_2\"><rights><permission>permission_2_1</permission><permission>permission_2_2</permission></rights></group></usergroups></query></api>"
                 << false
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
+
 
         QTest::newRow("No group with include number")
                 << "<?xml version=\"1.0\"?><api><query><usergroups></usergroups></query></api>"
@@ -232,8 +220,7 @@ private slots:
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\" number=\"0\"/></usergroups></query></api>"
                 << true
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1);
+                << (QList<UserGroup>() << ug1);
 
         ug1.setNumber(41);
         ug2.setRights(QList<QString>());
@@ -242,9 +229,7 @@ private slots:
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\" number=\"41\"></group><group name=\"name_2\" number=\"12543\" /></usergroups></query></api>"
                 << true
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2);
+                << (QList<UserGroup>() << ug1 << ug2);
 
         ug1.setRights(QList<QString>()<< "permission_1_1");
         ug1.setNumber(1781);
@@ -256,10 +241,7 @@ private slots:
                 << "<?xml version=\"1.0\"?><api><query><usergroups><group name=\"name_1\" number=\"1781\"><rights><permission>permission_1_1</permission></rights></group><group name=\"name_2\" number=\"10989982\"><rights><permission>permission_2_1</permission><permission>permission_2_2</permission><permission>permission_2_3</permission></rights></group><group name=\"name_3\" number=\"6\"><rights><permission>permission_3_1</permission><permission>permission_3_2</permission></rights></group></usergroups></query></api>"
                 << true
                 << int(KJob::NoError)
-                << (QList<UserGroup>()
-                        << ug1
-                        << ug2
-                        << ug3);
+                << (QList<UserGroup>() << ug1 << ug2 << ug3);
     }
     
 private:
