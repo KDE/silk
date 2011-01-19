@@ -118,7 +118,8 @@ private slots:
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryImages * job = new QueryImages(mediawiki, title);
+        QueryImages * job = new QueryImages(mediawiki);
+        job->setTitle(title);
 
         connect(job, SIGNAL(pages(const QList<QueryImages::Page> &)), this, SLOT(pagesHandle(const QList<QueryImages::Page> &)));
 
@@ -212,7 +213,9 @@ private slots:
 
         // Prepare the job
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryImages * job = new QueryImages(mediawiki, title, limit);
+        QueryImages * job = new QueryImages(mediawiki);
+        job->setTitle(title);
+        job->setLimit(limit);
         connect(job, SIGNAL(pages(const QList<QueryImages::Page> &)), this, SLOT(pagesHandle(const QList<QueryImages::Page> &)));
         job->exec();
 

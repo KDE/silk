@@ -75,7 +75,8 @@ void PictureOfTheDayEngine::images(const QList<QueryImageinfo::Image> & images) 
 }
 
 bool PictureOfTheDayEngine::searchImages(const MediaWiki & mediawiki, const QString& page) {
-    QueryImages * const queryimages(new QueryImages(mediawiki, page));
+    QueryImages * const queryimages(new QueryImages(mediawiki));
+    queryimages->setTitle(page);
     connect(queryimages, SIGNAL(pages(const QList<QueryImages::Page> &)), this, SLOT(pages( const QList<QueryImages::Page>&)));
     if (!queryimages->exec() || m_pages.size() == 0) {
         return false;

@@ -197,16 +197,26 @@ public:
     /**
      * @brief Constructs a query images job.
      * @param mediawiki the mediawiki concerned by the job
-     * @param title the title of the page
-     * @param limit number of images returned by one signal #pages()
      * @param parent the QObject parent
      */
-    explicit QueryImages(const MediaWiki & mediawiki, const QString & title, unsigned int limit = 10, QObject * parent = 0);
+    explicit QueryImages(const MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys a query images job.
      */
     virtual ~QueryImages();
+
+    /**
+     * @brief Set the title.
+     * @param title the title of the page
+     */
+    void setTitle(const QString & title);
+
+    /**
+     * @brief Set the limit.
+     * @param limit number of images returned by one signal #pages()
+     */
+    void setLimit(unsigned int limit);
 
     /**
      * @brief Starts the job asynchronously.
