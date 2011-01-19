@@ -50,9 +50,6 @@ struct QueryRevisionPrivate {
     QMap<QString, QString> requestParameter;
 
     int id;
-
-    QueryRevision::IdType type;
-
 };
 
 }
@@ -128,12 +125,13 @@ void QueryRevision::setContinue(int param)
 {
     d->requestParameter["rvcontinue"] = QString::number(param);
 }
-void QueryRevision::setPageId(int id, QueryRevision::IdType type)
+void QueryRevision::setPageId(unsigned int param)
 {
-    if(type == QueryRevision::PageId)
-        d->requestParameter["pageids"] = QString::number(id);
-    else if(type == QueryRevision::RevisionId)
-        d->requestParameter["revids"] = QString::number(id);
+    d->requestParameter["pageids"] = QString::number(param);
+}
+void QueryRevision::setRevisionId(unsigned int param)
+{
+    d->requestParameter["revids"] = QString::number(param);
 }
 
 void QueryRevision::setLimit(int param)

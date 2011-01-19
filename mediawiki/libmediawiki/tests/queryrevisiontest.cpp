@@ -653,7 +653,38 @@ private slots:
 
         QueryRevision * job = new QueryRevision(mediawiki);
         job->setProp( rvprop );
-        job->setPageId(id,QueryRevision::PageId);
+        job->setPageId(id);
+
+        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+
+        job->exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+
+        FakeServer::Request request = requests[0];
+        QCOMPARE( requestTrue.type, request.type);
+        QCOMPARE(revisionCount, 1);
+        QCOMPARE(requestTrue.value, request.value);
+
+        QVERIFY(fakeserver.isAllScenarioDone());
+
+    }
+
+    void testRvRevisionId(){
+        FakeServer::Request requestTrue("GET","","?format=xml&action=query&prop=revisions&revids=2993&rvprop=timestamp|user|comment|content");
+        int rvprop = TIMESTAMP|USER|COMMENT|CONTENT;
+        int id= 2993;
+
+
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        QueryRevision * job = new QueryRevision(mediawiki);
+        job->setProp( rvprop );
+        job->setRevisionId(id);
 
         connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 

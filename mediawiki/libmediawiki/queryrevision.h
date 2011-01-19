@@ -59,7 +59,6 @@ class MEDIAWIKI_EXPORT QueryRevision : public Job
     Q_OBJECT
 
 public:
-    enum IdType { PageId , RevisionId , NoId };
 
     enum Dir {Older, Newer};
 
@@ -160,7 +159,13 @@ public:
      * @param Id
      * @param QueryRevision::IdType
      */
-    void setPageId(int, QueryRevision::IdType);
+    void setPageId(unsigned int);
+
+    /**
+     * @param Id
+     * @param QueryRevision::IdType
+     */
+    void setRevisionId(unsigned int);
 
     /**
      *
