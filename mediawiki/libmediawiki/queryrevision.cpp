@@ -56,7 +56,7 @@ struct QueryRevisionPrivate {
 
 using namespace mediawiki;
 
-QueryRevision::QueryRevision(const MediaWiki & mediawiki, QObject * parent)
+QueryRevision::QueryRevision(MediaWiki & mediawiki, QObject * parent)
         : Job(mediawiki,parent)
         , d(new QueryRevisionPrivate(new QNetworkAccessManager(this), mediawiki))
 {

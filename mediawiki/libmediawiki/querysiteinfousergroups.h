@@ -51,7 +51,7 @@ public:
      * @param includeNumber if true number of users of each user group is included
      * @param parent the QObject parent
      */
-    explicit QuerySiteinfoUsergroups(const MediaWiki & mediawiki, QObject * parent = 0);
+    explicit QuerySiteinfoUsergroups(MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the UserGroups job.

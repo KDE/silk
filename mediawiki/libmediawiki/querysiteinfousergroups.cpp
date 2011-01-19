@@ -50,7 +50,7 @@ struct QuerySiteinfoUsergroupsPrivate {
 
 using namespace mediawiki;
 
-QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(const MediaWiki & mediawiki, QObject * parent)
+QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(MediaWiki & mediawiki, QObject * parent)
         : Job(mediawiki, parent)
         , d(new QuerySiteinfoUsergroupsPrivate(new QNetworkAccessManager(this), mediawiki, false))
 {
