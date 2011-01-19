@@ -23,7 +23,9 @@
 
 namespace mediawiki {
 
-struct ImageinfoPrivate {
+class ImageinfoPrivate {
+
+public:
 
     QDateTime timestamp;
     QString user;
@@ -201,7 +203,7 @@ void Imageinfo::setMime(const QString & mime)
     d->mime = mime;
 }
 
-QHash<QString, QVariant> Imageinfo::metadata() const
+const QHash<QString, QVariant> & Imageinfo::metadata() const
 {
     return d->metadata;
 }

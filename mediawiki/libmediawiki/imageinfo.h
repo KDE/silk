@@ -219,7 +219,7 @@ public:
      * @brief Get image metadata.
      * @return image metadata
      */
-    QHash<QString, QVariant> metadata() const;
+    const QHash<QString, QVariant> & metadata() const;
 
     /**
      * @brief Get image metadata.
@@ -235,7 +235,7 @@ public:
 
 private:
 
-    struct ImageinfoPrivate * d;
+    class ImageinfoPrivate * d;
 
 };
 
