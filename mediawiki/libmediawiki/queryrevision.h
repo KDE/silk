@@ -28,6 +28,7 @@
 #include <KDE/KJob>
 
 #include "mediawiki_export.h"
+#include "job.h"
 
 //FIXME: Fait pas de define ça se met dans l'espace de nommage global et ça remplace PARTOUT TIMESTAMP par 4, ... !
 #define IDS         1
@@ -53,7 +54,7 @@ class MediaWiki;
  *
  * Uses for fetch a revision information about one pages of the wiki.
  */
-class MEDIAWIKI_EXPORT QueryRevision : public KJob
+class MEDIAWIKI_EXPORT QueryRevision : public Job
 {
     Q_OBJECT
 
@@ -141,20 +142,9 @@ public:
     /**
      * @brief Constructs a Revision job.
      * @param mediawiki the mediawiki concerned by the job
-     * @param title the pages title
-     * @param requestParameter map the parameter name and values
      * @param parent the QObject parent
      */
-    explicit QueryRevision(const MediaWiki & mediawiki, QString title, QObject * parent = 0);
-
-    /**
-     * @brief Constructs a Revision job.
-     * @param mediawiki the mediawiki concerned by the job
-     * @param title the pages title
-     * @param requestParameter map the parameter name and values
-     * @param parent the QObject parent
-     */
-    explicit QueryRevision(const MediaWiki & mediawiki, int id, QueryRevision::IdType, QObject * parent = 0);
+    explicit QueryRevision(const MediaWiki & mediawiki,QObject * parent = 0);
 
     /**
      * @brief Destroys the QueryRevision job.
@@ -167,58 +157,70 @@ public:
     virtual void start();
 
     /**
+     * @param Id
+     * @param QueryRevision::IdType
+     */
+    void setPageId(int, QueryRevision::IdType);
+
+    /**
+     *
+     * @param Qstring title
+     */
+    void setPageName(QString);
+
+    /**
      * @brief Which properties to get for each revision.
      * @param int
      */
-    void setRvProp(int);
+    void setProp(int);
 
     /**
      * @brief When more results are available, use this to continue.
      * @param int
      */
-    void setRvContinue(int);
+    void setContinue(int);
 
     /**
      * @brief The maximum number of revisions to return.
      * @param int
      */
-    void setRvLimit(int);
+    void setLimit(int);
 
     /**
      * @brief Revision ID to stop listing at.
      * @param int
      */
-    void setRvStartId(int);
+    void setStartId(int);
 
     /**
      * @brief Revision ID to start listing from.
      * @param int
      */
-    void setRvEndId(int);
+    void setEndId(int);
 
     /**
      * @brief Timestamp to start listing from.
      * @param QDateTime
      */
-    void setRvStart(QDateTime);
+    void setStart(QDateTime);
 
     /**
      * @brief Timestamp to stop listing at.
      * @param QDateTime
      */
-    void setRvEnd(QDateTime);
+    void setEnd(QDateTime);
 
     /**
      * @brief Only list revisions made by this user.
      * @param QString
      */
-    void setRvUser(QString);
+    void setUser(QString);
 
     /**
      * @brief Do not list revisions made by this user.
      * @param QString
      */
-    void setRvExcludeUser(QString);
+    void setExcludeUser(QString);
 
     /**
      * @brief Direction to list in.
@@ -226,31 +228,31 @@ public:
      * newer: List oldest revisions first.
      * @param QueryRevision::Dir
      */
-    void setRvDir(QueryRevision::Dir);
+    void setDir(QueryRevision::Dir);
 
     /**
      * @brief Set XML generation to parse tree for revision content.
      * @param bool
      */
-    void setRvGenerateXML(bool);
+    void setGenerateXML(bool);
 
     /**
      * @brief If rvprop=content is set, only retrieve the contents of this section. NOTE: Only implemented in MediaWiki versions 1.13 and above.
      * @param int
      */
-    void setRvSection(int);
+    void setSection(int);
 
     /**
      * @brief Tokens to get for each revision
      * @param QueryRevision::Token
      */
-    void setRvToken(QueryRevision::Token);
+    void setToken(QueryRevision::Token);
 
     /**
      * @brief Expand templates in rvprop=content output
      * @param bool
      */
-    void setRvExpandTemplates(bool);
+    void setExpandTemplates(bool);
 
 signals:
 

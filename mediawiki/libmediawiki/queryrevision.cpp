@@ -36,30 +36,11 @@ namespace mediawiki
 struct QueryRevisionPrivate {
 
     QueryRevisionPrivate(QNetworkAccessManager * const manager,
-                         const MediaWiki & mediawiki,
-                         int id,
-                         QueryRevision::IdType type
+                         const MediaWiki & mediawiki
                          )
             : manager(manager)
             , mediawiki(mediawiki)
-            , id(id)
-            , type(type)
     {
-        if(type == QueryRevision::PageId)
-            requestParameter["pageids"] = QString::number(id);
-        else if(type == QueryRevision::RevisionId)
-            requestParameter["revids"] = QString::number(id);
-    }
-    QueryRevisionPrivate(QNetworkAccessManager * const manager,
-                         const MediaWiki & mediawiki,
-                         QString title
-                         )
-            : manager(manager)
-            , mediawiki(mediawiki)
-            , id(0)
-            , type(QueryRevision::NoId)
-    {
-        requestParameter["titles"] = title;
     }
 
     QNetworkAccessManager * const manager;
@@ -78,15 +59,9 @@ struct QueryRevisionPrivate {
 
 using namespace mediawiki;
 
-QueryRevision::QueryRevision(const MediaWiki & mediawiki, QString title, QObject * parent)
-        : KJob(parent)
-        , d(new QueryRevisionPrivate(new QNetworkAccessManager(this), mediawiki, title))
-{
-    setCapabilities(KJob::NoCapabilities);
-}
-QueryRevision::QueryRevision(const MediaWiki & mediawiki, int id, QueryRevision::IdType idType, QObject * parent)
-    : KJob(parent)
-    , d(new QueryRevisionPrivate(new QNetworkAccessManager(this), mediawiki, id, idType))
+QueryRevision::QueryRevision(const MediaWiki & mediawiki, QObject * parent)
+        : Job(mediawiki,parent)
+        , d(new QueryRevisionPrivate(new QNetworkAccessManager(this), mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);
 }
@@ -101,8 +76,12 @@ void QueryRevision::start()
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
+void QueryRevision::setPageName(QString param)
+{
+    d->requestParameter["titles"]=param;
+}
 
-void QueryRevision::setRvProp(int param)
+void QueryRevision::setProp(int param)
 {
     QString buff;
     if(param & IDS) buff.append("ids");
@@ -145,46 +124,53 @@ void QueryRevision::setRvProp(int param)
     d->requestParameter["rvprop"] = buff;
 }
 
-void QueryRevision::setRvContinue(int param)
+void QueryRevision::setContinue(int param)
 {
     d->requestParameter["rvcontinue"] = QString::number(param);
 }
+void QueryRevision::setPageId(int id, QueryRevision::IdType type)
+{
+    if(type == QueryRevision::PageId)
+        d->requestParameter["pageids"] = QString::number(id);
+    else if(type == QueryRevision::RevisionId)
+        d->requestParameter["revids"] = QString::number(id);
+}
 
-void QueryRevision::setRvLimit(int param)
+void QueryRevision::setLimit(int param)
 {
     d->requestParameter["rvlimit"] = QString::number(param);
 }
 
-void QueryRevision::setRvStartId(int param)
+void QueryRevision::setStartId(int param)
 {
     d->requestParameter["rvstartid"] = QString::number(param);
 }
-void QueryRevision::setRvEndId(int param)
+void QueryRevision::setEndId(int param)
 {
     d->requestParameter["rvendid"] = QString::number(param);
 }
 
-void QueryRevision::setRvStart(QDateTime param)
+void QueryRevision::setStart(QDateTime param)
 {
     d->requestParameter["rvstart"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void QueryRevision::setRvEnd(QDateTime param)
+void QueryRevision::setEnd(QDateTime param)
 {
     d->requestParameter["rvend"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void QueryRevision::setRvUser(QString param)
+void QueryRevision::setUser(QString param)
 {
     d->requestParameter["rvuser"] = param;
 }
 
-void QueryRevision::setRvExcludeUser(QString param)
+void QueryRevision::setExcludeUser(QString param)
 {
     d->requestParameter["rvexcludeuser"] = param;
 }
 
-void QueryRevision::setRvDir(QueryRevision::Dir param)
+void QueryRevision::setDir(QueryRevision::Dir param)
 {
     if( param == QueryRevision::Older)
         d->requestParameter["rvdir"] = QString("older");
@@ -193,24 +179,24 @@ void QueryRevision::setRvDir(QueryRevision::Dir param)
         d->requestParameter["rvdir"] = QString("newer");
 }
 
-void QueryRevision::setRvGenerateXML(bool param)
+void QueryRevision::setGenerateXML(bool param)
 {
     if( param )
         d->requestParameter["rvgeneratexml"] = QString("on");
 }
 
-void QueryRevision::setRvSection(int param)
+void QueryRevision::setSection(int param)
 {
     d->requestParameter["rvsection"] = QString::number(param);
 }
 
-void QueryRevision::setRvToken(QueryRevision::Token t)
+void QueryRevision::setToken(QueryRevision::Token t)
 {
     if(QueryRevision::Rollback == t)
         d->requestParameter["rvtoken"] = QString("rollback");
 }
 
-void QueryRevision::setRvExpandTemplates(bool param)
+void QueryRevision::setExpandTemplates(bool param)
 {
     if( param )
         d->requestParameter["rvexpandtemplates"] = QString("on");

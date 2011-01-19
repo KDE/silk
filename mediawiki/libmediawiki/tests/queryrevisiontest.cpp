@@ -121,8 +121,9 @@ private slots:
         fakeserver.addScenario(scenario);
         fakeserver.startAndWait();
 
-        QueryRevision * job = new QueryRevision(mediawiki, title);
-        job->setRvProp( rvprop );
+        QueryRevision * job = new QueryRevision(mediawiki);
+        job->setProp( rvprop );
+        job->setPageName(title);
 
         connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
@@ -230,8 +231,9 @@ private slots:
             fakeserver.startAndWait();
         }
 
-        QueryRevision * job = new QueryRevision(mediawiki, "NoTitle");
-        job->setRvProp( SIZE|CONTENT );
+        QueryRevision * job = new QueryRevision(mediawiki);
+        job->setProp( SIZE|CONTENT );
+        job->setPageName("title");
 
         connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
@@ -289,8 +291,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvcontinue=5555&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvContinue(5555);
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setContinue(5555);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -309,8 +312,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvlimit=2&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvLimit(2);
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setLimit(2);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -329,8 +333,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvstartid=2&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvStartId(2);
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setStartId(2);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -349,8 +354,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvendid=2&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvEndId(2);
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setEndId(2);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -370,8 +376,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvstart=2010-09-28T15:21:07Z&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvStart(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
+        QueryRevision job(mediawiki);
+         job.setPageName("API");
+        job.setStart(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -391,8 +398,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvend=2010-09-28T15:21:07Z&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvEnd(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setEnd(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -412,8 +420,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvuser=martine&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvUser(QString("martine"));
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setUser(QString("martine"));
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -433,8 +442,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvexcludeuser=martine&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvExcludeUser(QString("martine"));
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setExcludeUser(QString("martine"));
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -454,8 +464,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvdir=older&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvDir(QueryRevision::Older);
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setDir(QueryRevision::Older);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -475,8 +486,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvdir=newer&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvDir(QueryRevision::Newer);
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setDir(QueryRevision::Newer);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -518,9 +530,10 @@ private slots:
         fakeserver.addScenario(scenario);
         fakeserver.startAndWait();
 
-        QueryRevision * job = new QueryRevision(mediawiki, title);
-        job->setRvProp( rvprop );
-        job->setRvGenerateXML(true);
+        QueryRevision * job = new QueryRevision(mediawiki);
+        job->setProp( rvprop );
+        job->setPageName(title);
+        job->setGenerateXML(true);
 
         connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
@@ -544,8 +557,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvsection=1&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvSection(1);
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setSection(1);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -582,8 +596,10 @@ private slots:
         fakeserver.addScenario(scenario);
         fakeserver.startAndWait();
 
-        QueryRevision * job = new QueryRevision(mediawiki, title);
-        job->setRvToken(QueryRevision::Rollback);
+        QueryRevision * job = new QueryRevision(mediawiki);
+        job->setPageName(title);
+
+        job->setToken(QueryRevision::Rollback);
 
         connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
 
@@ -607,8 +623,9 @@ private slots:
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvexpandtemplates=on&titles=API");
-        QueryRevision job(mediawiki, "API");
-        job.setRvExpandTemplates(true);
+        QueryRevision job(mediawiki);
+        job.setPageName("API");
+        job.setExpandTemplates(true);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -623,6 +640,37 @@ private slots:
         QCOMPARE(requests[0].type, requestSend.type);
         QVERIFY(fakeserver.isAllScenarioDone());
     }
+    void testRvPageId(){
+        FakeServer::Request requestTrue("GET","","?format=xml&action=query&prop=revisions&pageids=2993&rvprop=timestamp|user|comment|content");
+        int rvprop = TIMESTAMP|USER|COMMENT|CONTENT;
+        int id= 2993;
+
+
+        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
+
+        FakeServer fakeserver;
+        fakeserver.startAndWait();
+
+        QueryRevision * job = new QueryRevision(mediawiki);
+        job->setProp( rvprop );
+        job->setPageId(id,QueryRevision::PageId);
+
+        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+
+        job->exec();
+
+        QList<FakeServer::Request> requests = fakeserver.getRequest();
+        QCOMPARE(requests.size(), 1);
+
+        FakeServer::Request request = requests[0];
+        QCOMPARE( requestTrue.type, request.type);
+        QCOMPARE(revisionCount, 1);
+        QCOMPARE(requestTrue.value, request.value);
+
+        QVERIFY(fakeserver.isAllScenarioDone());
+
+    }
+
 private:
     
     int revisionCount;
