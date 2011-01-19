@@ -25,36 +25,33 @@
 #include <QtCore/QDebug>
 #include <QDateTime>
 
+#include "job_p.h"
 #include "logout.h"
 #include "mediawiki.h"
 
-namespace mediawiki
-{
-    struct LogoutPrivate
-    {
+namespace mediawiki {
+
+    class LogoutPrivate : public JobPrivate {
+
+    public:
 
         LogoutPrivate(MediaWiki & mediawiki)
-            : mediawiki(mediawiki)
+            : JobPrivate(mediawiki)
         {}
 
-        MediaWiki & mediawiki;
-
     };
+
 }
 
 using namespace mediawiki;
 
 Logout::Logout(MediaWiki & mediawiki, QObject *parent)
-    : Job(mediawiki,parent)
-    , d(new LogoutPrivate(mediawiki))
+    : Job(*new LogoutPrivate(mediawiki), parent)
 {
     setCapabilities(KJob::NoCapabilities);
 }
 
-Logout::~Logout()
-{
-    delete d;
-}
+Logout::~Logout() {}
 
 void Logout::start()
 {
@@ -63,6 +60,7 @@ void Logout::start()
 
 void Logout::doWorkSendRequest()
 {
+    Q_D(Logout);
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");

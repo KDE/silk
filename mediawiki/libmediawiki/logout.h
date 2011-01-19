@@ -20,16 +20,15 @@
 #ifndef MEDIAWIKI_LOGOUT_H
 #define MEDIAWIKI_LOGOUT_H
 
-#include <QtCore/QString>
-#include <KDE/KJob>
-#include "mediawiki_export.h"
 #include "job.h"
+#include "mediawiki_export.h"
 
 class QNetworkReply;
 
 namespace mediawiki {
 
 class MediaWiki;
+class LogoutPrivate;
 
 /**
  * @brief Logout job.
@@ -40,6 +39,7 @@ class MEDIAWIKI_EXPORT Logout : public Job
 {
 
     Q_OBJECT
+    Q_DECLARE_PRIVATE(Logout)
 
 public:
 
@@ -61,19 +61,10 @@ public:
 
 private slots:
 
-    /**
-     * @brief Send a request to destroy the cookie.
-     */
     void doWorkSendRequest();
     void doWorkProcessReply(QNetworkReply * reply);
 
-private:
-
-    /**
-     * @brief Contains the class attributes.
-     */
-    struct LogoutPrivate * const d;
-
 };
+
 }
 #endif // LOGOUT_H

@@ -24,16 +24,15 @@
 
 namespace mediawiki {
 
-
 class JobPrivate {
 
 public:
 
-    explicit JobPrivate(const MediaWiki & mediawiki)
+    explicit JobPrivate(MediaWiki & mediawiki)
         : mediawiki(mediawiki)
     {}
 
-    MediaWiki const & mediawiki;
+    MediaWiki & mediawiki;
 
 };
 

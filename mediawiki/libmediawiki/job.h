@@ -53,18 +53,18 @@ public:
     };
 
     /**
-     * @brief Constructs a Job.
-     * @param mediawiki the mediawiki receiving the request
-     * @param parent the QObject parent
+     * @deprecated
      */
-    Job(const MediaWiki & mediawiki, QObject * parent = 0);
+    Job(MediaWiki & mediawiki, QObject *parent);
 
     /**
      * @brief Destructs the Job.
      */
     virtual ~Job();
 
-private:
+protected:
+
+    Job(JobPrivate & dd, QObject * parent = 0);
 
     JobPrivate * const d_ptr;
 
