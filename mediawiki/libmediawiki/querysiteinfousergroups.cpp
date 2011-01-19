@@ -89,7 +89,7 @@ void QuerySiteinfoUsergroups::doWorkSendRequest()
 void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
 {
     if (reply->error() == QNetworkReply::NoError) {
-        QList<QuerySiteinfoUsergroups::Result> results;
+        QList<UserGroup> results;
         QString name;
         QList<QString> rights;
         unsigned int number;
@@ -110,7 +110,13 @@ void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
                 }
             } else if (token == QXmlStreamReader::EndElement) {
                 if (reader.name() == "group") {
-                    results.push_back(d->includeNumber ? QuerySiteinfoUsergroups::Result(name, rights, number) : QuerySiteinfoUsergroups::Result(name, rights));
+                    UserGroup res;
+                    res.setName(name);
+                    res.setRights(rights);
+                    if(d->includeNumber){
+                        res.setNumber(number);
+                    }
+                    results.push_back(res);
                 }
             }
         }

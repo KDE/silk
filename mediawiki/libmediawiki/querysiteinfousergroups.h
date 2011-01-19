@@ -24,6 +24,7 @@
 #include <QtCore/QString>
 #include <job.h>
 #include "mediawiki_export.h"
+#include "usergroup.h"
 
 class QNetworkReply;
 
@@ -43,76 +44,6 @@ class MEDIAWIKI_EXPORT QuerySiteinfoUsergroups : public Job
     Q_OBJECT
 
 public:
-
-    /**
-     * @brief A user group result.
-     */
-    struct Result {
-
-    public:
-
-        /**
-         * Constructs a user group.
-         * @param name the name of the user group
-         * @param rights rights of the user group
-         */
-        Result(const QString & name, const QList<QString> & rights)
-                : m_name(name)
-                , m_rights(rights)
-                , m_hasNumber(false)
-        {}
-
-        /**
-         * Constructs a user group.
-         * @param name the name of the user group
-         * @param rights rights of the user group
-         * @param number the numbers of users in the user group
-         */
-        Result(const QString & name, const QList<QString> & rights, unsigned int number)
-                : m_name(name)
-                , m_rights(rights)
-                , m_number(number)
-                , m_hasNumber(true)
-        {}
-
-        /**
-         * @brief Returns the name of the user group.
-         * @return the name of the user group
-         */
-        inline QString name() const { return m_name; }
-
-        /**
-         * @brief Returns rights of the user group.
-         * @return rights of the user group
-         */
-        inline const QList<QString> & rights() const { return m_rights; }
-
-        /**
-         * @brief Returns the numbers of users in the user group.
-         * @pre hasNumber() == true
-         * @return the numbers of users in the user group
-         * @see QuerySiteinfoUsergroups::Result::hasNumber()
-         */
-        inline unsigned int number() const { Q_ASSERT(hasNumber()); return m_number; }
-
-        /**
-         * @brief Returns true if number has defined else false.
-         * @return true if number has defined else false
-         * @see QuerySiteinfoUsergroups::Result::number()
-         */
-        inline bool hasNumber() const { return m_hasNumber; }
-
-    private:
-
-        QString m_name;
-
-        QList<QString> m_rights;
-
-        unsigned int m_number;
-
-        bool m_hasNumber;
-
-    };
 
     /**
      * @brief Constructs a UserGroups job.
@@ -145,7 +76,7 @@ signals:
      * @param usergroups list of all user groups
      * @see QuerySiteinfoUsergroups::Result
      */
-    void usergroups(const QList<QuerySiteinfoUsergroups::Result> & usergroups);
+    void usergroups(const QList<UserGroup> & usergroups);
 
 private slots:
 
