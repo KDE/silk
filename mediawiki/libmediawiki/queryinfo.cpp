@@ -35,54 +35,47 @@ namespace mediawiki
     struct QueryInfoPrivate
     {
 
-        QueryInfoPrivate(int id, QueryInfo::IdType type, QString token, MediaWiki & mediawiki)
+        QueryInfoPrivate(MediaWiki & mediawiki)
             : mediawiki(mediawiki)
-            , id(id)
-            , type(type)
-            , token(token)
-        {
-            if(type == QueryInfo::PageId)
-                requestParameter["pageids"] = QString::number(id);
-            else if(type == QueryInfo::RevisionId)
-                requestParameter["revids"] = QString::number(id);
-        }
-
-        QueryInfoPrivate(QString title, QString token, MediaWiki & mediawiki)
-            : mediawiki(mediawiki)
-            , id(0)
-            , type(QueryInfo::NoId)
-            , token(token)
-        {
-            requestParameter["titles"] = title;
-        }
+        { }
 
         MediaWiki & mediawiki;
         QMap<QString, QString> requestParameter;
-        int id;
-        QueryInfo::IdType type;
-        QString token;
     };
 }
 
 using namespace mediawiki;
-QueryInfo::QueryInfo(MediaWiki & mediawiki, const QString & titre, const QString & token, QObject *parent)
+QueryInfo::QueryInfo(MediaWiki & mediawiki, QObject *parent)
     : KJob(parent)
-    , d(new QueryInfoPrivate(titre, token, mediawiki))
+    , d(new QueryInfoPrivate(mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);
 }
 
-
-QueryInfo::QueryInfo(MediaWiki & mediawiki, unsigned int id, QueryInfo::IdType type, const QString & token, QObject *parent)
-    : KJob(parent)
-    , d(new QueryInfoPrivate(id, type, token, mediawiki))
-{
-    setCapabilities(KJob::NoCapabilities);
-}
 
 QueryInfo::~QueryInfo()
 {
     delete d;
+}
+
+void QueryInfo::setPageName(const QString & title)
+{
+    d->requestParameter["titles"] = title;
+}
+
+void QueryInfo::setToken(const QString & token)
+{
+    d->requestParameter["intoken"] = token;
+}
+
+void QueryInfo::setPageId(unsigned int id)
+{
+    d->requestParameter["pageids"] = QString::number(id);
+}
+
+void QueryInfo::setRevisionId(unsigned int id)
+{
+    d->requestParameter["revids"] = QString::number(id);
 }
 
 void QueryInfo::start()
@@ -102,7 +95,6 @@ void QueryInfo::doWorkSendRequest()
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "query");
-    url.addEncodedQueryItem("intoken", d->token.toUtf8());
     url.addQueryItem("prop", "info");
     url.addEncodedQueryItem("inprop", QString("protection|talkid|watched|subjectid|url|readable|preload").toUtf8());
 

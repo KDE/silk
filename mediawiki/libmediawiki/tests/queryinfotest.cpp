@@ -110,7 +110,9 @@ private slots:
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryInfo * job = new QueryInfo(mediawiki, 367741564, QueryInfo::RevisionId, "edit");
+        QueryInfo * job = new QueryInfo(mediawiki);
+        job->setRevisionId(367741564);
+        job->setToken("edit");
 
         connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
@@ -122,7 +124,7 @@ private slots:
         FakeServer::Request request = requests[0];
         QCOMPARE(request.agent, mediawiki.userAgent());
         QCOMPARE(request.type, QString("GET"));
-        QCOMPARE(request.value, QString("?format=xml&action=query&intoken=edit&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&revids=367741564"));
+        QCOMPARE(request.value, QString("?format=xml&action=query&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&intoken=edit&revids=367741564"));
 
         QCOMPARE(job->error(), error);
         QCOMPARE(queryInfoCount, 1);
@@ -228,7 +230,9 @@ private slots:
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryInfo * job = new QueryInfo(mediawiki, "API", "edit");
+        QueryInfo * job = new QueryInfo(mediawiki);
+        job->setPageName("API");
+        job->setToken("edit");
 
         connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
@@ -240,7 +244,7 @@ private slots:
         FakeServer::Request request = requests[0];
         QCOMPARE(request.agent, mediawiki.userAgent());
         QCOMPARE(request.type, QString("GET"));
-        QCOMPARE(request.value, QString("?format=xml&action=query&intoken=edit&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&titles=API"));
+        QCOMPARE(request.value, QString("?format=xml&action=query&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&intoken=edit&titles=API"));
 
         QCOMPARE(job->error(), error);
         QCOMPARE(queryInfoCount, 1);
@@ -346,7 +350,9 @@ private slots:
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::PageId, "edit");
+        QueryInfo * job = new QueryInfo(mediawiki);
+        job->setPageId(27697087);
+        job->setToken("edit");
 
         connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
@@ -358,7 +364,7 @@ private slots:
         FakeServer::Request request = requests[0];
         QCOMPARE(request.agent, mediawiki.userAgent());
         QCOMPARE(request.type, QString("GET"));
-        QCOMPARE(request.value, QString("?format=xml&action=query&intoken=edit&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&pageids=27697087"));
+        QCOMPARE(request.value, QString("?format=xml&action=query&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&intoken=edit&pageids=27697087"));
 
         QCOMPARE(job->error(), error);
         QCOMPARE(queryInfoCount, 1);
@@ -466,7 +472,9 @@ private slots:
         fakeserver.startAndWait();
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryInfo * job = new QueryInfo(mediawiki, 27697087, QueryInfo::PageId, QString("edit|move|delete"));
+        QueryInfo * job = new QueryInfo(mediawiki);
+        job->setPageId(27697087);
+        job->setToken("edit|move|delete");
 
         connect(job, SIGNAL(infos(const QList<QueryInfo::Result> &)), this, SLOT(queryInfoHandle(const QList<QueryInfo::Result> &)));
 
@@ -478,7 +486,7 @@ private slots:
         FakeServer::Request request = requests[0];
         QCOMPARE(request.agent, mediawiki.userAgent());
         QCOMPARE(request.type, QString("GET"));
-        QCOMPARE(request.value, QString("?format=xml&action=query&intoken=edit|move|delete&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&pageids=27697087"));
+        QCOMPARE(request.value, QString("?format=xml&action=query&prop=info&inprop=protection|talkid|watched|subjectid|url|readable|preload&intoken=edit|move|delete&pageids=27697087"));
 
         QCOMPARE(job->error(), error);
         QCOMPARE(job->warning(), warning);

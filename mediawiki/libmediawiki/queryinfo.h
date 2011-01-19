@@ -74,20 +74,9 @@ public:
     /**
      * @brief Constructs a QueryInfo job.
      * @param mediawiki the mediawiki concerned by the job
-     * @param name the page title
-     * @param token the page token
      * @param parent the QObject parent
      */
-    explicit QueryInfo(MediaWiki & mediawiki, const QString & name, const QString & token, QObject *parent = 0);
-
-    /**
-     * @brief Constructs a QueryInfo job.
-     * @param mediawiki the mediawiki concerned by the job
-     * @param id the page id or the revision id
-     * @param token the page token
-     * @param parent the QObject parent
-     */
-    explicit QueryInfo(MediaWiki & mediawiki, unsigned int id, IdType type, const QString & token, QObject *parent = 0);
+    explicit QueryInfo(MediaWiki & mediawiki, QObject *parent = 0);
 
     /**
      * @brief Destroys the QuerySiteInfoGeneral job.
@@ -98,6 +87,30 @@ public:
      * @brief Starts the job asynchronously.
      */
     virtual void start();
+
+    /**
+     * @brief Set the page name.
+     * @param title the page name
+     */
+    void setPageName(const QString & title);
+
+    /**
+     * @brief Set the token to perform a data-modifying action on a page
+     * @param token the token
+     */
+    void setToken(const QString & token);
+
+    /**
+     * @brief Set the page id.
+     * @param id the page id
+     */
+    void setPageId(unsigned int id);
+
+    /**
+     * @brief Set the page revision
+     * @param id the page revision
+     */
+    void setRevisionId(unsigned int id);
 
     struct Protection {
 
