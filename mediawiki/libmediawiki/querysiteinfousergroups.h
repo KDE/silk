@@ -134,7 +134,7 @@ public:
 
     /**
      * @brief If true number of users of each user group is included
-     * @param includeNumber If true number of users of each user group is included
+     * @param includeNumber if true number of users of each user group is included
      */
     void setIncludeNumber(bool includeNumber);
 
