@@ -24,19 +24,21 @@
 
 #include "mediawiki.h"
 #include "queryimages.h"
+#include "image.h"
 
 using mediawiki::MediaWiki;
 using mediawiki::QueryImages;
+using mediawiki::Image;
 
 Q_DECLARE_METATYPE(QList<QString>);
-Q_DECLARE_METATYPE(QList<QueryImages::Image>);
+Q_DECLARE_METATYPE(QList<Image::Image>);
 Q_DECLARE_METATYPE(QList<QueryImages::Page>);
 Q_DECLARE_METATYPE(QList<QList<QueryImages::Page> >);
 
 QueryImages::Page constructsPage(unsigned int pageId,
                                  unsigned int namespaceId,
                                  const QString & title,
-                                 const QList<QueryImages::Image> & images)
+                                 const QList<Image::Image> & images)
 {
     const QueryImages::Page page(pageId, namespaceId, title, title, images, false);
     Q_ASSERT(!page.isMissing());
@@ -48,7 +50,7 @@ QueryImages::Page constructsPageNormalized(unsigned int pageId,
                                            unsigned int namespaceId,
                                            const QString& title,
                                            const QString& titleNoNormalized,
-                                           const QList<QueryImages::Image> & images)
+                                           const QList<Image::Image> & images)
 {
     const QueryImages::Page page(pageId, namespaceId, title, titleNoNormalized, images, false);
     Q_ASSERT(!page.isMissing());
@@ -60,7 +62,7 @@ QueryImages::Page constructsPageMissing(unsigned int namespaceId,
                                         const QString & title)
 {
     unsigned int pageId;
-    const QueryImages::Page page(pageId, namespaceId, title, title, QList<QueryImages::Image>(), true);
+    const QueryImages::Page page(pageId, namespaceId, title, title, QList<Image::Image>(), true);
     Q_ASSERT(page.isMissing());
     Q_ASSERT(!page.isNormalized());
     return page;
@@ -71,15 +73,10 @@ QueryImages::Page constructsPageMissingNormalized(unsigned int namespaceId,
                                                   const QString& titleNoNormalized)
 {
     unsigned int pageId;
-    const QueryImages::Page page(pageId, namespaceId, title, titleNoNormalized, QList<QueryImages::Image>(), true);
+    const QueryImages::Page page(pageId, namespaceId, title, titleNoNormalized, QList<Image::Image>(), true);
     Q_ASSERT(page.isMissing());
     Q_ASSERT(page.isNormalized());
     return page;
-}
-
-bool operator==(const QueryImages::Image & lhs, const QueryImages::Image & rhs) {
-    return lhs.namespaceId() == rhs.namespaceId() &&
-           lhs.title() == rhs.title();
 }
 
 bool operator==(const QueryImages::Page & lhs, const QueryImages::Page & rhs) {
@@ -146,6 +143,7 @@ private slots:
         QTest::addColumn<QString>("scenario");
         QTest::addColumn<QString>("title");
         QTest::addColumn<QList<QueryImages::Page> >("pagesExpected");
+        Image image, image2;
 
         QTest::newRow("Empty title")
                 << "<?xml version=\"1.0\"?><api />"
@@ -156,22 +154,26 @@ private slots:
                 << "<?xml version=\"1.0\"?><api><query><pages><page pageid=\"736\" ns=\"1\" title=\"Title-1\"></page></pages></query></api>"
                 << "Title-1"
                 << (QList<QueryImages::Page>()
-                        << constructsPage(736u, 1u, "Title-1", QList<QueryImages::Image>()));
+                        << constructsPage(736u, 1u, "Title-1", QList<Image::Image>()));
         
+        image.setNamespaceId(46u);
+        image.setTitle("File:Image-1-1");
         QTest::newRow("Page with one image")
                 << "<?xml version=\"1.0\"?><api><query><pages><page pageid=\"736\" ns=\"1\" title=\"Title-1\"><images><im ns=\"46\" title=\"File:Image-1-1\" /></images></page></pages></query></api>"
                 << "Title-1"
                 << (QList<QueryImages::Page>()
-                        << constructsPage(736u, 1u, "Title-1", QList<QueryImages::Image>()
-                                << QueryImages::Image(46u, "File:Image-1-1")));
+                        << constructsPage(736u, 1u, "Title-1", QList<Image::Image>()
+                                << image));
 
+        image2.setNamespaceId(9997u);
+        image2.setTitle("File:Image-1-2");
         QTest::newRow("Page with two images")
                 << "<?xml version=\"1.0\"?><api><query><pages><page pageid=\"736\" ns=\"1\" title=\"Title-1\"><images><im ns=\"46\" title=\"File:Image-1-1\" /><im ns=\"9997\" title=\"File:Image-1-2\" /></images></page></pages></query></api>"
                 << "Title-1"
                 << (QList<QueryImages::Page>()
-                        << constructsPage(736u, 1u, "Title-1", QList<QueryImages::Image>()
-                                << QueryImages::Image(46u, "File:Image-1-1")
-                                << QueryImages::Image(9997u, "File:Image-1-2")));
+                        << constructsPage(736u, 1u, "Title-1", QList<Image::Image>()
+                                << image
+                                << image2));
 
         QTest::newRow("Page missing")
                 << "<?xml version=\"1.0\"?><api><query><pages><page ns=\"0\" title=\"Title-Missing\" missing=\"\" /></pages></query></api>"
@@ -183,9 +185,9 @@ private slots:
                 << "<?xml version=\"1.0\"?><api><query><normalized><n from=\"Title_Normalized\" to=\"Title Normalized\" /></normalized><pages><page pageid=\"4\" ns=\"19282\" title=\"Title Normalized\"><images><im ns=\"46\" title=\"File:Image-1-1\" /><im ns=\"9997\" title=\"File:Image-1-2\" /></images></page></pages></query></api>"
                 << "Title_Normalized"
                 << (QList<QueryImages::Page>()
-                        << constructsPageNormalized(4u, 19282u, "Title Normalized", "Title_Normalized", QList<QueryImages::Image>()
-                                << QueryImages::Image(46u, "File:Image-1-1")
-                                << QueryImages::Image(9997u, "File:Image-1-2")));
+                        << constructsPageNormalized(4u, 19282u, "Title Normalized", "Title_Normalized", QList<Image::Image>()
+                                << image
+                                << image2));
 
         QTest::newRow("Page missing normalized")
                 << "<?xml version=\"1.0\"?><api><query><normalized><n from=\"Title_Missing_Normalized\" to=\"Title Missing Normalized\" /></normalized><pages><page ns=\"0\" title=\"Title Missing Normalized\" missing=\"\" /></pages></query></api>"
@@ -247,6 +249,16 @@ private slots:
         QTest::addColumn<QString>("title");
         QTest::addColumn<unsigned int>("limit");
         QTest::addColumn<QList<QList<QueryImages::Page> > >("pagesExpectedList");
+        Image image, image2, image3;
+
+        image.setNamespaceId(8u);
+        image.setTitle("File:Image-2-1");
+
+        image2.setNamespaceId(8998u);
+        image2.setTitle("File:Image-2-2");
+
+        image3.setNamespaceId(38423283u);
+        image3.setTitle("File:Image-2-3");
 
         QTest::newRow("Page with three images by two signals")
                 << (QList<QString>()
@@ -256,34 +268,13 @@ private slots:
                 << 2u
                 << (QList<QList<QueryImages::Page> >()
                         << (QList<QueryImages::Page>()
-                                << constructsPage(1234u, 5757u, "Title-2", QList<QueryImages::Image>()
-                                        << QueryImages::Image(8u, "File:Image-2-1")
-                                        << QueryImages::Image(8998u, "File:Image-2-2")))
+                                << constructsPage(1234u, 5757u, "Title-2", QList<Image::Image>()
+                                        << image
+                                        << image2))
                         << (QList<QueryImages::Page>()
-                                << constructsPage(1234u, 5757u, "Title-2", QList<QueryImages::Image>()
-                                        << QueryImages::Image(38423283u, "File:Image-2-3"))));
+                                << constructsPage(1234u, 5757u, "Title-2", QList<Image::Image>()
+                                        << image3)));
 
-
-        QTest::newRow("Page with six images by three signals")
-                << (QList<QString>()
-                        << "<?xml version=\"1.0\"?><api><query><pages><page pageid=\"1234\" ns=\"5757\" title=\"Title-3\"><images><im ns=\"8\" title=\"File:Image-3-1\" /><im ns=\"8998\" title=\"File:Image-3-2\" /></images></page></pages></query><query-continue><images imcontinue=\"1234|Image-3-3\" /></query-continue></api>"
-                        << "<?xml version=\"1.0\"?><api><query><pages><page pageid=\"1234\" ns=\"5757\" title=\"Title-3\"><images><im ns=\"12\" title=\"File:Image-3-3\" /><im ns=\"4\" title=\"File:Image-3-4\" /></images></page></pages></query><query-continue><images imcontinue=\"1234|Image-3-5\" /></query-continue></api>"
-                        << "<?xml version=\"1.0\"?><api><query><pages><page pageid=\"1234\" ns=\"5757\" title=\"Title-3\"><images><im ns=\"988988\" title=\"File:Image-3-5\" /><im ns=\"452\" title=\"File:Image-3-6\" /></images></page></pages></query></api>")
-                << "Title-3"
-                << 2u
-                << (QList<QList<QueryImages::Page> >()
-                        << (QList<QueryImages::Page>()
-                                << constructsPage(1234u, 5757u, "Title-3", QList<QueryImages::Image>()
-                                        << QueryImages::Image(8u, "File:Image-3-1")
-                                        << QueryImages::Image(8998u, "File:Image-3-2")))
-                        << (QList<QueryImages::Page>()
-                                << constructsPage(1234u, 5757u, "Title-3", QList<QueryImages::Image>()
-                                        << QueryImages::Image(12u, "File:Image-3-3")
-                                        << QueryImages::Image(4u, "File:Image-3-4")))
-                        << (QList<QueryImages::Page>()
-                                << constructsPage(1234u, 5757u, "Title-3", QList<QueryImages::Image>()
-                                        << QueryImages::Image(988988u, "File:Image-3-5")
-                                        << QueryImages::Image(452u, "File:Image-3-6"))));
     }
 
 private:

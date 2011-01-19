@@ -127,10 +127,10 @@ void QueryImages::doWorkProcessReply(QNetworkReply * reply) {
                         d->imcontinue = reader.attributes().value("imcontinue").toString();
                     }
                 } else if (reader.name() == "im") {
-                    images.push_back(QueryImages::Image(
-                        reader.attributes().value("ns").toString().toUInt(),
-                        reader.attributes().value("title").toString()
-                    ));
+                    Image image;
+                    image.setNamespaceId( reader.attributes().value("ns").toString().toUInt());
+                    image.setTitle(reader.attributes().value("title").toString());
+                    images.push_back(image);
                 } else if (reader.name() == "n") {
                     normalized[reader.attributes().value("to").toString()] = reader.attributes().value("from").toString();
                 }

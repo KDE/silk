@@ -1,5 +1,6 @@
 /*
  *   Copyright 2010 by Ludovic Delfau <ludovicdelfau@gmail.com>
+ *   Copyright 2010 by Paolo de Vathaire <paolo.devathaire@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -23,6 +24,7 @@
 #include <KDE/KJob>
 
 #include "mediawiki_export.h"
+#include "image.h"
 
 class QNetworkReply;
 
@@ -40,43 +42,6 @@ class MEDIAWIKI_EXPORT QueryImages : public KJob {
     Q_OBJECT
 
 public:
-
-    /**
-     * @brief A image
-     */
-    struct Image {
-
-    public:
-
-        /**
-         * @brief Constructs a image.
-         * @param namespaceId the namespace id of the image
-         * @param title the title of the image
-         */
-        Image(unsigned int namespaceId,const QString & title)
-            : m_namespaceId(namespaceId)
-            , m_title(title)
-        {}
-
-        /**
-         * @brief Returns the namespace id of the image.
-         * @return the namespace id of the image
-         */
-        inline unsigned int namespaceId() const { return m_namespaceId; }
-
-        /**
-         * @brief Returns the title of the imagee.
-         * @return the title of the image
-         */
-        inline QString title() const { return m_title; }
-
-    private:
-
-        unsigned int m_namespaceId;
-
-        QString m_title;
-
-    };
 
     /**
      * @brief A page.
