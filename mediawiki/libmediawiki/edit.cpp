@@ -35,6 +35,32 @@
 
 namespace mediawiki
 {
+    /**
+     * @brief An edit result.
+     */
+    struct Result
+    {
+        /**
+         * @brief CAPTCHA ID from previous request.
+         */
+        unsigned int m_captchaId;
+
+        /**
+         * @brief Question from the CAPTCHA.
+         */
+        QVariant m_captchaQuestion;
+
+        /**
+         * @brief Answer to the CAPTCHA.
+         */
+        QString m_captchaAnswer;
+
+        unsigned int captchaId(){ return this->m_captchaId; }
+
+        QVariant captchaQuestion(){ return this->m_captchaQuestion; }
+
+        QString captchaAnswer(){ return this->m_captchaAnswer; }
+    };
     struct EditPrivate
     {
         EditPrivate(MediaWiki  & mediawiki)
@@ -42,7 +68,7 @@ namespace mediawiki
         QUrl baseUrl;
         MediaWiki  & mediawiki;
         QMap<QString, QString> requestParameter;
-        Edit::Result result;
+        Result result;
     };
 }
 

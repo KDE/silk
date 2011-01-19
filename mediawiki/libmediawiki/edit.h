@@ -148,33 +148,6 @@ public:
     };
 
     /**
-     * @brief An edit result.
-     */
-    struct Result
-    {
-        /**
-         * @brief CAPTCHA ID from previous request.
-         */
-        unsigned int captchaId;
-
-        /**
-         * @brief Question from the CAPTCHA.
-         */
-        QVariant captchaQuestion;
-
-        /**
-         * @brief Answer to the CAPTCHA.
-         */
-        QString captchaAnswer;
-
-        unsigned int captchaId(){ return this->captchaId; }
-
-        QVariant captchaQuestion(){ return this->captchaQuestion; }
-
-        QString captchaAnswer(){ return this->captchaAnswer; }
-    };
-
-    /**
      * @brief Constructs an Edit job.
      * @param parent the QObject parent
      */
@@ -340,7 +313,6 @@ public slots:
     void finishedCaptcha( const QString & captcha );
 
 private:
-
     /**
      * @brief Contains the class attributes.
      */
