@@ -22,9 +22,9 @@
 #define MEDIAWIKI_LOGIN_H
 
 #include <QtCore/QString>
-#include <KDE/KJob>
 #include "mediawiki_export.h"
 #include <QtNetwork/QNetworkCookieJar>
+#include "job.h"
 
 class QNetworkReply;
 
@@ -37,7 +37,7 @@ class MediaWiki;
  *
  * Uses for log in a user.
  */
-class MEDIAWIKI_EXPORT Login : public KJob
+class MEDIAWIKI_EXPORT Login : public Job
 {
 
     Q_OBJECT
@@ -49,7 +49,7 @@ public:
         /**
          * @brief
          */
-        BadXml = KJob::UserDefinedError+1,
+        BadXml = Job::UserDefinedError+1,
 
         /**
          * @brief
@@ -57,7 +57,7 @@ public:
         ConnectionAborted,
 
         /**
-         * @brief You didn't set the lgname parameter
+         * @brief You didn't set the login parameter
          */
         LoginMissing,
 
@@ -117,12 +117,12 @@ public:
         /**
          * @brief The username.
          */
-        QString lgname;
+        QString login;
 
         /**
          * @brief The password.
          */
-        QString lgpassword;
+        QString password;
 
         /**
          * @brief The session id.
@@ -144,11 +144,11 @@ public:
     /**
      * @brief Constructs a Login job.
      * @param mediawiki the mediawiki concerned by the job
-     * @param lgname the QObject parent
-     * @param lgpassword the QObject parent
+     * @param login the QObject parent
+     * @param password the QObject parent
      * @param parent the QObject parent
-     */
-    explicit Login( MediaWiki & media, const QString & lgname, const QString & lgpassword, QObject * parent = 0 );
+     */    
+    explicit Login( MediaWiki & media, const QString & login, const QString & password, QObject * parent = 0 );
 
     /**
      * @brief Destroys the Login job.
@@ -158,13 +158,7 @@ public:
     /**
      * @brief Starts the job asynchronously.
      */
-    virtual void start();
-
-    /**
-     * @brief Get the error number.
-     * @param error the error sent by the API.
-     */
-    int getError(const QString & error);
+    virtual void start();    
 
 private slots:
 
@@ -188,10 +182,13 @@ private slots:
 
 private:
 
-    /**
-     * @brief Contains the class attributes.
-     */
     struct LoginPrivate * const d;
+
+    /**
+     * @brief Get the error number.
+     * @param error the error sent by the API.
+     */
+    int getError(const QString & error);
 };
 
 }

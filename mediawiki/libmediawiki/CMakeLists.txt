@@ -26,6 +26,7 @@ set(mediawiki_SRCS
     queryimageinfo.cpp
     queryimages.cpp
     querysiteinfogeneral.cpp
+    generalinfo.cpp
     querysiteinfousergroups.cpp
     queryrevision.cpp
     queryinfo.cpp

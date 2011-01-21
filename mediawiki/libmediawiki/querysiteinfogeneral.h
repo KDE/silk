@@ -23,8 +23,9 @@
 #include <QObject>
 #include <QtCore/QList>
 #include <QtCore/QString>
-
 #include <KDE/KJob>
+
+#include "generalinfo.h"
 
 #include "mediawiki_export.h"
 
@@ -62,52 +63,23 @@ public:
      * @brief Destroys the QuerySiteInfoGeneral job.
      */
     virtual ~QuerySiteInfoGeneral();
+
     /**
      * @brief Starts the job asynchronously.
      */
     virtual void start();
-    /**
-     * @brief A QuerySiteInfoGeneral result.
-     */
-    struct Result {
-        QString mainPage;
-        QString url;
-        QString siteName;
-        QString generator;
-        QString phpVersion;
-        QString phpApi;
-        QString dataBaseType;
-        QString dataBaseVersion;
-        QString rev;
-        QString cas;
-        QString rights;
-        QString language;
-        QString fallBack8bitEncoding;
-        QString writeApi;
-        QString timeZone;
-        QString timeOffset;
-        QString articlePath;
-        QString scriptPath;
-        QString script;
-        QString variantArticlePath;
-        QString serverUrl;
-        QString wikiId;
-        QString time;
-
-    };
-    /**
-     * @brief Result Getter.
-     * @return QuerySiteInfoGeneral::Result
-     */
-    QuerySiteInfoGeneral::Result getResult();
 
 private slots:
     void abort();
     void doWorkSendRequest();
     void doWorkProcessReply(QNetworkReply * reply);
+
 private:
 
     struct QuerySiteInfoGeneralPrivate * const d;
+
+public:
+
 
 };
 }

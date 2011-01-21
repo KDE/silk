@@ -97,8 +97,8 @@ private slots:
         QCOMPARE(serverrequest.value, this->request);
         QCOMPARE(m_mediaWiki->cookies().isEmpty(), false);
         QCOMPARE(login.error(), (int)Login::NoError);
-        QVERIFY(result.lgname      == QString("alexTest"));
-        QVERIFY(result.lgpassword  == QString("test"));
+        QVERIFY(result.login      == QString("alexTest"));
+        QVERIFY(result.password  == QString("test"));
         QCOMPARE(result.lgsessionid, QString("17ab96bd8ffbe8ca58a78657a918558e"));
         QVERIFY(result.lgtoken     == QString("b5780b6e2f27e20b450921d9461010b4"));
     }
