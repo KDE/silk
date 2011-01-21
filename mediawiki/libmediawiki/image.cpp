@@ -87,6 +87,7 @@ void Image::setImageinfos(const QVector<Imageinfo> & imageinfos) {
 
 bool operator==(const Image & lhs, const Image & rhs) {
     return lhs.namespaceId() == rhs.namespaceId() &&
-           lhs.title() == rhs.title();
+           lhs.title() == rhs.title() &&
+           lhs.imageinfos() == rhs.imageinfos();
 }
 
