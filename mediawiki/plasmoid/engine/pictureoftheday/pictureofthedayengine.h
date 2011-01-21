@@ -47,7 +47,7 @@ protected:
 
 private slots:
 
-    void pages(const QList<QueryImages::Page> & pages);
+    void images(const QList<Image> & images);
 
     void images(const QList<QueryImageinfo::Image> & images);
 
@@ -64,9 +64,9 @@ private:
 
     bool searchImageinfo(const MediaWiki & mediawiki);
 
-    QList<QueryImages::Page> m_pages;
+    QList<Image> m_pages;
 
-    QueryImages::Page m_page;
+    Image m_page;
 
     QList<QueryImageinfo::Image> m_images;
 

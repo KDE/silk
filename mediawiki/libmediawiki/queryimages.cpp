@@ -38,13 +38,9 @@ struct QueryImagesPrivate {
     {}
 
     QNetworkAccessManager * const manager;
-
     const MediaWiki & mediawiki;
-
     QString title;
-
     QString limit;
-
     QString imcontinue;
 
 };
@@ -99,30 +95,15 @@ void QueryImages::doWorkSendRequest() {
 #include <QDebug>
 void QueryImages::doWorkProcessReply(QNetworkReply * reply) {
     if (reply->error() == QNetworkReply::NoError) {
-        QList<QueryImages::Page> pagesReceived;
-        QMap<QString, QString> normalized;
-        unsigned int pageId;
-        unsigned int namespaceId;
-        QString title;
-        bool isMissing;
-        QList<Image> images;
+        QList<Image> imagesReceived;
         d->imcontinue = QString();
         QXmlStreamReader reader(reply);
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {
-                if (reader.name() == "page") {
-                    namespaceId = reader.attributes().value("ns").toString().toUInt();
-                    title = reader.attributes().value("title").toString();
-                    if (reader.attributes().value("missing").isNull()) {
-                        isMissing = false;
-                        pageId = reader.attributes().value("pageid").toString().toUInt();
-                    } else {
-                        isMissing = true;
-                    }
-                } else if (reader.name() == "images") {
+                if (reader.name() == "images") {
                     if (reader.attributes().value("imcontinue").isNull()) {
-                        images.clear();
+                        imagesReceived.clear();
                     } else {
                         d->imcontinue = reader.attributes().value("imcontinue").toString();
                     }
@@ -130,26 +111,13 @@ void QueryImages::doWorkProcessReply(QNetworkReply * reply) {
                     Image image;
                     image.setNamespaceId( reader.attributes().value("ns").toString().toUInt());
                     image.setTitle(reader.attributes().value("title").toString());
-                    images.push_back(image);
-                } else if (reader.name() == "n") {
-                    normalized[reader.attributes().value("to").toString()] = reader.attributes().value("from").toString();
-                }
-            } else if (token == QXmlStreamReader::EndElement) {
-                if (reader.name() == "page") {
-                    pagesReceived.push_back(QueryImages::Page(
-                        pageId,
-                        namespaceId,
-                        title,
-                        normalized.contains(title) ? normalized[title] : title,
-                        images,
-                        isMissing
-                    ));
+                    imagesReceived.push_back(image);
                 }
             }
         }
         //FIXME: Bad solution
         if (reader.error() == QXmlStreamReader::NoError || reader.error() == QXmlStreamReader::PrematureEndOfDocumentError) {
-            emit pages(pagesReceived);
+            emit images(imagesReceived);
             if (!d->imcontinue.isNull()) {
                 QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
                 return;

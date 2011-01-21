@@ -21,6 +21,8 @@
 
 #include "mediawiki.h"
 
+
+
 #include "pictureofthedayengine.h"
 
 PictureOfTheDayEngine::PictureOfTheDayEngine(QObject * parent, const QVariantList & args)
@@ -66,8 +68,8 @@ bool PictureOfTheDayEngine::updateSourceEvent(const QString& source) {
     return true;
 }
 
-void PictureOfTheDayEngine::pages(const QList<QueryImages::Page> & pages) {
-    m_pages.append(pages);
+void PictureOfTheDayEngine::images(const QList<Image> & images) {
+    m_pages.append(images);
 }
 
 void PictureOfTheDayEngine::images(const QList<QueryImageinfo::Image> & images) {
@@ -77,16 +79,16 @@ void PictureOfTheDayEngine::images(const QList<QueryImageinfo::Image> & images) 
 bool PictureOfTheDayEngine::searchImages(const MediaWiki & mediawiki, const QString& page) {
     QueryImages * const queryimages(new QueryImages(mediawiki));
     queryimages->setTitle(page);
-    connect(queryimages, SIGNAL(pages(const QList<QueryImages::Page> &)), this, SLOT(pages( const QList<QueryImages::Page>&)));
+    connect(queryimages, SIGNAL(images(const QList<Image> &)), this, SLOT(images( const QList<Image>&)));
     if (!queryimages->exec() || m_pages.size() == 0) {
         return false;
     }
     m_page = m_pages[0];
-    return !m_page.isMissing() && m_page.images().size() > 0;
+    return m_pages.size() > 0;
 }
 
 bool PictureOfTheDayEngine::searchImageinfo(const MediaWiki & mediawiki) {
-    QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki, m_page.images()[0].title()));
+    QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki, m_pages[0].title()));
     queryimageinfo->paramLimit(1u, true);
     queryimageinfo->paramProperties(QueryImageinfo::URL);
     queryimageinfo->paramScale(400u, 300u);

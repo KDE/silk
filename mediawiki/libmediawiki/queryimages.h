@@ -44,105 +44,6 @@ class MEDIAWIKI_EXPORT QueryImages : public KJob {
 public:
 
     /**
-     * @brief A page.
-     */
-    struct Page {
-
-    public:
-
-        /**
-         * @brief Construct a page not initialized.
-         */
-        Page() {}
-
-        /**
-         * @brief Construct a page.
-         * @param pageId the page id
-         * @param namespaceId the namespace id of the page
-         * @param title the title of the page
-         * @param titleNoNormalized the title of the page no normalized
-         * @param images images of page
-         * @param isMissing true if the page is missing, else false
-         */
-        Page(unsigned int pageId,
-             unsigned int namespaceId,
-             const QString & title,
-             const QString & titleNoNormalized,
-             const QList<Image> & images,
-             bool isMissing
-            )
-            : m_pageId(pageId)
-            , m_namespaceId(namespaceId)
-            , m_title(title)
-            , m_titleNoNormalized(titleNoNormalized)
-            , m_images(images)
-            , m_isMissing(isMissing)
-        {}
-
-        /**
-         * @brief Returns the page id.
-         * @return the page id
-         * @pre !#isMissing()
-         */
-        inline unsigned int pageId() const { Q_ASSERT(!isMissing()); return m_pageId; }
-
-        /**
-         * @brief Returns the namespace id of the page.
-         * @return the namespace id of the page
-         */
-        inline unsigned int namespaceId() const { return m_namespaceId; }
-
-        /**
-         * @brief Returns the title of the page.
-         * @return the title of the page
-         */
-        inline QString title() const { return m_title; }
-
-        /**
-         * @brief Returns the title no normalized of the page.
-         * @return the title of the page no normalized
-         * @post #isNormalized() ? return != #title() : return == #title()
-         */
-        inline QString titleNoNormalized() const {
-            Q_ASSERT(isNormalized() ? m_titleNoNormalized != title() : m_titleNoNormalized == title());
-            return m_titleNoNormalized;
-        }
-
-        /**
-         * @brief Returns images of page.
-         * @return images of page
-         */
-        inline QList<Image> images() const { return m_images; }
-
-        /**
-         * @brief Returns true if the page is missing, else false.
-         * @return true if the page is missing, else false
-         */
-        inline bool isMissing() const { return m_isMissing; }
-
-        /**
-         * @brief Returns true if the page is normalized, else false.
-         * @return true if the page is normalized, else false
-         */
-        inline bool isNormalized() const { return m_title != m_titleNoNormalized; }
-
-    private:
-
-        unsigned int m_pageId;
-
-        unsigned int m_namespaceId;
-
-        QString m_title;
-
-        QString m_titleNoNormalized;
-
-        QList<Image> m_images;
-
-        bool m_isMissing;
-
-    };
-
-    /**
      * @brief Indicates all possible error conditions found during the processing of the job.
      */
     enum {
@@ -197,7 +98,7 @@ signals:
      *
      * @param pages list of all images used on pages
      */
-    void pages(const QList<QueryImages::Page> & pages);
+    void images(const QList<Image> & images);
 
 private slots:
 
