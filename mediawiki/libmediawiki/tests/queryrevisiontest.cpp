@@ -33,9 +33,36 @@
 
 #include "mediawiki.h"
 #include "queryrevision.h"
+#include "revision.h"
 
 using mediawiki::MediaWiki;
 using mediawiki::QueryRevision;
+using mediawiki::Revision;
+Revision constructRevision(int i, int p = 0, int s = 0, QString m = "", QString u = "", QDateTime t = QDateTime(), QString cm = "", QString ct = "", QString pt = "", QString r = ""){
+
+    Revision rev;
+    rev.setRevId(i);
+
+    rev.setParentId(p);
+
+    rev.setSize(s);
+
+    rev.setMinor(m);
+
+    rev.setUser(u);
+
+    rev.setTimestamp(t);
+
+    rev.setComment(cm);
+
+    rev.setContent(ct);
+
+    rev.setParseTree(pt),
+
+    rev.setRollback(r);
+    return rev;
+
+}
 
 QString QStringFromFile( const QString &fileName )
 {
@@ -57,35 +84,11 @@ QString QStringFromFile( const QString &fileName )
   return scenario;
 }
 
-Q_DECLARE_METATYPE(QList<QueryRevision::Result>)
+Q_DECLARE_METATYPE(QList<Revision>)
 Q_DECLARE_METATYPE(FakeServer::Request)
 Q_DECLARE_METATYPE(QueryRevision*)
 
-bool operator==(const QueryRevision::Result & lhs, const QueryRevision::Result & rhs) {
-    return lhs.revid == rhs.revid &&
-            lhs.parentId == rhs.parentId &&
-            lhs.size == rhs.size &&
-            lhs.minor == rhs.minor &&
-            lhs.user == rhs.user &&
-            lhs.timeStamp == rhs.timeStamp &&
-            lhs.comment == rhs.comment &&
-            lhs.content == rhs.content &&
-            lhs.parseTree == rhs.parseTree &&
-            lhs.rollback == rhs.rollback;
-}
-void debugRevision(const QueryRevision::Result & lhs)
-{
-    qDebug() << lhs.revid;
-    qDebug() << lhs.parentId;
-    qDebug() << lhs.size;
-    qDebug() << lhs.minor;
-    qDebug() << lhs.user;
-    qDebug() << lhs.timeStamp;
-    qDebug() << lhs.comment;
-    qDebug() << lhs.content;
-    qDebug() << lhs.parseTree;
-    qDebug() << lhs.rollback;
-}
+
 
 class QueryRevisionTest : public QObject
 {
@@ -94,7 +97,7 @@ class QueryRevisionTest : public QObject
     
 public slots:
     
-    void revisionHandle(const QList<QueryRevision::Result> & revision) {
+    void revisionHandle(const QList<Revision> & revision) {
         ++revisionCount;
         revisionResults = revision;
     }
@@ -112,7 +115,7 @@ private slots:
         QFETCH(int, error);
         QFETCH(int, rvprop);
         QFETCH(int, size);
-        QFETCH(QList<QueryRevision::Result>, results);
+        QFETCH(QList<Revision>, results);
 
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
@@ -125,7 +128,7 @@ private slots:
         job->setProp( rvprop );
         job->setPageName(title);
 
-        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job->exec();
 
@@ -150,7 +153,7 @@ private slots:
         QTest::addColumn<int>("error");
         QTest::addColumn<int>("rvprop");
         QTest::addColumn<int>("size");
-        QTest::addColumn< QList<QueryRevision::Result> >("results");
+        QTest::addColumn< QList<Revision> >("results");
 
         QTest::newRow("All rvprop enable")
                 << QStringFromFile("./queryrevisiontest.rc")
@@ -159,12 +162,12 @@ private slots:
                 << int(KJob::NoError)
                 << int(IDS|FLAGS|TIMESTAMP|USER|COMMENT|SIZE|CONTENT)
                 << 2
-                << (QList<QueryRevision::Result>()
-                        << QueryRevision::Result(367741756, 367741564, 70, "", "Graham87",
+                << (QList<Revision>()
+                        << constructRevision(367741756, 367741564, 70, "", "Graham87",
                                                            QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                                            "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
                                                            "#REDIRECT [[Application programming interface]]{{R from abbreviation}}","")
-                        << QueryRevision::Result(387545037, 387542946, 5074, "", "Rich Farmbrough",
+                        << constructRevision(387545037, 387542946, 5074, "", "Rich Farmbrough",
                                                  QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"),
                                                  "[[Help:Reverting|Reverted]] edits by [[Special:Contributions/Rich Farmbrough|Rich Farmbrough]] ([[User talk:Rich Farmbrough|talk]]) to last version by David Levy",
                                                  QStringFromFile("./queryrevisiontest_content.rc"),""));
@@ -176,8 +179,8 @@ private slots:
                 << int(KJob::NoError)
                 << int(IDS|FLAGS|TIMESTAMP|USER|COMMENT|SIZE|CONTENT)
                 << 1
-                << (QList<QueryRevision::Result>()
-                        << QueryRevision::Result(367741756, 367741564, 70, "", "Graham87",
+                << (QList<Revision>()
+                        << constructRevision(367741756, 367741564, 70, "", "Graham87",
                                                  QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                                  "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
                                                  "#REDIRECT [[Application programming interface]]{{R from abbreviation}}",""));
@@ -189,12 +192,12 @@ private slots:
                 << int(KJob::NoError)
                 << int(TIMESTAMP)
                 << 2
-                << (QList<QueryRevision::Result>()
-                    << QueryRevision::Result(0, 0, 0, "", "",
+                << (QList<Revision>()
+                    << constructRevision(0, 0, 0, "", "",
                                              QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                              "",
                                              "","")
-                    << QueryRevision::Result(0, 0, 0, "", "",
+                    << constructRevision(0, 0, 0, "", "",
                                              QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"),
                                              "",
                                              "",""));
@@ -205,12 +208,12 @@ private slots:
                 << int(KJob::NoError)
                 << int(USER)
                 << 2
-                << (QList<QueryRevision::Result>()
-                    << QueryRevision::Result(0, 0, 0, "", "Graham87",
+                << (QList<Revision>()
+                    << constructRevision(0, 0, 0, "", "Graham87",
                                              QDateTime(),
                                              "",
                                              "","")
-                    << QueryRevision::Result(0, 0, 0, "", "Rich Farmbrough",
+                    << constructRevision(0, 0, 0, "", "Rich Farmbrough",
                                              QDateTime(),
                                              "",
                                              "",""));
@@ -235,7 +238,7 @@ private slots:
         job->setProp( SIZE|CONTENT );
         job->setPageName("title");
 
-        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job->exec();
 
@@ -298,7 +301,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -319,7 +322,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -340,7 +343,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -361,7 +364,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -383,7 +386,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -405,7 +408,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -427,7 +430,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -449,7 +452,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -471,7 +474,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -493,7 +496,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -511,13 +514,13 @@ private slots:
         int error = 0;
         int rvprop = TIMESTAMP|USER|COMMENT|CONTENT;
         int size = 2;
-        QList<QueryRevision::Result> results;
-        results << QueryRevision::Result(0, 0, 0, "", "martine",
+        QList<Revision> results;
+        results << constructRevision(0, 0, 0, "", "martine",
                                          QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                          "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
                                          "#REDIRECT [[Application programming interface]]{{R from abbreviation}}",
                                          "<root>#REDIRECT [[Application programming interface]]<template><title>R from abbreviation</title></template></root>")
-                << QueryRevision::Result(0, 0, 0, "", "Graham87",
+                << constructRevision(0, 0, 0, "", "Graham87",
                                            QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                            "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
                                            "#REDIRECT [[Application programming interface]]{{R from abbreviation}}",
@@ -535,7 +538,7 @@ private slots:
         job->setPageName(title);
         job->setGenerateXML(true);
 
-        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job->exec();
 
@@ -564,7 +567,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -581,8 +584,8 @@ private slots:
         QString title = "API";
         int error = 0;
         int size = 1;
-        QList<QueryRevision::Result> results;
-        results << QueryRevision::Result(0, 0, 0, "", "",
+        QList<Revision> results;
+        results << constructRevision(0, 0, 0, "", "",
                                            QDateTime(),
                                            "",
                                            "",
@@ -601,7 +604,7 @@ private slots:
 
         job->setToken(QueryRevision::Rollback);
 
-        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job->exec();
 
@@ -630,7 +633,7 @@ private slots:
         FakeServer fakeserver;
         fakeserver.startAndWait();
 
-        connect(&job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job.exec();
 
@@ -655,7 +658,7 @@ private slots:
         job->setProp( rvprop );
         job->setPageId(id);
 
-        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job->exec();
 
@@ -686,7 +689,7 @@ private slots:
         job->setProp( rvprop );
         job->setRevisionId(id);
 
-        connect(job, SIGNAL(revision(const QList<QueryRevision::Result> &)), this, SLOT(revisionHandle(const QList<QueryRevision::Result> &)));
+        connect(job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
 
         job->exec();
 
@@ -706,7 +709,7 @@ private:
     
     int revisionCount;
     
-    QList<QueryRevision::Result> revisionResults;
+    QList<Revision> revisionResults;
 
 };
 

@@ -26,6 +26,7 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 #include <QDebug>
+#include <QDateTime>
 
 #include "mediawiki.h"
 #include "queryrevision.h"
@@ -223,8 +224,8 @@ void QueryRevision::doWorkSendRequest()
 void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
 {
     if (reply->error() == QNetworkReply::NoError) {
-        QList<QueryRevision::Result> results;
-        QueryRevision::Result tempR;
+        QList<Revision> results;
+        Revision   tempR;
         QString replytmp = reply->readAll();
         if(d->requestParameter.contains("rvgeneratexml"))
         {
@@ -245,29 +246,29 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {
                 if (reader.name() == "page" && d->requestParameter.contains("rvtoken")) {
-                    tempR.rollback = reader.attributes().value("rollbacktoken").toString();
+                    tempR.setRollback(reader.attributes().value("rollbacktoken").toString());
                 }
                 if (reader.name() == "rev") {
                     if(d->requestParameter.contains("rvprop"))
                     {
                         QString rvprop = d->requestParameter["rvprop"];
                         if(rvprop.contains("ids")){
-                            tempR.revid = reader.attributes().value("revid").toString().toInt();
-                            tempR.parentId = reader.attributes().value("parentid").toString().toInt();}
+                            tempR.setRevId(reader.attributes().value("revid").toString().toInt());
+                            tempR.setParentId(reader.attributes().value("parentid").toString().toInt());}
                         if(rvprop.contains("size"))
-                            tempR.size = reader.attributes().value("size").toString().toInt();
+                            tempR.setSize(reader.attributes().value("size").toString().toInt());
                         if(rvprop.contains("minor"))
-                            tempR.minor = reader.attributes().value("minor").toString();
+                            tempR.setMinor(reader.attributes().value("minor").toString());
                         if(rvprop.contains("user"))
-                            tempR.user = reader.attributes().value("user").toString();
+                            tempR.setUser(reader.attributes().value("user").toString());
                         if(rvprop.contains("timestamp"))
-                            tempR.timeStamp = QDateTime::fromString(reader.attributes().value("timestamp").toString(),"yyyy-MM-ddThh:mm:ssZ");
+                            tempR.setTimestamp(QDateTime::fromString(reader.attributes().value("timestamp").toString(),"yyyy-MM-ddThh:mm:ssZ"));
                         if(rvprop.contains("comment"))
-                            tempR.comment = reader.attributes().value("comment").toString();
+                            tempR.setComment(reader.attributes().value("comment").toString());
                         if(d->requestParameter.contains("rvgeneratexml"))
-                            tempR.parseTree = reader.attributes().value("parsetree").toString();
+                            tempR.setParseTree(reader.attributes().value("parsetree").toString());
                         if(rvprop.contains("content"))
-                            tempR.content = reader.readElementText();
+                            tempR.setContent(reader.readElementText());
                     }
             results << tempR;
             }
@@ -286,7 +287,7 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
 
                 reply->close();
                 reply->deleteLater();
-                emit revision(QList<QueryRevision::Result>());
+                emit revision(QList<Revision>());
                 emitResult();
                 return;
             }
@@ -296,23 +297,23 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
             setError(KJob::NoError);
             for(int i = 0; i < results.length(); i++)
             {
-                results[i].parseTree.replace(char(254),'>');
-                results[i].parseTree.replace(char(255),'<');
+                results[i].setParseTree( results[i].parseTree().replace(char(254),'>') );
+                results[i].setParseTree( results[i].parseTree().replace(char(255),'<') );
             }
 
             emit revision(results);
         } else {
-            setError(QueryRevision::XmlError);
+            setError(XmlError);
             reply->close();
             reply->deleteLater();
-            emit revision(QList<QueryRevision::Result>());
+            emit revision(QList<Revision>());
         }
     }
     else {
-        setError(QueryRevision::NetworkError);
+        setError(NetworkError);
         reply->close();
         reply->deleteLater();
-        emit revision(QList<QueryRevision::Result>());
+        emit revision(QList<Revision>());
     }
     emitResult();
 }

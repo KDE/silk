@@ -28,6 +28,7 @@
 #include <KDE/KJob>
 
 #include "mediawiki_export.h"
+#include "revision.h"
 #include "job.h"
 
 //FIXME: Fait pas de define ça se met dans l'espace de nommage global et ça remplace PARTOUT TIMESTAMP par 4, ... !
@@ -97,46 +98,6 @@ public:
          */
         SectionNotFound
 
-    };
-    /**
-     * @brief A user group result.
-     */
-    struct Result {
-        Result()
-        {
-            revid=0;
-            parentId=0;
-            size=0;
-            minor="";
-            user="";
-            timeStamp=QDateTime();
-            comment="";
-            content="";
-            parseTree="",
-            rollback="";
-        }
-        Result(int i, int p = 0, int s = 0, QString m = "", QString u = "", QDateTime t = QDateTime(), QString cm = "", QString ct = "", QString pt = "", QString r = ""){
-            revid=i;
-            parentId=p;
-            size=s;
-            minor=m;
-            user=u;
-            timeStamp=t;
-            comment=cm;
-            content=ct;
-            parseTree=pt,
-            rollback=r;
-        }
-        int revid;
-        int parentId;
-        int size;
-        QString minor;
-        QString user;
-        QDateTime timeStamp;
-        QString comment;
-        QString content;
-        QString parseTree;
-        QString rollback;
     };
     /**
      * @brief Constructs a Revision job.
@@ -266,7 +227,7 @@ signals:
      * @param revision list of all user groups
      * @see QueryRevision::Result
      */
-    void revision(const QList<QueryRevision::Result> & revision);
+    void revision(const QList<Revision> & revision);
 
 private slots:
 
