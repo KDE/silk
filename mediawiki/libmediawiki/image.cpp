@@ -26,13 +26,9 @@ class ImagePrivate {
 
 public:
 
-    ImagePrivate(qint64 namespaceId)
-        : namespaceId(namespaceId)
-    {}
-
     qint64 namespaceId;
-
     QString title;
+    QVector<Imageinfo> imageinfos;
 
 };
 
@@ -41,8 +37,10 @@ public:
 using namespace mediawiki;
 
 Image::Image()
-    : d(new ImagePrivate(-1))
-{}
+    : d(new ImagePrivate())
+{
+    d->namespaceId = -1;
+}
 
 Image::Image(const Image & other)
     : d(new ImagePrivate(*(other.d)))
@@ -73,6 +71,18 @@ QString Image::title() const {
 
 void Image::setTitle(const QString & title) {
     d->title = title;
+}
+
+const QVector<Imageinfo> & Image::imageinfos() const {
+    return d->imageinfos;
+}
+
+QVector<Imageinfo> & Image::imageinfos() {
+    return d->imageinfos;
+}
+
+void Image::setImageinfos(const QVector<Imageinfo> & imageinfos) {
+    d->imageinfos = imageinfos;
 }
 
 bool operator==(const Image & lhs, const Image & rhs) {

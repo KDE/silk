@@ -21,9 +21,11 @@
 #ifndef MEDIAWIKI_IMAGE_H
 #define MEDIAWIKI_IMAGE_H
 
-#include <QString>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 #include "mediawiki_export.h"
+#include "imageinfo.h"
 
 namespace mediawiki {
 
@@ -68,7 +70,6 @@ public:
      */
     void setNamespaceId(qint64 namespaceId);
 
-
     /**
      * @brief Returns the title of the image.
      * @return the title of the image
@@ -81,6 +82,23 @@ public:
      */
     void setTitle(const QString & title);
 
+    /**
+     * @brief Get the image info.
+     * @return the image info
+     */
+    const QVector<Imageinfo> & imageinfos() const;
+
+    /**
+     * @brief Get the image info.
+     * @return the image info
+     */
+    QVector<Imageinfo> & imageinfos();
+    
+    /**
+     * @brief Set the image info.
+     * @return the image info
+     */
+    void setImageinfos(const QVector<Imageinfo> & imageinfos);
 
 private:
 
