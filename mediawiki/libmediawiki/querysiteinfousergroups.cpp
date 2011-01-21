@@ -18,7 +18,6 @@
  */
 
 #include <QtCore/QTimer>
-#include <QtCore/QUrl>
 #include <QtCore/QXmlStreamReader>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
@@ -26,22 +25,22 @@
 
 #include "mediawiki.h"
 #include "querysiteinfousergroups.h"
+#include "job_p.h"
 
 namespace mediawiki
 {
 
-struct QuerySiteinfoUsergroupsPrivate {
+class QuerySiteinfoUsergroupsPrivate : public JobPrivate {
 
-    QuerySiteinfoUsergroupsPrivate(QNetworkAccessManager * const manager, const MediaWiki & mediawiki, bool includeNumber)
-            : manager(manager)
-            , mediawiki(mediawiki)
+public:
+
+    QuerySiteinfoUsergroupsPrivate(MediaWiki & mediawiki, QNetworkAccessManager * const manager, bool includeNumber)
+            : JobPrivate(mediawiki)
+            , manager(manager)
             , includeNumber(includeNumber)
     {}
 
     QNetworkAccessManager * const manager;
-
-    const MediaWiki & mediawiki;
-
     bool includeNumber;
 
 };
@@ -51,15 +50,18 @@ struct QuerySiteinfoUsergroupsPrivate {
 using namespace mediawiki;
 
 QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(MediaWiki & mediawiki, QObject * parent)
-        : Job(mediawiki, parent)
-        , d(new QuerySiteinfoUsergroupsPrivate(new QNetworkAccessManager(this), mediawiki, false))
+        : Job(*new QuerySiteinfoUsergroupsPrivate(mediawiki, new QNetworkAccessManager(), false), parent)
 {
     setCapabilities(Job::NoCapabilities);
 }
 
 QuerySiteinfoUsergroups::~QuerySiteinfoUsergroups()
+{}
+
+void QuerySiteinfoUsergroups::setIncludeNumber(bool includeNumber)
 {
-    delete d;
+    Q_D(QuerySiteinfoUsergroups);
+    d->includeNumber = includeNumber;
 }
 
 void QuerySiteinfoUsergroups::start()
@@ -69,6 +71,7 @@ void QuerySiteinfoUsergroups::start()
 
 void QuerySiteinfoUsergroups::doWorkSendRequest()
 {
+    Q_D(QuerySiteinfoUsergroups);
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
@@ -88,6 +91,7 @@ void QuerySiteinfoUsergroups::doWorkSendRequest()
 
 void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
 {
+    Q_D(QuerySiteinfoUsergroups);
     if (reply->error() == QNetworkReply::NoError) {
         QList<UserGroup> results;
         QString name;
@@ -131,9 +135,4 @@ void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
         setError(QuerySiteinfoUsergroups::NetworkError);
     }
     emitResult();
-}
-
-void QuerySiteinfoUsergroups::setIncludeNumber(bool includeNumber)
-{
-    d->includeNumber = includeNumber;
 }

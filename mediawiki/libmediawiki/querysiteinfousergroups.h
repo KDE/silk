@@ -20,8 +20,6 @@
 #ifndef MEDIAWIKI_QUERYSITEINFOUSERGROUPS_H
 #define MEDIAWIKI_QUERYSITEINFOUSERGROUPS_H
 
-#include <QtCore/QList>
-#include <QtCore/QString>
 #include <job.h>
 #include "mediawiki_export.h"
 #include "usergroup.h"
@@ -32,6 +30,7 @@ namespace mediawiki
 {
 
 class MediaWiki;
+class QuerySiteinfoUsergroupsPrivate;
 
 /**
  * @brief UserGroups job.
@@ -42,13 +41,13 @@ class MEDIAWIKI_EXPORT QuerySiteinfoUsergroups : public Job
 {
 
     Q_OBJECT
+    Q_DECLARE_PRIVATE(QuerySiteinfoUsergroups)
 
 public:
 
     /**
      * @brief Constructs a UserGroups job.
      * @param mediawiki the mediawiki concerned by the job
-     * @param includeNumber if true number of users of each user group is included
      * @param parent the QObject parent
      */
     explicit QuerySiteinfoUsergroups(MediaWiki & mediawiki, QObject * parent = 0);
@@ -59,15 +58,15 @@ public:
     virtual ~QuerySiteinfoUsergroups();
 
     /**
-     * @brief Starts the job asynchronously.
-     */
-    virtual void start();
-
-    /**
      * @brief If true number of users of each user group is included
      * @param includeNumber if true number of users of each user group is included
      */
     void setIncludeNumber(bool includeNumber);
+
+    /**
+     * @brief Starts the job asynchronously.
+     */
+    virtual void start();
 
 signals:
 
@@ -83,10 +82,6 @@ private slots:
     void doWorkSendRequest();
 
     void doWorkProcessReply(QNetworkReply * reply);
-
-private:
-
-    struct QuerySiteinfoUsergroupsPrivate * const d;
 
 private:
 
