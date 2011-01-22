@@ -32,6 +32,7 @@
 
 #include "edit.h"
 #include "mediawiki.h"
+#include "queryinfo.h"
 
 namespace mediawiki
 {
@@ -101,7 +102,7 @@ void Edit::setAppendText( const QString& param )
     d->requestParameter["md5"] = "";
 }
 
-void Edit::setPageTitle( const QString& param )
+void Edit::setPageName( const QString& param )
 {
     d->requestParameter["title"] = param;
 }
@@ -193,11 +194,19 @@ Edit::~Edit()
 
 void Edit::start()
 {
-    QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
+    QueryInfo *info = new QueryInfo(d->mediawiki,this);
+    info->setPageName(d->requestParameter["title"]);
+    info->setToken("edit");
+    connect(info,SIGNAL(infos(QList<QueryInfo::Result>)),this,SLOT(doWorkSendRequest(QList<QueryInfo::Result>)));
+    info->start();
+
 }
 
-void Edit::doWorkSendRequest()
+void Edit::doWorkSendRequest(QList<QueryInfo::Result> info)
 {
+    if(info.size() == 0)
+        return;
+    d->requestParameter["token"] = info[0].m_edittoken;
     // Set the url
     QUrl    url = d->mediawiki.url();
             url.addQueryItem("format", "xml");

@@ -1,6 +1,7 @@
 /*
  *   Copyright 2010 by Alexandre Mendes <alex.mendes1988@gmail.com>
  *   Copyright 2011 by Manuel Campomanes <campomanes.manuel@gmail.com>
+ *   Copyright 2011 by Hormiere Guillaume <hormiere.guillaume@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -29,6 +30,7 @@
 #include <KDE/KJob>
 #include "mediawiki_export.h"
 #include "job.h"
+#include "queryinfo.h"
 
 class QNetworkReply;
 
@@ -257,7 +259,7 @@ public:
      * @brief Which properties .
      * @param title the page title
      */
-    void setPageTitle( const QString&);
+    void setPageName( const QString&);
     /**
      * @brief Which properties .
      * @param token the edit token. Gotten through prop=info.
@@ -297,7 +299,7 @@ private slots:
     /**
      * @brief Send a request.
      */
-    void doWorkSendRequest();
+    void doWorkSendRequest(QList<QueryInfo::Result> info);
 
     /**
      * @brief Reads the xml
