@@ -33,17 +33,17 @@ class QueryImageinfoTest : public QObject {
 
 public slots:
 
-    void imagesHandle(const QList<QueryImageinfo::Image> & images) {
-        imagesReceived.push_back(images);
+    void resultHandle(const QList<Imageinfo> & imageinfos) {
+        imageinfosReceived.push_back(imageinfos);
     }
 
 private slots:
 
     void init() {
-        imagesReceived = QList<QList<QueryImageinfo::Image> >();
+        imageinfosReceived = QList<QList<Imageinfo> >();
     }
 
-    void testConstructorTitle() {
+    void testQuery() {
         // Constructs the fakeserver
         FakeServer fakeserver;
         fakeserver.setScenario("<?xml version=\"1.0\"?><api><query><normalized><n from=\"Image:Image.bmp\" to=\"File:Image.bmp\" /></normalized><pages><page ns=\"6\" title=\"File:Image.bmp\" missing=\"\" imagerepository=\"shared\"><imageinfo><ii timestamp=\"2008-06-06T22:27:45Z\" user=\"User1\" size=\"448798\" width=\"924\" height=\"1203\" url=\"http://url/File:Image.bmp\" thumburl=\"http://thumburl/File:Image.bmp\" thumbwidth=\"78\" thumbheight=\"102\" descriptionurl=\"http://descriptionurl/File:Image.bmp\" comment=\"Comment1\" sha1=\"00be23585fde01190a0f8c60fc4267ea00f3745d\" mime=\"image/bmp\"><metadata><metadata name=\"Name1\" value=\"Value1\" /><metadata name=\"Name2\" value=\"Value2\" /></metadata></ii></imageinfo></page></pages></query><query-continue><imageinfo iistart=\"2007-06-06T22:27:45Z\" /></query-continue></api>");
@@ -52,13 +52,22 @@ private slots:
 
         // Prepare the job
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        QueryImageinfo * job = new QueryImageinfo(mediawiki, "Image:Image.bmp");
-        job->paramProperties(QueryImageinfo::ALL_PROPERTIES);
-        job->paramLimit(1u, false);
-        job->paramStart(QDateTime(QDate(2008, 06, 06), QTime(22, 27, 45, 0)));
-        job->paramEnd(QDateTime(QDate(2007, 06, 06), QTime(22, 27, 45, 0)));
-        job->paramScale(78u, 102u);
-        connect(job, SIGNAL(images(const QList<QueryImageinfo::Image> &)), this, SLOT(imagesHandle(const QList<QueryImageinfo::Image> &)));
+        QueryImageinfo * job = new QueryImageinfo(mediawiki);
+        job->setTitle("Image:Image.bmp");
+        job->setProperties(QueryImageinfo::Timestamp|
+                           QueryImageinfo::User|
+                           QueryImageinfo::Comment|
+                           QueryImageinfo::Url|
+                           QueryImageinfo::Size|
+                           QueryImageinfo::Sha1|
+                           QueryImageinfo::Mime|
+                           QueryImageinfo::Metadata);
+        job->setLimit(1u);
+        job->setBeginTimestamp(QDateTime(QDate(2008, 06, 06), QTime(22, 27, 45, 0)));
+        job->setEndTimestamp(QDateTime(QDate(2007, 06, 06), QTime(22, 27, 45, 0)));
+        job->setWidthScale(78u);
+        job->setHeightScale(102u);
+        connect(job, SIGNAL(result(const QList<Imageinfo> &)), this, SLOT(resultHandle(const QList<Imageinfo> &)));
         job->exec();
 
         // Test job
@@ -78,7 +87,7 @@ private slots:
         QCOMPARE(requests[1].value, QString("?format=xml&action=query&titles=Image:Image.bmp&prop=imageinfo&iiprop=timestamp%7Cuser%7Ccomment%7Curl%7Csize%7Csha1%7Cmime%7Cmetadata&iilimit=1&iistart=2007-06-06T22:27:45Z&iiend=2007-06-06T22:27:45Z&iiurlwidth=78&iiurlheight=102"));
 
         // Test pages received
-        QList<QList<QueryImageinfo::Image> > imagesExpected;
+        QList<QList<Imageinfo> > imageinfosExpected;
         {
             QHash<QString, QVariant> metadata;
             metadata["Name1"] = "Value1";
@@ -99,9 +108,7 @@ private slots:
                 imageinfoExpected.setSha1(QString("00be23585fde01190a0f8c60fc4267ea00f3745d"));
                 imageinfoExpected.setMime(QString("image/bmp"));
                 imageinfoExpected.setMetadata(metadata);
-                imagesExpected.push_back(QList<QueryImageinfo::Image>()
-                    << (QueryImageinfo::Image(6, "File:Image.bmp", "Image:Image.bmp", "shared", QVector<Imageinfo>()
-                        << imageinfoExpected)));
+                imageinfosExpected.push_back(QList<Imageinfo>() << imageinfoExpected);
             }
             {
                 Imageinfo imageinfoExpected;
@@ -116,18 +123,15 @@ private slots:
                 imageinfoExpected.setSha1(QString("00be23585fde01190a0f8c60fc4267ea00f3745d"));
                 imageinfoExpected.setMime(QString("image/bmp"));
                 imageinfoExpected.setMetadata(metadata);
-                imagesExpected.push_back(QList<QueryImageinfo::Image>()
-                    << (QueryImageinfo::Image(6, "File:Image.bmp", "Image:Image.bmp", "shared", QVector<Imageinfo>()
-                        << imageinfoExpected))
-                );
+                imageinfosExpected.push_back(QList<Imageinfo>() << imageinfoExpected);
             }
         }
-        QCOMPARE(imagesReceived, imagesExpected);
+        QCOMPARE(imageinfosReceived, imageinfosExpected);
     }
 
 private:
 
-    QList<QList<QueryImageinfo::Image> > imagesReceived;
+    QList<QList<Imageinfo> > imageinfosReceived;
 
 };
 

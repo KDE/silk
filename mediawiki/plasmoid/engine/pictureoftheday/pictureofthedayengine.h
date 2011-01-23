@@ -22,7 +22,6 @@
 
 #include <Plasma/DataEngine>
 
-#include "imageinfo.h"
 #include "queryimageinfo.h"
 #include "queryimages.h"
 
@@ -35,21 +34,21 @@ class PictureOfTheDayEngine : public Plasma::DataEngine {
 
 public:
 
-    PictureOfTheDayEngine(QObject* parent, const QVariantList & args);
+    PictureOfTheDayEngine(QObject * parent, const QVariantList & args);
 
 protected:
 
     virtual void init();
 
-    virtual bool sourceRequestEvent(const QString& name);
+    virtual bool sourceRequestEvent(const QString & name);
 
-    virtual bool updateSourceEvent(const QString& source);
+    virtual bool updateSourceEvent(const QString & source);
 
 private slots:
 
-    void images(const QList<Image> & images);
+    void result(const QList<Image> & images);
 
-    void images(const QList<QueryImageinfo::Image> & images);
+    void result(const QList<Imageinfo> & imageinfos);
 
 private:
 
@@ -62,16 +61,12 @@ private:
 
     bool searchImages(const MediaWiki & mediawiki, const QString & date);
 
-    bool searchImageinfo(const MediaWiki & mediawiki);
+    bool searchImageinfo(MediaWiki & mediawiki);
 
-    QList<Image> m_pages;
-
-    Image m_page;
-
-    QList<QueryImageinfo::Image> m_images;
-
+    QList<Image> m_images;
+    Image m_image;
+    QList<Imageinfo> m_imageinfos;
     Imageinfo m_imageinfo;
-
     QMap<QString, MediaWikiInfo> m_mediawiki;
 
 };

@@ -21,14 +21,12 @@
 
 #include "mediawiki.h"
 
-
-
 #include "pictureofthedayengine.h"
 
 PictureOfTheDayEngine::PictureOfTheDayEngine(QObject * parent, const QVariantList & args)
     : Plasma::DataEngine(parent, args)
-    , m_pages()
     , m_images()
+    , m_imageinfos()
     , m_mediawiki()
 {
     setMinimumPollingInterval(3600000);
@@ -43,11 +41,14 @@ void PictureOfTheDayEngine::init() {
     setData(QString("mediawiki"), data);
 }
 
-bool PictureOfTheDayEngine::sourceRequestEvent(const QString& name) {
+bool PictureOfTheDayEngine::sourceRequestEvent(const QString & name) {
     return updateSourceEvent(name);
 }
 
-bool PictureOfTheDayEngine::updateSourceEvent(const QString& source) {
+bool PictureOfTheDayEngine::updateSourceEvent(const QString & source) {
+    m_images.clear();
+    m_imageinfos.clear();
+
     if (sources().contains(source)) return true;
 
     QStringList sourceSplit = source.split(':');
@@ -59,48 +60,51 @@ bool PictureOfTheDayEngine::updateSourceEvent(const QString& source) {
 
     Plasma::DataEngine::Data data;
     data["url"] = m_imageinfo.thumbUrl();
-    KIO::StoredTransferJob * image = KIO::storedGet(KUrl(m_imageinfo.thumbUrl()), KIO::NoReload, KIO::HideProgressInfo);
-    image->exec();
-    data["image"] = QImage::fromData(image->data());
+    KIO::StoredTransferJob * imageJob = KIO::storedGet(KUrl(m_imageinfo.thumbUrl()), KIO::NoReload, KIO::HideProgressInfo);
+    imageJob->exec();
+    QImage image = QImage::fromData(imageJob->data());
+    //FIXME: the image can be null
+    if (image.isNull()) {
+        image = QImage(200, 150, QImage::Format_Mono);
+        image.fill(1u);
+    }
+    data["image"] = image;
     setData(source, data);
-    m_pages.clear();
-    m_images.clear();
     return true;
 }
 
-void PictureOfTheDayEngine::images(const QList<Image> & images) {
-    m_pages.append(images);
-}
-
-void PictureOfTheDayEngine::images(const QList<QueryImageinfo::Image> & images) {
+void PictureOfTheDayEngine::result(const QList<Image> & images) {
     m_images.append(images);
 }
 
-bool PictureOfTheDayEngine::searchImages(const MediaWiki & mediawiki, const QString& page) {
-    QueryImages * const queryimages(new QueryImages(mediawiki));
-    queryimages->setTitle(page);
-    connect(queryimages, SIGNAL(images(const QList<Image> &)), this, SLOT(images( const QList<Image>&)));
-    if (!queryimages->exec() || m_pages.size() == 0) {
-        return false;
-    }
-    m_page = m_pages[0];
-    return m_pages.size() > 0;
+void PictureOfTheDayEngine::result(const QList<Imageinfo> & imageinfos) {
+    m_imageinfos.append(imageinfos);
 }
 
-bool PictureOfTheDayEngine::searchImageinfo(const MediaWiki & mediawiki) {
-    QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki, m_pages[0].title()));
-    queryimageinfo->paramLimit(1u, true);
-    queryimageinfo->paramProperties(QueryImageinfo::URL);
-    queryimageinfo->paramScale(400u, 300u);
-    connect(queryimageinfo, SIGNAL(images(const QList<QueryImageinfo::Image> &)), this, SLOT(images(const QList<QueryImageinfo::Image> &)));
-    if (!queryimageinfo->exec() || m_images.size() == 0) {
+bool PictureOfTheDayEngine::searchImages(const MediaWiki & mediawiki, const QString & page) {
+    QueryImages * const queryimages(new QueryImages(mediawiki));
+    queryimages->setTitle(page);
+    connect(queryimages, SIGNAL(images(const QList<Image> &)), this, SLOT(result( const QList<Image> &)));
+    if (!queryimages->exec() || m_images.size() == 0) {
         return false;
     }
-    QueryImageinfo::Image image(m_images[0]);
-    if (image.isMissing() || image.imageinfos().size() == 0) {
+    m_image = m_images[0];
+    return true;
+}
+
+bool PictureOfTheDayEngine::searchImageinfo(MediaWiki & mediawiki) {
+    QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki));
+    queryimageinfo->setTitle(m_image.title());
+    queryimageinfo->setLimit(1u);
+    queryimageinfo->setOnlyOneSignal(true);
+    queryimageinfo->setProperties(QueryImageinfo::Url);
+    queryimageinfo->setWidthScale(200u);
+    queryimageinfo->setHeightScale(150u);
+    connect(queryimageinfo, SIGNAL(result(const QList<Imageinfo> &)), this, SLOT(result(const QList<Imageinfo> &)));
+    if (!queryimageinfo->exec() || m_imageinfos.size() == 0) {
         return false;
     }
-    m_imageinfo = image.imageinfos()[0];
+    m_imageinfo = m_imageinfos[0];
     return true;
 }
 

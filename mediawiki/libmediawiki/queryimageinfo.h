@@ -20,11 +20,10 @@
 #ifndef MEDIAWIKI_QUERYIMAGEINFO_H
 #define MEDIAWIKI_QUERYIMAGEINFO_H
 
-#include <QtCore/QVector>
-#include <KDE/KJob>
+#include <QtCore/QList>
 
 #include "imageinfo.h"
-
+#include "job.h"
 #include "mediawiki_export.h"
 
 class QNetworkReply;
@@ -32,15 +31,17 @@ class QNetworkReply;
 namespace mediawiki {
 
 class MediaWiki;
+class QueryImageinfoPrivate;
 
 /**
  * @brief Query image info job.
  *
  * Gets image information for an image.
  */
-class MEDIAWIKI_EXPORT QueryImageinfo : public KJob {
+class MEDIAWIKI_EXPORT QueryImageinfo : public Job {
 
     Q_OBJECT
+    Q_DECLARE_PRIVATE(QueryImageinfo)
 
 public:
 
@@ -52,10 +53,9 @@ public:
      * By default, a single image info is returned.
      *
      * @param mediawiki the mediawiki concerned by the job
-     * @param title the title of the image
      * @param parent the QObject parent
      */
-    QueryImageinfo(const MediaWiki & mediawiki, const QString & title, QObject * parent = 0);
+    QueryImageinfo(MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destructs a query image info job.
@@ -63,133 +63,78 @@ public:
     virtual ~QueryImageinfo();
 
     /**
+     * @brief Set the title of the image requested.
+     * @param title the title of the image requested
+     */
+    void setTitle(const QString & title);
+
+    /**
      * @brief Type used for property.
      */
     typedef unsigned char property_type;
 
     /**
+     * @brief Property.
+     */
+    enum Property {
+        Timestamp    = 0x01,
+        User         = 0x02,
+        Comment      = 0x04,
+        Url          = 0x08,
+        Size         = 0x10,
+        Sha1         = 0x20,
+        Mime         = 0x40,
+        Metadata     = 0x80
+    };
+    Q_DECLARE_FLAGS(Properties, Property)
+
+    /**
      * @brief Set which properties to get.
-     * @param properties bitmask of properties to get
-     * @pre to call just before start()
-     * @see NO_PROPERTY
-     * @see TIMESTAMP
-     * @see USER
-     * @see COMMENT
-     * @see URL
-     * @see SIZE
-     * @see SHA1
-     * @see MIME
-     * @see METADATA
-     * @see ALL_PROPERTIES
+     * @param properties properties to get
      */
-    void paramProperties(property_type properties);
+    void setProperties(Properties properties);
 
     /**
-     * @brief No property.
-     * @see paramProperties()
+     * @brief Set how many image info to return per signal.
+     * @param limit how many image info to return per signal
      */
-    static const property_type NO_PROPERTY = 0;
+    void setLimit(unsigned int limit);
 
     /**
-     * @brief Timestamp of the image.
-     * @see paramProperties()
+     * @brief If true stop the request to the first signal.
+     * @param onlyOneSignal if true stop the request to the first signal
      */
-    static const property_type TIMESTAMP = 1 << 0;
-
-    /**
-     * @brief User of the image.
-     * @see paramProperties()
-     */
-    static const property_type USER = 1 << 1;
-
-    /**
-     * @brief Comment of the image.
-     * @see paramProperties()
-     */
-    static const property_type COMMENT = 1 << 2;
-
-    /**
-     * @brief URL of the image.
-     * @see paramProperties()
-     */
-    static const property_type URL = 1 << 3;
-
-    /**
-     * @brief Size of the image.
-     * @see paramProperties()
-     */
-    static const property_type SIZE = 1 << 4;
-
-    /**
-     * @brief SHA-1 of the image.
-     * @see paramProperties()
-     */
-    static const property_type SHA1 = 1 << 5;
-
-    /**
-     * @brief MIME of the image.
-     * @see paramProperties()
-     */
-    static const property_type MIME = 1 << 6;
-
-    /**
-     * @brief Metadata of the image.
-     * @see paramProperties()
-     */
-    static const property_type METADATA = 1 << 7;
-
-    /**
-     * @brief All properties.
-     * @see paramProperties()
-     */
-    static const property_type ALL_PROPERTIES = TIMESTAMP|USER|COMMENT|URL|SIZE|SHA1|MIME|METADATA;
-
-    /**
-     * @brief Set how many image revisions to return.
-     * @param limit how many image revisions to return
-     * @param stop stop the job when the limit is reached
-     * @pre to call just before start()
-     * @pre limit >= 1
-     */
-    void paramLimit(unsigned int limit, bool stop);
+    void setOnlyOneSignal(bool onlyOneSignal);
 
     /**
      * @brief Set timestamp to start listing from.
      * @param start timestamp to start listing from
-     * @pre to call just before start()
      */
-    void paramStart(const QDateTime & start);
+    void setBeginTimestamp(const QDateTime & begin);
 
     /**
      * @brief Set timestamp to stop listing at.
      * @param end timestamp to stop listing at
-     * @pre to call just before start()
      */
-    void paramEnd(const QDateTime & end);
+    void setEndTimestamp(const QDateTime & end);
 
     /**
-     * @brief Set image scale parameters for an URL will be returned.
+     * @brief Set width scale.
      *
-     * Only for the first image info and the property URL will be set.
+     * Only for the first image info. The property URL must be set.
      *
-     * @param width width parameter
-     * @pre to call just before start()
-     * @pre width >= 1
+     * @param width width scale
      */
-    void paramScale(unsigned int width);
+    void setWidthScale(unsigned int width);
 
     /**
-     * @brief Set image scale parameters for an URL will be returned.
+     * @brief Set height scale.
      *
-     * Only for the first image info and the property URL will be set.
+     * Only for the first image info. The property URL must be set.
      *
-     * @param width width parameter
-     * @param height height paramter
-     * @pre to call just before start()
-     * @pre width >= 1
-     * @pre height >= 1
+     * @param height height scale
      */
-    void paramScale(unsigned int width, unsigned int height);
+    void setHeightScale(unsigned int height);
 
     /**
      * @brief Starts the job asynchronously.
@@ -202,143 +147,17 @@ private slots:
 
     void doWorkProcessReply(QNetworkReply * reply);
 
-private:
-
-    QString iiprop() const;
-
-    struct QueryImageinfoPrivate * const d;
-
-public:
-
-    /**
-     * @brief Indicates all possible error conditions found during the processing of the job.
-     */
-    enum {
-
-        /**
-         * @brief A network error has occured.
-         */
-        NetworkError = KJob::UserDefinedError + 1,
-
-        /**
-         * @brief A XML error has occured.
-         */
-        XmlError,
-
-    };
-
-    /**
-     * @brief An image.
-     */
-    struct Image {
-
-    public:
-
-        /**
-         * @brief Construct an image.
-         * @param namespaceId the image's namespace id
-         * @param title the image's title
-         * @param titleNoNormalized he image's title no normalized
-         * @param imageRepository the image's repository
-         * @param imageinfos the image's info
-         */
-        Image(unsigned int namespaceId,
-              const QString & title,
-              const QString & titleNoNormalized,
-              const QString & imageRepository,
-              const QVector<Imageinfo> & imageinfos)
-              : m_namespaceId(namespaceId)
-              , m_title(title)
-              , m_titleNoNormalized(titleNoNormalized)
-              , m_imageRepository(imageRepository)
-              , m_imageinfos(imageinfos)
-        {}
-
-        /**
-         * @brief Returns the image's namespace id.
-         * @return the image's namespace id
-         */
-        inline unsigned int namespaceId() const { return m_namespaceId; }
-
-        /**
-         * @brief Returns the image's title.
-         * @return the image's title
-         */
-        inline QString title() const { return m_title; }
-
-        /**
-         * @brief Returns the image's title no normalized.
-         * @return the image's title no normalized
-         * @post #isNormalized() ? return != #title() : return == #title()
-         */
-        inline QString titleNoNormalized() const {
-            Q_ASSERT(isNormalized() ? m_titleNoNormalized != title() : m_titleNoNormalized == title());
-            return m_titleNoNormalized;
-        }
-
-        /**
-         * @brief Returns true if is normalized, else false.
-         * @return true if is normalized, else false
-         */
-        inline bool isNormalized() const { return m_title != m_titleNoNormalized; }
-
-        /**
-         * @brief Returns the image's repository.
-         * @return the image's repository
-         * @pre !isMissing()
-         */
-        inline QString imageRepository() const { Q_ASSERT(!isMissing()); return m_imageRepository; }
-
-        /**
-         * @brief Returns the image's info.
-         * @return the image's info
-         * @pre !isMissing()
-         */
-        inline const QVector<Imageinfo> & imageinfos() const { Q_ASSERT(!isMissing()); return m_imageinfos; }
-
-        /**
-         * @brief Returns true if is missing, else false.
-         * @return true if is missing, else false
-         */
-        inline bool isMissing() const { return m_imageRepository.isEmpty(); }
-
-    private:
-
-        unsigned int m_namespaceId;
-        QString m_title;
-        QString m_titleNoNormalized;
-        QString m_imageRepository;
-        QVector<Imageinfo> m_imageinfos;
-
-    };
-
 signals:
 
     /**
-     * @brief Provides a list of image.
-     *
-     * This signal can be emited several times.
-     *
-     * @param imageinfos a list of image
+     * @brief Provides a list of imageinfos.
+     * @param imageinfos a list of imageinfos
      */
-    void images(const QList<QueryImageinfo::Image> & images);
+    void result(const QList<Imageinfo> & imageinfos);
 
 };
 
-/**
- * @brief Returns true if lhs and rhs are equal, else false.
- * @param lhs left-hand side image info
- * @param rhs right-hand side image info
- * @return true if lhs and rhs are equal, else false
- */
-inline bool operator==( const QueryImageinfo::Image & lhs,  const QueryImageinfo::Image & rhs) {
-    return lhs.namespaceId() == rhs.namespaceId() &&
-           lhs.title() == rhs.title() &&
-           lhs.titleNoNormalized() == rhs.titleNoNormalized() &&
-           lhs.isNormalized() == rhs.isNormalized() &&
-           lhs.isMissing() == rhs.isMissing() &&
-           (!lhs.isMissing() /* && rhs.isMissing() */ ? lhs.imageRepository() == rhs.imageRepository() && lhs.imageinfos() == rhs.imageinfos() : true);
-}
+Q_DECLARE_OPERATORS_FOR_FLAGS(QueryImageinfo::Properties)
 
 }
 

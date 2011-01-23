@@ -32,6 +32,7 @@ set(mediawiki_SRCS
     queryinfo.cpp
     edit.cpp
     job.cpp
+    usergroup.cpp
     revision.cpp
 )
 

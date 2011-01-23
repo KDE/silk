@@ -28,7 +28,6 @@ public:
 
     qint64 namespaceId;
     QString title;
-    QVector<Imageinfo> imageinfos;
 
 };
 
@@ -73,21 +72,8 @@ void Image::setTitle(const QString & title) {
     d->title = title;
 }
 
-const QVector<Imageinfo> & Image::imageinfos() const {
-    return d->imageinfos;
-}
-
-QVector<Imageinfo> & Image::imageinfos() {
-    return d->imageinfos;
-}
-
-void Image::setImageinfos(const QVector<Imageinfo> & imageinfos) {
-    d->imageinfos = imageinfos;
-}
-
 bool operator==(const Image & lhs, const Image & rhs) {
     return lhs.namespaceId() == rhs.namespaceId() &&
-           lhs.title() == rhs.title() &&
-           lhs.imageinfos() == rhs.imageinfos();
+           lhs.title() == rhs.title();
 }
 
