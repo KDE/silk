@@ -76,7 +76,7 @@ public:
      * @brief Returns the connection manager.
      * @return the connection manager
      */
-    QNetworkAccessManager * const manager();
+    QNetworkAccessManager * manager() const;
 
     /**
      * @brief Returns the cookies created by the login.

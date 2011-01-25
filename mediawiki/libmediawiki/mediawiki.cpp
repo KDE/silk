@@ -56,7 +56,7 @@ QString MediaWiki::userAgent() const
     return d_ptr->userAgent;
 }
 
-QNetworkAccessManager * const MediaWiki::manager()
+QNetworkAccessManager * MediaWiki::manager() const
 {
     return d_ptr->manager;
 }

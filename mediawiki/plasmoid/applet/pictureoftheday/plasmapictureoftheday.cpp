@@ -24,7 +24,7 @@ PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject *parent, const QVariantList
     setBackgroundHints(DefaultBackground);
 
     resize(250,300);
-    this->m_containWidget->resize(this->size());    
+    this->m_containWidget->resize(this->size());
 
     connect(m_picture,SIGNAL(pictureUpdated()),this,SLOT(updatePicture()));
     m_provider = QString("commons.wikimedia.org");
@@ -68,7 +68,8 @@ void PlasmaPictureOfTheDay::reloadPicture()
 
 void PlasmaPictureOfTheDay::paintInterface(QPainter *p,
         const QStyleOptionGraphicsItem *option, const QRect &contentsRect)
-{    
+{
+    Q_UNUSED(contentsRect)
     //get image size scalled
     QSize sizeR = m_picture->getPicture().scaled(this->size().width(),this->size().height(),Qt::KeepAspectRatio).size();
     //set minimum size of the image
