@@ -297,8 +297,8 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
             setError(KJob::NoError);
             for(int i = 0; i < results.length(); i++)
             {
-                results[i].setParseTree( results[i].parseTree().replace(char(254),'>') );
-                results[i].setParseTree( results[i].parseTree().replace(char(255),'<') );
+                results[i].setParseTree( results[i].parseTree().replace(QChar(254),'>') );
+                results[i].setParseTree( results[i].parseTree().replace(QChar(255),'<') );
             }
 
             emit revision(results);

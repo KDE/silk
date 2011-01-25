@@ -102,7 +102,7 @@ void Revision::setUser(const QString & user)
 
 void Revision::setComment(const QString &  com)
 {
-    d->comment=com;
+    d->comment = com;
 }
 
 QString Revision::comment() const
@@ -137,7 +137,7 @@ void Revision::setRollback(const QString &  rollback)
 }
 
 
-QString Revision::Rollback() const
+QString Revision::rollback() const
 {
     return d->rollback;
 }
@@ -153,6 +153,6 @@ bool operator==(const mediawiki::Revision & lhs, const mediawiki::Revision & rhs
            lhs.minor()==rhs.minor()&&
            lhs.parseTree() == rhs.parseTree()&&
            lhs.parentId() == rhs.parentId()&&
-           lhs.Rollback() == rhs.Rollback()&&
+           lhs.rollback() == rhs.rollback()&&
            lhs.revId() == rhs.revId();
 }

@@ -38,30 +38,40 @@
 using mediawiki::MediaWiki;
 using mediawiki::QueryRevision;
 using mediawiki::Revision;
-Revision constructRevision(int i, int p = 0, int s = 0, QString m = "", QString u = "", QDateTime t = QDateTime(), QString cm = "", QString ct = "", QString pt = "", QString r = ""){
+
+
+Q_DECLARE_METATYPE(QList<Revision>)
+Q_DECLARE_METATYPE(FakeServer::Request)
+Q_DECLARE_METATYPE(QueryRevision*)
+
+Revision constructRevision(int i,int p, int s, QString m, QString u, QDateTime t, QString cm, QString ct, QString pt, QString r){
 
     Revision rev;
     rev.setRevId(i);
-
     rev.setParentId(p);
-
     rev.setSize(s);
-
     rev.setMinor(m);
-
     rev.setUser(u);
-
     rev.setTimestamp(t);
-
     rev.setComment(cm);
-
     rev.setContent(ct);
-
-    rev.setParseTree(pt),
-
+    rev.setParseTree(pt);
     rev.setRollback(r);
     return rev;
 
+}
+void debugRev(const Revision &rev)
+{
+    qDebug() << rev.revId();
+    qDebug() << rev.parentId();
+    qDebug() << rev.size();
+    //qDebug() << rev.minor();
+    qDebug() << rev.user();
+    qDebug() << rev.timestamp();
+    qDebug() << rev.comment();
+    qDebug() << rev.content();
+    qDebug() << rev.parseTree();
+    qDebug() << rev.rollback();
 }
 
 QString QStringFromFile( const QString &fileName )
@@ -69,26 +79,16 @@ QString QStringFromFile( const QString &fileName )
   QFile file( fileName );
   file.open( QFile::ReadOnly );
   QTextStream in(&file);
-
   QString scenario;
-
   // When loading from files we never have the authentication phase
   // force jumping directly to authenticated state.
 
   while ( !in.atEnd() ) {
     scenario.append( in.readLine() );
   }
-
   file.close();
-
   return scenario;
 }
-
-Q_DECLARE_METATYPE(QList<Revision>)
-Q_DECLARE_METATYPE(FakeServer::Request)
-Q_DECLARE_METATYPE(QueryRevision*)
-
-
 
 class QueryRevisionTest : public QObject
 {
@@ -119,7 +119,6 @@ private slots:
 
 
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-
         FakeServer fakeserver;
         fakeserver.addScenario(scenario);
         fakeserver.startAndWait();
@@ -166,11 +165,11 @@ private slots:
                         << constructRevision(367741756, 367741564, 70, "", "Graham87",
                                                            QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                                            "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
-                                                           "#REDIRECT [[Application programming interface]]{{R from abbreviation}}","")
+                                                           "#REDIRECT [[Application programming interface]]{{R from abbreviation}}","","")
                         << constructRevision(387545037, 387542946, 5074, "", "Rich Farmbrough",
                                                  QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"),
                                                  "[[Help:Reverting|Reverted]] edits by [[Special:Contributions/Rich Farmbrough|Rich Farmbrough]] ([[User talk:Rich Farmbrough|talk]]) to last version by David Levy",
-                                                 QStringFromFile("./queryrevisiontest_content.rc"),""));
+                                                 QStringFromFile("./queryrevisiontest_content.rc"),"",""));
 
         QTest::newRow("One title")
                 << QStringFromFile("./queryrevisiontest_onetitle.rc")
@@ -183,7 +182,7 @@ private slots:
                         << constructRevision(367741756, 367741564, 70, "", "Graham87",
                                                  QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                                  "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
-                                                 "#REDIRECT [[Application programming interface]]{{R from abbreviation}}",""));
+                                                 "#REDIRECT [[Application programming interface]]{{R from abbreviation}}","",""));
 
         QTest::newRow("Timestamp only")
                 << QStringFromFile("./queryrevisiontest_timestamponly.rc")
@@ -193,14 +192,14 @@ private slots:
                 << int(TIMESTAMP)
                 << 2
                 << (QList<Revision>()
-                    << constructRevision(0, 0, 0, "", "",
+                    << constructRevision(-1, -1, -1, "", "",
                                              QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                              "",
-                                             "","")
-                    << constructRevision(0, 0, 0, "", "",
+                                             "","","")
+                    << constructRevision(-1, -1, -1, "", "",
                                              QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"),
                                              "",
-                                             "",""));
+                                             "","",""));
         QTest::newRow("User only")
                 << QStringFromFile("./queryrevisiontest_useronly.rc")
                 << FakeServer::Request("GET","","?format=xml&action=query&prop=revisions&rvprop=user&titles=API|Main%20Page")
@@ -209,14 +208,14 @@ private slots:
                 << int(USER)
                 << 2
                 << (QList<Revision>()
-                    << constructRevision(0, 0, 0, "", "Graham87",
+                    << constructRevision(-1, -1, -1, "", "Graham87",
                                              QDateTime(),
                                              "",
-                                             "","")
-                    << constructRevision(0, 0, 0, "", "Rich Farmbrough",
+                                             "","","")
+                    << constructRevision(-1, -1, -1, "", "Rich Farmbrough",
                                              QDateTime(),
                                              "",
-                                             "",""));
+                                             "","",""));
 
     }
 
@@ -515,18 +514,21 @@ private slots:
         int rvprop = TIMESTAMP|USER|COMMENT|CONTENT;
         int size = 2;
         QList<Revision> results;
-        results << constructRevision(0, 0, 0, "", "martine",
-                                         QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
-                                         "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
-                                         "#REDIRECT [[Application programming interface]]{{R from abbreviation}}",
-                                         "<root>#REDIRECT [[Application programming interface]]<template><title>R from abbreviation</title></template></root>")
-                << constructRevision(0, 0, 0, "", "Graham87",
-                                           QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
-                                           "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
-                                           "#REDIRECT [[Application programming interface]]{{R from abbreviation}}",
-                                           "<root>#REDIRECT [[Application programming interface]]<template><title>R from abbreviation</title></template></root>");
 
-
+        Revision rev;
+        rev.setUser("martine");
+        rev.setTimestamp(QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"));
+        rev.setComment("Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))");
+        rev.setContent("#REDIRECT [[Application programming interface]]{{R from abbreviation}}");
+        rev.setParseTree("<root>#REDIRECT [[Application programming interface]]<template><title>R from abbreviation</title></template></root>");
+        results << rev;
+        Revision rev2;
+        rev2.setUser("Graham87");
+        rev2.setTimestamp(QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"));
+        rev2.setComment("Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))");
+        rev2.setContent("#REDIRECT [[Application programming interface]]{{R from abbreviation}}");
+        rev2.setParseTree("<root>#REDIRECT [[Application programming interface]]<template><title>R from abbreviation</title></template></root>");
+        results << rev2;
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
 
         FakeServer fakeserver;
@@ -552,6 +554,10 @@ private slots:
 
         QCOMPARE(job->error(), error);
         QCOMPARE(revisionResults.size(), size);
+//        debugRev(revisionResults[0]);
+//        debugRev(results[0]);
+//        debugRev(revisionResults[1]);
+//        debugRev(results[1]);
         QCOMPARE(revisionResults, results);
 
         QVERIFY(fakeserver.isAllScenarioDone());
@@ -585,7 +591,7 @@ private slots:
         int error = 0;
         int size = 1;
         QList<Revision> results;
-        results << constructRevision(0, 0, 0, "", "",
+        results << constructRevision(-1, -1, -1, "", "",
                                            QDateTime(),
                                            "",
                                            "",

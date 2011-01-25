@@ -143,7 +143,7 @@ public:
     /**
      * @brief
      */
-    QString Rollback() const;
+    QString rollback() const;
 };
 }
 
