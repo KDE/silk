@@ -63,13 +63,15 @@ bool PictureOfTheDayEngine::updateSourceEvent(const QString & source) {
     KIO::StoredTransferJob * imageJob = KIO::storedGet(KUrl(m_imageinfo.thumbUrl()), KIO::NoReload, KIO::HideProgressInfo);
     imageJob->exec();
     data["image"] = QImage::fromData(imageJob->data());
-    //FIXME: pointeur de fonction
+    //FIXME: pointeur de fonction ou classe
+    QString content;
     if (sourceSplit[0] == QString("en.wikipedia.org")) {
-        data["content"] = m_revision.content().remove(QRegExp("^.*\\|caption=")).remove(QRegExp("\\|credit=.*$")).remove(QRegExp("\\[\\[([^\\]]*\\|)?|\\]\\]")).replace("'''", "\"");
+        content = m_revision.content().remove(QRegExp("^.*\\[\\[Image:[^\\]]*\\]\\]\\s*\\|\\s*|\\s*<small>.*$"));
     }
-    else {
-        data["content"] = m_revision.content();
+    else if (sourceSplit[0] == QString("commons.wikimedia.org")) {
+        content = m_revision.content().remove(QRegExp("^.*<span[^>]*>\\s*|\\s*</span>.*$"));
     }
+    data["content"] = content.replace(QRegExp("\\[\\[((\\]?[^\\]\\|])*\\]?\\|)?|\\]\\]"), "").replace(QRegExp("'''((('('?))?[^'])*)'''"), "<b>\\1</b>").replace(QRegExp("''(('?[^'])*)''"), "<i>\\1</i>");
     setData(source, data);
     return true;
 }
@@ -94,7 +96,7 @@ bool PictureOfTheDayEngine::searchImages(const MediaWiki & mediawiki, const QStr
     if (!queryimages->exec() || m_images.size() == 0) {
         return false;
     }
-    m_image = m_images[0];
+    m_image = m_images[0]; //FIXME: faire ça dans l'update et dc un return avec la condition
     return true;
 }
 
@@ -104,8 +106,8 @@ bool PictureOfTheDayEngine::searchImageinfo(MediaWiki & mediawiki) {
     queryimageinfo->setLimit(1u);
     queryimageinfo->setOnlyOneSignal(true);
     queryimageinfo->setProperties(QueryImageinfo::Url);
-    queryimageinfo->setWidthScale(200u);
-    queryimageinfo->setHeightScale(150u);
+    queryimageinfo->setWidthScale(400u);
+    queryimageinfo->setHeightScale(300u);
     connect(queryimageinfo, SIGNAL(result(const QList<Imageinfo> &)), this, SLOT(result(const QList<Imageinfo> &)));
     if (!queryimageinfo->exec() || m_imageinfos.size() == 0) {
         return false;
@@ -119,6 +121,7 @@ bool PictureOfTheDayEngine::searchText(MediaWiki & mediawiki, const QString & pa
     QueryRevision * const queryrevision(new QueryRevision(mediawiki));
     queryrevision->setPageName(page);
     queryrevision->setProp(CONTENT);
+    queryrevision->setExpandTemplates(true);
     queryrevision->setLimit(1);
     connect(queryrevision, SIGNAL(revision(const QList<Revision> &)), this, SLOT(result(const QList<Revision> &)));
     if (!queryrevision->exec() || m_revisions.size() == 0) {
