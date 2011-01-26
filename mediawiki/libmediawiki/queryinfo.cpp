@@ -48,7 +48,7 @@ namespace mediawiki
 
 using namespace mediawiki;
 QueryInfo::QueryInfo(MediaWiki & mediawiki, QObject *parent)
-    : KJob(parent)
+    : Job(mediawiki, parent)
     , d(new QueryInfoPrivate(mediawiki))
 {
     setCapabilities(KJob::NoCapabilities);
@@ -87,7 +87,7 @@ void QueryInfo::start()
 
 void QueryInfo::abort()
 {
-    this->setError(this->ConnectionAborted);
+    this->setError(Job::NetworkError);
     emitResult();
 }
 
@@ -184,13 +184,14 @@ void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
         }
         if (!reader.hasError()) {
             setError(KJob::NoError);
+            emit protection(protect);
             emit page(d->page);
         } else {
-            setError(QueryInfo::BadXml);
+            setError(Job::XmlError);
         }
     }
     else {
-        setError(QueryInfo::ConnectionAborted);
+        setError(Job::NetworkError);
     }
     emitResult();
 }

@@ -28,6 +28,7 @@
 #include "page.h"
 #include "protection.h"
 #include "mediawiki_export.h"
+#include "job.h"
 
 class QNetworkReply;
 
@@ -41,26 +42,12 @@ class MediaWiki;
  *
  * Uses to send a request to get basic page information.
  */
-class MEDIAWIKI_EXPORT QueryInfo : public KJob
+class MEDIAWIKI_EXPORT QueryInfo : public Job
 {
 
     Q_OBJECT
 
 public:
-
-    enum
-    {
-        /**
-         * @brief XML error
-         */
-        BadXml = KJob::UserDefinedError+1,
-
-        /**
-         * @brief Connection aborted
-         */
-        ConnectionAborted,
-
-    };
 
     /**
      * @brief Constructs a QueryInfo job.
