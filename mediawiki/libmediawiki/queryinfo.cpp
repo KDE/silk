@@ -40,7 +40,9 @@ namespace mediawiki
         { }
 
         MediaWiki & mediawiki;
+        QVector<Protection> protections;
         QMap<QString, QString> requestParameter;
+        Page page;
     };
 }
 
@@ -122,38 +124,36 @@ void QueryInfo::doWorkSendRequest()
 void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
 {
     if (reply->error() == QNetworkReply::NoError) {
-        QList<QueryInfo::Result> results;
-        Result page;
-        QList<QueryInfo::Protection> protections;
 
         // Replace & in &amp;
         QString content(reply->readAll());
         QRegExp regex("&(?!\\w+;)");
         content.replace(regex, "&amp;");
         QXmlStreamReader reader(content);
+        QVector<Protection> protect;
 
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             QXmlStreamAttributes attrs = reader.attributes();
             if (token == QXmlStreamReader::StartElement) {
                 if (reader.name() == "page") {
-                    page.m_pageid = attrs.value( QString( "pageid" ) ).toString().toUInt();
-                    page.m_title = attrs.value( QString( "title" ) ).toString();
-                    page.m_ns = attrs.value( QString( "ns" ) ).toString().toUInt();
-                    page.m_touched = QDateTime::fromString(attrs.value( QString( "touched" ) ).toString(), "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
-                    page.m_lastrevid = attrs.value( QString( "lastrevid" ) ).toString().toUInt();
-                    page.m_counter = attrs.value( QString( "counter" ) ).toString().toUInt();
-                    page.m_length = attrs.value( QString( "length" ) ).toString().toUInt();
-                    page.m_starttimestamp = QDateTime::fromString(attrs.value( QString( "starttimestamp" ) ).toString(), "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'");
-                    page.m_edittoken = attrs.value( QString( "edittoken" ) ).toString();
-                    page.m_talkid = attrs.value( QString( "talkid" ) ).toString().toUInt();
-                    page.m_fullurl = QUrl(attrs.value( QString( "fullurl" ) ).toString());
-                    page.m_editurl = QUrl(attrs.value( QString( "editurl" ) ).toString());
-                    page.m_readable = attrs.value( QString( "readable" ) ).toString();
-                    page.m_preload = attrs.value( QString( "preload" ) ).toString();
+                    d->page.setPageId(attrs.value( QString( "pageid" ) ).toString().toUInt());
+                    d->page.setTitle(attrs.value( QString( "title" ) ).toString());
+                    d->page.setNs(attrs.value( QString( "ns" ) ).toString().toUInt());
+                    d->page.setTouched(QDateTime::fromString(attrs.value( QString( "touched" ) ).toString(), "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'"));
+                    d->page.setLastRevId(attrs.value( QString( "lastrevid" ) ).toString().toUInt());
+                    d->page.setCounter(attrs.value( QString( "counter" ) ).toString().toUInt());
+                    d->page.setLength(attrs.value( QString( "length" ) ).toString().toUInt());
+                    d->page.setStarttimestamp(QDateTime::fromString(attrs.value( QString( "starttimestamp" ) ).toString(), "yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'"));
+                    d->page.setEditToken(attrs.value( QString( "edittoken" ) ).toString());
+                    d->page.setTalkid(attrs.value( QString( "talkid" ) ).toString().toUInt());
+                    d->page.setFullurl(QUrl(attrs.value( QString( "fullurl" ) ).toString()));
+                    d->page.setEditurl(QUrl(attrs.value( QString( "editurl" ) ).toString()));
+                    d->page.setReadable(attrs.value( QString( "readable" ) ).toString());
+                    d->page.setPreload(attrs.value( QString( "preload" ) ).toString());
                 }
                 else if (reader.name() == "protection") {
-                    protections.clear();
+                    protect.clear();
                 }
                 else if (reader.name() == "pr") {
                     QString expiry(attrs.value( QString( "expiry" ) ).toString());
@@ -165,7 +165,12 @@ void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
                     }else if(attrs.value( QString( "cascade" ) ).toString() != "") {
                         source = attrs.value( QString( "cascade" ) ).toString();
                     }
-                    protections.push_back(QueryInfo::Protection(type, level, expiry, source));
+                    Protection p;
+                    p.setExpiry(expiry);
+                    p.setLevel(level);
+                    p.setType(type);
+                    p.setSource(source);
+                    protect.push_back(p);
                 }
                 else if (reader.name() == "info") {
                     reader.readNext();
@@ -173,14 +178,13 @@ void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
                 }
             } else if (token == QXmlStreamReader::EndElement) {
                 if (reader.name() == "page") {
-                    page.setProtections(protections);
-                    results.push_back(QueryInfo::Result(page));
+                    d->protections = protect;
                 }
             }
         }
         if (!reader.hasError()) {
             setError(KJob::NoError);
-            emit infos(results);
+            emit page(d->page);
         } else {
             setError(QueryInfo::BadXml);
         }

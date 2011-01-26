@@ -13,8 +13,6 @@ namespace mediawiki {
  */
 class MEDIAWIKI_EXPORT Revision {
 
-    struct RevisionPrivate * d;
-
 public:
     Revision();
     /**
@@ -144,6 +142,11 @@ public:
      * @brief
      */
     QString rollback() const;
+
+private:
+
+    struct RevisionPrivate * d;
+
 };
 }
 

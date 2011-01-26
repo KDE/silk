@@ -34,6 +34,8 @@ set(mediawiki_SRCS
     job.cpp
     usergroup.cpp
     revision.cpp
+    page.cpp
+    protection.cpp
 )
 
 kde4_add_library( mediawiki ${LIBRARY_TYPE} ${mediawiki_SRCS} )

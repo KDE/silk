@@ -25,7 +25,8 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDateTime>
 #include <KDE/KJob>
-
+#include "page.h"
+#include "protection.h"
 #include "mediawiki_export.h"
 
 class QNetworkReply;
@@ -46,16 +47,6 @@ class MEDIAWIKI_EXPORT QueryInfo : public KJob
     Q_OBJECT
 
 public:
-
-    /**
-     * @brief type of the id
-     */
-    enum IdType
-    {
-        RevisionId,
-        PageId,
-        NoId
-    };
 
     enum
     {
@@ -112,115 +103,6 @@ public:
      */
     void setRevisionId(unsigned int id);
 
-    struct Protection {
-
-    public:
-
-        /**
-         * Constructs a protection.
-         * @param type the protection type
-         * @param level the protection level
-         * @param expiry the protection expiry
-         * @param source the protection source
-         */
-        Protection(const QString & type, const QString & level, const QString & expiry, const QString & source)
-                : m_type(type)
-                , m_level(level)
-                , m_expiry(expiry)
-                , m_source(source)
-        {}
-
-
-        /**
-         * @brief Get the protection type.
-         */
-        inline const QString & type() const { return m_type; }
-
-        /**
-         * @brief Get the protection level.
-         */
-        inline const QString & level() const { return m_level; }
-
-        /**
-         * @brief Get the protection expiry.
-         */
-        inline const QString & expiry() const { return m_expiry; }
-
-        /**
-         * @brief Get the protection source.
-         */
-        inline const QString & source() const { return m_source; }
-
-    private:
-
-        QString m_type;
-        QString m_level;
-        QString m_expiry;
-        QString m_source;
-    };
-
-    /**
-     * @brief A QueryInfo result.
-     */
-    struct Result {
-
-    public:
-
-        /**
-         * Constructs an info.
-         */
-        Result()
-        {}
-
-        /**
-         * Constructs an info.
-         * @param protections the page protections
-         */
-        Result(const QList<QueryInfo::Protection> & protections)
-                : m_protections(protections)
-        {}
-
-        /**
-         * @brief Get the last touched timestamp.
-         */
-        inline QString touched() const { return m_touched.toString("yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'"); }
-
-        /**
-         * @brief Get the timestamp when you obtained the token.
-         */
-        inline QString starttimestamp() const { return m_starttimestamp.toString("yyyy'-'MM'-'dd'T'hh':'mm':'ss'Z'"); }
-
-        /**
-         * @brief Put a protections list.
-         * @param protections the page protections
-         */
-        inline void setProtections(QList<QueryInfo::Protection> protection) { m_protections = protection; }
-
-        /**
-         * @brief Get the protections list.
-         */
-        inline const QList<QueryInfo::Protection> & protections() const { return m_protections; }
-
-        unsigned int m_pageid;
-        QString m_title;
-        unsigned int m_ns;
-        unsigned int m_lastrevid;
-        unsigned int m_counter;
-        unsigned int m_length;
-        QString m_edittoken ;
-        unsigned int m_talkid ;
-        QUrl m_fullurl;
-        QUrl m_editurl;
-        QString m_readable;
-        QString m_preload;
-        QDateTime m_touched;
-        QDateTime m_starttimestamp;
-
-    private:
-
-        QList<QueryInfo::Protection> m_protections;
-    };
-
     /**
      * @brief Get the warning.
      */
@@ -235,11 +117,11 @@ public:
 signals:
 
     /**
-     * @brief Provides a pages list
-     * @param info list of pages
-     * @see QueryInfo::Result
+     * @brief Provides a page
+     * @param
      */
-    void infos(const QList<QueryInfo::Result> & info);
+    void page(const Page & p);
+    void protection(const QVector <Protection> & protect);
 
 private slots:
 

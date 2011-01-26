@@ -26,103 +26,103 @@ public:
      */
     Page & operator=(Page other);
 
-    void Page::setPageId(unsigned int id);
+    void setPageId(unsigned int id);
 
     /**
      * @brief
      */
-    unsigned int Page::pageId() const;
+    unsigned int pageId() const;
 
-    void Page::setTitle(QString title);
-
-    /**
-     * @brief
-     */
-    QString Page::pageTitle() const;
-
-    void Page::setNs(unsigned int ns) const;
+    void setTitle(QString title);
 
     /**
      * @brief
      */
-    unsigned int Page::pageNs() const;
+    QString pageTitle() const;
 
-    void Page::setLastRevId(unsigned int lastRevId) const;
-
-    /**
-     * @brief
-     */
-    unsigned int Page::pageLastRevId() const;
-
-    void Page::setCounter(unsigned int counter) const;
+    void setNs(unsigned int ns) const;
 
     /**
      * @brief
      */
-    unsigned int Page::pageCounter() const;
+    unsigned int pageNs() const;
 
-    void Page::setLength(unsigned int length) const;
-
-    /**
-     * @brief
-     */
-    unsigned int Page::pageLength() const;
-
-    void Page::setEditToken(QString editToken);
+    void setLastRevId(unsigned int lastRevId) const;
 
     /**
      * @brief
      */
-    QString Page::pageEditToken() const;
+    unsigned int pageLastRevId() const;
 
-    void Page::setTalkid(unsigned int talkid) const;
-
-    /**
-     * @brief
-     */
-    unsigned int Page::pageTalkid() const;
-
-    void Page::setFullurl(QUrl fullurl);
+    void setCounter(unsigned int counter) const;
 
     /**
      * @brief
      */
-    QUrl Page::pageFullurl() const;
+    unsigned int pageCounter() const;
 
-    void Page::setEditurl(QUrl editurl);
-
-    /**
-     * @brief
-     */
-    QUrl Page::pageEditurl() const;
-
-    void Page::setReadable(QString readable);
+    void setLength(unsigned int length) const;
 
     /**
      * @brief
      */
-    QString Page::pageReadable() const;
+    unsigned int pageLength() const;
 
-    void Page::setPreload(QString preload);
-
-    /**
-     * @brief
-     */
-    QString Page::pagePreload() const;
-
-    void Page::setTouched(QDateTime touched);
+    void setEditToken(QString editToken);
 
     /**
      * @brief
      */
-    QDateTime Page::pageTouched() const;
+    QString pageEditToken() const;
 
-    void Page::setStarttimestamp(QDateTime starttimestamp);
+    void setTalkid(unsigned int talkid) const;
 
     /**
      * @brief
      */
-    QDateTime Page::pageStarttimestamp() const;
+    unsigned int pageTalkid() const;
+
+    void setFullurl(QUrl fullurl);
+
+    /**
+     * @brief
+     */
+    QUrl pageFullurl() const;
+
+    void setEditurl(QUrl editurl);
+
+    /**
+     * @brief
+     */
+    QUrl pageEditurl() const;
+
+    void setReadable(QString readable);
+
+    /**
+     * @brief
+     */
+    QString pageReadable() const;
+
+    void setPreload(QString preload);
+
+    /**
+     * @brief
+     */
+    QString pagePreload() const;
+
+    void setTouched(QDateTime touched);
+
+    /**
+     * @brief
+     */
+    QDateTime pageTouched() const;
+
+    void setStarttimestamp(QDateTime starttimestamp);
+
+    /**
+     * @brief
+     */
+    QDateTime pageStarttimestamp() const;
 
 private:
 
