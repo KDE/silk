@@ -31,7 +31,7 @@ using mediawiki::QueryImages;
 using mediawiki::Image;
 
 Q_DECLARE_METATYPE(QList<QString>);
-Q_DECLARE_METATYPE(QList<Image::Image>);
+Q_DECLARE_METATYPE(QList<Image>);
 Q_DECLARE_METATYPE(QList<QList<Image> >);
 
 
