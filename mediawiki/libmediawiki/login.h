@@ -106,40 +106,7 @@ public:
         */
         TokenNeeded,
 
-    };
-
-    /**
-     * @brief A login result.
-     */
-    struct Result
-    {
-
-        /**
-         * @brief The username.
-         */
-        QString login;
-
-        /**
-         * @brief The password.
-         */
-        QString password;
-
-        /**
-         * @brief The session id.
-         */
-        QString lgsessionid;
-
-        /**
-         * @brief The token.
-         */
-        QString lgtoken;
-
-    };
-
-    /**
-     * @brief Return all parameters defined in the result struct.
-     */
-    Login::Result getResults();
+    };    
 
     /**
      * @brief Constructs a Login job.

@@ -34,18 +34,19 @@ namespace mediawiki
 {
     struct LoginPrivate
     {
-
-        LoginPrivate(const QString &login, const QString &password, MediaWiki & mediawiki)
-            : mediawiki(mediawiki)
-        {
-            result.login = login;
-            result.password = password;
-        }
-
         QUrl baseUrl;
         MediaWiki & mediawiki;
-        Login::Result result;
+        QString login;
+        QString password;
+        QString lgsessionid;
+        QString lgtoken;
 
+        LoginPrivate(const QString &log, const QString &pass, MediaWiki & mediawiki)
+            : mediawiki(mediawiki)
+        {
+            login = log;
+            password = pass;
+        }        
     };
 
 }
@@ -77,8 +78,8 @@ void Login::doWorkSendRequest()
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "login");
-    url.addQueryItem("lgname", d->result.login);
-    url.addQueryItem("lgpassword", d->result.password);
+    url.addQueryItem("lgname", d->login);
+    url.addQueryItem("lgpassword", d->password);
     d->baseUrl = url;
     // Set the request
     QNetworkRequest request( url );
@@ -116,8 +117,8 @@ void Login::doWorkProcessReply( QNetworkReply *reply )
                 if ( attrs.value( QString( "result" ) ).toString() == "Success" ) {
                     //qDebug()<<"Success";
                     this->setError(Job::NoError);
-                    d->result.lgtoken = attrs.value( QString( "lgtoken" ) ).toString() ;
-                    d->result.lgsessionid = attrs.value( QString( "sessionid" ) ).toString() ;
+                    d->lgtoken = attrs.value( QString( "lgtoken" ) ).toString() ;
+                    d->lgsessionid = attrs.value( QString( "sessionid" ) ).toString() ;
                     if(d->mediawiki.manager()->cookieJar()->cookiesForUrl( d->mediawiki.url() ).isEmpty()) {
                         QList<QNetworkCookie> cookies;
                         QString prefix = attrs.value( QString( "cookieprefix" ) ).toString();
@@ -152,12 +153,12 @@ void Login::doWorkProcessReply( QNetworkReply *reply )
                 else if ( attrs.value( QString( "result" ) ).toString() == "NeedToken" ) {
                     this->setError(Job::NoError);
                     //qDebug()<<"Need Token";
-                    d->result.lgtoken = attrs.value( QString( "token" ) ).toString() ;
-                    d->result.lgsessionid = attrs.value( QString( "sessionid" ) ).toString() ;
+                    d->lgtoken = attrs.value( QString( "token" ) ).toString() ;
+                    d->lgsessionid = attrs.value( QString( "sessionid" ) ).toString() ;
                     if(d->mediawiki.manager()->cookieJar()->cookiesForUrl( d->mediawiki.url() ).isEmpty()) {
                         QString prefix = attrs.value( QString( "cookieprefix" ) ).toString();
                         prefix.append("_session");
-                        QNetworkCookie cookie(prefix.toUtf8(),QString(d->result.lgsessionid).toUtf8());
+                        QNetworkCookie cookie(prefix.toUtf8(),QString(d->lgsessionid).toUtf8());
                         QList<QNetworkCookie> cookies;
                         cookies.append(cookie);
                         d->mediawiki.manager()->cookieJar()->setCookiesFromUrl(cookies, d->mediawiki.url());
@@ -191,7 +192,7 @@ void Login::doWorkProcessReply( QNetworkReply *reply )
     reply->deleteLater();
 
     QUrl url = d->baseUrl;
-    url.addQueryItem("lgtoken", d->result.lgtoken);
+    url.addQueryItem("lgtoken", d->lgtoken);
     QString data = url.toString();
 
     // Set the request
@@ -203,11 +204,6 @@ void Login::doWorkProcessReply( QNetworkReply *reply )
     connect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply* ) ), this, SLOT( doWorkProcessReply( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 
-}
-
-Login::Result Login::getResults()
-{
-    return d->result;
 }
 
 int Login::getError(const QString & error)

@@ -41,7 +41,6 @@ public slots:
 
     void loginHandle(KJob* job) {
         loginCount++;
-        loginResults = ((Login*)job)->getResults();
     }
 
 private slots:
@@ -90,17 +89,13 @@ private slots:
 
         connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
         login.exec();
-        Login::Result result = login.getResults();
+
         FakeServer::Request serverrequest = m_server->getRequest()[0];
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
         QCOMPARE(m_mediaWiki->cookies().isEmpty(), false);
-        QCOMPARE(login.error(), (int)Login::NoError);
-        QVERIFY(result.login      == QString("alexTest"));
-        QVERIFY(result.password  == QString("test"));
-        QCOMPARE(result.lgsessionid, QString("17ab96bd8ffbe8ca58a78657a918558e"));
-        QVERIFY(result.lgtoken     == QString("b5780b6e2f27e20b450921d9461010b4"));
+        QCOMPARE(login.error(), (int)Login::NoError);        
     }
 
     void loginTestConnectTrueWithoutCookie()
@@ -556,7 +551,6 @@ private slots:
 private:
 
     int loginCount;
-    Login::Result loginResults;
     QString request;
     MediaWiki* m_mediaWiki;
     FakeServer* m_server;
