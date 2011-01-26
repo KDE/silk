@@ -62,13 +62,7 @@ bool PictureOfTheDayEngine::updateSourceEvent(const QString & source) {
     data["url"] = m_imageinfo.thumbUrl();
     KIO::StoredTransferJob * imageJob = KIO::storedGet(KUrl(m_imageinfo.thumbUrl()), KIO::NoReload, KIO::HideProgressInfo);
     imageJob->exec();
-    QImage image = QImage::fromData(imageJob->data());
-    //FIXME: the image can be null
-    if (image.isNull()) {
-        image = QImage(200, 150, QImage::Format_Mono);
-        image.fill(1u);
-    }
-    data["image"] = image;
+    data["image"] = QImage::fromData(imageJob->data());
     setData(source, data);
     return true;
 }
