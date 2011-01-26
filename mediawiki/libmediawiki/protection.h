@@ -31,6 +31,8 @@ public:
 
     ~Protection();
 
+    Protection(const Protection & other);
+
     Protection & operator=(Protection other);
 
     void setType(const QString & type);
@@ -54,8 +56,8 @@ private:
     class ProtectionInfo * d;
 
 };
-
-#endif // PROTECTION_H
 }
+#endif // PROTECTION_H
+
 
 MEDIAWIKI_EXPORT bool operator==(const mediawiki::Protection & lhs, const mediawiki::Protection & rhs);

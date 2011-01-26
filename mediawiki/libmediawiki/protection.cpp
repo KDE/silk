@@ -48,6 +48,10 @@ Protection::~Protection()
         delete d;
 }
 
+Protection::Protection(const Protection & other)
+    : d(new ProtectionInfo(*(other.d)))
+{}
+
 Protection & Protection::operator=(Protection other)
 {
         std::swap(d, other.d);
