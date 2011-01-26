@@ -24,6 +24,7 @@
 
 #include "queryimageinfo.h"
 #include "queryimages.h"
+#include "queryrevision.h"
 
 using namespace mediawiki;
 
@@ -50,23 +51,30 @@ private slots:
 
     void result(const QList<Imageinfo> & imageinfos);
 
+    void result(const QList<Revision> & revisions);
+
 private:
 
     struct MediaWikiInfo {
         MediaWikiInfo() {}
-        MediaWikiInfo(const QUrl & url, const QString & page) : url(url), page(page) {}
+        MediaWikiInfo(const QUrl & url, const QString & page, const QString & lang) : url(url), page(page), lang(lang) {}
         QUrl url;
         QString page;
+        QString lang;
     };
 
-    bool searchImages(const MediaWiki & mediawiki, const QString & date);
+    bool searchImages(const MediaWiki & mediawiki, const QString & page);
 
     bool searchImageinfo(MediaWiki & mediawiki);
+
+    bool searchText(MediaWiki & mediawiki, const QString & page);
 
     QList<Image> m_images;
     Image m_image;
     QList<Imageinfo> m_imageinfos;
     Imageinfo m_imageinfo;
+    QList<Revision> m_revisions;
+    Revision m_revision;
     QMap<QString, MediaWikiInfo> m_mediawiki;
 
 };

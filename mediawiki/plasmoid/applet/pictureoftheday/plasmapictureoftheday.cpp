@@ -63,7 +63,7 @@ void PlasmaPictureOfTheDay::reloadPicture()
 
     m_containWidget->setDate(m_picture->getCurrentDate().toString("dddd dd MMMM"));
     m_containWidget->setImage(m_picture);
-    m_containWidget->setText(QString::fromUtf8("Légi, Patres colendissimi, in Arabum monumentis, interrogatum Abdalam 1 Sarracenum, quid in hac quasi mundana scaena"));
+    m_containWidget->setText(m_picture->getContent());
 }
 
 void PlasmaPictureOfTheDay::paintInterface(QPainter *p,

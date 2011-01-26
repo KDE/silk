@@ -23,6 +23,7 @@ void Picture::dataUpdated(const QString &name, const Plasma::DataEngine::Data &d
         return;
     }
     m_picture = data["image"].value<QPixmap>();
+    m_content = data["content"].value<QString>();
     emit pictureUpdated();
 }
 ;

@@ -15,6 +15,7 @@ public:
     virtual ~Picture();
     QPixmap getPicture(){return this->m_picture;}
     QDate getCurrentDate(){return this->m_currentDate;}
+    QString getContent(){return this->m_content;}
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option=0, QWidget *widget=0);
     void setCurrentDate(QDate d){this->m_currentDate = d;}
 
@@ -31,6 +32,7 @@ public slots:
 private:
     QPixmap m_picture;
     QDate m_currentDate;
+    QString m_content;
 
 
 };
