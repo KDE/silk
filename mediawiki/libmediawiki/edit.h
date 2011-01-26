@@ -299,7 +299,7 @@ private slots:
     /**
      * @brief Send a request.
      */
-    void doWorkSendRequest(QList<QueryInfo::Result> info);
+    void doWorkSendRequest(Page page);
 
     /**
      * @brief Reads the xml

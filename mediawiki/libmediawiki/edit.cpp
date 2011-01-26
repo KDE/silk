@@ -197,16 +197,14 @@ void Edit::start()
     QueryInfo *info = new QueryInfo(d->mediawiki,this);
     info->setPageName(d->requestParameter["title"]);
     info->setToken("edit");
-    connect(info,SIGNAL(infos(QList<QueryInfo::Result>)),this,SLOT(doWorkSendRequest(QList<QueryInfo::Result>)));
+    connect(info,SIGNAL(page(Page )),this,SLOT(doWorkSendRequest(Page )));
     info->start();
 
 }
 
-void Edit::doWorkSendRequest(QList<QueryInfo::Result> info)
+void Edit::doWorkSendRequest(Page page)
 {
-    if(info.size() == 0)
-        return;
-    d->requestParameter["token"] = info[0].m_edittoken;
+    d->requestParameter["token"] = page.pageEditToken();
     // Set the url
     QUrl    url = d->mediawiki.url();
             url.addQueryItem("format", "xml");
