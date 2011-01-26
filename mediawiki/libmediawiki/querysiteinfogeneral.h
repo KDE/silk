@@ -23,8 +23,9 @@
 #include <QObject>
 #include <QtCore/QList>
 #include <QtCore/QString>
-#include <KDE/KJob>
 
+
+#include "job.h"
 #include "generalinfo.h"
 
 #include "mediawiki_export.h"
@@ -40,7 +41,7 @@ class MediaWiki;
  *
  * Uses for fetch a generals information about the wiki.
  */
-class MEDIAWIKI_EXPORT QuerySiteInfoGeneral : public KJob
+class MEDIAWIKI_EXPORT QuerySiteInfoGeneral : public Job
 {
 
     Q_OBJECT
@@ -48,7 +49,7 @@ class MEDIAWIKI_EXPORT QuerySiteInfoGeneral : public KJob
 public:
     enum
     {
-        BadXml = KJob::UserDefinedError+1,
+        BadXml = Job::UserDefinedError+1,
         ConnectionAborted,
         IncludeAllDenied
     };
@@ -57,7 +58,7 @@ public:
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QuerySiteInfoGeneral(const MediaWiki & mediawiki, QObject * parent = 0);
+    explicit QuerySiteInfoGeneral( MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the QuerySiteInfoGeneral job.
@@ -68,6 +69,7 @@ public:
      * @brief Starts the job asynchronously.
      */
     virtual void start();
+    Generalinfo getResult();
 
 private slots:
     void abort();

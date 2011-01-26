@@ -33,28 +33,27 @@ namespace mediawiki {
 
     struct QuerySiteInfoGeneralPrivate
     {
-        QuerySiteInfoGeneralPrivate(QNetworkAccessManager * const manager,QuerySiteInfoGeneral::Result* result, const MediaWiki & mediawiki)
+        QuerySiteInfoGeneralPrivate(QNetworkAccessManager * const manager, const MediaWiki & mediawiki)
                 : manager(manager)
-                , result(result)
                 , mediawiki(mediawiki) {}
         QNetworkAccessManager * manager;
-        QuerySiteInfoGeneral::Result* result;
         const MediaWiki & mediawiki;
+        Generalinfo generalinfo;
     };
 
 }
 
 using namespace mediawiki;
 
-QuerySiteInfoGeneral::QuerySiteInfoGeneral(const MediaWiki & mediawiki, QObject * parent)
-    : KJob(parent),d(new QuerySiteInfoGeneralPrivate(new QNetworkAccessManager(this),new Result,mediawiki))
+QuerySiteInfoGeneral::QuerySiteInfoGeneral( MediaWiki & mediawiki, QObject *parent)
+    : Job(mediawiki, parent)
+    ,d(new QuerySiteInfoGeneralPrivate(new QNetworkAccessManager(this),mediawiki))
 {
-    setCapabilities(KJob::NoCapabilities);
+    setCapabilities(Job::NoCapabilities);
 }
 
 QuerySiteInfoGeneral::~QuerySiteInfoGeneral()
 {
-    delete this->d->result;
     delete d;
 }
 void QuerySiteInfoGeneral::start()
@@ -98,29 +97,29 @@ void QuerySiteInfoGeneral::doWorkProcessReply(QNetworkReply * reply)
         QXmlStreamReader::TokenType token = reader.readNext();
         if(token == QXmlStreamReader::StartElement) {
             if(reader.name() == "general") {
-                d->result->mainPage = reader.attributes().value("mainpage").toString();
-                d->result->url = reader.attributes().value("base").toString();
-                d->result->siteName = reader.attributes().value("sitename").toString();
-                d->result->generator = reader.attributes().value("generator").toString();
-                d->result->phpVersion = reader.attributes().value("phpversion").toString();
-                d->result->phpApi = reader.attributes().value("phpsapi").toString();
-                d->result->dataBaseType = reader.attributes().value("dbtype").toString();
-                d->result->dataBaseVersion = reader.attributes().value("dbversion").toString();
-                d->result->rev = reader.attributes().value("rev").toString();
-                d->result->cas = reader.attributes().value("case").toString();
-                d->result->rights = reader.attributes().value("rights").toString();
-                d->result->language = reader.attributes().value("lang").toString();
-                d->result->fallBack8bitEncoding = reader.attributes().value("fallback8bitEncoding").toString();
-                d->result->writeApi = reader.attributes().value("writeapi").toString();
-                d->result->timeZone = reader.attributes().value("timezone").toString();
-                d->result->timeOffset = reader.attributes().value("timeoffset").toString();
-                d->result->articlePath = reader.attributes().value("articlepath").toString();
-                d->result->scriptPath = reader.attributes().value("scriptpath").toString();
-                d->result->script = reader.attributes().value("script").toString();
-                d->result->variantArticlePath = reader.attributes().value("variantarticlepath").toString();
-                d->result->serverUrl = reader.attributes().value("server").toString();
-                d->result->wikiId = reader.attributes().value("wikiid").toString();
-                d->result->time = reader.attributes().value("time").toString();
+                d->generalinfo.setMainPage(reader.attributes().value("mainpage").toString());
+                d->generalinfo.setUrl(reader.attributes().value("base").toString());
+                d->generalinfo.setSiteName(reader.attributes().value("sitename").toString());
+                d->generalinfo.setGenerator(reader.attributes().value("generator").toString());
+                d->generalinfo.setPhpVersion(reader.attributes().value("phpversion").toString());
+                d->generalinfo.setPhpApi(reader.attributes().value("phpsapi").toString());
+                d->generalinfo.setDataBaseType(reader.attributes().value("dbtype").toString());
+                d->generalinfo.setDataBaseVersion(reader.attributes().value("dbversion").toString());
+                d->generalinfo.setRev(reader.attributes().value("rev").toString());
+                d->generalinfo.setCas(reader.attributes().value("case").toString());
+                d->generalinfo.setRights(reader.attributes().value("rights").toString());
+                d->generalinfo.setLanguage(reader.attributes().value("lang").toString());
+                d->generalinfo.setFallBack8bitEncoding(reader.attributes().value("fallback8bitEncoding").toString());
+                d->generalinfo.setWriteApi(reader.attributes().value("writeapi").toString());
+                d->generalinfo.setTimeZone(reader.attributes().value("timezone").toString());
+                d->generalinfo.setTimeOffSet(reader.attributes().value("timeoffset").toString());
+                d->generalinfo.setArticlePath(reader.attributes().value("articlepath").toString());
+                d->generalinfo.setScriptPath(reader.attributes().value("scriptpath").toString());
+                d->generalinfo.setScript(reader.attributes().value("script").toString());
+                d->generalinfo.setVariantArticlePath(reader.attributes().value("variantarticlepath").toString());
+                d->generalinfo.setServerUrl(reader.attributes().value("server").toString());
+                d->generalinfo.setWikiId(reader.attributes().value("wikiid").toString());
+                d->generalinfo.setTime(reader.attributes().value("time").toString());
             }
             else if(reader.name() == "error")
             {
@@ -139,4 +138,7 @@ void QuerySiteInfoGeneral::doWorkProcessReply(QNetworkReply * reply)
     reply->deleteLater();
     emitResult();
 }
-mediawiki::QuerySiteInfoGeneral::Result QuerySiteInfoGeneral::getResult(){ return *d->result; }
+Generalinfo QuerySiteInfoGeneral::getResult()
+{
+    return d->generalinfo;
+}

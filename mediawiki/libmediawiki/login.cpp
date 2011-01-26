@@ -53,7 +53,7 @@ namespace mediawiki
 using namespace mediawiki;
 
 Login::Login( MediaWiki & media, const QString &login, const QString &password, QObject * parent )
-    : Job(parent)
+    : Job(media, parent)
     , d(new LoginPrivate(login, password, media))
 {
     setCapabilities(Job::NoCapabilities);
