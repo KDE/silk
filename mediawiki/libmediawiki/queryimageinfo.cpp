@@ -189,9 +189,9 @@ void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
                     imageinfo.setTimestamp(QDateTime::fromString(reader.attributes().value("timestamp").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'"));
                     imageinfo.setUser(reader.attributes().value("user").toString());
                     imageinfo.setComment(reader.attributes().value("comment").toString());
-                    imageinfo.setUrl(QUrl::fromPercentEncoding(reader.attributes().value("url").toString().toLocal8Bit()));
-                    imageinfo.setDescriptionUrl(QUrl::fromPercentEncoding(reader.attributes().value("descriptionurl").toString().toLocal8Bit()));
-                    imageinfo.setThumbUrl(QUrl::fromPercentEncoding(reader.attributes().value("thumburl").toString().toLocal8Bit()));
+                    imageinfo.setUrl(QUrl(reader.attributes().value("url").toString()));
+                    imageinfo.setDescriptionUrl(QUrl(reader.attributes().value("descriptionurl").toString()));
+                    imageinfo.setThumbUrl(QUrl(reader.attributes().value("thumburl").toString()));
                     imageinfo.setThumbWidth(QueryImageinfoPrivate::toQInt64(reader.attributes().value("thumbwidth").toString()));
                     imageinfo.setThumbHeight(QueryImageinfoPrivate::toQInt64(reader.attributes().value("thumbheight").toString()));
                     imageinfo.setSize(QueryImageinfoPrivate::toQInt64(reader.attributes().value("size").toString()));
