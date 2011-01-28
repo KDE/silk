@@ -5,9 +5,7 @@ include_directories( ${KDE4_INCLUDES} )
 
 set(potd_SRCS
     plasmapictureoftheday.cpp
-    setting.cpp
-    picture.cpp
-    containwidget.cpp)
+    setting.cpp)
 
 kde4_add_ui_files(potd_SRCS setting.ui )
 

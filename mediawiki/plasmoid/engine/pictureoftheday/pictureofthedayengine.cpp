@@ -106,8 +106,8 @@ bool PictureOfTheDayEngine::searchImageinfo(MediaWiki & mediawiki) {
     queryimageinfo->setLimit(1u);
     queryimageinfo->setOnlyOneSignal(true);
     queryimageinfo->setProperties(QueryImageinfo::Url);
-    queryimageinfo->setWidthScale(400u);
-    queryimageinfo->setHeightScale(300u);
+    queryimageinfo->setWidthScale(280u);
+    queryimageinfo->setHeightScale(210u);
     connect(queryimageinfo, SIGNAL(result(const QList<Imageinfo> &)), this, SLOT(result(const QList<Imageinfo> &)));
     if (!queryimageinfo->exec() || m_imageinfos.size() == 0) {
         return false;
