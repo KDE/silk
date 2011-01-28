@@ -25,6 +25,7 @@ MEDIAWIKI_UNIT_TESTS(
     queryrevisiontest
     queryinfotest
     edittest
+    uploadtest
 )
 set( ressources_RC
     queryrevisiontest_content.rc
