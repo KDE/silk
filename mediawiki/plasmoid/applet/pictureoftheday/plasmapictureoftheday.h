@@ -22,8 +22,12 @@
 #define PLASMAPICTUREOFTHEDAY_H
 
 #include <QtCore/QDate>
+#include <QtGui/QGraphicsLinearLayout>
+#include <QtGui/QLabel>
+#include <KDE/KConfigDialog>
 #include <Plasma/Applet>
 #include <Plasma/Label>
+#include <Plasma/PushButton>
 
 class QLabel;
 class Setting;
@@ -51,6 +55,9 @@ private slots:
 
     void dataUpdated(const QString & name, const Plasma::DataEngine::Data & data);
 
+    void yesterday();
+    void tomorrow();
+
 private:
 
     QString provider() const;
@@ -60,10 +67,14 @@ private:
     Plasma::Label * const m_dateWidget;
     QLabel * const m_pictureWidget;
     Plasma::Label * const m_contentWidget;
+    Plasma::PushButton * m_navigationWidget;
+    QGraphicsLinearLayout * m_layoutH;
+    QGraphicsLinearLayout * m_layout;
+    QGraphicsProxyWidget * m_pictureProxy;
 
     Setting * m_setting;
 
-    const QDate m_date;
+    QDate m_date;
     QPixmap m_picture;
 
     Plasma::DataEngine::Data m_providers;

@@ -18,12 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <QtGui/QLabel>
-#include <QtGui/QGraphicsLinearLayout>
-#include <KDE/KConfigDialog>
 
 #include "setting.h"
-
 #include "plasmapictureoftheday.h"
 
 PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject * parent, const QVariantList & args)
@@ -32,38 +28,57 @@ PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject * parent, const QVariantLis
     , m_pictureWidget(new QLabel())
     , m_contentWidget(new Plasma::Label(this))
     , m_date(QDate::currentDate())
+    , m_layoutH(new QGraphicsLinearLayout(Qt::Horizontal, this))
+    , m_layout(new QGraphicsLinearLayout(Qt::Vertical))
+    , m_pictureProxy(new QGraphicsProxyWidget(this))
 {
+    m_navigationWidget = new Plasma::PushButton[2];
+    connect(&m_navigationWidget[0],SIGNAL(clicked()), this, SLOT(yesterday()));
+    connect(&m_navigationWidget[1],SIGNAL(clicked()), this, SLOT(tomorrow()));
     setHasConfigurationInterface(true);
     setBackgroundHints(DefaultBackground);
     setAspectRatioMode(Plasma::KeepAspectRatio);
 }
 
+void PlasmaPictureOfTheDay::yesterday()
+{
+    Plasma::DataEngine * const engine = dataEngine("pictureoftheday");
+    engine->disconnectSource(provider(), this);
+    m_date = this->m_date.addDays(-1);
+    engine->connectSource(provider(), this);
+}
+
+void PlasmaPictureOfTheDay::tomorrow()
+{
+    Plasma::DataEngine * const engine = dataEngine("pictureoftheday");
+    engine->disconnectSource(provider(), this);
+    m_date = this->m_date.addDays(1);
+    engine->connectSource(provider(), this);
+}
+
 PlasmaPictureOfTheDay::~PlasmaPictureOfTheDay()
 {
     delete m_pictureWidget;
+    delete[] m_navigationWidget;
 }
 
 void PlasmaPictureOfTheDay::init()
 {
     Plasma::DataEngine * const engine = dataEngine("pictureoftheday");
     engine->connectSource("mediawiki", this);
-
-    QGraphicsLinearLayout * const layout = new QGraphicsLinearLayout(Qt::Vertical, this);
-    QGraphicsProxyWidget * const pictureProxy = new QGraphicsProxyWidget(this);
-    if (m_dateWidget == 0 || m_pictureWidget == 0 || m_contentWidget == 0 || layout == 0 || pictureProxy == 0) {
+    if (m_dateWidget == 0 || m_pictureWidget == 0 || m_contentWidget == 0 || m_layout == 0 || m_layoutH == 0 || m_pictureProxy == 0) {
         setFailedToLaunch(true, i18n("Null pointer"));
     }
-
     m_dateWidget->setText(QDate::currentDate().toString("dddd dd MMMM"));
     m_dateWidget->setAlignment(Qt::AlignCenter);
-    layout->addItem(m_dateWidget);
-
-    pictureProxy->setWidget(m_pictureWidget);
-    layout->addItem(pictureProxy);
-
-    layout->addItem(m_contentWidget);
-
-    setLayout(layout);
+    m_layout->addItem(m_dateWidget);
+    m_pictureProxy->setWidget(m_pictureWidget);
+    m_layout->addItem(m_pictureProxy);
+    m_layout->addItem(m_contentWidget);
+    m_layoutH->addItem(&m_navigationWidget[0]);
+    m_layoutH->addItem(m_layout);
+    m_layoutH->addItem(&m_navigationWidget[1]);
+    setLayout(m_layoutH);
 }
 
 
@@ -98,6 +113,7 @@ void PlasmaPictureOfTheDay::dataUpdated(const QString & name, const Plasma::Data
     }
     else {
         m_picture = data["image"].value<QPixmap>();
+        m_dateWidget->setText(m_date.toString("dddd dd MMMM"));
         m_pictureWidget->setPixmap(m_picture);
         m_pictureWidget->setMinimumSize(m_picture.size());
         m_contentWidget->setText(data["content"].value<QString>());
