@@ -21,6 +21,8 @@
 
 #include "setting.h"
 #include "plasmapictureoftheday.h"
+#include <Plasma/Theme>
+#include <QSvgRenderer>
 
 PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject * parent, const QVariantList & args)
     : Plasma::Applet(parent, args)
@@ -33,6 +35,13 @@ PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject * parent, const QVariantLis
     , m_pictureProxy(new QGraphicsProxyWidget(this))
 {
     m_navigationWidget = new Plasma::PushButton[2];
+    m_navigationWidget[0].setMaximumWidth(20);
+    m_navigationWidget[1].setMaximumWidth(20);
+    m_navigationWidget[0].setMaximumHeight(20);
+    m_navigationWidget[1].setMaximumHeight(20);
+    Plasma::Theme theme;
+    m_navigationWidget[0].setImage(theme.imagePath("widgets/arrows"),"left-arrow");
+    m_navigationWidget[1].setImage(theme.imagePath("widgets/arrows"),"right-arrow");
     connect(&m_navigationWidget[0],SIGNAL(clicked()), this, SLOT(yesterday()));
     connect(&m_navigationWidget[1],SIGNAL(clicked()), this, SLOT(tomorrow()));
     setHasConfigurationInterface(true);
