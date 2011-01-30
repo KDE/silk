@@ -99,6 +99,7 @@ void Login::abort()
 
 void Login::doWorkProcessReply( QNetworkReply *reply )
 {
+    disconnect(d->mediawiki.manager(), SIGNAL( finished( QNetworkReply * ) ), this, SLOT( doWorkProcessReply( QNetworkReply * ) ));
     if ( reply->error() != QNetworkReply::NoError )
     {
         this->setError(this->ConnectionAborted);
