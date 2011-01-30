@@ -29,10 +29,17 @@ PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject * parent, const QVariantLis
     , m_dateWidget(new Plasma::Label(this))
     , m_pictureWidget(new QLabel())
     , m_contentWidget(new Plasma::Label(this))
-    , m_date(QDate::currentDate())
     , m_layoutH(new QGraphicsLinearLayout(Qt::Horizontal, this))
     , m_layout(new QGraphicsLinearLayout(Qt::Vertical))
     , m_pictureProxy(new QGraphicsProxyWidget(this))
+    , m_date(QDate::currentDate())
+{
+    setHasConfigurationInterface(true);
+    setBackgroundHints(DefaultBackground);
+    setAspectRatioMode(Plasma::KeepAspectRatio);
+    setupButton();
+}
+void PlasmaPictureOfTheDay::setupButton()
 {
     m_navigationWidget = new Plasma::PushButton[2];
     m_navigationWidget[0].setMaximumWidth(20);
@@ -44,9 +51,6 @@ PlasmaPictureOfTheDay::PlasmaPictureOfTheDay(QObject * parent, const QVariantLis
     m_navigationWidget[1].setImage(theme.imagePath("widgets/arrows"),"right-arrow");
     connect(&m_navigationWidget[0],SIGNAL(clicked()), this, SLOT(yesterday()));
     connect(&m_navigationWidget[1],SIGNAL(clicked()), this, SLOT(tomorrow()));
-    setHasConfigurationInterface(true);
-    setBackgroundHints(DefaultBackground);
-    setAspectRatioMode(Plasma::KeepAspectRatio);
 }
 
 void PlasmaPictureOfTheDay::yesterday()
@@ -73,8 +77,6 @@ PlasmaPictureOfTheDay::~PlasmaPictureOfTheDay()
 
 void PlasmaPictureOfTheDay::init()
 {
-    Plasma::DataEngine * const engine = dataEngine("pictureoftheday");
-    engine->connectSource("mediawiki", this);
     if (m_dateWidget == 0 || m_pictureWidget == 0 || m_contentWidget == 0 || m_layout == 0 || m_layoutH == 0 || m_pictureProxy == 0) {
         setFailedToLaunch(true, i18n("Null pointer"));
     }
@@ -88,6 +90,8 @@ void PlasmaPictureOfTheDay::init()
     m_layoutH->addItem(m_layout);
     m_layoutH->addItem(&m_navigationWidget[1]);
     setLayout(m_layoutH);
+    Plasma::DataEngine * const engine = dataEngine("pictureoftheday");
+    engine->connectSource("mediawiki", this);
 }
 
 
@@ -118,6 +122,7 @@ void PlasmaPictureOfTheDay::dataUpdated(const QString & name, const Plasma::Data
         m_providers = data;
         if (m_provider.isNull() && m_providers.begin() != m_providers.end()) {
             connectProvider(m_providers.begin().value().toString());
+            adjustSize();
         }
     }
     else {

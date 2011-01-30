@@ -61,7 +61,7 @@ private slots:
 private:
 
     QString provider() const;
-
+    void setupButton();
     void connectProvider(const QString & newProvider);
 
     Plasma::Label * const m_dateWidget;
