@@ -37,7 +37,10 @@ struct MediaWikiPrivate {
 using namespace mediawiki;
 
 MediaWiki::MediaWiki(const QUrl & url, const QString & customUserAgent)
-    : d(new MediaWikiPrivate(new QNetworkAccessManager(), url, customUserAgent.isEmpty() ? MediaWiki::DEFAULT_USER_AGENT : customUserAgent + "-" + MediaWiki::DEFAULT_USER_AGENT))
+    : d_ptr(new MediaWikiPrivate(url,
+                                 (customUserAgent.isEmpty() ? "" : customUserAgent + "-") + MediaWikiPrivate::POSTFIX_USER_AGENT,
+                                 new QNetworkAccessManager()))
+
 {}
 
 MediaWiki::~MediaWiki()
@@ -65,7 +68,3 @@ QList<QNetworkCookie> MediaWiki::cookies() const
 {
     return d_ptr->manager->cookieJar()->cookiesForUrl(d_ptr->url);
 }
-
-const QString MediaWiki::DEFAULT_USER_AGENT = "mediawiki-silk";
-
-

@@ -36,11 +36,15 @@ public:
         , manager(manager)
     {}
 
+    static const QString POSTFIX_USER_AGENT;
+
     const QUrl url;
     const QString userAgent;
     QNetworkAccessManager * const manager;
 
 };
+
+const QString MediaWikiPrivate::POSTFIX_USER_AGENT = "mediawiki-silk";
 
 }
 
