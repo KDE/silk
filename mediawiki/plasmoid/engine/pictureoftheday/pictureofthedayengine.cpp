@@ -27,8 +27,14 @@ PictureOfTheDayEngine::PictureOfTheDayEngine(QObject * parent, const QVariantLis
     : Plasma::DataEngine(parent, args)
 {
     setMinimumPollingInterval(3600000);
-    m_mediawiki["commons.wikimedia.org"] = MediaWikiInfo(QUrl("http://commons.wikimedia.org/w/api.php"), QString("Template:Potd/"), QString("_(en)"));
-    m_mediawiki["en.wikipedia.org"] = MediaWikiInfo(QUrl("http://en.wikipedia.org/w/api.php"), QString("Template:POTD/"), QString(""));
+    m_mediawiki["commons.wikimedia.org"] = MediaWikiInfo(QUrl("http://commons.wikimedia.org/w/api.php")
+                                                         , QString("Template:Potd/")
+                                                         , QString("_(en)")
+                                                         , QString("^.*<span[^>]*>\\s*|\\s*</span>.*$"));
+    m_mediawiki["en.wikipedia.org"] = MediaWikiInfo(QUrl("http://en.wikipedia.org/w/api.php")
+                                                    , QString("Template:POTD/")
+                                                    , QString("")
+                                                    , QString("^.*\\[\\[Image:[^\\]]*\\]\\]\\s*\\|\\s*|\\s*<small>.*$"));
 }
 
 void PictureOfTheDayEngine::init() {
@@ -55,22 +61,19 @@ bool PictureOfTheDayEngine::updateSourceEvent(const QString & source) {
     MediaWiki mediawiki(m_mediawiki[sourceSplit[0]].url, QString("pictureofthedayengine"));
     const QString page(m_mediawiki[sourceSplit[0]].page + sourceSplit[1] + m_mediawiki[sourceSplit[0]].lang);
     if (!searchImages(mediawiki, page)) return false;
-    if (!searchImageinfo(mediawiki)) return false;
+    if (!searchImageinfo(mediawiki, m_images[0])) return false;
     if (!searchText(mediawiki, page)) return false;
+    Imageinfo  imageinfo = m_imageinfos[0];
+    Revision revision = m_revisions[0];
 
     Plasma::DataEngine::Data data;
-    data["url"] = m_imageinfo.thumbUrl();
-    KIO::StoredTransferJob * imageJob = KIO::storedGet(KUrl(m_imageinfo.thumbUrl()), KIO::NoReload, KIO::HideProgressInfo);
+    data["url"] = imageinfo.thumbUrl();
+    KIO::StoredTransferJob * imageJob = KIO::storedGet(KUrl(imageinfo.thumbUrl()), KIO::NoReload, KIO::HideProgressInfo);
     imageJob->exec();
     data["image"] = QImage::fromData(imageJob->data());
-    //FIXME: pointeur de fonction ou classe
     QString content;
-    if (sourceSplit[0] == QString("en.wikipedia.org")) {
-        content = m_revision.content().remove(QRegExp("^.*\\[\\[Image:[^\\]]*\\]\\]\\s*\\|\\s*|\\s*<small>.*$"));
-    }
-    else if (sourceSplit[0] == QString("commons.wikimedia.org")) {
-        content = m_revision.content().remove(QRegExp("^.*<span[^>]*>\\s*|\\s*</span>.*$"));
-    }
+    content = revision.content().remove(QRegExp(m_mediawiki[sourceSplit[0]].regex));
+
     data["content"] = content.replace(QRegExp("\\[\\[((\\]?[^\\]\\|])*\\]?\\|)?|\\]\\]"), "").replace(QRegExp("'''((('('?))?[^'])*)'''"), "<b>\\1</b>").replace(QRegExp("''(('?[^'])*)''"), "<i>\\1</i>");
     setData(source, data);
     return true;
@@ -96,13 +99,12 @@ bool PictureOfTheDayEngine::searchImages(const MediaWiki & mediawiki, const QStr
     if (!queryimages->exec() || m_images.size() == 0) {
         return false;
     }
-    m_image = m_images[0]; //FIXME: faire ça dans l'update et dc un return avec la condition
     return true;
 }
 
-bool PictureOfTheDayEngine::searchImageinfo(MediaWiki & mediawiki) {
+bool PictureOfTheDayEngine::searchImageinfo(MediaWiki & mediawiki, Image & image) {
     QueryImageinfo * const queryimageinfo(new QueryImageinfo(mediawiki));
-    queryimageinfo->setTitle(m_image.title());
+    queryimageinfo->setTitle(image.title());
     queryimageinfo->setLimit(1u);
     queryimageinfo->setOnlyOneSignal(true);
     queryimageinfo->setProperties(QueryImageinfo::Url);
@@ -112,7 +114,6 @@ bool PictureOfTheDayEngine::searchImageinfo(MediaWiki & mediawiki) {
     if (!queryimageinfo->exec() || m_imageinfos.size() == 0) {
         return false;
     }
-    m_imageinfo = m_imageinfos[0];
     return true;
 }
 
@@ -127,7 +128,6 @@ bool PictureOfTheDayEngine::searchText(MediaWiki & mediawiki, const QString & pa
     if (!queryrevision->exec() || m_revisions.size() == 0) {
         return false;
     }
-    m_revision = m_revisions[0];
     return true;
 }
 

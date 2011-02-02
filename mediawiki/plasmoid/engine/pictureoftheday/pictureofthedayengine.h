@@ -57,24 +57,23 @@ private:
 
     struct MediaWikiInfo {
         MediaWikiInfo() {}
-        MediaWikiInfo(const QUrl & url, const QString & page, const QString & lang) : url(url), page(page), lang(lang) {}
+        MediaWikiInfo(const QUrl & url, const QString & page, const QString & lang, const QString & regex)
+            : url(url), page(page), lang(lang), regex(regex) {}
         QUrl url;
         QString page;
         QString lang;
+        QString regex;
     };
 
     bool searchImages(const MediaWiki & mediawiki, const QString & page);
 
-    bool searchImageinfo(MediaWiki & mediawiki);
+    bool searchImageinfo(MediaWiki & mediawiki, Image & image);
 
     bool searchText(MediaWiki & mediawiki, const QString & page);
 
     QList<Image> m_images;
-    Image m_image;
     QList<Imageinfo> m_imageinfos;
-    Imageinfo m_imageinfo;
     QList<Revision> m_revisions;
-    Revision m_revision;
     QMap<QString, MediaWikiInfo> m_mediawiki;
 
 };
