@@ -57,7 +57,20 @@ bool ArticleOfTheDayEngine::updateSourceEvent(const QString & source) {
 
     Plasma::DataEngine::Data data;
 
-    data["content"] = m_revision.content();
+    QRegExp rx(QRegExp("<div.*>.*</div>"));
+    rx.setMinimal(true);
+
+    QString content = m_revision.content().remove(rx)
+                                          .remove(QRegExp("<span[^>]*>\\s*|\\s*</span>"))
+                                          .remove(QRegExp("Recently featured:.*"))
+                                          .replace(QRegExp("\\[\\[([^\\|\\]]*)\\|more\\.\\.\\.\\]\\]")
+                                                            ,"<a href=\"http://"+sourceSplit[0]+"/wiki/\\1\" title=\"\\1\">more...</a>");
+
+    content = content.replace(QRegExp("\\[\\[((\\]?[^\\]\\|])*\\]?\\|)?|\\]\\]"), "")
+                     .replace(QRegExp("'''((('('?))?[^'])*)'''"), "<b>\\1</b>")
+                     .replace(QRegExp("''(('?[^'])*)''"), "<i>\\1</i>");
+
+    data["content"] = content;
 
     setData(source, data);
     return true;
