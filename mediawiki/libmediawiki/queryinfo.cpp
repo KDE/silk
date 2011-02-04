@@ -136,7 +136,7 @@ void QueryInfo::doWorkSendRequest()
 void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
 {
     Q_D(QueryInfo);
-    disconnect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    disconnect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     if (reply->error() == QNetworkReply::NoError) {
 
         // Replace & in &amp;

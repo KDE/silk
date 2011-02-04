@@ -281,7 +281,7 @@ void Edit::doWorkSendRequest(Page page)
 void Edit::finishedEdit( QNetworkReply *reply )
 {
     Q_D(Edit);
-    disconnect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
+    disconnect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
 
     if ( reply->error() != QNetworkReply::NoError )
     {

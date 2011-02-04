@@ -172,7 +172,7 @@ void QueryImageinfo::doWorkSendRequest() {
 
 void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
     Q_D(QueryImageinfo);
-    disconnect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     d->begin = QString();
     if (reply->error() == QNetworkReply::NoError) {
         QXmlStreamReader reader(reply);
