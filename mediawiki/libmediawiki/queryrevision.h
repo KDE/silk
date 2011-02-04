@@ -29,19 +29,6 @@
 #include "revision.h"
 #include "mediawiki_export.h"
 
-//FIXME: Fait pas de define ça se met dans l'espace de nommage global et ça remplace PARTOUT TIMESTAMP par 4, ... !
-#define IDS         1
-#define FLAGS       2
-//#define TIMESTAMP   4
-static int const TIMESTAMP = 4;
-//#define USER        8
-static int const USER = 8;
-//#define COMMENT     16
-static int const COMMENT = 16;
-//#define SIZE        32
-static int const SIZE = 32;
-#define CONTENT     64
-
 class QNetworkReply;
 
 namespace mediawiki {
@@ -99,6 +86,20 @@ public:
     };
 
     /**
+     * @brief Property.
+     */
+    enum Prop {
+        Ids         = 0x01,
+        Flags       = 0x02,
+        Timestamp   = 0x04,
+        User        = 0x08,
+        Comment     = 0x10,
+        Size        = 0x20,
+        Content     = 0x40
+    };
+    Q_DECLARE_FLAGS(Props, Prop)
+
+    /**
      * @brief Constructs a Revision job.
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
@@ -137,7 +138,7 @@ public:
      * @brief Which properties to get for each revision.
      * @param int
      */
-    void setProp(int);
+    void setProp(Props properties); //FIXME: No abreviation
 
     /**
      * @brief When more results are available, use this to continue.
@@ -241,5 +242,8 @@ private:
     QueryRevision & operator=(const QueryRevision &);
 
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(QueryRevision::Props)
+
 }
 #endif //QUERYREVISION_H

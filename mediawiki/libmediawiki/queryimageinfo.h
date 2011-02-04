@@ -69,11 +69,6 @@ public:
     void setTitle(const QString & title);
 
     /**
-     * @brief Type used for property.
-     */
-    typedef unsigned char property_type;
-
-    /**
      * @brief Property.
      */
     enum Property {

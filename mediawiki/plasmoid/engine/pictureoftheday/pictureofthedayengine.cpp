@@ -121,7 +121,7 @@ bool PictureOfTheDayEngine::searchText(MediaWiki & mediawiki, const QString & pa
 {
     QueryRevision * const queryrevision(new QueryRevision(mediawiki));
     queryrevision->setPageName(page);
-    queryrevision->setProp(CONTENT);
+    queryrevision->setProp(QueryRevision::Content);
     queryrevision->setExpandTemplates(true);
     queryrevision->setLimit(1);
     connect(queryrevision, SIGNAL(revision(const QList<Revision> &)), this, SLOT(result(const QList<Revision> &)));

@@ -43,6 +43,7 @@ using mediawiki::Revision;
 Q_DECLARE_METATYPE(QList<Revision>)
 Q_DECLARE_METATYPE(FakeServer::Request)
 Q_DECLARE_METATYPE(QueryRevision*)
+Q_DECLARE_METATYPE(QueryRevision::Props)
 
 Revision constructRevision(int i,int p, int s, QString m, QString u, QDateTime t, QString cm, QString ct, QString pt, QString r){
 
@@ -113,7 +114,7 @@ private slots:
         QFETCH(FakeServer::Request, requestTrue);
         QFETCH(QString, title);
         QFETCH(int, error);
-        QFETCH(int, rvprop);
+        QFETCH(QueryRevision::Props, rvprop);
         QFETCH(int, size);
         QFETCH(QList<Revision>, results);
 
@@ -150,7 +151,7 @@ private slots:
         QTest::addColumn<FakeServer::Request>("requestTrue");
         QTest::addColumn<QString>("title");
         QTest::addColumn<int>("error");
-        QTest::addColumn<int>("rvprop");
+        QTest::addColumn<QueryRevision::Props>("rvprop");
         QTest::addColumn<int>("size");
         QTest::addColumn< QList<Revision> >("results");
 
@@ -159,7 +160,7 @@ private slots:
                 << FakeServer::Request("GET","","?format=xml&action=query&prop=revisions&rvprop=ids|flags|timestamp|user|comment|size|content&titles=API|Main%20Page")
                 << QString("API|Main%20Page")
                 << int(KJob::NoError)
-                << int(IDS|FLAGS|TIMESTAMP|USER|COMMENT|SIZE|CONTENT)
+                << QueryRevision::Props(QueryRevision::Ids | QueryRevision::Flags | QueryRevision::Timestamp |QueryRevision::User | QueryRevision::Comment | QueryRevision::Size | QueryRevision::Content)
                 << 2
                 << (QList<Revision>()
                         << constructRevision(367741756, 367741564, 70, "", "Graham87",
@@ -176,7 +177,7 @@ private slots:
                 << FakeServer::Request("GET","","?format=xml&action=query&prop=revisions&rvprop=ids|flags|timestamp|user|comment|size|content&titles=API")
                 << QString("API")
                 << int(KJob::NoError)
-                << int(IDS|FLAGS|TIMESTAMP|USER|COMMENT|SIZE|CONTENT)
+                << QueryRevision::Props(QueryRevision::Ids | QueryRevision::Flags | QueryRevision::Timestamp |QueryRevision::User | QueryRevision::Comment | QueryRevision::Size | QueryRevision::Content)
                 << 1
                 << (QList<Revision>()
                         << constructRevision(367741756, 367741564, 70, "", "Graham87",
@@ -189,7 +190,7 @@ private slots:
                 << FakeServer::Request("GET","","?format=xml&action=query&prop=revisions&rvprop=timestamp&titles=API|Main%20Page")
                 << QString("API|Main%20Page")
                 << int(KJob::NoError)
-                << int(TIMESTAMP)
+                << QueryRevision::Props(QueryRevision::Timestamp)
                 << 2
                 << (QList<Revision>()
                     << constructRevision(-1, -1, -1, "", "",
@@ -205,7 +206,7 @@ private slots:
                 << FakeServer::Request("GET","","?format=xml&action=query&prop=revisions&rvprop=user&titles=API|Main%20Page")
                 << QString("API|Main%20Page")
                 << int(KJob::NoError)
-                << int(USER)
+                << QueryRevision::Props(QueryRevision::User)
                 << 2
                 << (QList<Revision>()
                     << constructRevision(-1, -1, -1, "", "Graham87",
@@ -234,7 +235,7 @@ private slots:
         }
 
         QueryRevision * job = new QueryRevision(mediawiki);
-        job->setProp( SIZE|CONTENT );
+        job->setProp( QueryRevision::Size | QueryRevision::Content );
         job->setPageName("title");
 
         connect(job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
@@ -511,7 +512,7 @@ private slots:
         FakeServer::Request requestTrue("GET","","?format=xml&action=query&prop=revisions&rvgeneratexml=on&rvprop=timestamp|user|comment|content&titles=API");
         QString title = "API";
         int error = 0;
-        int rvprop = TIMESTAMP|USER|COMMENT|CONTENT;
+        QueryRevision::Props rvprop = QueryRevision::Timestamp |QueryRevision::User | QueryRevision::Comment | QueryRevision::Content;
         int size = 2;
         QList<Revision> results;
 
@@ -651,7 +652,7 @@ private slots:
     }
     void testRvPageId(){
         FakeServer::Request requestTrue("GET","","?format=xml&action=query&prop=revisions&pageids=2993&rvprop=timestamp|user|comment|content");
-        int rvprop = TIMESTAMP|USER|COMMENT|CONTENT;
+        QueryRevision::Props rvprop = QueryRevision::Timestamp |QueryRevision::User | QueryRevision::Comment | QueryRevision::Content;
         int id= 2993;
 
 
@@ -682,7 +683,7 @@ private slots:
 
     void testRvRevisionId(){
         FakeServer::Request requestTrue("GET","","?format=xml&action=query&prop=revisions&revids=2993&rvprop=timestamp|user|comment|content");
-        int rvprop = TIMESTAMP|USER|COMMENT|CONTENT;
+        QueryRevision::Props rvprop = QueryRevision::Timestamp |QueryRevision::User | QueryRevision::Comment | QueryRevision::Content;
         int id= 2993;
 
 

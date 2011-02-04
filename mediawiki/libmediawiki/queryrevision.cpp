@@ -70,42 +70,49 @@ void QueryRevision::setPageName(QString param)
     d->requestParameter["titles"] = param;
 }
 
-void QueryRevision::setProp(int param)
+void QueryRevision::setProp(Props properties)
 {
     Q_D(QueryRevision);
     QString buff;
-    if (param & IDS) buff.append("ids");
-    if (param & FLAGS)
+
+    if(properties & QueryRevision::Ids) buff.append("ids");
+
+    if(properties & QueryRevision::Flags)
     {
         if (buff.length())
             buff.append('|');
         buff.append("flags");
     }
-    if (param & TIMESTAMP)
+
+    if(properties & QueryRevision::Timestamp)
     {
         if (buff.length())
             buff.append('|');
         buff.append("timestamp");
     }
-    if (param & USER)
+
+    if(properties & QueryRevision::User)
     {
         if (buff.length())
             buff.append('|');
         buff.append("user");
     }
-    if (param & COMMENT)
+
+    if(properties & QueryRevision::Comment)
     {
         if (buff.length())
             buff.append('|');
         buff.append("comment");
     }
-    if (param & SIZE)
+
+    if(properties & QueryRevision::Size)
     {
         if (buff.length())
             buff.append('|');
         buff.append("size");
     }
-    if (param & CONTENT)
+
+    if(properties & QueryRevision::Content)
     {
         if (buff.length())
             buff.append('|');
