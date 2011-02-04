@@ -83,6 +83,8 @@ void Logout::doWorkSendRequest()
 
 void Logout::doWorkProcessReply(QNetworkReply * reply)
 {
+    Q_D(Logout);
+    disconnect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     this->setError(KJob::NoError);
     reply->close();
     reply->deleteLater();

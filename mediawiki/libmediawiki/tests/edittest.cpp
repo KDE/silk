@@ -401,7 +401,7 @@ private slots:
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
         QCOMPARE(edit.error(), (int)Edit::NoError);
-        QCOMPARE(this->editCount, 2);
+        QCOMPARE(this->editCount, 1);
     }
 
     void cleanupTestCase()

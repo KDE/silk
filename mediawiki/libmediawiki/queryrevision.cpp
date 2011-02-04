@@ -223,6 +223,7 @@ void QueryRevision::doWorkSendRequest()
 
 void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
 {
+    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     if (reply->error() == QNetworkReply::NoError) {
         QList<Revision> results;
         Revision   tempR;

@@ -83,6 +83,7 @@ void QuerySiteInfoGeneral::abort()
 }
 void QuerySiteInfoGeneral::doWorkProcessReply(QNetworkReply * reply)
 {
+    disconnect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     if ( reply->error() != QNetworkReply::NoError )
     {
         this->setError(this->ConnectionAborted);

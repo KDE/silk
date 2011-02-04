@@ -88,12 +88,11 @@ void QueryImages::doWorkSendRequest() {
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
     d->manager->get(request);
-    if (d->imcontinue.isNull()) {
-        connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    }
+    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
 }
-#include <QDebug>
+
 void QueryImages::doWorkProcessReply(QNetworkReply * reply) {
+    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     if (reply->error() == QNetworkReply::NoError) {
         QList<Image> imagesReceived;
         d->imcontinue = QString();
@@ -115,8 +114,7 @@ void QueryImages::doWorkProcessReply(QNetworkReply * reply) {
                 }
             }
         }
-        //FIXME: Bad solution
-        if (reader.error() == QXmlStreamReader::NoError || reader.error() == QXmlStreamReader::PrematureEndOfDocumentError) {
+        if (!reader.hasError()) {
             emit images(imagesReceived);
             if (!d->imcontinue.isNull()) {
                 QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));

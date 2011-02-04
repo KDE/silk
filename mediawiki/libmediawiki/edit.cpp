@@ -262,6 +262,7 @@ void Edit::abort()
 
 void Edit::finishedEdit( QNetworkReply *reply )
 {
+    disconnect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
     if ( reply->error() != QNetworkReply::NoError )
     {
         this->setError(this->NetworkError);

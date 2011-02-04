@@ -92,6 +92,7 @@ void QuerySiteinfoUsergroups::doWorkSendRequest()
 void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
 {
     Q_D(QuerySiteinfoUsergroups);
+    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     if (reply->error() == QNetworkReply::NoError) {
         QList<UserGroup> results;
         QString name;
