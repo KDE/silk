@@ -20,16 +20,14 @@
 
 #ifndef QUERYREVISION_H
 #define QUERYREVISION_H
-#include <QObject>
-#include <QDateTime>
+
+#include <QtCore/QDateTime>
 #include <QtCore/QList>
 #include <QtCore/QString>
 
-#include <KDE/KJob>
-
-#include "mediawiki_export.h"
-#include "revision.h"
 #include "job.h"
+#include "revision.h"
+#include "mediawiki_export.h"
 
 //FIXME: Fait pas de define ça se met dans l'espace de nommage global et ça remplace PARTOUT TIMESTAMP par 4, ... !
 #define IDS         1
@@ -49,6 +47,7 @@ class QNetworkReply;
 namespace mediawiki {
 
 class MediaWiki;
+class QueryRevisionPrivate;
 
 /**
  * @brief QueryRevision job.
@@ -57,54 +56,54 @@ class MediaWiki;
  */
 class MEDIAWIKI_EXPORT QueryRevision : public Job
 {
+
     Q_OBJECT
+    Q_DECLARE_PRIVATE(QueryRevision)
 
 public:
 
     enum Dir {Older, Newer};
 
     enum Token{Rollback};
+
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
      */
     enum {
 
         /**
-         * @brief A network error has occured.
-         */
-        NetworkError = KJob::UserDefinedError + 1,
-        /**
-         * @brief A XML error has occured.
-         */
-        XmlError,
-        /**
          * @brief The revids= parameter may not be used with the list options (limit, startid, endid, dirNewer, start, end).
          */
-        WrongRevisionId,
+        WrongRevisionId = Job::UserDefinedError + 1,
+
         /**
          * @brief titles, pageids or a generator was used to supply multiple pages, but the limit, startid, endid, dirNewer, user, excludeuser, start and end parameters may only be used on a single page.
          */
         MultiPagesNotAllowed,
+
         /**
          * @brief The current user is not allowed to read title.
          */
         TitleAccessDenied,
+
         /**
          * @brief start and startid or end and endid or user and excludeuser cannot be used together
          */
         TooManyParams,
+
         /**
          * @brief There is no section section in rrevid
          */
         SectionNotFound
 
     };
+
     /**
      * @brief Constructs a Revision job.
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QueryRevision(MediaWiki & mediawiki,QObject * parent = 0);
+    explicit QueryRevision(MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the QueryRevision job.
@@ -234,10 +233,6 @@ private slots:
     void doWorkSendRequest();
 
     void doWorkProcessReply(QNetworkReply * reply);
-
-private:
-
-    struct QueryRevisionPrivate * const d;
 
 private:
 

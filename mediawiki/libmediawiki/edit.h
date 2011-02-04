@@ -22,21 +22,22 @@
 #ifndef MEDIAWIKI_EDIT_H
 #define MEDIAWIKI_EDIT_H
 
-#include <QtCore/QString>
-#include <QtCore/QVariant>
 #include <QtCore/QDateTime>
-#include <QtNetwork/QNetworkCookieJar>
+#include <QtCore/QString>
 #include <QtCore/QUrl>
-#include <KDE/KJob>
-#include "mediawiki_export.h"
+#include <QtCore/QVariant>
+#include <QtNetwork/QNetworkCookieJar>
+
 #include "job.h"
 #include "queryinfo.h"
+#include "mediawiki_export.h"
 
 class QNetworkReply;
 
 namespace mediawiki {
 
 class MediaWiki;
+class EditPrivate;
 
 /**
  * @brief Edit job.
@@ -46,7 +47,8 @@ class MediaWiki;
 class MEDIAWIKI_EXPORT Edit : public Job
 {
 
-Q_OBJECT
+    Q_OBJECT
+    Q_DECLARE_PRIVATE(Edit)
 
 public:
 
@@ -153,7 +155,7 @@ public:
      * @brief Constructs an Edit job.
      * @param parent the QObject parent
      */
-    explicit Edit( MediaWiki  & media, QObject *parent = 0);
+    explicit Edit( MediaWiki & media, QObject * parent = 0);
     /**
      * @brief Destroys the Edit job.
      */
@@ -175,6 +177,7 @@ public:
      * @brief Specify how the watchlist is affected by this edit.
      */
     enum Watchlist {
+
         /**
          * @brief Add the page to the watchlist
          */
@@ -194,6 +197,7 @@ public:
          * @brief Don't change the watchlist
          */
         nochange
+
     };
 
     /**
@@ -292,11 +296,6 @@ signals:
 private slots:
 
     /**
-     * @brief Destroy the connection.
-     */
-    void abort();
-
-    /**
      * @brief Send a request.
      */
     void doWorkSendRequest(Page page);
@@ -314,11 +313,8 @@ public slots:
      */
     void finishedCaptcha( const QString & captcha );
 
-private:
-    /**
-     * @brief Contains the class attributes.
-     */
-    struct EditPrivate * const d;
 };
+
 }
+
 #endif // EDIT_H

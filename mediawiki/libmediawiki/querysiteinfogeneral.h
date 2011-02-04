@@ -20,21 +20,20 @@
 
 #ifndef QUERYSITEINFOGENERAL_H
 #define QUERYSITEINFOGENERAL_H
-#include <QObject>
+
 #include <QtCore/QList>
 #include <QtCore/QString>
 
-
+#include "mediawiki_export.h"
 #include "job.h"
 #include "generalinfo.h"
-
-#include "mediawiki_export.h"
 
 class QNetworkReply;
 
 namespace mediawiki {
 
 class MediaWiki;
+class QuerySiteInfoGeneralPrivate;
 
 /**
  * @brief QuerySiteInfoGeneral job.
@@ -45,20 +44,21 @@ class MEDIAWIKI_EXPORT QuerySiteInfoGeneral : public Job
 {
 
     Q_OBJECT
+    Q_DECLARE_PRIVATE(QuerySiteInfoGeneral)
 
 public:
+
     enum
     {
-        BadXml = Job::UserDefinedError+1,
-        ConnectionAborted,
-        IncludeAllDenied
+        IncludeAllDenied = Job::UserDefinedError + 1,
     };
+
     /**
      * @brief Constructs a QuerySiteInfoGeneral job.
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QuerySiteInfoGeneral( MediaWiki & mediawiki, QObject * parent = 0);
+    explicit QuerySiteInfoGeneral(MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the QuerySiteInfoGeneral job.
@@ -69,20 +69,15 @@ public:
      * @brief Starts the job asynchronously.
      */
     virtual void start();
-    Generalinfo getResult();
+
+    Generalinfo getResult(); //FIXME: Mettre un signal
 
 private slots:
-    void abort();
+
     void doWorkSendRequest();
     void doWorkProcessReply(QNetworkReply * reply);
 
-private:
-
-    struct QuerySiteInfoGeneralPrivate * const d;
-
-public:
-
-
 };
+
 }
 #endif // QUERYSITEINFOGENERAL_H

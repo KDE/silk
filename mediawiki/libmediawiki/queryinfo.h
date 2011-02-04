@@ -24,7 +24,7 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QDateTime>
-#include <KDE/KJob>
+
 #include "page.h"
 #include "protection.h"
 #include "mediawiki_export.h"
@@ -36,6 +36,7 @@ namespace mediawiki
 {
 
 class MediaWiki;
+class QueryInfoPrivate;
 
 /**
  * @brief QueryInfo job.
@@ -46,6 +47,7 @@ class MEDIAWIKI_EXPORT QueryInfo : public Job
 {
 
     Q_OBJECT
+    Q_DECLARE_PRIVATE(QueryInfo)
 
 public:
 
@@ -54,7 +56,7 @@ public:
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QueryInfo(MediaWiki & mediawiki, QObject *parent = 0);
+    explicit QueryInfo(MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the QuerySiteInfoGeneral job.
@@ -93,13 +95,13 @@ public:
     /**
      * @brief Get the warning.
      */
-    const QString & warning () const { return m_warning; }
+    QString warning () const;
 
     /**
      * @brief Put a warning.
      * @param warning the warning
      */
-    void setWarning (const QString & warning) {  m_warning = warning; }
+    void setWarning (const QString & warning);
 
 signals:
 
@@ -113,28 +115,11 @@ signals:
 private slots:
 
     /**
-     * @brief Destroy the connection.
-     */
-    void abort();
-
-    /**
      * @brief Send a request.
      */
     void doWorkSendRequest();
 
     void doWorkProcessReply(QNetworkReply * reply);
-
-private:
-
-    /**
-     * @brief Contains the class attributes.
-     */
-    struct QueryInfoPrivate * const d;
-
-    /**
-     * @brief Contains the warning.
-     */
-    QString m_warning;
 
 };
 

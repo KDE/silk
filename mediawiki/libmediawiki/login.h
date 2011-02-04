@@ -22,15 +22,17 @@
 #define MEDIAWIKI_LOGIN_H
 
 #include <QtCore/QString>
-#include "mediawiki_export.h"
 #include <QtNetwork/QNetworkCookieJar>
+
 #include "job.h"
+#include "mediawiki_export.h"
 
 class QNetworkReply;
 
 namespace mediawiki {
     
 class MediaWiki;
+class LoginPrivate;
 
 /**
  * @brief Login job.
@@ -41,6 +43,7 @@ class MEDIAWIKI_EXPORT Login : public Job
 {
 
     Q_OBJECT
+    Q_DECLARE_PRIVATE(Login)
 
 public:
 
@@ -49,7 +52,7 @@ public:
         /**
          * @brief
          */
-        BadXml = Job::UserDefinedError+1,
+        BadXml = Job::UserDefinedError + 1,
 
         /**
          * @brief
@@ -115,7 +118,7 @@ public:
      * @param password the QObject parent
      * @param parent the QObject parent
      */    
-    explicit Login( MediaWiki & media, const QString & login, const QString & password, QObject * parent = 0 );
+    explicit Login(MediaWiki & mediawiki, const QString & login, const QString & password, QObject * parent = 0);
 
     /**
      * @brief Destroys the Login job.
@@ -148,8 +151,6 @@ private slots:
     void doWorkProcessReply(QNetworkReply * reply);
 
 private:
-
-    struct LoginPrivate * const d;
 
     /**
      * @brief Get the error number.

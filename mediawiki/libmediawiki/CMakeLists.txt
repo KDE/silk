@@ -36,7 +36,7 @@ set(mediawiki_SRCS
     revision.cpp
     page.cpp
     protection.cpp
-    upload.cpp
+    #upload.cpp
 )
 
 kde4_add_library( mediawiki ${LIBRARY_TYPE} ${mediawiki_SRCS} )

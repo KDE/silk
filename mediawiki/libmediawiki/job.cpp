@@ -24,15 +24,12 @@
 
 using namespace mediawiki;
 
-Job::Job(MediaWiki & mediawiki, QObject * parent)
-    : KJob(parent)
-    , d_ptr(new JobPrivate(mediawiki))
-{}
-
 Job::Job(JobPrivate & dd, QObject * parent)
     : KJob(parent)
     , d_ptr(&dd)
-{}
+{
+    //FIXME: set capabilitie
+}
 
 Job::~Job()
 {

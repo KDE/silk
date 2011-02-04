@@ -24,7 +24,7 @@
 #include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 
-namespace mediawiki{
+namespace mediawiki {
 
 class MediaWikiPrivate {
 
@@ -36,6 +36,11 @@ public:
         , manager(manager)
     {}
 
+    ~MediaWikiPrivate()
+    {
+        delete manager;
+    }
+
     static const QString POSTFIX_USER_AGENT;
 
     const QUrl url;
@@ -43,8 +48,6 @@ public:
     QNetworkAccessManager * const manager;
 
 };
-
-const QString MediaWikiPrivate::POSTFIX_USER_AGENT = "mediawiki-silk";
 
 }
 

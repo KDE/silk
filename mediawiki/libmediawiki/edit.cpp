@@ -21,114 +21,131 @@
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
 #include <QtCore/QXmlStreamReader>
-#include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 #include <QtCore/QCryptographicHash>
 #include <QtNetwork/QNetworkCookieJar>
-#include <QStringList>
-#include <QDebug>
-#include <Q3Url>
+#include <QtCore/QStringList>
 
-#include "edit.h"
 #include "mediawiki.h"
 #include "queryinfo.h"
+#include "job_p.h"
+#include "edit.h"
 
 namespace mediawiki
 {
+
+/**
+ * @brief An edit result.
+ */
+struct Result
+{
     /**
-     * @brief An edit result.
+     * @brief CAPTCHA ID from previous request.
      */
-    struct Result
-    {
-        /**
-         * @brief CAPTCHA ID from previous request.
-         */
-        unsigned int m_captchaId;
+    unsigned int m_captchaId;
 
-        /**
-         * @brief Question from the CAPTCHA.
-         */
-        QVariant m_captchaQuestion;
+    /**
+     * @brief Question from the CAPTCHA.
+     */
+    QVariant m_captchaQuestion;
 
-        /**
-         * @brief Answer to the CAPTCHA.
-         */
-        QString m_captchaAnswer;
+    /**
+     * @brief Answer to the CAPTCHA.
+     */
+    QString m_captchaAnswer;
 
-        unsigned int captchaId(){ return this->m_captchaId; }
+    unsigned int captchaId(){ return this->m_captchaId; }
 
-        QVariant captchaQuestion(){ return this->m_captchaQuestion; }
+    QVariant captchaQuestion(){ return this->m_captchaQuestion; }
 
-        QString captchaAnswer(){ return this->m_captchaAnswer; }
-    };
-    struct EditPrivate
-    {
-        EditPrivate(MediaWiki  & mediawiki)
-            : mediawiki(mediawiki){}
-        QUrl baseUrl;
-        MediaWiki  & mediawiki;
-        QMap<QString, QString> requestParameter;
-        Result result;
-    };
+    QString captchaAnswer(){ return this->m_captchaAnswer; }
+
+};
+
+class EditPrivate : public JobPrivate
+{
+
+public:
+
+    EditPrivate(MediaWiki & mediawiki)
+        : JobPrivate(mediawiki)
+    {}
+
+    QUrl baseUrl;
+    QMap<QString, QString> requestParameter;
+    Result result;
+
+};
+
 }
 
 using namespace mediawiki;
 
 Edit::Edit( MediaWiki  & media, QObject *parent)
-    : Job(media,parent)
-    , d(new EditPrivate(media))
-{
-}
+    : Job(*new EditPrivate(media), parent)
+{}
+
 void Edit::setUndoAfter( int param )
 {
+    Q_D(Edit);
     d->requestParameter["undoafter"] = QString::number(param);
 }
 
 void Edit::setUndo( int param )
 {
+    Q_D(Edit);
     d->requestParameter["undo"] = QString::number(param);
 }
 
 void Edit::setPrependText( const QString& param )
 {
+    Q_D(Edit);
     d->requestParameter["prependtext"] = param;
     d->requestParameter["md5"] = "";
 }
 
 void Edit::setAppendText( const QString& param )
 {
+    Q_D(Edit);
     d->requestParameter["appendtext"] = param;
     d->requestParameter["md5"] = "";
 }
 
 void Edit::setPageName( const QString& param )
 {
+    Q_D(Edit);
     d->requestParameter["title"] = param;
 }
 
 void Edit::setToken( const QString& param )
 {
+    Q_D(Edit);
     d->requestParameter["token"] = param;
 }
+
 void Edit::setBaseTimesStamp( const QDateTime& param )
 {
+    Q_D(Edit);
     d->requestParameter["basetimestamp"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
 void Edit::setStartTimesStamp( const QDateTime& param )
 {
+    Q_D(Edit);
     d->requestParameter["starttimestamp"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
 void Edit::setText( const QString& param )
 {
+    Q_D(Edit);
     d->requestParameter["text"] = param;
     d->requestParameter["md5"] = "";
 }
 
 void Edit::setRecreate(bool param)
 {
+    Q_D(Edit);
     if(param)
     {
         d->requestParameter["recreate"] = "on";
@@ -138,6 +155,7 @@ void Edit::setRecreate(bool param)
 
 void Edit::setCreateonly(bool param)
 {
+    Q_D(Edit);
     if(param)
     {
         d->requestParameter["createonly"] = "on";
@@ -147,6 +165,7 @@ void Edit::setCreateonly(bool param)
 
 void Edit::setNocreate(bool param)
 {
+    Q_D(Edit);
     if(param)
     {
         d->requestParameter["nocreate"] = "on";
@@ -156,22 +175,27 @@ void Edit::setNocreate(bool param)
 
 void Edit::setMinor(bool minor)
 {
+    Q_D(Edit);
     if(minor)
         d->requestParameter["minor"] = "on";
     else
         d->requestParameter["notminor"] = "on";
 }
+
 void Edit::setSection(const QString& section)
 {
+    Q_D(Edit);
     d->requestParameter["section"] = section;
 }
 
 void Edit::setSummary(const QString & summary)
 {
+    Q_D(Edit);
     d->requestParameter["summary"] = summary;
 }
 void Edit::setWatchList(Edit::Watchlist watchlist)
 {
+    Q_D(Edit);
     switch(watchlist) {
     case Edit::watch:
         d->requestParameter["watchlist"] = QString("watch");
@@ -187,13 +211,12 @@ void Edit::setWatchList(Edit::Watchlist watchlist)
         break;
     }
 }
-Edit::~Edit()
-{
-    delete d;
-}
+
+Edit::~Edit() {}
 
 void Edit::start()
 {
+    Q_D(Edit);
     QueryInfo *info = new QueryInfo(d->mediawiki,this);
     info->setPageName(d->requestParameter["title"]);
     info->setToken("edit");
@@ -204,6 +227,7 @@ void Edit::start()
 
 void Edit::doWorkSendRequest(Page page)
 {
+    Q_D(Edit);
     d->requestParameter["token"] = page.pageEditToken();
     // Set the url
     QUrl    url = d->mediawiki.url();
@@ -249,20 +273,16 @@ void Edit::doWorkSendRequest(Page page)
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->mediawiki.manager()->post( request, url.toString().toUtf8() );
-    connect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
+    d->manager->post( request, url.toString().toUtf8() );
+    connect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
-}
-
-void Edit::abort()
-{
-    this->setError(this->NetworkError);
-    emitResult();
 }
 
 void Edit::finishedEdit( QNetworkReply *reply )
 {
+    Q_D(Edit);
     disconnect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
+
     if ( reply->error() != QNetworkReply::NoError )
     {
         this->setError(this->NetworkError);
@@ -318,7 +338,8 @@ void Edit::finishedEdit( QNetworkReply *reply )
 
 void Edit::finishedCaptcha( const QString & captcha )
 {
-    d->result.captchaAnswer = captcha;
+    Q_D(Edit);
+    d->result.m_captchaAnswer = captcha;
     QUrl url = d->baseUrl;
     url.addQueryItem("CaptchaId", QString::number(d->result.captchaId));
     url.addQueryItem("CaptchaAnswer", d->result.captchaAnswer);
@@ -334,8 +355,8 @@ void Edit::finishedCaptcha( const QString & captcha )
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->mediawiki.manager()->post( request, data.toUtf8() );
-    connect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
+    d->manager->post( request, data.toUtf8() );
+    connect( d->manager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 

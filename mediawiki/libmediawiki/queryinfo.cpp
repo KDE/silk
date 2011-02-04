@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <QtCore/QDateTime>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
 #include <QtCore/QXmlStreamReader>
@@ -24,75 +25,86 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
-#include <QtCore/QDebug>
-#include <QDateTime>
 
-#include "queryinfo.h"
 #include "mediawiki.h"
+#include "job_p.h"
+#include "queryinfo.h"
 
 namespace mediawiki
 {
-    struct QueryInfoPrivate
-    {
 
-        QueryInfoPrivate(MediaWiki & mediawiki)
-            : mediawiki(mediawiki)
-        { }
+class QueryInfoPrivate : public JobPrivate
+{
 
-        MediaWiki & mediawiki;
-        QVector<Protection> protections;
-        QMap<QString, QString> requestParameter;
-        Page page;
-    };
+public:
+
+    QueryInfoPrivate(MediaWiki & mediawiki)
+        : JobPrivate(mediawiki)
+    {}
+
+    QVector<Protection> protections;
+    QMap<QString, QString> requestParameter;
+    Page page;
+    QString warning; //FIXME: Usefull ?
+
+};
+
 }
 
 using namespace mediawiki;
-QueryInfo::QueryInfo(MediaWiki & mediawiki, QObject *parent)
-    : Job(mediawiki, parent)
-    , d(new QueryInfoPrivate(mediawiki))
+
+QueryInfo::QueryInfo(MediaWiki & mediawiki, QObject * parent)
+    : Job(*new QueryInfoPrivate(mediawiki), parent)
 {
     setCapabilities(KJob::NoCapabilities);
 }
 
 
-QueryInfo::~QueryInfo()
-{
-    delete d;
-}
+QueryInfo::~QueryInfo() {}
 
 void QueryInfo::setPageName(const QString & title)
 {
+    Q_D(QueryInfo);
     d->requestParameter["titles"] = title;
 }
 
 void QueryInfo::setToken(const QString & token)
 {
+    Q_D(QueryInfo);
     d->requestParameter["intoken"] = token;
 }
 
 void QueryInfo::setPageId(unsigned int id)
 {
+    Q_D(QueryInfo);
     d->requestParameter["pageids"] = QString::number(id);
 }
 
 void QueryInfo::setRevisionId(unsigned int id)
 {
+    Q_D(QueryInfo);
     d->requestParameter["revids"] = QString::number(id);
+}
+
+QString QueryInfo::warning() const {
+    Q_D(const QueryInfo);
+    return d->warning;
+}
+
+void QueryInfo::setWarning(const QString & warning) {
+    Q_D(QueryInfo);
+    d->warning = warning;
 }
 
 void QueryInfo::start()
 {
+    Q_D(QueryInfo);
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
-}
-
-void QueryInfo::abort()
-{
-    this->setError(Job::NetworkError);
-    emitResult();
 }
 
 void QueryInfo::doWorkSendRequest()
 {
+    Q_D(QueryInfo);
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
@@ -116,13 +128,14 @@ void QueryInfo::doWorkSendRequest()
     }
     request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->mediawiki.manager()->get(request);
-    connect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->manager->get(request);
+    connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 
 void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
 {
+    Q_D(QueryInfo);
     disconnect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     if (reply->error() == QNetworkReply::NoError) {
 
@@ -175,7 +188,7 @@ void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
                 }
                 else if (reader.name() == "info") {
                     reader.readNext();
-                    m_warning = reader.text().toString();
+                    d->warning = reader.text().toString();
                 }
             } else if (token == QXmlStreamReader::EndElement) {
                 if (reader.name() == "page") {

@@ -20,7 +20,6 @@
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
-#include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
@@ -167,8 +166,8 @@ void QueryImageinfo::doWorkSendRequest() {
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
-    connect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    d->mediawiki.manager()->get(request);
+    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->manager->get(request);
 }
 
 void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {

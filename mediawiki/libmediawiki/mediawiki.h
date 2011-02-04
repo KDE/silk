@@ -39,6 +39,8 @@ class MEDIAWIKI_EXPORT MediaWiki
 
     Q_DECLARE_PRIVATE(MediaWiki)
 
+    friend class JobPrivate;
+
 public:
 
     /**
@@ -68,14 +70,9 @@ public:
     QString userAgent() const;
 
     /**
-     * @brief Returns the connection manager.
-     * @return the connection manager
-     */
-    QNetworkAccessManager * manager() const;
-
-    /**
      * @brief Returns the cookies created by the login.
      * @return the cookies created by the login
+     * FIXME remove
      */
     QList<QNetworkCookie> cookies() const;
 

@@ -21,6 +21,7 @@
 #define MEDIAWIKIJOB_P_H
 
 #include "mediawiki.h"
+#include "mediawiki_p.h"
 
 namespace mediawiki {
 
@@ -30,9 +31,11 @@ public:
 
     explicit JobPrivate(MediaWiki & mediawiki)
         : mediawiki(mediawiki)
+        , manager(mediawiki.d_ptr->manager)
     {}
 
     MediaWiki & mediawiki;
+    QNetworkAccessManager * const manager;
 
 };
 

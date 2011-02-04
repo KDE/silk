@@ -138,23 +138,10 @@ void QuerySiteInfoGeneralTestConnectFalseXML()
     QCOMPARE(this->generalCount, 1);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == QuerySiteInfoGeneral::BadXml);
+    QVERIFY(general.error() == QuerySiteInfoGeneral::XmlError);
 
 }
-void QuerySiteInfoGeneralTestConnectAbort()
-{
 
-    MediaWiki mediaWiki(QUrl("http://127.0.0.1:12566"));
-    FakeServer server;
-
-    generalCount = 0;
-    QuerySiteInfoGeneral general(mediaWiki);
-    connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
-    general.exec();
-    QCOMPARE(this->generalCount, 1);
-    QVERIFY(general.error() == QuerySiteInfoGeneral::ConnectionAborted);
-
-}
 void QuerySiteInfoGeneralTestErrortIncludeAllDenied()
 {
 

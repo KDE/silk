@@ -45,7 +45,6 @@ MediaWiki::MediaWiki(const QUrl & url, const QString & customUserAgent)
 
 MediaWiki::~MediaWiki()
 {
-    delete d_ptr->manager;
     delete d_ptr;
 }
 
@@ -59,12 +58,9 @@ QString MediaWiki::userAgent() const
     return d_ptr->userAgent;
 }
 
-QNetworkAccessManager * MediaWiki::manager() const
-{
-    return d_ptr->manager;
-}
-
 QList<QNetworkCookie> MediaWiki::cookies() const
 {
     return d_ptr->manager->cookieJar()->cookiesForUrl(d_ptr->url);
 }
+
+const QString MediaWikiPrivate::POSTFIX_USER_AGENT = "mediawiki-silk";

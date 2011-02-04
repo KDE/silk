@@ -53,19 +53,22 @@ public:
     };
 
     /**
-     * @deprecated
-     */
-    Job(MediaWiki & mediawiki, QObject *parent);
-
-    /**
      * @brief Destructs the Job.
      */
     virtual ~Job();
 
 protected:
 
+    /**
+     * @brief Constructs a Job by a private class.
+     * @param dd a private class
+     * @param parent the QObject parent
+     */
     Job(JobPrivate & dd, QObject * parent = 0);
 
+    /**
+     * @brief The private d pointer.
+     */
     JobPrivate * const d_ptr;
 
 };

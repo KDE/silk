@@ -16,18 +16,17 @@
  *   Free Software Foundation, Inc.,
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
+#include <QtCore/QDateTime>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
 #include <QtCore/QXmlStreamReader>
-#include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
-#include <QtCore/QDebug>
-#include <QDateTime>
 
+#include "mediawiki.h"
 #include "job_p.h"
 #include "logout.h"
-#include "mediawiki.h"
 
 namespace mediawiki {
 
@@ -75,10 +74,10 @@ void Logout::doWorkSendRequest()
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     request.setRawHeader( "Cookie", cookie );
     // Delete cookies
-    d->mediawiki.manager()->setCookieJar(new QNetworkCookieJar);
+    d->manager->setCookieJar(new QNetworkCookieJar);
     // Send the request
-    d->mediawiki.manager()->get(request);
-    connect(d->mediawiki.manager(), SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->manager->get(request);
+    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
 }
 
 void Logout::doWorkProcessReply(QNetworkReply * reply)
