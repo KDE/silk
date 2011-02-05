@@ -130,7 +130,6 @@ void QueryInfo::doWorkSendRequest()
     // Send the request
     d->manager->get(request);
     connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 
 void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
