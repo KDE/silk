@@ -21,11 +21,10 @@
 #define MEDIAWIKI_UPLOAD_H
 
 #include <QtCore/QString>
-#include <QtCore/QVariant>
 #include <QtCore/QDateTime>
 #include <QtNetwork/QNetworkCookieJar>
 #include <QtCore/QUrl>
-#include <KDE/KJob>
+
 #include "mediawiki_export.h"
 #include "job.h"
 #include "queryinfo.h"
@@ -35,16 +34,17 @@ class QNetworkReply;
 namespace mediawiki {
 
 class MediaWiki;
+class UploadPrivate;
 
 /**
  * @brief Upload job.
  *
  * Uses for upload files.
  */
-class MEDIAWIKI_EXPORT Upload : public Job
-{
+class MEDIAWIKI_EXPORT Upload : public Job {
 
-Q_OBJECT
+    Q_OBJECT
+    Q_DECLARE_PRIVATE(Upload)
 
 public:
 
@@ -121,7 +121,7 @@ public:
      * @brief Constructs an Upload job.
      * @param parent the QObject parent
      */
-    explicit Upload( MediaWiki  & media, QObject *parent = 0);
+    Upload( MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the Upload job.
@@ -143,7 +143,7 @@ public:
      * @brief Set the file.
      * @param file the file
      */
-    void setFile(const QByteArray&);
+    void setFile(QIODevice*);
 
     /**
      * @brief Set the upload comment. Also used as the initial page text for new files if text parameter not provided.
@@ -151,36 +151,22 @@ public:
      */
     void setComment(const QString&);
 
+    /**
+     * @brief Set the initial page text for new files.
+     * @param text the text
+     */
+    void setText(const QString&);
+
 private slots:
 
-    /**
-     * @brief Destroy the connection.
-     */
-    void abort();
-
-    /**
-     * @brief Send a request.
-     */
     void doWorkSendRequest(Page page);
 
-    /**
-     * @brief Reads the xml
-     * @param success true if the connection was completed successfully.
-     */
     void doWorkProcessReply(QNetworkReply * reply);
 
 private:
 
-    /**
-     * @brief Get the error number.
-     * @param error the error sent by the API.
-     */
     int getError(const QString & error);
 
-    /**
-     * @brief Contains the class attributes.
-     */
-    struct UploadPrivate * const d;
 };
 }
 #endif // UPLOAD_H

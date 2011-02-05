@@ -25,57 +25,67 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QStringList>
 #include <QDebug>
-#include <Q3Url>
+#include <QtCore/QFile>
 
+#include "job_p.h"
 #include "upload.h"
 #include "mediawiki.h"
 #include "queryinfo.h"
 
 namespace mediawiki
 {
-    struct UploadPrivate
+    class UploadPrivate : public JobPrivate
     {
-        UploadPrivate(MediaWiki  & mediawiki)
-            : mediawiki(mediawiki){}
 
-        MediaWiki  & mediawiki;
-        QByteArray file;
+    public:
+
+        UploadPrivate(MediaWiki & mediawiki)
+            : JobPrivate(mediawiki)
+        {}
+
+        QIODevice* file;
         QString filename;
         QString comment;
+        QString text;
         QString token;
     };
 }
 
 using namespace mediawiki;
 
-Upload::Upload( MediaWiki  & media, QObject *parent)
-    : Job(media,parent)
-    , d(new UploadPrivate(media))
-{
-}
+Upload::Upload( MediaWiki  & mediawiki, QObject *parent)
+    : Job(*new UploadPrivate(mediawiki), parent)
+{}
 
-Upload::~Upload()
-{
-    delete d;
-}
+Upload::~Upload() {}
 
 void Upload::setFilename( const QString& param )
 {
+    Q_D(Upload);
     d->filename = param;
 }
 
-void Upload::setFile( const QByteArray & file )
+void Upload::setFile( QIODevice* file )
 {
+    Q_D(Upload);
     d->file = file;
 }
 
 void Upload::setComment( const QString& param )
 {
+    Q_D(Upload);
     d->comment = param;
+}
+
+void Upload::setText(const QString& text)
+{
+    Q_D(Upload);
+    d->text = text;
 }
 
 void Upload::start()
 {
+    Q_D(Upload);
     QueryInfo *info = new QueryInfo(d->mediawiki,this);
     info->setPageName("File:" + d->filename);
     info->setToken("edit");
@@ -85,15 +95,13 @@ void Upload::start()
 
 void Upload::doWorkSendRequest(Page page)
 {
+    Q_D(Upload);
     QString token = page.pageEditToken();
-    // Add the token
-    token.replace("+", "%2B");
-    token.replace("\\", "%5C");
     d->token = token;
-    qDebug()<<"upload token "<<token;
 
     // Get the extension
-    QString extension = d->filename.mid(d->filename.length() - 2).toUpper().toLower();
+    QStringList filename = d->filename.split(".");
+    QString extension = filename.at(filename.size()-1);
     if (extension == "jpg")
         extension = "jpeg";
     else if (extension == "svg")
@@ -101,17 +109,10 @@ void Upload::doWorkSendRequest(Page page)
 
     // Set the url
     QUrl url = d->mediawiki.url();
-    // Set the file content
-    QByteArray content = d->file;
-    content = "test";
+
     // Add params
-    url.addQueryItem("format", "xml");
     url.addQueryItem("action", "upload");
-    url.addQueryItem("filename", d->filename);
-    url.addQueryItem("file", content);
-    if(d->comment != "")
-        url.addQueryItem("comment", d->comment);
-    url.addEncodedQueryItem(QByteArray("token"), d->token.toUtf8());
+    url.addQueryItem("format", "xml");
 
     // Add the cookies
     QByteArray cookie = "";
@@ -122,116 +123,89 @@ void Upload::doWorkSendRequest(Page page)
 
     // Set the request
     QNetworkRequest request( url );
-    request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+    request.setRawHeader( "User-Agent", d->mediawiki.userAgent().toUtf8());
 
-
-
-    QByteArray boundary = "87142694621188";
-    request.setRawHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
+    QByteArray boundary = "-----------------------------15827188141577679942014851228";
+    request.setRawHeader( "Content-Type", "multipart/form-data; boundary="  + boundary);
     request.setRawHeader( "Cookie", cookie );
 
-    QByteArray data = "--" + boundary + "\r\n";
+    // send data
+    boundary = "--" + boundary + "\r\n";
+    QByteArray out = boundary;
+    // ignore warnings
+    out += "Content-Disposition: form-data; name=\"ignorewarnings\"\r\n\r\n";
+    out += "true\r\n";
+    out += boundary;
     // filename
-    data += "Content-Disposition: form-data; name=\"filename\"\r\n\r\n";
-    data += d->filename;
-    data += "\r\n";
-    data += boundary;
-    data += "\r\n";
-
-    // edit token
-    data += "Content-Disposition: form-data; name=\"token\"\r\n\r\n";
-    data += d->token;
-    data += "\r\n";
-    data += boundary;
-    data += "\r\n";
-
+    out += "Content-Disposition: form-data; name=\"filename\"\r\n\r\n";
+    out += d->filename.toUtf8();
+    out += "\r\n";
+    out += boundary;
+    // comment
+    if(d->comment != "")
+    {
+        out += "Content-Disposition: form-data; name=\"comment\"\r\n\r\n";
+        out += d->comment.toUtf8();
+        out += "\r\n";
+        out += boundary;
+    }
+    // token
+    out += "Content-Disposition: form-data; name=\"token\"\r\n\r\n";
+    out += d->token.toUtf8();
+    out += "\r\n";
+    out += boundary;
     // the actual file
-    data += "Content-Disposition: form-data; name=\"file\"; filename=\"";
-    data += d->filename;
-    data += "\"\r\n";
-    data += "Content-Type: text/plain";
-    data += "\r\n\r\n";
-    data += content;
-    data += "\r\n";
-    data += boundary;
-    data += "\r\n";
+    out += "Content-Disposition: form-data; name=\"file\"; filename=\"";
+    out += d->filename;
+    out += "\"\r\n";
+    out += "Content-Type: image/";
+    out += extension;
+    out += "\r\n\r\n";
+    out += d->file->readAll();
+    out += "\r\n";
+    out += boundary;
+    // description page
+    out += "Content-Disposition: form-data; name=\"text\"\r\n";
+    out += "Content-Type: text/plain\r\n\r\n";
+    out += d->text;
+    out += "\r\n";
+    out += boundary.mid(0, boundary.length() - 2);
+    out += "--\r\n";
 
-
-
-    // Set the boundary
-//    QByteArray boundary = "87142694621188";
-//    QByteArray data = "--" + boundary + "\r\n";
-//    data += "Content-Disposition: form-data; name=\"upload\"; filename=\""+d->filename+"\";\r\n";
-//    data += "Content-Type: image/"+ extension +"\r\n\r\n" + content + "\r\n";
-//    data += "--" + boundary + "--\r\n";
-//    request.setRawHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
-//    request.setRawHeader("Content-Length", QString::number(data.size()).toAscii());
-    // Send the request
-    qDebug()<<"data "<<data;
-    d->mediawiki.manager()->post( request, data );
-    connect( d->mediawiki.manager(), SIGNAL( finished( QNetworkReply * ) ), this, SLOT( doWorkProcessReply( QNetworkReply * ) ) );
-    QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
-}
-
-void Upload::abort()
-{
-    this->setError(this->NetworkError);
-    emitResult();
+    d->manager->post( request, out );
+    connect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( doWorkProcessReply( QNetworkReply * ) ) );
 }
 
 void Upload::doWorkProcessReply( QNetworkReply *reply )
 {
+    Q_D(Upload);
+    disconnect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( doWorkProcessReply( QNetworkReply * ) ) );
+
     if ( reply->error() != QNetworkReply::NoError )
     {
-        qDebug()<<" NetworkError upload : ";
         this->setError(this->NetworkError);
         reply->close();
         reply->deleteLater();
         emitResult();
         return;
     }
+
     QXmlStreamReader reader( reply );
     while ( !reader.atEnd() && !reader.hasError() ) {
         QXmlStreamReader::TokenType token = reader.readNext();
         if ( token == QXmlStreamReader::StartElement ) {
             QXmlStreamAttributes attrs = reader.attributes();
-            qDebug()<<"name : "<< reader.name() << " attrs : "<<attrs.value( QString( "result" ) ).toString();
             if ( reader.name() == QString( "upload" ) ) {
                 if ( attrs.value( QString( "result" ) ).toString() == "Success" ) {
                     this->setError(KJob::NoError);
-                    qDebug()<<" Success upload";
-                    reply->close();
-                    reply->deleteLater();
-                    emitResult();
-                    return;
-                }
-                else if ( attrs.value( QString( "result" ) ).toString() == "Failure" ) {
-                    reader.readNext();
-                    attrs = reader.attributes();
-                    qDebug()<<" Failure upload : "<<attrs.value( QString( "code" ) ).toString();
-                    this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
-                    reply->close();
-                    reply->deleteLater();
-                    emitResult();
-                    return;
                 }
             }
             else if ( reader.name() == QString( "error" ) ) {
                 this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
-                qDebug()<<" Error upload : "<<attrs.value( QString( "code" ) ).toString();
-                reply->close();
-                reply->deleteLater();
-                emitResult();
-                return;
             }
         }
         else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
-            qDebug()<<" XMLError upload : ";
             this->setError(this->XmlError);
-            reply->close();
-            reply->deleteLater();
-            emitResult();
-            return;
         }
     }
     reply->close();
