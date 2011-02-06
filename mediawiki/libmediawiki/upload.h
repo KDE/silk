@@ -152,7 +152,7 @@ public:
     void setComment(const QString&);
 
     /**
-     * @brief Set the initial page text for new files.
+     * @brief Set the information of the image. Use this template {{Information|Description=|Source=|Date=|Author=|Permission=|other_versions=}}.
      * @param text the text
      */
     void setText(const QString&);
