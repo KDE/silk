@@ -26,17 +26,13 @@
 
 #include "mediawiki.h"
 #include "upload.h"
-#include "login.h"
 #include "libmediawikitest/fakeserver.h"
 
 using mediawiki::MediaWiki;
 using mediawiki::Upload;
-using mediawiki::Login;
 
 Q_DECLARE_METATYPE(FakeServer::Request)
-Q_DECLARE_METATYPE(QVariant)
 Q_DECLARE_METATYPE(Upload*)
-Q_DECLARE_METATYPE(Login*)
 
 class UploadTest : public QObject
 {
@@ -55,6 +51,8 @@ private slots:
         uploadCount = 0;
         this->m_mediaWiki = new MediaWiki(QUrl("http://127.0.0.1:12566"));
         this->m_infoScenario = "<api><query><pages><page pageid=\"27697087\" ns=\"0\" title=\"API\" touched=\"2010-11-25T13:59:03Z\" lastrevid=\"367741756\" counter=\"0\" length=\"70\" redirect=\"\" starttimestamp=\"2010-11-25T16:14:51Z\" edittoken=\"cecded1f35005d22904a35cc7b736e18%2B\" talkid=\"5477418\" fullurl=\"http://en.wikipedia.org/wiki/API\" editurl=\"http://en.wikipedia.org/w/index.php?title=API&action=edit\" ><protection /></page></pages></query></api>";
+        this->m_file = new QFile("/home/alex/Documents/MediaWiki-Silk/src/mediawiki/libmediawiki/tests/Test.jpeg");
+        this->m_file->open(QIODevice::ReadOnly);
     }
 
     void uploadSetters()
@@ -83,14 +81,12 @@ private slots:
         QTest::addColumn<Upload*>("job");
 
         Upload * e1 = new Upload( *m_mediaWiki, NULL);
-        QFile file("/home/alex/Documents/MediaWiki-Silk/src/mediawiki/libmediawiki/tests/Test.jpeg");
-        file.open(QIODevice::ReadOnly);
-        e1->setFile(&file);
-        e1->setFilename("Test.txt");
+        e1->setFile(this->m_file);
+        e1->setFilename("Test.jpeg");
         e1->setComment("Test");
-        e1->setText("Test");
+        e1->setText("{{Information|Description=Ajout du logo de l'IUP ISI, Toulouse.|Source=http://www.iupisi.ups-tlse.fr/|Date=1992-01-01|Author=iup|Permission={{PD-EEA}}|other_versions=}}");
         QTest::newRow("Text")
-                << "?format=xml&action=upload&file=&filename=Test.txt&token=cecded1f35005d22904a35cc7b736e18+\\"
+                << "?action=upload&format=xml"
                 << "<api><upload result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>"
                 << e1;
     }
@@ -111,11 +107,10 @@ private slots:
         }
 
         Upload * job = new Upload(mediawiki, NULL);
-        QFile file("/home/alex/Documents/MediaWiki-Silk/src/mediawiki/libmediawiki/tests/Test.jpeg");
-        file.open(QIODevice::ReadOnly);
-        job->setFile(&file);
-        job->setFilename("Test.txt");
+        job->setFile(this->m_file);
+        job->setFilename("Test.jpeg");
         job->setComment("Test");
+        job->setText("{{Information|Description=Ajout du logo de l'IUP ISI, Toulouse.|Source=http://www.iupisi.ups-tlse.fr/|Date=1992-01-01|Author=iup|Permission={{PD-EEA}}|other_versions=}}");
         connect(job,  SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
 
         job->exec();
@@ -194,6 +189,7 @@ private slots:
     void cleanupTestCase()
     {
         delete this->m_mediaWiki;
+        delete this->m_file;
     }
 
 private:
@@ -201,6 +197,7 @@ private:
     int uploadCount;
     QString request;
     QString m_infoScenario;
+    QIODevice* m_file;
     MediaWiki* m_mediaWiki;
 };
 
