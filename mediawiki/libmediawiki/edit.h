@@ -304,7 +304,7 @@ private slots:
      * @brief Reads the xml
      * @param success true if the connection was completed successfully.
      */
-    void finishedEdit( QNetworkReply *reply );
+    void finishedEdit();
 
 public slots:
     /**

@@ -85,20 +85,20 @@ void QuerySiteinfoUsergroups::doWorkSendRequest()
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
-    d->manager->get(request);
-    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->reply = d->manager->get(request);
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
-void QuerySiteinfoUsergroups::doWorkProcessReply(QNetworkReply * reply)
+void QuerySiteinfoUsergroups::doWorkProcessReply()
 {
     Q_D(QuerySiteinfoUsergroups);
-    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    if (reply->error() == QNetworkReply::NoError) {
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    if (d->reply->error() == QNetworkReply::NoError) {
         QList<UserGroup> results;
         QString name;
         QList<QString> rights;
         unsigned int number;
-        QXmlStreamReader reader(reply);
+        QXmlStreamReader reader(d->reply);
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {

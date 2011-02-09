@@ -23,6 +23,7 @@
 
 #include <KDE/KJob>
 
+#include "job.h"
 #include "mediawiki_export.h"
 #include "image.h"
 
@@ -31,15 +32,17 @@ class QNetworkReply;
 namespace mediawiki {
 
 class MediaWiki;
+class QueryImagesPrivate;
 
 /**
  * @brief Query images job.
  *
  * Gets a list of all images used on pages.
  */
-class MEDIAWIKI_EXPORT QueryImages : public KJob {
+class MEDIAWIKI_EXPORT QueryImages : public Job {
 
     Q_OBJECT
+    Q_DECLARE_PRIVATE(QueryImages)
 
 public:
 
@@ -65,7 +68,7 @@ public:
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QueryImages(const MediaWiki & mediawiki, QObject * parent = 0);
+    explicit QueryImages(MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys a query images job.
@@ -104,11 +107,7 @@ private slots:
 
     void doWorkSendRequest();
 
-    void doWorkProcessReply(QNetworkReply * reply);
-
-private:
-
-    struct QueryImagesPrivate * const d;
+    void doWorkProcessReply();
 
 };
 

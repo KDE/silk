@@ -148,7 +148,7 @@ private slots:
      * else if the attribute value is equal to "Success", the user is logged in
      * @param success true if the connection was completed successfully.
      */
-    void doWorkProcessReply(QNetworkReply * reply);
+    void doWorkProcessReply();
 
 private:
 

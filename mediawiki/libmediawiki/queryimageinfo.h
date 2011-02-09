@@ -140,7 +140,7 @@ private slots:
 
     void doWorkSendRequest();
 
-    void doWorkProcessReply(QNetworkReply * reply);
+    void doWorkProcessReply();
 
 signals:
 

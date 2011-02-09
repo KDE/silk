@@ -161,7 +161,7 @@ private slots:
 
     void doWorkSendRequest(Page page);
 
-    void doWorkProcessReply(QNetworkReply * reply);
+    void doWorkProcessReply();
 
 private:
 

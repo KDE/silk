@@ -72,24 +72,24 @@ void QuerySiteInfoGeneral::doWorkSendRequest()
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
-    d->manager->get(request);
-    connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->reply = d->manager->get(request);
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
-void QuerySiteInfoGeneral::doWorkProcessReply(QNetworkReply * reply)
+void QuerySiteInfoGeneral::doWorkProcessReply()
 {
     Q_D(QuerySiteInfoGeneral);
-    disconnect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    if (reply->error() != QNetworkReply::NoError)
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    if (d->reply->error() != QNetworkReply::NoError)
     {
         this->setError(Job::NetworkError);
-        reply->close();
-        reply->deleteLater();
+        d->reply->close();
+        d->reply->deleteLater();
         emitResult();
         return;
     }
 
-    QXmlStreamReader reader(reply);
+    QXmlStreamReader reader(d->reply);
     while(!reader.atEnd() && !reader.hasError()) {
         QXmlStreamReader::TokenType token = reader.readNext();
         if(token == QXmlStreamReader::StartElement) {
@@ -121,16 +121,16 @@ void QuerySiteInfoGeneral::doWorkProcessReply(QNetworkReply * reply)
             else if(reader.name() == "error")
             {
                 this->setError(QuerySiteInfoGeneral::IncludeAllDenied);
-                reply->close();
-                reply->deleteLater();
+                d->reply->close();
+                d->reply->deleteLater();
                 emitResult();
                 return;
             }
         }
     }
     if(reader.hasError())this->setError(Job::XmlError);
-    reply->close();
-    reply->deleteLater();
+    d->reply->close();
+    d->reply->deleteLater();
     emitResult();
 }
 

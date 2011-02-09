@@ -273,24 +273,24 @@ void Edit::doWorkSendRequest(Page page)
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->manager->post( request, url.toString().toUtf8() );
-    connect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
+    d->reply = d->manager->post( request, url.toString().toUtf8() );
+    connect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );
 }
 
-void Edit::finishedEdit( QNetworkReply *reply )
+void Edit::finishedEdit()
 {
     Q_D(Edit);
-    disconnect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
+    disconnect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );
 
-    if ( reply->error() != QNetworkReply::NoError )
+    if ( d->reply->error() != QNetworkReply::NoError )
     {
         this->setError(this->NetworkError);
-        reply->close();
-        reply->deleteLater();
+        d->reply->close();
+        d->reply->deleteLater();
         emitResult();
         return;
     }
-    QXmlStreamReader reader( reply );
+    QXmlStreamReader reader( d->reply );
     while ( !reader.atEnd() && !reader.hasError() ) {
         QXmlStreamReader::TokenType token = reader.readNext();
         if ( token == QXmlStreamReader::StartElement ) {
@@ -298,8 +298,8 @@ void Edit::finishedEdit( QNetworkReply *reply )
             if ( reader.name() == QString( "edit" ) ) {
                 if ( attrs.value( QString( "result" ) ).toString() == "Success" ) {
                     this->setError(KJob::NoError);
-                    reply->close();
-                    reply->deleteLater();
+                    d->reply->close();
+                    d->reply->deleteLater();
                     emitResult();
                     return;
                 }
@@ -316,23 +316,23 @@ void Edit::finishedEdit( QNetworkReply *reply )
             }
             else if ( reader.name() == QString( "error" ) ) {
                 this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
-                reply->close();
-                reply->deleteLater();
+                d->reply->close();
+                d->reply->deleteLater();
                 emitResult();
                 return;
             }
         }
         else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
             this->setError(this->XmlError);
-            reply->close();
-            reply->deleteLater();
+            d->reply->close();
+            d->reply->deleteLater();
             emitResult();
             return;
         }
     }
-    reply->close();
-    reply->deleteLater();
-    emit resultCaptcha( d->result.captchaQuestion );
+    d->reply->close();
+    d->reply->deleteLater();
+    emit resultCaptcha( d->result.m_captchaQuestion );
 }
 
 void Edit::finishedCaptcha( const QString & captcha )
@@ -354,8 +354,8 @@ void Edit::finishedCaptcha( const QString & captcha )
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->manager->post( request, data.toUtf8() );
-    connect( d->manager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
+    d->reply = d->manager->post( request, data.toUtf8() );
+    connect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );
     QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 

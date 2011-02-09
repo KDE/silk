@@ -128,18 +128,18 @@ void QueryInfo::doWorkSendRequest()
     }
     request.setRawHeader( "Cookie", cookie );
     // Send the request
-    d->manager->get(request);
-    connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->reply = d->manager->get(request);
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
-void QueryInfo::doWorkProcessReply(QNetworkReply * reply)
+void QueryInfo::doWorkProcessReply()
 {
     Q_D(QueryInfo);
-    disconnect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    if (reply->error() == QNetworkReply::NoError) {
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    if (d->reply->error() == QNetworkReply::NoError) {
 
         // Replace & in &amp;
-        QString content(reply->readAll());
+        QString content(d->reply->readAll());
         QRegExp regex("&(?!\\w+;)");
         content.replace(regex, "&amp;");
         QXmlStreamReader reader(content);

@@ -24,21 +24,20 @@
 #include <QtNetwork/QNetworkRequest>
 
 #include "mediawiki.h"
+#include "job_p.h"
 #include "queryimages.h"
 
 namespace mediawiki {
 
-struct QueryImagesPrivate {
+class QueryImagesPrivate : public JobPrivate {
 
-    QueryImagesPrivate(QNetworkAccessManager * const manager, const MediaWiki & mediawiki, const QString & limit)
-        : manager(manager)
-        , mediawiki(mediawiki)
+public:
+
+    QueryImagesPrivate(MediaWiki & mediawiki, const QString & limit)
+        : JobPrivate(mediawiki)
         , limit(limit)
-        , imcontinue()
     {}
 
-    QNetworkAccessManager * const manager;
-    const MediaWiki & mediawiki;
     QString title;
     QString limit;
     QString imcontinue;
@@ -49,30 +48,30 @@ struct QueryImagesPrivate {
 
 using namespace mediawiki;
 
-QueryImages::QueryImages(const MediaWiki & mediawiki, QObject * parent)
-    : KJob(parent)
-    , d(new QueryImagesPrivate(new QNetworkAccessManager(this), mediawiki, "10"))
+QueryImages::QueryImages(MediaWiki & mediawiki, QObject * parent)
+    : Job(*new QueryImagesPrivate(mediawiki, "10"), parent)
 {
     setCapabilities(KJob::NoCapabilities);
 }
 
 void QueryImages::setTitle(const QString & title) {
+    Q_D(QueryImages);
     d->title = title;
 }
 
 void QueryImages::setLimit(unsigned int limit) {
+    Q_D(QueryImages);
     d->limit = QString::number(limit);
 }
 
-QueryImages::~QueryImages() {
-    delete d;
-}
+QueryImages::~QueryImages() {}
 
 void QueryImages::start() {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
 void QueryImages::doWorkSendRequest() {
+    Q_D(QueryImages);
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
@@ -87,16 +86,17 @@ void QueryImages::doWorkSendRequest() {
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
-    d->manager->get(request);
-    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->reply = d->manager->get(request);
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
-void QueryImages::doWorkProcessReply(QNetworkReply * reply) {
-    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    if (reply->error() == QNetworkReply::NoError) {
+void QueryImages::doWorkProcessReply() {
+    Q_D(QueryImages);
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    if (d->reply->error() == QNetworkReply::NoError) {
         QList<Image> imagesReceived;
         d->imcontinue = QString();
-        QXmlStreamReader reader(reply);
+        QXmlStreamReader reader(d->reply);
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
             if (token == QXmlStreamReader::StartElement) {

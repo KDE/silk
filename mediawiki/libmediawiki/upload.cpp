@@ -172,25 +172,25 @@ void Upload::doWorkSendRequest(Page page)
     out += boundary.mid(0, boundary.length() - 2);
     out += "--\r\n";
 
-    d->manager->post( request, out );
-    connect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( doWorkProcessReply( QNetworkReply * ) ) );
+    d->reply = d->manager->post( request, out );
+    connect( d->reply, SIGNAL( finished() ), this, SLOT( doWorkProcessReply() ) );
 }
 
-void Upload::doWorkProcessReply( QNetworkReply *reply )
+void Upload::doWorkProcessReply()
 {
     Q_D(Upload);
-    disconnect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( doWorkProcessReply( QNetworkReply * ) ) );
+    disconnect( d->reply, SIGNAL( finished() ), this, SLOT( doWorkProcessReply() ) );
 
-    if ( reply->error() != QNetworkReply::NoError )
+    if ( d->reply->error() != QNetworkReply::NoError )
     {
         this->setError(this->NetworkError);
-        reply->close();
-        reply->deleteLater();
+        d->reply->close();
+        d->reply->deleteLater();
         emitResult();
         return;
     }
 
-    QXmlStreamReader reader( reply );
+    QXmlStreamReader reader( d->reply );
     while ( !reader.atEnd() && !reader.hasError() ) {
         QXmlStreamReader::TokenType token = reader.readNext();
         if ( token == QXmlStreamReader::StartElement ) {
@@ -208,8 +208,8 @@ void Upload::doWorkProcessReply( QNetworkReply *reply )
             this->setError(this->XmlError);
         }
     }
-    reply->close();
-    reply->deleteLater();
+    d->reply->close();
+    d->reply->deleteLater();
     emitResult();
 }
 

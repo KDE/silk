@@ -92,7 +92,7 @@ void PictureOfTheDayEngine::result(const QList<Revision> & revisions)
     m_revisions.append(revisions);
 }
 
-bool PictureOfTheDayEngine::searchImages(const MediaWiki & mediawiki, const QString & page) {
+bool PictureOfTheDayEngine::searchImages(MediaWiki & mediawiki, const QString & page) {
     QueryImages * const queryimages(new QueryImages(mediawiki));
     queryimages->setTitle(page);
     connect(queryimages, SIGNAL(images(const QList<Image> &)), this, SLOT(result( const QList<Image> &)));

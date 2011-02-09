@@ -236,18 +236,18 @@ void QueryRevision::doWorkSendRequest()
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
-    d->manager->get(request);
-    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->reply = d->manager->get(request);
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
-void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
+void QueryRevision::doWorkProcessReply()
 {
     Q_D(QueryRevision);
-    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    if (reply->error() == QNetworkReply::NoError) {
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    if (d->reply->error() == QNetworkReply::NoError) {
         QList<Revision> results;
         Revision   tempR;
-        QString replytmp = reply->readAll();
+        QString replytmp = d->reply->readAll();
         if (d->requestParameter.contains("rvgeneratexml"))
         {
             for (int i = replytmp.indexOf("parsetree"); i != -1; i = replytmp.indexOf("parsetree", i+1))
@@ -306,8 +306,8 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
                 else if (reader.attributes().value("code").toString() == QString("rvnosuchsection"))
                     this->setError(this->SectionNotFound);
 
-                reply->close();
-                reply->deleteLater();
+                d->reply->close();
+                d->reply->deleteLater();
                 emit revision(QList<Revision>());
                 emitResult();
                 return;
@@ -325,15 +325,15 @@ void QueryRevision::doWorkProcessReply(QNetworkReply * reply)
             emit revision(results);
         } else {
             setError(XmlError);
-            reply->close();
-            reply->deleteLater();
+            d->reply->close();
+            d->reply->deleteLater();
             emit revision(QList<Revision>());
         }
     }
     else {
         setError(NetworkError);
-        reply->close();
-        reply->deleteLater();
+        d->reply->close();
+        d->reply->deleteLater();
         emit revision(QList<Revision>());
     }
     emitResult();

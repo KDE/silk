@@ -65,7 +65,7 @@ private:
         QString regex;
     };
 
-    bool searchImages(const MediaWiki & mediawiki, const QString & page);
+    bool searchImages(MediaWiki & mediawiki, const QString & page);
 
     bool searchImageinfo(MediaWiki & mediawiki, Image & image);
 

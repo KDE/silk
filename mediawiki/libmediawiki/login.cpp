@@ -81,8 +81,8 @@ void Login::doWorkSendRequest()
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
-    d->manager->post(request, url.toString().toUtf8());
-    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->reply = d->manager->post(request, url.toString().toUtf8());
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
 void Login::abort()
@@ -91,19 +91,19 @@ void Login::abort()
     emitResult();
 }
 
-void Login::doWorkProcessReply(QNetworkReply *reply)
+void Login::doWorkProcessReply()
 {
     Q_D(Login);
-    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    if (reply->error() != QNetworkReply::NoError)
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    if (d->reply->error() != QNetworkReply::NoError)
     {
         this->setError(this->ConnectionAborted);
-        reply->close();
-        reply->deleteLater();
+        d->reply->close();
+        d->reply->deleteLater();
         emitResult();
         return;
     }
-    QXmlStreamReader reader(reply);
+    QXmlStreamReader reader(d->reply);
     while (!reader.atEnd() && !reader.hasError()) {
         QXmlStreamReader::TokenType token = reader.readNext();
         if (token == QXmlStreamReader::StartElement) {
@@ -139,8 +139,8 @@ void Login::doWorkProcessReply(QNetworkReply *reply)
 
                         d->manager->cookieJar()->setCookiesFromUrl(cookies, d->mediawiki.url());
                     }
-                    reply->close();
-                    reply->deleteLater();
+                    d->reply->close();
+                    d->reply->deleteLater();
                     emitResult();
                     return;
                 }
@@ -159,30 +159,30 @@ void Login::doWorkProcessReply(QNetworkReply *reply)
                 }
                 else{
                     this->setError(this->getError(attrs.value(QString("result")).toString()));
-                    reply->close();
-                    reply->deleteLater();
+                    d->reply->close();
+                    d->reply->deleteLater();
                     emitResult();
                     return;
                 }
             }
             else if (reader.name() == QString("error")) {
                 this->setError(this->getError(attrs.value(QString("code")).toString()));
-                reply->close();
-                reply->deleteLater();
+                d->reply->close();
+                d->reply->deleteLater();
                 emitResult();
                 return;
             }
         }
         else if (token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
             this->setError(this->BadXml);
-            reply->close();
-            reply->deleteLater();
+            d->reply->close();
+            d->reply->deleteLater();
             emitResult();
             return;
         }
     }
-    reply->close();
-    reply->deleteLater();
+    d->reply->close();
+    d->reply->deleteLater();
 
     QUrl url = d->baseUrl;
     url.addQueryItem("lgtoken", d->lgtoken);
@@ -193,8 +193,8 @@ void Login::doWorkProcessReply(QNetworkReply *reply)
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     request.setRawHeader("Cookie", d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url()).at(0).toRawForm());
     // Send the request
-    d->manager->post(request, data.toUtf8());
-    connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->reply = d->manager->post(request, data.toUtf8());
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
     QTimer::singleShot(30 * 1000, this, SLOT(abort()));
 
 }

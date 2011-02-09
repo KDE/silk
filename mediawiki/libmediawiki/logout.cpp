@@ -76,16 +76,16 @@ void Logout::doWorkSendRequest()
     // Delete cookies
     d->manager->setCookieJar(new QNetworkCookieJar);
     // Send the request
-    d->manager->get(request);
-    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->reply = d->manager->get(request);
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
-void Logout::doWorkProcessReply(QNetworkReply * reply)
+void Logout::doWorkProcessReply()
 {
     Q_D(Logout);
-    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
     this->setError(KJob::NoError);
-    reply->close();
-    reply->deleteLater();
+    d->reply->close();
+    d->reply->deleteLater();
     emitResult();
 }

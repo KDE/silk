@@ -47,7 +47,7 @@ public:
      * @brief Constructs a Logout job.
      * @param parent the QObject parent
      */
-    explicit Logout(MediaWiki & mediawiki, QObject *parent = 0);
+    explicit Logout(MediaWiki & mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the Logout job.
@@ -62,7 +62,7 @@ public:
 private slots:
 
     void doWorkSendRequest();
-    void doWorkProcessReply(QNetworkReply * reply);
+    void doWorkProcessReply();
 
 };
 

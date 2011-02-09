@@ -166,16 +166,16 @@ void QueryImageinfo::doWorkSendRequest() {
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
-    connect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    d->manager->get(request);
+    d->reply = d->manager->get(request);
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
-void QueryImageinfo::doWorkProcessReply(QNetworkReply * reply) {
+void QueryImageinfo::doWorkProcessReply() {
     Q_D(QueryImageinfo);
-    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
     d->begin = QString();
-    if (reply->error() == QNetworkReply::NoError) {
-        QXmlStreamReader reader(reply);
+    if (d->reply->error() == QNetworkReply::NoError) {
+        QXmlStreamReader reader(d->reply);
         QList<Imageinfo> imageinfos;
         Imageinfo imageinfo;
         while (!reader.atEnd() && !reader.hasError()) {

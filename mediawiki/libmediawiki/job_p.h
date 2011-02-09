@@ -36,6 +36,7 @@ public:
 
     MediaWiki & mediawiki;
     QNetworkAccessManager * const manager;
+    QNetworkReply * reply;
 
 };
 
