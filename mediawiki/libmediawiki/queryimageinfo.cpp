@@ -70,7 +70,6 @@ QueryImageinfo::QueryImageinfo(MediaWiki & mediawiki, QObject * parent)
 {
     Q_D(QueryImageinfo);
     d->onlyOneSignal = false;
-    setCapabilities(KJob::NoCapabilities);
 }
 
 QueryImageinfo::~QueryImageinfo() {}

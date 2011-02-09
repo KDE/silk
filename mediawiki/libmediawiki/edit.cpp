@@ -356,7 +356,6 @@ void Edit::finishedCaptcha( const QString & captcha )
     // Send the request
     d->reply = d->manager->post( request, data.toUtf8() );
     connect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );
-    QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 
 int Edit::getError(const QString & error)

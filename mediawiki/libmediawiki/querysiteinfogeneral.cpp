@@ -49,9 +49,7 @@ using namespace mediawiki;
 
 QuerySiteInfoGeneral::QuerySiteInfoGeneral(MediaWiki & mediawiki, QObject *parent)
     : Job(*new QuerySiteInfoGeneralPrivate(mediawiki))
-{
-    setCapabilities(Job::NoCapabilities);
-}
+{}
 
 QuerySiteInfoGeneral::~QuerySiteInfoGeneral() {}
 

@@ -55,11 +55,6 @@ public:
         BadXml = Job::UserDefinedError + 1,
 
         /**
-         * @brief
-         */
-        ConnectionAborted,
-
-        /**
          * @brief You didn't set the login parameter
          */
         LoginMissing,
@@ -131,11 +126,6 @@ public:
     virtual void start();    
 
 private slots:
-
-    /**
-     * @brief Destroy the connection.
-     */
-    void abort();
 
     /**
      * @brief Send a request to get the token and the cookie.

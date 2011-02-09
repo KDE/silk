@@ -57,6 +57,11 @@ public:
      */
     virtual ~Job();
 
+    /**
+     * @brief Aborts this job quietly.
+     */
+    virtual bool doKill();
+
 protected:
 
     /**

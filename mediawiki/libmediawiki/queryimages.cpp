@@ -50,9 +50,7 @@ using namespace mediawiki;
 
 QueryImages::QueryImages(MediaWiki & mediawiki, QObject * parent)
     : Job(*new QueryImagesPrivate(mediawiki, "10"), parent)
-{
-    setCapabilities(KJob::NoCapabilities);
-}
+{}
 
 void QueryImages::setTitle(const QString & title) {
     Q_D(QueryImages);

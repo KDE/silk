@@ -138,19 +138,6 @@ private slots:
 
     }
 
-    void loginTestConnectionAbortLogin()
-    {
-        loginCount = 0;
-        MediaWiki media(QUrl("http://127.0.0.2:910"));
-        Login login(media, "alexTest", "test");
-
-        connect(&login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
-        login.exec();
-        QCOMPARE(this->loginCount, 1);
-        QCOMPARE(login.error(), (int)Login::ConnectionAborted);
-
-    }
-
     void loginTestNoNameLogin()
     {
         loginCount = 0;

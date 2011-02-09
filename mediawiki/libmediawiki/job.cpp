@@ -17,6 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <QtNetwork/QNetworkReply>
+
 #include "mediawiki.h"
 #include "job_p.h"
 
@@ -28,10 +30,19 @@ Job::Job(JobPrivate & dd, QObject * parent)
     : KJob(parent)
     , d_ptr(&dd)
 {
-    //FIXME: set capabilitie
+    setCapabilities(Job::Killable);
 }
 
 Job::~Job()
 {
     delete d_ptr;
+}
+
+bool Job::doKill()
+{
+    Q_D(Job);
+    if (d->reply != 0) {
+        d->reply->abort();
+    }
+    return true;
 }

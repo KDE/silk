@@ -55,9 +55,7 @@ using namespace mediawiki;
 
 QueryInfo::QueryInfo(MediaWiki & mediawiki, QObject * parent)
     : Job(*new QueryInfoPrivate(mediawiki), parent)
-{
-    setCapabilities(KJob::NoCapabilities);
-}
+{}
 
 
 QueryInfo::~QueryInfo() {}

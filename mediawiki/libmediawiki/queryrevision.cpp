@@ -53,9 +53,7 @@ using namespace mediawiki;
 
 QueryRevision::QueryRevision(MediaWiki & mediawiki, QObject * parent)
     : Job(*new QueryRevisionPrivate(mediawiki), parent)
-{
-    setCapabilities(KJob::NoCapabilities);
-}
+{}
 
 QueryRevision::~QueryRevision() {}
 

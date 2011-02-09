@@ -51,9 +51,7 @@ using namespace mediawiki;
 
 QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(MediaWiki & mediawiki, QObject * parent)
         : Job(*new QuerySiteinfoUsergroupsPrivate(mediawiki, new QNetworkAccessManager(), false), parent)
-{
-    setCapabilities(Job::NoCapabilities);
-}
+{}
 
 QuerySiteinfoUsergroups::~QuerySiteinfoUsergroups()
 {}

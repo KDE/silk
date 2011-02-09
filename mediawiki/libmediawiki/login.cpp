@@ -56,9 +56,7 @@ using namespace mediawiki;
 
 Login::Login(MediaWiki & mediawiki, const QString & login, const QString & password, QObject * parent)
     : Job(*new LoginPrivate(mediawiki, login, password), parent)
-{
-    setCapabilities(Job::NoCapabilities);
-}
+{}
 
 Login::~Login() {}
 
@@ -85,19 +83,13 @@ void Login::doWorkSendRequest()
     connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
-void Login::abort()
-{
-    this->setError(this->ConnectionAborted);
-    emitResult();
-}
-
 void Login::doWorkProcessReply()
 {
     Q_D(Login);
     disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
     if (d->reply->error() != QNetworkReply::NoError)
     {
-        this->setError(this->ConnectionAborted);
+        this->setError(Job::NetworkError);
         d->reply->close();
         d->reply->deleteLater();
         emitResult();
@@ -195,8 +187,6 @@ void Login::doWorkProcessReply()
     // Send the request
     d->reply = d->manager->post(request, data.toUtf8());
     connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
-    QTimer::singleShot(30 * 1000, this, SLOT(abort()));
-
 }
 
 int Login::getError(const QString & error)
@@ -204,7 +194,6 @@ int Login::getError(const QString & error)
     int ret = 0;
     QStringList list;
     list << "Falsexml"
-            << "ConnectionAbort"
             << "NoName"
             << "Illegal"
             << "NotExists"

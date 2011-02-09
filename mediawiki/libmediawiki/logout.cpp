@@ -46,9 +46,7 @@ using namespace mediawiki;
 
 Logout::Logout(MediaWiki & mediawiki, QObject *parent)
     : Job(*new LogoutPrivate(mediawiki), parent)
-{
-    setCapabilities(KJob::NoCapabilities);
-}
+{}
 
 Logout::~Logout() {}
 
