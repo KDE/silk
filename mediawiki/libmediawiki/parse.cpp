@@ -76,16 +76,16 @@ void Parse::doWorkSendRequest()
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
-    d->manager->get(request);
-    connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
+    d->reply = d->manager->get(request);
+    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
-void Parse::doWorkProcessReply(QNetworkReply * reply)
+void Parse::doWorkProcessReply()
 {
     Q_D(Parse);
-    disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
-    if (reply->error() == QNetworkReply::NoError) {
-        QXmlStreamReader reader(reply);
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    if (d->reply->error() == QNetworkReply::NoError) {
+        QXmlStreamReader reader(d->reply);
         QString text;
         while (!reader.atEnd() && !reader.hasError()) {
             QXmlStreamReader::TokenType token = reader.readNext();
@@ -106,7 +106,7 @@ void Parse::doWorkProcessReply(QNetworkReply * reply)
     else {
         setError(Parse::NetworkError);
     }
-    reply->close();
-    reply->deleteLater();
+    d->reply->close();
+    d->reply->deleteLater();
     emitResult();
 }
