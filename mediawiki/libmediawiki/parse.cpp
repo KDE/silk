@@ -22,19 +22,20 @@
 #include <QtCore/QXmlStreamReader>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
+#include <QDebug>
 
 #include "job_p.h"
 #include "mediawiki.h"
-#include "parser.h"
+#include "parse.h"
 
 namespace mediawiki
 {
 
-class ParserPrivate : public JobPrivate {
+class ParsePrivate : public JobPrivate {
 
 public:
 
-    ParserPrivate(MediaWiki & mediawiki)
+    ParsePrivate(MediaWiki & mediawiki)
         : JobPrivate(mediawiki)
     {}
 
@@ -46,32 +47,26 @@ public:
 
 using namespace mediawiki ;
 
-Parser::Parser(MediaWiki & mediawiki, QObject * parent)
-    : Job(*new ParserPrivate(mediawiki), parent)
+Parse::Parse(MediaWiki & mediawiki, QObject * parent)
+    : Job(*new ParsePrivate(mediawiki), parent)
 {}
 
-Parser::~Parser() {}
+Parse::~Parse() {}
 
-QString Parser::text() const
+void Parse::setText(const QString & text)
 {
-    Q_D(const Parser);
-    return d->text;
-}
-
-void Parser::setText(const QString & text)
-{
-    Q_D(Parser);
+    Q_D(Parse);
     d->text = text;
 }
 
-void Parser::start()
+void Parse::start()
 {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
-void Parser::doWorkSendRequest()
+void Parse::doWorkSendRequest()
 {
-    Q_D(Parser);
+    Q_D(Parse);
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
@@ -85,9 +80,9 @@ void Parser::doWorkSendRequest()
     connect(d->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
 }
 
-void Parser::doWorkProcessReply(QNetworkReply * reply)
+void Parse::doWorkProcessReply(QNetworkReply * reply)
 {
-    Q_D(Parser);
+    Q_D(Parse);
     disconnect(d->manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(doWorkProcessReply(QNetworkReply *)));
     if (reply->error() == QNetworkReply::NoError) {
         QXmlStreamReader reader(reply);
@@ -97,6 +92,7 @@ void Parser::doWorkProcessReply(QNetworkReply * reply)
             if (token == QXmlStreamReader::StartElement) {
                 if (reader.name() == "text") {
                     text = reader.text().toString();
+                    setError(Parse::NoError);
                 }
             }
         }
@@ -104,11 +100,13 @@ void Parser::doWorkProcessReply(QNetworkReply * reply)
             emit result(text);
 
         } else {
-            setError(Parser::XmlError);
+            setError(Parse::XmlError);
         }
     }
     else {
-        setError(Parser::NetworkError);
+        setError(Parse::NetworkError);
     }
+    reply->close();
+    reply->deleteLater();
     emitResult();
 }

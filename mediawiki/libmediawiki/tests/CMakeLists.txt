@@ -37,6 +37,7 @@ set( ressources_RC
     queryrevisiontest_useronly.rc
     queryrevisiontest_parsetree.rc
     queryrevisiontest_rollback.rc
+    parsetest.rc
 )
 install(FILES ${ressources_RC} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 

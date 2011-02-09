@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef PARSE_H
+#define PARSE_H
 
 #include <QtCore/QString>
 #include "job.h"
@@ -30,20 +30,40 @@ class QNetworkReply;
 namespace mediawiki {
 
 class MediaWiki;
-class ParserPrivate;
+class ParsePrivate;
 
-class MEDIAWIKI_EXPORT Parser : public Job {
+class MEDIAWIKI_EXPORT Parse : public Job {
 
     Q_OBJECT
-    Q_DECLARE_PRIVATE(Parser)
+    Q_DECLARE_PRIVATE(Parse)
 
 public:
 
-    explicit Parser(MediaWiki & mediawiki, QObject * parent = 0);
+    /**
+     * @brief Indicates all possible error conditions found during the processing of the job.
+     */
+    enum {
 
-    virtual ~Parser();
+        /**
+         * @brief An internal error occurred.
+         */
+        InternalError= Job::UserDefinedError+1,
 
-    QString text() const;
+        /**
+         * @brief The page parameter cannot be used together with the text and title parameters
+         */
+        TooManyParams,
+
+        /**
+         * @brief The page you specified doesn't exist
+         */
+        MissingPage
+
+    };
+
+    explicit Parse(MediaWiki & mediawiki, QObject * parent = 0);
+
+    virtual ~Parse();
 
     void setText(const QString & text);
 
@@ -64,4 +84,4 @@ signals:
 
 }
 
-#endif // PARSER_H
+#endif // PARSE_H
