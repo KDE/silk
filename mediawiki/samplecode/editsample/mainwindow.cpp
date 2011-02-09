@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    mediawiki(QUrl("http://en.wikipedia.org/w/api.php"))
+    mediawiki(QUrl("http://test.wikipedia.org/w/api.php"))
 {
     ui->setupUi(this);
 }
@@ -16,20 +16,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    Login *login = new Login(mediawiki, "iup", "isi");
+    Login *login = new Login(mediawiki, this->ui->mLoginEdit->text(), this->ui->mMdpEdit->text());
     connect(login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
     login->start();
 }
 void MainWindow::loginHandle(KJob* login)
 {
-    qDebug() << login->error();
+    qDebug() << "Login : " << login->error();
     Edit * job = new Edit( mediawiki,NULL);
-    job->setPageName("User:Iup");
+    job->setPageName(this->ui->mPageEdit->text());
     job->setText(this->ui->plainTextEdit->toPlainText());
     connect(job, SIGNAL(result(KJob *)),this, SLOT(editHandle(KJob*)));
     job->start();
 }
 void MainWindow::editHandle(KJob* job)
 {
-    qDebug() << job->error();
+    qDebug() << "Edit : " << job->error();
 }
