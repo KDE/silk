@@ -39,7 +39,7 @@ public:
         : JobPrivate(mediawiki)
     {}
 
-    QString text;
+    QMap<QString, QString> requestParameter;
 
 };
 
@@ -53,10 +53,28 @@ Parse::Parse(MediaWiki & mediawiki, QObject * parent)
 
 Parse::~Parse() {}
 
-void Parse::setText(const QString & text)
+void Parse::setText(const QString & param)
 {
     Q_D(Parse);
-    d->text = text;
+    d->requestParameter["text"] = param;
+}
+
+void Parse::setTitle(const QString & param)
+{
+    Q_D(Parse);
+    d->requestParameter["title"] = param;
+}
+
+void Parse::setPageName(const QString & param)
+{
+    Q_D(Parse);
+    d->requestParameter["page"] = param;
+}
+
+void Parse::setUseLang(const QString &param)
+{
+    Q_D(Parse);
+    d->requestParameter["uselang"] = param;
 }
 
 void Parse::start()
@@ -71,7 +89,12 @@ void Parse::doWorkSendRequest()
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "parse");
-    url.addQueryItem("text", d->text);
+
+    QMapIterator<QString, QString> i(d->requestParameter);
+    while (i.hasNext()) {
+        i.next();
+        url.addEncodedQueryItem(QByteArray(i.key().toStdString().c_str()), QByteArray(i.value().toStdString().c_str()));
+    }
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
@@ -93,6 +116,18 @@ void Parse::doWorkProcessReply()
                 if (reader.name() == "text") {
                     text = reader.text().toString();
                     setError(Parse::NoError);
+                }
+                else if (reader.name() == "error")
+                {
+                    if (reader.attributes().value("code").toString() == QString("params"))
+                        this->setError(this->TooManyParams);
+                    else if (reader.attributes().value("code").toString() == QString("missingtitle"))
+                        this->setError(this->MissingPage);
+
+                    d->reply->close();
+                    d->reply->deleteLater();
+                    emitResult();
+                    return;
                 }
             }
         }

@@ -22,6 +22,7 @@
 #define PARSE_H
 
 #include <QtCore/QString>
+#include <QLocale>
 #include "job.h"
 #include "mediawiki_export.h"
 
@@ -65,7 +66,13 @@ public:
 
     virtual ~Parse();
 
-    void setText(const QString & text);
+    void setText(const QString & param);
+
+    void setTitle(const QString & param);
+
+    void setPageName(const QString & param);
+
+    void setUseLang(const QString & param);
 
     virtual void start();
 
