@@ -35,6 +35,7 @@ set(mediawiki_SRCS
     usergroup.cpp
     revision.cpp
     page.cpp
+    parser.cpp
     protection.cpp
     upload.cpp
 )
