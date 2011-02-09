@@ -275,7 +275,6 @@ void Edit::doWorkSendRequest(Page page)
     // Send the request
     d->manager->post( request, url.toString().toUtf8() );
     connect( d->manager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT( finishedEdit( QNetworkReply * ) ) );
-    QTimer::singleShot( 30 * 1000, this, SLOT( abort() ) );
 }
 
 void Edit::finishedEdit( QNetworkReply *reply )
