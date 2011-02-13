@@ -1,25 +1,52 @@
 [Global]
 IconName=internet-web-browser
 Comment=Selkie
+Comment[pt]=Selkie
+Comment[uk]=Selkie
+Comment[x-test]=xxSelkiexx
 Name=Web Application
+Name[pt]=Aplicação Web
+Name[uk]=Веб-програма
+Name[x-test]=xxWeb Applicationxx
 
 [Context/group]
 Name=Selkie Notifications
+Name[pt]=Notificações do Selkie
+Name[uk]=Сповіщення Selkie
+Name[x-test]=xxSelkie Notificationsxx
 Comment=Notifications from the Selkie Browser
+Comment[pt]=Notificações do Navegador do Selkie
+Comment[uk]=Сповіщення від переглядача Selkie
+Comment[x-test]=xxNotifications from the Selkie Browserxx
 
 [Context/folder]
 Name=Selkie Notifications
+Name[pt]=Notificações do Selkie
+Name[uk]=Сповіщення Selkie
+Name[x-test]=xxSelkie Notificationsxx
 
 
 [Event/popup]
 Name=Selkie Popup
+Name[pt]=Mensagem do Selkie
+Name[uk]=Контекстне сповіщення Selkie
+Name[x-test]=xxSelkie Popupxx
 Comment=Selkie has triggered a notification
+Comment[pt]=O Selkie despoletou uma notificação
+Comment[uk]=Selkie було увімкнено сповіщення
+Comment[x-test]=xxSelkie has triggered a notificationxx
 Contexts=folder,group
 Action=Popup
 
 [Event/fancynotification]
 Name=FancyNotification
+Name[pt]=Notificação Bonita
+Name[uk]=FancyNotification
+Name[x-test]=xxFancyNotificationxx
 Comment=Notification with highlight sound
+Comment[pt]=Notificação com som de realce
+Comment[uk]=Сповіщення зі звуковим супроводом
+Comment[x-test]=xxNotification with highlight soundxx
 Contexts=folder,group
 Sound=KDE-Im-Highlight-Msg.ogg
 Action=Sound|Popup

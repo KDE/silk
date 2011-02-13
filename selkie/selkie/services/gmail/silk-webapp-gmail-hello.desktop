@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Hello
+Name[nl]=Hallo
+Name[pt]=Olá
+Name[uk]=Привіт
+Name[x-test]=xxHelloxx
 Comment=Trigger a Notification saying Hello
+Comment[nl]=Een melding starten door Hallo te zeggen
+Comment[pt]=Emitir uma Notificação a dizer Olá
+Comment[uk]=Запуск сповіщення з привітанням
+Comment[x-test]=xxTrigger a Notification saying Helloxx
 Icon=dialog-information
 
 Type=Service

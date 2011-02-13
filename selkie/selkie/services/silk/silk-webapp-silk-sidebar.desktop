@@ -1,7 +1,14 @@
 [Desktop Entry]
 Comment=Toggle the Chrome in Gitorious Interface
+Comment[pt]=Activar o Chrome na Interface do Gitorious
+Comment[uk]=Увімкнути або вимкнути Chrome у інтерфейсі Gitorious
+Comment[x-test]=xxToggle the Chrome in Gitorious Interfacexx
 Icon=view-fullscreen
 Name=Toggle Chrome
+Name[nl]=Chrome omschakelen
+Name[pt]=Activar o Chrome
+Name[uk]=Вмикання або вимикання Chrome
+Name[x-test]=xxToggle Chromexx
 Type=Service
 X-KDE-PluginInfo-Name=silk-sidebar
 X-KDE-ServiceTypes=Silk/WebApp/Action

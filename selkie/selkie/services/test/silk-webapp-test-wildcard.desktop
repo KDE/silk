@@ -1,7 +1,13 @@
 [Desktop Entry]
 Comment=An action triggered by a Wildcard
+Comment[pt]=Uma acção despoletada por uma sequência de caracteres especiais
+Comment[uk]=Дія, увімкнена шаблоном заміни
+Comment[x-test]=xxAn action triggered by a Wildcardxx
 Icon=flag-blue
 Name=Wildcard Match
+Name[pt]=Correspondência de Caracteres Especiais
+Name[uk]=Відповідність шаблону заміни
+Name[x-test]=xxWildcard Matchxx
 Type=Service
 X-KDE-PluginInfo-Name=silk-test-wildcard
 X-KDE-ServiceTypes=Silk/WebApp/Action

@@ -1,7 +1,13 @@
 [Desktop Entry]
 Comment=An action in the Toolbar
+Comment[pt]=Uma acção na barra de ferramentas
+Comment[uk]=Дія на панелі інструментів
+Comment[x-test]=xxAn action in the Toolbarxx
 Icon=flag-green
 Name=Scale Content
+Name[pt]=Ajustar o Conteúdo
+Name[uk]=Масштабування вмісту
+Name[x-test]=xxScale Contentxx
 Type=Service
 X-KDE-PluginInfo-Name=silk-test-toolbar
 X-KDE-ServiceTypes=Silk/WebApp/Action

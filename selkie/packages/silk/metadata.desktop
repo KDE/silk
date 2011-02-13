@@ -1,6 +1,13 @@
 [Desktop Entry]
 Name=Gitorious Silk
+Name[nl]=Gitorious Silk
+Name[pt]=Gitorious Silk
+Name[uk]=Gitorious Silk
+Name[x-test]=xxGitorious Silkxx
 Comment=Project Silk on Gitorious
+Comment[pt]=Projecto Silk no Gitorious
+Comment[uk]=Проект Silk у Gitorious
+Comment[x-test]=xxProject Silk on Gitoriousxx
 Icon=project-development
 Type=Service
 

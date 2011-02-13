@@ -1,7 +1,14 @@
 [Desktop Entry]
 Comment=Triggers an action on a URL
+Comment[nl]=Start een actie op een URL
+Comment[pt]=Despoleta uma acção num dado URL
+Comment[uk]=Вмикає дію у відповідь на вказану адресу URL
+Comment[x-test]=xxTriggers an action on a URLxx
 Icon=flag-yellow
 Name=Toggle Header
+Name[pt]=Comutar o Cabeçalho
+Name[uk]=Вмикання або вимикання заголовка
+Name[x-test]=xxToggle Headerxx
 Type=Service
 X-KDE-PluginInfo-Name=silk-test-trigger
 X-KDE-ServiceTypes=Silk/WebApp/Action

@@ -1,6 +1,12 @@
 [Desktop Entry]
 Name=Geoweb - Open Street Map - Map
+Name[pt]=Geoweb - Open Street Map - Mapa
+Name[uk]=Geoweb — Open Street Map — Карта
+Name[x-test]=xxGeoweb - Open Street Map - Mapxx
 Comment=Applet for Geoweb - Open Street Map
+Comment[pt]='Applet' para o Geoweb - Open Street Map
+Comment[uk]=Аплет Geoweb — Open Street Map
+Comment[x-test]=xxApplet for Geoweb - Open Street Mapxx
 Type=Service
 ServiceTypes=Plasma/Applet
 

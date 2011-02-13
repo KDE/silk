@@ -1,6 +1,12 @@
 [Desktop Entry]
 Name=Buienradar
+Name[pt]=Buienradar
+Name[uk]=Buienradar
+Name[x-test]=xxBuienradarxx
 Comment=Rain in The Netherlands?
+Comment[pt]=Chove na Holanda?
+Comment[uk]=Дощ у Нідерландах?
+Comment[x-test]=xxRain in The Netherlands?xx
 Icon=kweather
 Type=Service
 

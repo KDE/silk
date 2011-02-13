@@ -1,6 +1,12 @@
 [Desktop Entry]
 Name=Geoweb - Hello
+Name[pt]=Geoweb - Olá
+Name[uk]=Geoweb — Привіт
+Name[x-test]=xxGeoweb - Helloxx
 Comment=Applet for Geoweb source - Hello
+Comment[pt]='Applet' para a fonte do Geoweb - Olá
+Comment[uk]=Аплет даних Geoweb — Привіт
+Comment[x-test]=xxApplet for Geoweb source - Helloxx
 Type=Service
 ServiceTypes=Plasma/Applet
 

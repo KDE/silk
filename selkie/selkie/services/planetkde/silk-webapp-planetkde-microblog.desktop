@@ -1,7 +1,17 @@
 [Desktop Entry]
 Comment=Compose a New Email
+Comment[nl]=Een nieuwe e-mail maken
+Comment[pt]=Compor um Novo E-Mail
+Comment[sv]=Skriv ett nytt brev
+Comment[uk]=Створення повідомлення електронної пошти
+Comment[x-test]=xxCompose a New Emailxx
 Icon=im-status-message-edit
 Name=Compose
+Name[nl]=Maken
+Name[pt]=Compor
+Name[sv]=Skriv brev
+Name[uk]=Створення
+Name[x-test]=xxComposexx
 Type=Service
 X-KDE-PluginInfo-Depends=gmail
 X-KDE-PluginInfo-Name=im-status-message-edit

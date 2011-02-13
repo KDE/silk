@@ -1,6 +1,15 @@
 [Desktop Entry]
 Name=Print
+Name[nl]=Afdrukken
+Name[pt]=Imprimir
+Name[sv]=Skriv ut
+Name[uk]=Друк
+Name[x-test]=xxPrintxx
 Comment=Print the current page
+Comment[nl]=De huidige pagina afdrukken
+Comment[pt]=Imprimir a página actual
+Comment[uk]=Друк поточної сторінки
+Comment[x-test]=xxPrint the current pagexx
 Icon=document-print
 
 Type=Service

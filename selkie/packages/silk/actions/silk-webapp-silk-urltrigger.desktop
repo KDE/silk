@@ -1,7 +1,16 @@
 [Desktop Entry]
 Comment=Triggers an action on a URL
+Comment[nl]=Start een actie op een URL
+Comment[pt]=Despoleta uma acção num dado URL
+Comment[uk]=Вмикає дію у відповідь на вказану адресу URL
+Comment[x-test]=xxTriggers an action on a URLxx
 Icon=flag-green
 Name=Trigger
+Name[nl]=Starter
+Name[pt]=Despoletar
+Name[sv]=Utlösare
+Name[uk]=Тригер
+Name[x-test]=xxTriggerxx
 Type=Service
 X-KDE-PluginInfo-Name=silk-urltrigger
 X-KDE-ServiceTypes=Silk/WebApp/Action

@@ -3,7 +3,13 @@ Type=ServiceType
 X-KDE-ServiceType=Silk/WebApp
 
 Name=Silk WebApp
+Name[pt]=Aplicação Web do Silk
+Name[uk]=Веб-програма Silk
+Name[x-test]=xxSilk WebAppxx
 Comment=Silk Web Application
+Comment[pt]=Aplicação Web do Silk
+Comment[uk]=Веб-програма Silk
+Comment[x-test]=xxSilk Web Applicationxx
 
 [PropertyDef::X-Silk-StartUrl]
 Type=QString

@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Source Tree
+Name[nl]=Boomstructuur van bron
+Name[pt]=Árvore de Código
+Name[uk]=Структура коду
+Name[x-test]=xxSource Treexx
 Comment=View Project Silk's Commit Log
+Comment[nl]=Log van vastleggen van project Silk bekijken
+Comment[pt]=Ver o Registo de Envios para o Projecto Silk
+Comment[uk]=Перегляд журналу внесків проекту Silk
+Comment[x-test]=xxView Project Silk's Commit Logxx
 Icon=view-list-tree
 
 Type=Service

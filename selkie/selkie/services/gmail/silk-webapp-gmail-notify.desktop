@@ -1,6 +1,15 @@
 [Desktop Entry]
 Name=Notify
+Name[nl]=Melden
+Name[pt]=Notificação
+Name[sv]=Underrättelse
+Name[uk]=Сповіщення
+Name[x-test]=xxNotifyxx
 Comment=Trigger a Notification
+Comment[nl]=Melding starten
+Comment[pt]=Emitir uma Notificação
+Comment[uk]=Вмикає сповіщення
+Comment[x-test]=xxTrigger a Notificationxx
 Icon=dialog-information
 
 Type=Service

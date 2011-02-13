@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Planet KDE
+Name[nl]=Planet KDE
+Name[pt]=Planet KDE
+Name[sv]=Planet KDE
+Name[uk]=Планета KDE
+Name[x-test]=xxPlanet KDExx
 Comment=KDE Developer Weblogs
+Comment[pt]='Blogs' Web de Desenvolvimento do KDE
+Comment[uk]=Блоги розробників KDE
+Comment[x-test]=xxKDE Developer Weblogsxx
 Icon=kde
 Type=Service
 

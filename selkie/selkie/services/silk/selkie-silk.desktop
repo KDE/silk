@@ -1,7 +1,17 @@
 [Desktop Entry]
 Name=Gitorious Silk
+Name[nl]=Gitorious Silk
+Name[pt]=Gitorious Silk
+Name[uk]=Gitorious Silk
+Name[x-test]=xxGitorious Silkxx
 GenericName=Project Silk's Repository on Gitorious
+GenericName[pt]=Repositório do Projecto Silk no Gitorious
+GenericName[uk]=Сховище коду проекту Silk у Gitorious
+GenericName[x-test]=xxProject Silk's Repository on Gitoriousxx
 Comment=Project Silk on Gitorious
+Comment[pt]=Projecto Silk no Gitorious
+Comment[uk]=Проект Silk у Gitorious
+Comment[x-test]=xxProject Silk on Gitoriousxx
 Exec=selkie silk
 Icon=project-development
 Type=Application

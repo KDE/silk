@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=GMail
+Name[nl]=GMail
+Name[pt]=GMail
+Name[sv]=Gmail
+Name[uk]=GMail
+Name[x-test]=xxGMailxx
 Comment=A GMail Browser
+Comment[pt]=Um Navegador do GMail
+Comment[uk]=Переглядач GMail
+Comment[x-test]=xxA GMail Browserxx
 Exec=selkie gmail
 Icon=mail-message
 Type=Application

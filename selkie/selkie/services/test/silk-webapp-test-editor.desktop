@@ -1,7 +1,15 @@
 [Desktop Entry]
 Comment=Show a native system notification
+Comment[pt]=Mostrar uma notificação nativa do sistema
+Comment[uk]=Показ типового системного сповіщення
+Comment[x-test]=xxShow a native system notificationxx
 Icon=media-playlist-shuffle
 Name=Notify
+Name[nl]=Melden
+Name[pt]=Notificação
+Name[sv]=Underrättelse
+Name[uk]=Сповіщення
+Name[x-test]=xxNotifyxx
 Type=Service
 X-KDE-PluginInfo-Author=Sebastian
 X-KDE-PluginInfo-Name=silk-test-editor

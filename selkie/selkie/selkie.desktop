@@ -1,6 +1,12 @@
 [Desktop Entry]
 Name=Selkie
+Name[pt]=Selkie
+Name[uk]=Selkie
+Name[x-test]=xxSelkiexx
 GenericName=Experimental site-specific Web Browser
+GenericName[pt]=Navegador Web experimental específico do servidor
+GenericName[uk]=Експериментальна програма для перегляду певних сайтів
+GenericName[x-test]=xxExperimental site-specific Web Browserxx
 Exec=selkie silk
 Icon=webkit
 Type=Application
