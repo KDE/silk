@@ -20,6 +20,9 @@ public:
      */
     ~Revision();
 
+    /**
+     * @brief Construct by copy.
+     */
     Revision(const Revision & other);
 
 
@@ -29,7 +32,6 @@ public:
      */
     Revision & operator=(Revision other);
     /**
-     * @brief
      * @param Revision Id
      */
     void setRevId(int id);
