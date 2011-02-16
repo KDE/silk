@@ -11,6 +11,7 @@ namespace mediawiki {
 /**
  * @brief An image info.
  */
+    //FIXME: virer les espaces doubles
 class MEDIAWIKI_EXPORT Revision {
 
 public:

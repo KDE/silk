@@ -70,7 +70,7 @@ public:
      */
     virtual void start();
 
-    Generalinfo getResult(); //FIXME: Mettre un signal
+    Generalinfo getResult(); //FIXME: Mettre un signal result
 
 private slots:
 

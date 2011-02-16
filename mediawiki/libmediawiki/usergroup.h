@@ -79,6 +79,7 @@ public:
      * @brief Returns rights of the user group.
      * @return rights of the user group
      */
+    // FIXME: supprimer ou par copie
     QList<QString> & rights();
 
     /**

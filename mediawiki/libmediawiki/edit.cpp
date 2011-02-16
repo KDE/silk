@@ -37,6 +37,7 @@ namespace mediawiki
 
 /**
  * @brief An edit result.
+ * FIXME: virer les getteur
  */
 struct Result
 {
@@ -193,6 +194,7 @@ void Edit::setSummary(const QString & summary)
     Q_D(Edit);
     d->requestParameter["summary"] = summary;
 }
+
 void Edit::setWatchList(Edit::Watchlist watchlist)
 {
     Q_D(Edit);

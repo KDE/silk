@@ -199,7 +199,7 @@ public:
         nochange
 
     };
-
+    //FIXME: virer les espaces
     /**
      * @brief Specify how the watchlist is affected by this edit.
      * @param watchlist Specify how the watchlist is affected by this edit
@@ -283,6 +283,7 @@ public:
      * @brief Which properties .
      * @param text the page content.
      */
+
     void setText( const QString&);
 
 signals:

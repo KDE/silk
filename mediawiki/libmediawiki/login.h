@@ -146,6 +146,7 @@ private:
      * @brief Get the error number.
      * @param error the error sent by the API.
      */
+    //FIXME: getError -> error
     int getError(const QString & error);
 };
 

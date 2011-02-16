@@ -164,7 +164,7 @@ private slots:
     void doWorkProcessReply();
 
 private:
-
+    //FIXME: error
     int getError(const QString & error);
 
 };

@@ -179,6 +179,7 @@ public:
      * @brief Get the rights titled.
      * @return the rights titled
      */
+    //FIXME: mettre une liste pour unifier avec usergroups
     QString rights() const;
 
     /**
