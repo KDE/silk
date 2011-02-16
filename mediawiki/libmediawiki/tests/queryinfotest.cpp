@@ -63,10 +63,10 @@ void debugProtection(QVector <Protection> p)
 {
     foreach(Protection pr, p)
     {
-        qDebug() << pr.Type();
-        qDebug() << pr.Level();
-        qDebug() << pr.Expiry();
-        qDebug() << pr.Source();
+        qDebug() << pr.type();
+        qDebug() << pr.level();
+        qDebug() << pr.expiry();
+        qDebug() << pr.source();
     }
 }
 

@@ -23,41 +23,95 @@
 
 namespace mediawiki {
 
+/**
+ * @brief Protection info job.
+ *
+ * Represent protection parameters in a page.
+ */
 class MEDIAWIKI_EXPORT Protection {
 
 public:
 
+    /**
+     * @brief Constructs a protection.
+     *
+     * You can set parameters of the protection after.
+     */
     Protection();
 
-    ~Protection();
-
+    /**
+     * @brief Constructs an protection from an other protection.
+     * @param other an other protection
+     */
     Protection(const Protection & other);
 
+    /**
+     * @brief Destructs a protection.
+     */
+    ~Protection();
+
+    /**
+     * @brief Assingning an protection from an other protection.
+     * @param other an other protection
+     */
     Protection & operator=(Protection other);
 
+    /**
+     * @brief Set the protection type.
+     * @param type the protection type
+     */
     void setType(const QString & type);
 
-    QString Type() const;
+    /**
+     * @brief Get the protection type.
+     * @return the protection type
+     */
+    QString type() const;
 
+    /**
+     * @brief Set the page protection level.
+     * @param level the page protection level
+     */
     void setLevel(const QString & level);
 
-    QString Level() const;
+    /**
+     * @brief Get the page protection level.
+     * @return the page protection level
+     */
+    QString level() const;
 
+    /**
+     * @brief Set the expiry date.
+     * @param expiry the expiry date
+     */
     void setExpiry(const QString & expiry);
 
-    QString Expiry() const;
+    /**
+   ² * @brief Get the expiry date.
+     * @return the expiry date
+     */
+    QString expiry() const;
 
+    /**
+     * @brief Set the source.
+     * @param source the source
+     */
     void setSource(const QString & source);
 
-    QString Source() const;
+    /**
+     * @brief Get the source.
+     * @return the source
+     */
+    QString source() const;
 
 private:
 
     class ProtectionInfo * d;
 
 };
-}
-#endif // PROTECTION_H
 
+}
 
 MEDIAWIKI_EXPORT bool operator==(const mediawiki::Protection & lhs, const mediawiki::Protection & rhs);
+
+#endif // PROTECTION_H

@@ -60,10 +60,10 @@ Protection & Protection::operator=(Protection other)
 
 bool operator==(const Protection & ptc, const Protection & ptc2)
 {
-return ptc.Type() == ptc2.Type() &&
-       ptc.Level() == ptc2.Level() &&
-       ptc.Expiry() == ptc2.Expiry() &&
-       ptc.Source() == ptc2.Source() ;
+return ptc.type() == ptc2.type() &&
+       ptc.level() == ptc2.level() &&
+       ptc.expiry() == ptc2.expiry() &&
+       ptc.source() == ptc2.source() ;
 }
 
 void Protection::setType(const QString & type)
@@ -71,7 +71,7 @@ void Protection::setType(const QString & type)
     d->type = type;
 }
 
-QString Protection::Type() const
+QString Protection::type() const
 {
     return d->type;
 }
@@ -81,7 +81,7 @@ void Protection::setLevel(const QString & level)
     d->level = level;
 }
 
-QString Protection::Level() const
+QString Protection::level() const
 {
     return d->level;
 }
@@ -91,7 +91,7 @@ void Protection::setExpiry(const QString & expiry)
     d->expiry = expiry;
 }
 
-QString Protection::Expiry() const
+QString Protection::expiry() const
 {
     return d->expiry;
 }
@@ -101,7 +101,7 @@ void Protection::setSource(const QString & source)
     d->source = source;
 }
 
-QString Protection::Source() const
+QString Protection::source() const
 {
     return d->source;
 }
