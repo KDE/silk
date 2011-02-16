@@ -40,7 +40,7 @@ public:
     Image();
 
     /**
-     * @brief Constructs an image an other image.
+     * @brief Constructs an image from an other image.
      * @param other an other image
      */
     Image(const Image & other);
