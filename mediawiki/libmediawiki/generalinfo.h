@@ -19,7 +19,9 @@
 #ifndef GENERALINFO_H
 #define GENERALINFO_H
 
+#include <QtCore/QDateTime>
 #include <QtCore/QString>
+#include <QtCore/QUrl>
 
 #include "mediawiki_export.h"
 
@@ -71,13 +73,13 @@ public:
      * @brief Get the url of the page.
      * @return the url of the page
      */
-    QString url() const;
+    QUrl url() const;
 
     /**
      * @brief Set the url of the page.
      * @param url the url of the page
      */
-    void setUrl(const QString & url);
+    void setUrl(const QUrl & url);
 
     /**
      * @brief Get the name of the web site.
@@ -246,7 +248,7 @@ public:
      * @brief Set the timeOffset.
      * @param timeOffset
      */
-    void setTimeOffSet(const QString & timeOffset);
+    void setTimeOffset(const QString & timeOffset);
 
     /**
      * @brief Get the path of the article.
@@ -300,13 +302,13 @@ public:
      * @brief Get the url of the server.
      * @return the url of the server
      */
-    QString serverUrl() const;
+    QUrl serverUrl() const;
 
     /**
      * @brief Set the url of the server.
      * @param serverUrl the url of the server
      */
-    void setServerUrl(const QString & serverUrl);
+    void setServerUrl(const QUrl & serverUrl);
 
     /**
      * @brief Get the id of the wiki.
@@ -324,13 +326,13 @@ public:
      * @brief Get the time.
      * @return the time
      */
-    QString time() const;
+    QDateTime time() const;
 
     /**
      * @brief Set the time.
      * @param time
      */
-    void setTime(const QString & time);
+    void setTime(const QDateTime & time);
 
 private:
 

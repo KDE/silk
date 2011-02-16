@@ -107,14 +107,14 @@ void QuerySiteInfoGeneral::doWorkProcessReply()
                 d->generalinfo.setFallBack8bitEncoding(reader.attributes().value("fallback8bitEncoding").toString());
                 d->generalinfo.setWriteApi(reader.attributes().value("writeapi").toString());
                 d->generalinfo.setTimeZone(reader.attributes().value("timezone").toString());
-                d->generalinfo.setTimeOffSet(reader.attributes().value("timeoffset").toString());
+                d->generalinfo.setTimeOffset(reader.attributes().value("timeoffset").toString());
                 d->generalinfo.setArticlePath(reader.attributes().value("articlepath").toString());
                 d->generalinfo.setScriptPath(reader.attributes().value("scriptpath").toString());
                 d->generalinfo.setScript(reader.attributes().value("script").toString());
                 d->generalinfo.setVariantArticlePath(reader.attributes().value("variantarticlepath").toString());
                 d->generalinfo.setServerUrl(reader.attributes().value("server").toString());
                 d->generalinfo.setWikiId(reader.attributes().value("wikiid").toString());
-                d->generalinfo.setTime(reader.attributes().value("time").toString());
+                d->generalinfo.setTime(QDateTime::fromString(reader.attributes().value("time").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'"));
             }
             else if(reader.name() == "error")
             {

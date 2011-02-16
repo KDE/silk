@@ -27,7 +27,7 @@ namespace mediawiki {
    public:
 
        QString mainPage;
-       QString url;
+       QUrl url;
        QString siteName;
        QString generator;
        QString phpVersion;
@@ -46,9 +46,9 @@ namespace mediawiki {
        QString scriptPath;
        QString script;
        QString variantArticlePath;
-       QString serverUrl;
+       QUrl serverUrl;
        QString wikiId;
-       QString time;
+       QDateTime time;
    };
 
 }
@@ -84,12 +84,12 @@ void Generalinfo::setMainPage(const QString & mainPage)
     d->mainPage = mainPage;
 }
 
-QString Generalinfo::url() const
+QUrl Generalinfo::url() const
 {
     return d->url;
 }
 
-void Generalinfo::setUrl(const QString & url)
+void Generalinfo::setUrl(const QUrl & url)
 {
     d->url = url;
 }
@@ -229,7 +229,7 @@ QString Generalinfo::timeOffset() const
     return d->timeOffset;
 }
 
-void Generalinfo::setTimeOffSet(const QString & timeOffset)
+void Generalinfo::setTimeOffset(const QString & timeOffset)
 {
     d->timeOffset = timeOffset;
 }
@@ -274,12 +274,12 @@ void Generalinfo::setVariantArticlePath(const QString & variantArticlePath)
     d->variantArticlePath = variantArticlePath;
 }
 
-QString Generalinfo::serverUrl() const
+QUrl Generalinfo::serverUrl() const
 {
     return d->serverUrl;
 }
 
-void Generalinfo::setServerUrl(const QString & serverUrl)
+void Generalinfo::setServerUrl(const QUrl & serverUrl)
 {
     d->serverUrl = serverUrl;
 }
@@ -294,12 +294,12 @@ void Generalinfo::setWikiId(const QString & wikiId)
     d->wikiId = wikiId;
 }
 
-QString Generalinfo::time() const
+QDateTime Generalinfo::time() const
 {
     return d->time;
 }
 
-void Generalinfo::setTime(const QString & time)
+void Generalinfo::setTime(const QDateTime & time)
 {
     d->time = time;
 }
