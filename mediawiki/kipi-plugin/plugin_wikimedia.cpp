@@ -49,7 +49,7 @@ extern "C"
 
 // Local includes
 
-#include "mwwindow.h"
+#include "wmwindow.h"
 #include "wikimediajob.h"
 
 K_PLUGIN_FACTORY( WikiMediaFactory, registerPlugin<Plugin_WikiMedia>(); )
@@ -109,7 +109,7 @@ void Plugin_WikiMedia::slotExport()
     if (!m_dlgExport)
     {
         // We clean it up in the close button
-        m_dlgExport = new KIPIWikiMediaPlugin::MWWindow(interface, tmp, false, kapp->activeWindow());
+        m_dlgExport = new KIPIWikiMediaPlugin::WMWindow(interface, tmp, false, kapp->activeWindow());
     }
     else
     {

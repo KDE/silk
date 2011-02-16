@@ -22,7 +22,7 @@ subdirs(icons)
 
 SET(kipiplugin_wikimedia_PART_SRCS
     plugin_wikimedia.cpp
-    mwwindow.cpp
+    wmwindow.cpp
     wikimediajob.cpp
    )
 

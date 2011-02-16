@@ -45,7 +45,7 @@ class KAction;
 
 namespace KIPIWikiMediaPlugin
 {
-    class MWWindow;
+    class WMWindow;
 }
 
 class KJob;
@@ -76,7 +76,7 @@ public Q_SLOTS:
 private:
 
     KAction                       *m_actionExport;
-    KIPIWikiMediaPlugin::MWWindow *m_dlgExport;
+    KIPIWikiMediaPlugin::WMWindow *m_dlgExport;
 };
 
 #endif // PLUGIN_WIKIMEDIA_H
