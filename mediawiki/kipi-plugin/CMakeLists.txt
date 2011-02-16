@@ -29,7 +29,6 @@ SET(kipiplugin_wikimedia_PART_SRCS
 KDE4_ADD_PLUGIN(kipiplugin_wikimedia ${kipiplugin_wikimedia_PART_SRCS})
 
 TARGET_LINK_LIBRARIES(kipiplugin_wikimedia
-                      kipiplugins
                       ${KIPI_LIBRARIES}
                       ${KEXIV2_LIBRARIES}
                       ${KDCRAW_LIBRARIES}

@@ -14,25 +14,25 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//bouton charger page
+//Load page
 void MainWindow::on_pushButton2_clicked()
 {
-    QueryRevision * const queryrevision(new QueryRevision(mediawiki));
-    qDebug() << "page : " << this->ui->mPageEdit->text();
+    QueryRevision * const queryrevision(new QueryRevision(mediawiki));    
     queryrevision->setPageName(this->ui->mPageEdit->text());
     queryrevision->setProp(QueryRevision::Content);
     queryrevision->setExpandTemplates(true);
     queryrevision->setLimit(1);
     connect(queryrevision, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
     connect(queryrevision, SIGNAL(result(KJob* )),this, SLOT(revisionError(KJob*)));
+    queryrevision->start();
 }
 
 void MainWindow::revisionHandle(const QList<Revision> & revisions)
-{    
+{        
     this->ui->plainTextEdit->setPlainText(revisions[0].content());
 }
 
-//bouton login et envoi
+//Send page
 void MainWindow::on_pushButton1_clicked()
 {
     Login *login = new Login(mediawiki, this->ui->mLoginEdit->text(), this->ui->mMdpEdit->text());
