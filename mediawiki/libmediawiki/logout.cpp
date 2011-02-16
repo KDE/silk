@@ -63,8 +63,9 @@ void Logout::doWorkSendRequest()
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "logout");
     QByteArray cookie = "";
-    for(int i = 0 ; i<d->mediawiki.cookies().size();i++){
-        cookie += d->mediawiki.cookies().at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
+    QList<QNetworkCookie> mediawikiCookies = d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());
+    for(int i = 0 ; i < mediawikiCookies.size(); ++i){
+        cookie += mediawikiCookies.at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
         cookie += ";";
     }
     // Set the request

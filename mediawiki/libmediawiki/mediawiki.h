@@ -69,13 +69,6 @@ public:
      */
     QString userAgent() const;
 
-    /**
-     * @brief Returns the cookies created by the login.
-     * @return the cookies created by the login
-     * FIXME remove
-     */
-    QList<QNetworkCookie> cookies() const;
-
 private:
 
     MediaWikiPrivate * const d_ptr;

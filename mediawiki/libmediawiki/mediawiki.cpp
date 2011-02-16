@@ -58,9 +58,4 @@ QString MediaWiki::userAgent() const
     return d_ptr->userAgent;
 }
 
-QList<QNetworkCookie> MediaWiki::cookies() const
-{
-    return d_ptr->manager->cookieJar()->cookiesForUrl(d_ptr->url);
-}
-
 const QString MediaWikiPrivate::POSTFIX_USER_AGENT = "mediawiki-silk";

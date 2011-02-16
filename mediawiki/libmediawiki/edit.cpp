@@ -258,8 +258,9 @@ void Edit::doWorkSendRequest(Page page)
     }
 
     QByteArray cookie = "";
-    for(int i = 0 ; i<d->mediawiki.cookies().size();i++){
-        cookie += d->mediawiki.cookies().at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
+    QList<QNetworkCookie> mediawikiCookies = d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());
+    for(int i = 0 ; i < mediawikiCookies.size(); ++i){
+        cookie += mediawikiCookies.at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
         cookie += ";";
     }
     // Add the token
@@ -346,8 +347,9 @@ void Edit::finishedCaptcha( const QString & captcha )
     url.addQueryItem("CaptchaAnswer", d->result.captchaAnswer);
     QString data = url.toString();
     QByteArray cookie = "";
-    for(int i = 0 ; i<d->mediawiki.cookies().size();i++){
-        cookie += d->mediawiki.cookies().at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
+    QList<QNetworkCookie> mediawikiCookies = d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());
+    for(int i = 0 ; i < mediawikiCookies.size(); ++i){
+        cookie += mediawikiCookies.at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
         cookie += ";";
     }
 

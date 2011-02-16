@@ -71,7 +71,6 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(m_mediaWiki->cookies().isEmpty(), false);
         QCOMPARE(login.error(), (int)Login::NoError);
     }
 
@@ -94,7 +93,6 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(m_mediaWiki->cookies().isEmpty(), false);
         QCOMPARE(login.error(), (int)Login::NoError);        
     }
 
@@ -113,7 +111,6 @@ private slots:
         login.exec();
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(login.error(), (int)Login::NoError);
-        QCOMPARE(m_mediaWiki->cookies().isEmpty(), false);
     }
 
     void loginTestFalseXMLLogin()
