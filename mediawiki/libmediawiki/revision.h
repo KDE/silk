@@ -73,7 +73,7 @@ public:
     void setMinor(const QString &  minor);
 
     /**
-     * @brief Get Minor  // Missing doc
+     * @brief Get Tags if the revision is minor
      */
     QString minor() const;
 
@@ -90,7 +90,7 @@ public:
     void setTimestamp(const QDateTime & timestamp);
 
     /**
-     * @brief Only list revisions made by this user
+     * @brief Adds the user who made the revision
      */
     QString user() const;
 
