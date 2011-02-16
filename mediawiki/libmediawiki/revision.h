@@ -90,12 +90,12 @@ public:
     void setTimestamp(const QDateTime & timestamp);
 
     /**
-     * @brief Get the user who made the revision
+     * @brief Only list revisions made by this user
      */
     QString user() const;
 
     /**
-     * @brief Set the user who made the revision
+     * @brief Set the list revisions made by this user
      * @param user revision owner
      */
     void setUser(const QString & user);
