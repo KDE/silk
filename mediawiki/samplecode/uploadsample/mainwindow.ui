@@ -35,7 +35,11 @@
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QLineEdit" name="mMdpEdit"/>
+       <widget class="QLineEdit" name="mMdpEdit">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
       </item>
       <item row="1" column="3">
        <widget class="QPushButton" name="pushButton">

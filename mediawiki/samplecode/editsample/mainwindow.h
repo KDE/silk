@@ -27,11 +27,12 @@ private:
     Ui::MainWindow *ui;
     MediaWiki mediawiki;
 private slots:
-    void on_pushButton_clicked();
-    void loginHandle(KJob* login);
-    void editHandle(KJob* job);
-
-
+    void on_pushButton1_clicked();
+    void on_pushButton2_clicked();
+    void loginHandle(KJob* login);    
+    void revisionHandle(const QList<Revision> & revisions);
+    void editError(KJob* job);
+    void revisionError(KJob* job);
 };
 
 #endif // MAINWINDOW_H
