@@ -70,7 +70,13 @@ public:
      */
     virtual void start();
 
-    Generalinfo getResult(); //FIXME: Mettre un signal result
+signals:
+
+    /**
+     * @brief Provide general info.
+     * @param generalinfo the general info
+     */
+    void result(const Generalinfo & generalinfo);
 
 private slots:
 

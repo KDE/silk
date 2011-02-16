@@ -41,9 +41,9 @@ class QuerySiteInfoGeneralTest : public QObject
 
 public slots:
 
-void generalHandle(KJob* job) {
-    generalCount++;
-    generalResults = ((QuerySiteInfoGeneral*)job)->getResult();
+void resultHandle(const Generalinfo & generalinfo) {
+    ++generalCount;
+    generalResult = generalinfo;
 }
 private slots:
 
@@ -63,15 +63,15 @@ void QuerySiteInfoGeneralTestConnectTrue()
     server.addScenario(senario);
     server.startAndWait();
 
-    QuerySiteInfoGeneral general(mediaWiki);
+    QuerySiteInfoGeneral * general = new QuerySiteInfoGeneral(mediaWiki);
 
-    connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
-    general.exec();
+    connect(general, SIGNAL(result(const Generalinfo &)), this, SLOT(resultHandle(const Generalinfo &)));
+    general->exec();
     FakeServer::Request serverrequest = server.getRequest()[0];
     QCOMPARE(this->generalCount, 1);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == QuerySiteInfoGeneral::NoError);
+    QVERIFY(general->error() == QuerySiteInfoGeneral::NoError);
 
 }
 void QuerySiteInfoGeneralTestAttribute()
@@ -85,16 +85,15 @@ void QuerySiteInfoGeneralTestAttribute()
     server.addScenario(senario);
     server.startAndWait();
 
-    QuerySiteInfoGeneral general(mediaWiki);
+    QuerySiteInfoGeneral * general = new QuerySiteInfoGeneral(mediaWiki);
 
-    connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
-    general.exec();
-    Generalinfo result = general.getResult();
+    connect(general, SIGNAL(result(const Generalinfo &)), this, SLOT(resultHandle(const Generalinfo &)));
+    general->exec();
     FakeServer::Request serverrequest = server.getRequest()[0];
     QCOMPARE(this->generalCount, 1);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == QuerySiteInfoGeneral::NoError);
+    QVERIFY(general->error() == QuerySiteInfoGeneral::NoError);
     Generalinfo resultExpected;
     resultExpected.setMainPage(QString("Main Page"));
     resultExpected.setUrl(QUrl("http://en.wikipedia.org/wiki/Main_Page"));
@@ -119,7 +118,7 @@ void QuerySiteInfoGeneralTestAttribute()
     resultExpected.setServerUrl(QUrl("http://en.wikipedia.org"));
     resultExpected.setWikiId(QString("enwiki"));
     resultExpected.setTime(QDateTime(QDate(2010, 10, 24), QTime(19, 53, 13)));
-    QCOMPARE(result, resultExpected);
+    QCOMPARE(generalResult, resultExpected);
 }
 void QuerySiteInfoGeneralTestConnectFalseXML()
 {
@@ -132,15 +131,15 @@ void QuerySiteInfoGeneralTestConnectFalseXML()
     server.addScenario(senario);
     server.startAndWait();
 
-    QuerySiteInfoGeneral general(mediaWiki);
+    QuerySiteInfoGeneral * general = new QuerySiteInfoGeneral(mediaWiki);
 
-    connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
-    general.exec();
+    connect(general, SIGNAL(result(const Generalinfo &)), this, SLOT(resultHandle(const Generalinfo &)));
+    general->exec();
     FakeServer::Request serverrequest = server.getRequest()[0];
-    QCOMPARE(this->generalCount, 1);
+    QCOMPARE(this->generalCount, 0);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == QuerySiteInfoGeneral::XmlError);
+    QVERIFY(general->error() == QuerySiteInfoGeneral::XmlError);
 
 }
 
@@ -155,21 +154,21 @@ void QuerySiteInfoGeneralTestErrortIncludeAllDenied()
     server.addScenario(senario);
     server.startAndWait();
 
-    QuerySiteInfoGeneral general(mediaWiki);
+    QuerySiteInfoGeneral * general = new QuerySiteInfoGeneral(mediaWiki);
 
-    connect(&general, SIGNAL(result(KJob* )),this, SLOT(generalHandle(KJob*)));
-    general.exec();
+    connect(general, SIGNAL(result(const Generalinfo &)), this, SLOT(resultHandle(const Generalinfo &)));
+    general->exec();
     FakeServer::Request serverrequest = server.getRequest()[0];
-    QCOMPARE(this->generalCount, 1);
+    QCOMPARE(this->generalCount, 0);
     QCOMPARE(serverrequest.type, QString("GET"));
     QCOMPARE(serverrequest.value, this->request);
-    QVERIFY(general.error() == QuerySiteInfoGeneral::IncludeAllDenied);
+    QVERIFY(general->error() == QuerySiteInfoGeneral::IncludeAllDenied);
 
 }
 
 private:
     int generalCount;
-    Generalinfo generalResults;
+    Generalinfo generalResult;
     QString request;
 };
 QTEST_MAIN(QuerySiteInfoGeneralTest);

@@ -39,8 +39,6 @@ public:
         : JobPrivate(mediawiki)
     {}
 
-    Generalinfo generalinfo;
-
 };
 
 }
@@ -86,35 +84,35 @@ void QuerySiteInfoGeneral::doWorkProcessReply()
         emitResult();
         return;
     }
-
+    Generalinfo generalinfo;
     QXmlStreamReader reader(d->reply);
     while(!reader.atEnd() && !reader.hasError()) {
         QXmlStreamReader::TokenType token = reader.readNext();
         if(token == QXmlStreamReader::StartElement) {
             if(reader.name() == "general") {
-                d->generalinfo.setMainPage(reader.attributes().value("mainpage").toString());
-                d->generalinfo.setUrl(reader.attributes().value("base").toString());
-                d->generalinfo.setSiteName(reader.attributes().value("sitename").toString());
-                d->generalinfo.setGenerator(reader.attributes().value("generator").toString());
-                d->generalinfo.setPhpVersion(reader.attributes().value("phpversion").toString());
-                d->generalinfo.setPhpApi(reader.attributes().value("phpsapi").toString());
-                d->generalinfo.setDataBaseType(reader.attributes().value("dbtype").toString());
-                d->generalinfo.setDataBaseVersion(reader.attributes().value("dbversion").toString());
-                d->generalinfo.setRev(reader.attributes().value("rev").toString());
-                d->generalinfo.setCas(reader.attributes().value("case").toString());
-                d->generalinfo.setRights(reader.attributes().value("rights").toString());
-                d->generalinfo.setLanguage(reader.attributes().value("lang").toString());
-                d->generalinfo.setFallBack8bitEncoding(reader.attributes().value("fallback8bitEncoding").toString());
-                d->generalinfo.setWriteApi(reader.attributes().value("writeapi").toString());
-                d->generalinfo.setTimeZone(reader.attributes().value("timezone").toString());
-                d->generalinfo.setTimeOffset(reader.attributes().value("timeoffset").toString());
-                d->generalinfo.setArticlePath(reader.attributes().value("articlepath").toString());
-                d->generalinfo.setScriptPath(reader.attributes().value("scriptpath").toString());
-                d->generalinfo.setScript(reader.attributes().value("script").toString());
-                d->generalinfo.setVariantArticlePath(reader.attributes().value("variantarticlepath").toString());
-                d->generalinfo.setServerUrl(reader.attributes().value("server").toString());
-                d->generalinfo.setWikiId(reader.attributes().value("wikiid").toString());
-                d->generalinfo.setTime(QDateTime::fromString(reader.attributes().value("time").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'"));
+                generalinfo.setMainPage(reader.attributes().value("mainpage").toString());
+                generalinfo.setUrl(reader.attributes().value("base").toString());
+                generalinfo.setSiteName(reader.attributes().value("sitename").toString());
+                generalinfo.setGenerator(reader.attributes().value("generator").toString());
+                generalinfo.setPhpVersion(reader.attributes().value("phpversion").toString());
+                generalinfo.setPhpApi(reader.attributes().value("phpsapi").toString());
+                generalinfo.setDataBaseType(reader.attributes().value("dbtype").toString());
+                generalinfo.setDataBaseVersion(reader.attributes().value("dbversion").toString());
+                generalinfo.setRev(reader.attributes().value("rev").toString());
+                generalinfo.setCas(reader.attributes().value("case").toString());
+                generalinfo.setRights(reader.attributes().value("rights").toString());
+                generalinfo.setLanguage(reader.attributes().value("lang").toString());
+                generalinfo.setFallBack8bitEncoding(reader.attributes().value("fallback8bitEncoding").toString());
+                generalinfo.setWriteApi(reader.attributes().value("writeapi").toString());
+                generalinfo.setTimeZone(reader.attributes().value("timezone").toString());
+                generalinfo.setTimeOffset(reader.attributes().value("timeoffset").toString());
+                generalinfo.setArticlePath(reader.attributes().value("articlepath").toString());
+                generalinfo.setScriptPath(reader.attributes().value("scriptpath").toString());
+                generalinfo.setScript(reader.attributes().value("script").toString());
+                generalinfo.setVariantArticlePath(reader.attributes().value("variantarticlepath").toString());
+                generalinfo.setServerUrl(reader.attributes().value("server").toString());
+                generalinfo.setWikiId(reader.attributes().value("wikiid").toString());
+                generalinfo.setTime(QDateTime::fromString(reader.attributes().value("time").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'"));
             }
             else if(reader.name() == "error")
             {
@@ -126,14 +124,14 @@ void QuerySiteInfoGeneral::doWorkProcessReply()
             }
         }
     }
-    if(reader.hasError())this->setError(Job::XmlError);
+    if (reader.hasError()) {
+        this->setError(Job::XmlError);
+    }
+    else {
+        emit result(generalinfo);
+        this->setError(Job::NoError);
+    }
     d->reply->close();
     d->reply->deleteLater();
     emitResult();
-}
-
-Generalinfo QuerySiteInfoGeneral::getResult()
-{
-    Q_D(QuerySiteInfoGeneral);
-    return d->generalinfo;
 }
