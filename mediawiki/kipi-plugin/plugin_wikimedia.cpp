@@ -96,7 +96,30 @@ Plugin_WikiMedia::~Plugin_WikiMedia()
 
 void Plugin_WikiMedia::slotExport()
 {
+    KIPI::Interface* interface = dynamic_cast<KIPI::Interface*>(parent());
+    if (!interface)
+    {
+        kError() << "Kipi interface is null!";
+        return;
+    }
 
+    KStandardDirs dir;
+    QString tmp = dir.saveLocation("tmp", QString("kipi-fb-") + QString::number(getpid()) + QString("/"));
+
+    if (!m_dlgExport)
+    {
+        // We clean it up in the close button
+        m_dlgExport = new KIPIWikiMediaPlugin::MWWindow(interface, tmp, false, kapp->activeWindow());
+    }
+    else
+    {
+        if (m_dlgExport->isMinimized())
+            KWindowSystem::unminimizeWindow(m_dlgExport->winId());
+
+        KWindowSystem::activateWindow(m_dlgExport->winId());
+    }
+
+    m_dlgExport->reactivate();
 }
 
 
