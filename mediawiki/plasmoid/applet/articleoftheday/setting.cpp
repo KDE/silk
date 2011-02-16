@@ -19,7 +19,7 @@
 
 #include "setting.h"
 
-Setting::Setting(const Plasma::DataEngine::Data & data, QWidget * parent)
+Setting::Setting(const Plasma::DataEngine::Data &, QWidget * parent)
     : QWidget(parent)
 {
     setupUi(this);
