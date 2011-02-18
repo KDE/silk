@@ -49,15 +49,11 @@ public:
 
     enum
     {
-        /**
-         * @brief
-         */
-        BadXml = Job::UserDefinedError + 1,
 
         /**
          * @brief You didn't set the login parameter
          */
-        LoginMissing,
+        LoginMissing = Job::UserDefinedError + 1,
 
         /**
          * @brief You provided an illegal username
@@ -140,14 +136,6 @@ private slots:
      */
     void doWorkProcessReply();
 
-private:
-
-    /**
-     * @brief Get the error number.
-     * @param error the error sent by the API.
-     */
-    //FIXME: getError -> error
-    int getError(const QString & error);
 };
 
 }

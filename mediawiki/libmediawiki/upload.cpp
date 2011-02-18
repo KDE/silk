@@ -43,6 +43,30 @@ namespace mediawiki
             : JobPrivate(mediawiki)
         {}
 
+        static int error(const QString & error) {
+            QString temp = error;
+            int ret = 0;
+            QStringList list;
+            list    << "internalerror"
+                    << "uploaddisabled"
+                    << "invalidsessionkey"
+                    << "badaccessgroups"
+                    << "missingparam"
+                    << "mustbeloggedin"
+                    << "fetchfileerror"
+                    << "nomodule"
+                    << "emptyfile"
+                    << "filetypemissing"
+                    << "filenametooshort"
+                    << "overwrite"
+                    << "stashfailed";
+            ret = list.indexOf(temp.remove(QChar('-')));
+            if(ret == -1){
+                ret = 0;
+            }
+            return  ret + (int)Upload::InternalError ;
+        }
+
         QIODevice* file;
         QString filename;
         QString comment;
@@ -202,7 +226,7 @@ void Upload::doWorkProcessReply()
                 }
             }
             else if ( reader.name() == QString( "error" ) ) {
-                this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
+                this->setError(UploadPrivate::error(attrs.value( QString( "code" ) ).toString()));
             }
         }
         else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
@@ -212,29 +236,4 @@ void Upload::doWorkProcessReply()
     d->reply->close();
     d->reply->deleteLater();
     emitResult();
-}
-
-int Upload::getError(const QString & error)
-{
-    QString temp = error;
-    int ret = 0;
-    QStringList list;
-    list    << "internalerror"
-            << "uploaddisabled"
-            << "invalidsessionkey"
-            << "badaccessgroups"
-            << "missingparam"
-            << "mustbeloggedin"
-            << "fetchfileerror"
-            << "nomodule"
-            << "emptyfile"
-            << "filetypemissing"
-            << "filenametooshort"
-            << "overwrite"
-            << "stashfailed";
-    ret = list.indexOf(temp.remove(QChar('-')));
-    if(ret == -1){
-        ret = 0;
-    }
-    return  ret + (int)Upload::InternalError ;
 }

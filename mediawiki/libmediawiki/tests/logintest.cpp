@@ -131,7 +131,7 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(login.error(), (int)Login::BadXml);
+        QCOMPARE(login.error(), (int)Login::XmlError);
 
     }
 
@@ -324,7 +324,7 @@ private slots:
         QCOMPARE(this->loginCount, 1);
         QCOMPARE(serverrequest.type, QString("POST"));
         QCOMPARE(serverrequest.value, this->request);
-        QCOMPARE(login.error(), (int)Login::BadXml);
+        QCOMPARE(login.error(), (int)Login::XmlError);
 
     }
 

@@ -73,6 +73,36 @@ public:
         : JobPrivate(mediawiki)
     {}
 
+    static int error(const QString & error) {
+        QString temp = error;
+        int ret = 0;
+        QStringList list;
+        list    << "notext"
+                << "invalidsection"
+                << "protectedtitle"
+                << "cantcreate"
+                << "cantcreateanon"
+                << "articleexists"
+                << "noimageredirectanon"
+                << "noimageredirect"
+                << "spamdetected"
+                << "filtered"
+                << "contenttoobig"
+                << "noeditanon"
+                << "noedit"
+                << "pagedeleted"
+                << "emptypage"
+                << "emptynewsection"
+                << "editconflict"
+                << "revwrongpage"
+                << "undofailure";
+        ret = list.indexOf(temp.remove(QChar('-')));
+        if(ret == -1){
+            ret = 0;
+        }
+        return  ret + (int)Edit::TextMissing ;
+    }
+
     QUrl baseUrl;
     QMap<QString, QString> requestParameter;
     Result result;
@@ -318,7 +348,7 @@ void Edit::finishedEdit()
                 }
             }
             else if ( reader.name() == QString( "error" ) ) {
-                this->setError(this->getError(attrs.value( QString( "code" ) ).toString()));
+                this->setError(EditPrivate::error(attrs.value( QString( "code" ) ).toString()));
                 d->reply->close();
                 d->reply->deleteLater();
                 emitResult();
@@ -360,35 +390,4 @@ void Edit::finishedCaptcha( const QString & captcha )
     // Send the request
     d->reply = d->manager->post( request, data.toUtf8() );
     connect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );
-}
-
-int Edit::getError(const QString & error)
-{
-    QString temp = error;
-    int ret = 0;
-    QStringList list;
-    list    << "notext"
-            << "invalidsection"
-            << "protectedtitle"
-            << "cantcreate"
-            << "cantcreateanon"
-            << "articleexists"
-            << "noimageredirectanon"
-            << "noimageredirect"
-            << "spamdetected"
-            << "filtered"
-            << "contenttoobig"
-            << "noeditanon"
-            << "noedit"
-            << "pagedeleted"
-            << "emptypage"
-            << "emptynewsection"
-            << "editconflict"
-            << "revwrongpage"
-            << "undofailure";
-    ret = list.indexOf(temp.remove(QChar('-')));
-    if(ret == -1){
-        ret = 0;
-    }
-    return  ret + (int)Edit::TextMissing ;
 }

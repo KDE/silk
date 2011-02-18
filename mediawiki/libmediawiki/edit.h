@@ -167,13 +167,6 @@ public:
     virtual void start();
 
     /**
-     * @brief Get the error number.
-     * @param error the error sent by the API.
-     */
-    int getError(const QString & error);
-
-
-    /**
      * @brief Specify how the watchlist is affected by this edit.
      */
     enum Watchlist {

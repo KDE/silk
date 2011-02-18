@@ -42,6 +42,26 @@ public:
         , password(password)
     {}
 
+    static int error(const QString & error) {
+        int ret = 0;
+        QStringList list;
+        list << "NoName"
+             << "Illegal"
+             << "NotExists"
+             << "EmptyPass"
+             << "WrongPass"
+             << "WrongPluginPass"
+             << "CreateBlocked"
+             << "Throttled"
+             << "Blocked"
+             << "NeedToken";
+        ret = list.indexOf(error);
+        if(ret == -1){
+            ret = 0;
+        }
+        return  ret + (int)Login::LoginMissing;
+    }
+
     QUrl baseUrl;
     QString login;
     QString password;
@@ -150,7 +170,7 @@ void Login::doWorkProcessReply()
                     }
                 }
                 else{
-                    this->setError(this->getError(attrs.value(QString("result")).toString()));
+                    this->setError(LoginPrivate::error(attrs.value(QString("result")).toString()));
                     d->reply->close();
                     d->reply->deleteLater();
                     emitResult();
@@ -158,7 +178,7 @@ void Login::doWorkProcessReply()
                 }
             }
             else if (reader.name() == QString("error")) {
-                this->setError(this->getError(attrs.value(QString("code")).toString()));
+                this->setError(LoginPrivate::error(attrs.value(QString("code")).toString()));
                 d->reply->close();
                 d->reply->deleteLater();
                 emitResult();
@@ -166,7 +186,7 @@ void Login::doWorkProcessReply()
             }
         }
         else if (token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
-            this->setError(this->BadXml);
+            this->setError(XmlError);
             d->reply->close();
             d->reply->deleteLater();
             emitResult();
@@ -187,26 +207,4 @@ void Login::doWorkProcessReply()
     // Send the request
     d->reply = d->manager->post(request, data.toUtf8());
     connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
-}
-
-int Login::getError(const QString & error)
-{
-    int ret = 0;
-    QStringList list;
-    list << "Falsexml"
-            << "NoName"
-            << "Illegal"
-            << "NotExists"
-            << "EmptyPass"
-            << "WrongPass"
-            << "WrongPluginPass"
-            << "CreateBlocked"
-            << "Throttled"
-            << "Blocked"
-            << "NeedToken";
-    ret = list.indexOf(error);
-    if(ret == -1){
-        ret = 0;
-    }
-    return  ret + (int)Login::BadXml;
 }
