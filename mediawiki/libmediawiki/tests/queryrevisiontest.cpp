@@ -469,7 +469,7 @@ private slots:
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvdir=older&titles=API");
         QueryRevision job(mediawiki);
         job.setPageName("API");
-        job.setDir(QueryRevision::Older);
+        job.setDirection(QueryRevision::Older);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -491,7 +491,7 @@ private slots:
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvdir=newer&titles=API");
         QueryRevision job(mediawiki);
         job.setPageName("API");
-        job.setDir(QueryRevision::Newer);
+        job.setDirection(QueryRevision::Newer);
 
         FakeServer fakeserver;
         fakeserver.startAndWait();

@@ -49,9 +49,23 @@ class MEDIAWIKI_EXPORT QueryRevision : public Job
 
 public:
 
-    enum Dir {Older, Newer};
+    /**
+     * @brief Direction to list revisions.
+     */
+    enum Direction {
 
-    enum Token{Rollback};
+        /**
+         * @brief List newest revisions first.
+         */
+        Older,
+
+        /**
+         * @brief List oldest revisions first.
+         */
+        Newer
+    };
+
+    enum Token {Rollback};
 
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
@@ -189,12 +203,10 @@ public:
     void setExcludeUser(const QString & excludeUser);
 
     /**
-     * @brief Direction to list in.
-     * older: List newest revisions first.
-     * newer: List oldest revisions first.
-     * @param QueryRevision::Dir
+     * @brief Set the direction to list revisions.
+     * @param direction the direction to list revisions
      */
-    void setDir(QueryRevision::Dir dir);
+    void setDirection(QueryRevision::Direction direction);
 
     /**
      * @brief Set XML generation to parse tree for revision content.

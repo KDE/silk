@@ -176,13 +176,13 @@ void QueryRevision::setExcludeUser(const QString & excludeUser)
     d->requestParameter["rvexcludeuser"] = excludeUser;
 }
 
-void QueryRevision::setDir(QueryRevision::Dir dir)
+void QueryRevision::setDirection(QueryRevision::Direction direction)
 {
     Q_D(QueryRevision);
-    if (dir == QueryRevision::Older) {
+    if (direction == QueryRevision::Older) {
         d->requestParameter["rvdir"] = QString("older");
     }
-    else if (dir == QueryRevision::Newer) {
+    else if (direction == QueryRevision::Newer) {
         d->requestParameter["rvdir"] = QString("newer");
     }
 }
