@@ -62,10 +62,10 @@ void QueryRevision::start()
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
-void QueryRevision::setPageName(const QString & param)
+void QueryRevision::setPageName(const QString & pageName)
 {
     Q_D(QueryRevision);
-    d->requestParameter["titles"] = param;
+    d->requestParameter["titles"] = pageName;
 }
 
 void QueryRevision::setProp(Props properties)
@@ -124,95 +124,95 @@ void QueryRevision::setContinue(int param)
     Q_D(QueryRevision);
     d->requestParameter["rvcontinue"] = QString::number(param);
 }
-void QueryRevision::setPageId(unsigned int param)
+void QueryRevision::setPageId(unsigned int pageId)
 {
     Q_D(QueryRevision);
-    d->requestParameter["pageids"] = QString::number(param);
+    d->requestParameter["pageids"] = QString::number(pageId);
 }
-void QueryRevision::setRevisionId(unsigned int param)
+void QueryRevision::setRevisionId(unsigned int revisionId)
 {
     Q_D(QueryRevision);
-    d->requestParameter["revids"] = QString::number(param);
-}
-
-void QueryRevision::setLimit(int param)
-{
-    Q_D(QueryRevision);
-    d->requestParameter["rvlimit"] = QString::number(param);
+    d->requestParameter["revids"] = QString::number(revisionId);
 }
 
-void QueryRevision::setStartId(int param)
+void QueryRevision::setLimit(int limit)
 {
     Q_D(QueryRevision);
-    d->requestParameter["rvstartid"] = QString::number(param);
-}
-void QueryRevision::setEndId(int param)
-{
-    Q_D(QueryRevision);
-    d->requestParameter["rvendid"] = QString::number(param);
+    d->requestParameter["rvlimit"] = QString::number(limit);
 }
 
-void QueryRevision::setStart(const QDateTime & param)
+void QueryRevision::setStartId(int startId)
 {
     Q_D(QueryRevision);
-    d->requestParameter["rvstart"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
+    d->requestParameter["rvstartid"] = QString::number(startId);
+}
+void QueryRevision::setEndId(int endId)
+{
+    Q_D(QueryRevision);
+    d->requestParameter["rvendid"] = QString::number(endId);
 }
 
-void QueryRevision::setEnd(const QDateTime & param)
+void QueryRevision::setStart(const QDateTime & start)
 {
     Q_D(QueryRevision);
-    d->requestParameter["rvend"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
+    d->requestParameter["rvstart"] = start.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void QueryRevision::setUser(const QString & param)
+void QueryRevision::setEnd(const QDateTime & end)
 {
     Q_D(QueryRevision);
-    d->requestParameter["rvuser"] = param;
+    d->requestParameter["rvend"] = end.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void QueryRevision::setExcludeUser(const QString & param)
+void QueryRevision::setUser(const QString & user)
 {
     Q_D(QueryRevision);
-    d->requestParameter["rvexcludeuser"] = param;
+    d->requestParameter["rvuser"] = user;
 }
 
-void QueryRevision::setDir(QueryRevision::Dir param)
+void QueryRevision::setExcludeUser(const QString & excludeUser)
 {
     Q_D(QueryRevision);
-    if (param == QueryRevision::Older) {
+    d->requestParameter["rvexcludeuser"] = excludeUser;
+}
+
+void QueryRevision::setDir(QueryRevision::Dir dir)
+{
+    Q_D(QueryRevision);
+    if (dir == QueryRevision::Older) {
         d->requestParameter["rvdir"] = QString("older");
     }
-    else if (param == QueryRevision::Newer) {
+    else if (dir == QueryRevision::Newer) {
         d->requestParameter["rvdir"] = QString("newer");
     }
 }
 
-void QueryRevision::setGenerateXML(bool param)
+void QueryRevision::setGenerateXML(bool generateXML)
 {
     Q_D(QueryRevision);
-    if (param) {
+    if (generateXML) {
         d->requestParameter["rvgeneratexml"] = QString("on");
     }
 }
 
-void QueryRevision::setSection(int param)
+void QueryRevision::setSection(int section)
 {
     Q_D(QueryRevision);
-    d->requestParameter["rvsection"] = QString::number(param);
+    d->requestParameter["rvsection"] = QString::number(section);
 }
 
-void QueryRevision::setToken(QueryRevision::Token t)
+void QueryRevision::setToken(QueryRevision::Token token)
 {
     Q_D(QueryRevision);
-    if (QueryRevision::Rollback == t) {
+    if (QueryRevision::Rollback == token) {
         d->requestParameter["rvtoken"] = QString("rollback");
     }
 }
 
-void QueryRevision::setExpandTemplates(bool param)
+void QueryRevision::setExpandTemplates(bool expandTemplates)
 {
     Q_D(QueryRevision);
-    if (param) {
+    if (expandTemplates) {
         d->requestParameter["rvexpandtemplates"] = QString("on");
     }
 }
