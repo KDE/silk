@@ -107,6 +107,7 @@ private slots:
 
     void init() {
         revisionCount = 0;
+        revisionResults.clear();
     }
 
     void testrvpropall() {
@@ -248,7 +249,7 @@ private slots:
             QCOMPARE(requests.size(), 1);
         }
         QCOMPARE(job->error(), error);
-        QCOMPARE(revisionCount, 1);
+        QCOMPARE(revisionCount, 0);
         QCOMPARE(revisionResults.size(), 0);
 
         if(scenario != QString("error serveur"))
@@ -674,7 +675,7 @@ private slots:
 
         FakeServer::Request request = requests[0];
         QCOMPARE( requestTrue.type, request.type);
-        QCOMPARE(revisionCount, 1);
+        QCOMPARE(revisionCount, 0);
         QCOMPARE(requestTrue.value, request.value);
 
         QVERIFY(fakeserver.isAllScenarioDone());
@@ -705,7 +706,7 @@ private slots:
 
         FakeServer::Request request = requests[0];
         QCOMPARE( requestTrue.type, request.type);
-        QCOMPARE(revisionCount, 1);
+        QCOMPARE(revisionCount, 0);
         QCOMPARE(requestTrue.value, request.value);
 
         QVERIFY(fakeserver.isAllScenarioDone());

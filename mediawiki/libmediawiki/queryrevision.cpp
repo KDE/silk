@@ -306,7 +306,7 @@ void QueryRevision::doWorkProcessReply()
 
                 d->reply->close();
                 d->reply->deleteLater();
-                emit revision(QList<Revision>());
+                //emit revision(QList<Revision>());
                 emitResult();
                 return;
             }
@@ -325,14 +325,14 @@ void QueryRevision::doWorkProcessReply()
             setError(XmlError);
             d->reply->close();
             d->reply->deleteLater();
-            emit revision(QList<Revision>());
+            //emit revision(QList<Revision>());
         }
     }
     else {
         setError(NetworkError);
         d->reply->close();
         d->reply->deleteLater();
-        emit revision(QList<Revision>());
+        //emit revision(QList<Revision>());
     }
     emitResult();
 }
