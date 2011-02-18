@@ -20,13 +20,14 @@ FIND_PACKAGE(TIFF REQUIRED)
 
 subdirs(icons)
 
+kde4_add_ui_files (ui_src wmwindow.ui)
 SET(kipiplugin_wikimedia_PART_SRCS
     plugin_wikimedia.cpp
     wmwindow.cpp
     wikimediajob.cpp
    )
 
-KDE4_ADD_PLUGIN(kipiplugin_wikimedia ${kipiplugin_wikimedia_PART_SRCS})
+KDE4_ADD_PLUGIN(kipiplugin_wikimedia ${kipiplugin_wikimedia_PART_SRCS} ${ui_src})
 
 TARGET_LINK_LIBRARIES(kipiplugin_wikimedia
                       ${KIPI_LIBRARIES}
