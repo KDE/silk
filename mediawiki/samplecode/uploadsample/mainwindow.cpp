@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mediawiki(QUrl("http://test.wikipedia.org/w/api.php"))
 {
     ui->setupUi(this);
-    this->ui->plainTextEdit->setPlainText("\n== {{int:filedesc}} ==\n{{Information\n|Description=\n|Source=\n|Date=\n|Author=\n|Permission=\n|other_versions=\n}}\n== {{int:license}} ==");
 }
 
 MainWindow::~MainWindow()
@@ -31,7 +30,16 @@ void MainWindow::loginHandle(KJob* login)
     file.open(QIODevice::ReadOnly);
     e1->setFile(&file);
     e1->setFilename(this->ui->lineEdit_2->text());
-    e1->setText(this->ui->plainTextEdit->toPlainText());
+
+    QString text("== {{int:filedesc}} == {{Information |Description=");
+    text.append(this->ui->descriptionEdit->text());
+    text.append(" |Source=").append(this->ui->sourceEdit->text());
+    text.append(" |Date=").append(this->ui->dateEdit->text());
+    text.append(" |Author=").append(this->ui->authorEdit->text());
+    text.append(" |Permission=").append(this->ui->permissionEdit->text());
+    text.append(" |other_versions=").append(this->ui->versionsEdit->text());
+    text.append("}} == {{int:license}} ==");
+    e1->setText(text);
     connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
     e1->exec();
 }
