@@ -120,19 +120,19 @@ public:
      * @param Id
      * @param QueryRevision::IdType
      */
-    void setPageId(unsigned int);
+    void setPageId(unsigned int pageId);
 
     /**
      * @param Id
      * @param QueryRevision::IdType
      */
-    void setRevisionId(unsigned int);
+    void setRevisionId(unsigned int revisionId);
 
     /**
      *
      * @param Qstring title
      */
-    void setPageName(const QString &);
+    void setPageName(const QString & pageName);
 
     /**
      * @brief Which properties to get for each revision.
@@ -150,43 +150,43 @@ public:
      * @brief The maximum number of revisions to return.
      * @param int
      */
-    void setLimit(int);
+    void setLimit(int limit);
 
     /**
      * @brief Revision ID to stop listing at.
      * @param int
      */
-    void setStartId(int);
+    void setStartId(int startId);
 
     /**
      * @brief Revision ID to start listing from.
      * @param int
      */
-    void setEndId(int);
+    void setEndId(int endId);
 
     /**
      * @brief Timestamp to start listing from.
      * @param QDateTime
      */
-    void setStart(const QDateTime &);
+    void setStart(const QDateTime & start);
 
     /**
      * @brief Timestamp to stop listing at.
      * @param QDateTime
      */
-    void setEnd(const QDateTime &);
+    void setEnd(const QDateTime & end);
 
     /**
      * @brief Only list revisions made by this user.
      * @param QString
      */
-    void setUser(const QString &);
+    void setUser(const QString & user);
 
     /**
      * @brief Do not list revisions made by this user.
      * @param QString
      */
-    void setExcludeUser(const QString &);
+    void setExcludeUser(const QString & excludeUser);
 
     /**
      * @brief Direction to list in.
@@ -194,31 +194,31 @@ public:
      * newer: List oldest revisions first.
      * @param QueryRevision::Dir
      */
-    void setDir(QueryRevision::Dir);
+    void setDir(QueryRevision::Dir dir);
 
     /**
      * @brief Set XML generation to parse tree for revision content.
      * @param bool
      */
-    void setGenerateXML(bool);
+    void setGenerateXML(bool generateXML);
 
     /**
      * @brief If rvprop=content is set, only retrieve the contents of this section. NOTE: Only implemented in MediaWiki versions 1.13 and above.
      * @param int
      */
-    void setSection(int);
+    void setSection(int section);
 
     /**
      * @brief Tokens to get for each revision
      * @param QueryRevision::Token
      */
-    void setToken(QueryRevision::Token);
+    void setToken(QueryRevision::Token token);
 
     /**
      * @brief Expand templates in rvprop=content output
      * @param bool
      */
-    void setExpandTemplates(bool);
+    void setExpandTemplates(bool expandTemplates);
 
 signals:
 
