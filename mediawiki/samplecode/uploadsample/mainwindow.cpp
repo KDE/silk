@@ -51,5 +51,12 @@ void MainWindow::uploadHandle(KJob* job)
 void MainWindow::on_parcourir_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "~", tr("Image Files (*.png *.jpg *.bmp *.jpeg *.gif)"));
-    this->ui->lineEdit->setText(fileName);
+    if(fileName != NULL)
+        this->ui->lineEdit->setText(fileName);
+}
+
+
+void MainWindow::on_lineEdit_textChanged(QString text)
+{
+    this->ui->pushButton->setEnabled(!text.isEmpty() && !text.isNull());
 }

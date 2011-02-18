@@ -29,8 +29,9 @@ private:
 private slots:
     void on_pushButton_clicked();
     void on_parcourir_clicked();
+    void on_lineEdit_textChanged(QString );
     void loginHandle(KJob* login);
-    void uploadHandle(KJob* job);
+    void uploadHandle(KJob* job);    
 
 
 };
