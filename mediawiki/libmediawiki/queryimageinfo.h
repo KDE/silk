@@ -103,7 +103,7 @@ public:
 
     /**
      * @brief Set timestamp to start listing from.
-     * @param start timestamp to start listing from
+     * @param begin timestamp to start listing from
      */
     void setBeginTimestamp(const QDateTime & begin);
 
