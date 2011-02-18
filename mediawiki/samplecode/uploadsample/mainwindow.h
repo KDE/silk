@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
 #include "upload.h"
 #include "mediawiki.h"
 #include "login.h"

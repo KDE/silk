@@ -34,7 +34,7 @@ private slots:
     void on_pushButton2_clicked();
     void loginHandle(KJob* login);    
     void revisionHandle(const QList<Revision> & revisions);
-    void editError(KJob* job);
+    void editError(KJob* job, int loginError);
     void revisionError(KJob* job);
 };
 

@@ -24,7 +24,13 @@ void MainWindow::on_pushButton_clicked()
 }
 void MainWindow::loginHandle(KJob* login)
 {
-    qDebug() << "Login : " << login->error();
+    if(login->error() != 0)
+    {
+        QMessageBox popup;
+        popup.setText("Erreur avec identification/Mot de passe");
+        popup.exec();
+    }
+
     Upload * e1 = new Upload( mediawiki );
     QFile file(this->ui->lineEdit->text());
     file.open(QIODevice::ReadOnly);
@@ -45,7 +51,12 @@ void MainWindow::loginHandle(KJob* login)
 }
 void MainWindow::uploadHandle(KJob* job)
 {
-    qDebug() << "Upload : " << job->error();
+    QString errorMessage;
+    if(job->error() == 0) errorMessage = "Image uploadee avec succes";
+    else errorMessage = "Erreur upload de image a echoue";
+    QMessageBox popup;
+    popup.setText(errorMessage);
+    popup.exec();
 }
 
 void MainWindow::on_parcourir_clicked()
