@@ -104,12 +104,12 @@ void Plugin_WikiMedia::slotExport()
     }
 
     KStandardDirs dir;
-    QString tmp = dir.saveLocation("tmp", QString("kipi-fb-") + QString::number(getpid()) + QString("/"));
+    QString tmp = dir.saveLocation("tmp", QString("kipi-wm-") + QString::number(getpid()) + QString("/"));
 
     if (!m_dlgExport)
     {
         // We clean it up in the close button
-        m_dlgExport = new KIPIWikiMediaPlugin::WMWindow(interface, tmp, false, kapp->activeWindow());
+        m_dlgExport = new KIPIWikiMediaPlugin::WMWindow(interface, tmp, kapp->activeWindow());
     }
     else
     {

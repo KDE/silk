@@ -1,9 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Wikimedia Import/Export
-Name[x-test]=xxWikimedia Import/Exportxx
-Comment=A tool to import/export images to/from a remote Wikimedia web service
-Comment[x-test]=xxA tool to import/export images to/from a remote Wikimedia web servicexx
+Name=Wikimedia Export
+Name[x-test]=xxWikimedia Exportxx
+Comment=A tool to export images to a remote Wikimedia web service
+Comment[x-test]=xxA tool to export images to a remote Wikimedia web servicexx
 Type=Service
 ServiceTypes=KIPI/Plugin
 X-KDE-Library=kipiplugin_wikimedia
