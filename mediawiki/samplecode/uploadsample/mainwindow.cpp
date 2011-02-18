@@ -27,7 +27,7 @@ void MainWindow::loginHandle(KJob* login)
     if(login->error() != 0)
     {
         QMessageBox popup;
-        popup.setText("Erreur avec identification/Mot de passe");
+        popup.setText("Wrong authentication.");
         popup.exec();
     }
 
@@ -52,8 +52,8 @@ void MainWindow::loginHandle(KJob* login)
 void MainWindow::uploadHandle(KJob* job)
 {
     QString errorMessage;
-    if(job->error() == 0) errorMessage = "Image uploadee avec succes";
-    else errorMessage = "Erreur upload de image a echoue";
+    if(job->error() == 0) errorMessage = "Image uploaded successfully.";
+    else errorMessage = "Image upload failed.";
     QMessageBox popup;
     popup.setText(errorMessage);
     popup.exec();

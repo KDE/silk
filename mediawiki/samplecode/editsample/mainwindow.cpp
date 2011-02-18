@@ -29,7 +29,14 @@ void MainWindow::on_pushButton2_clicked()
 }
 
 void MainWindow::revisionHandle(const QList<Revision> & revisions)
-{        
+{
+    if(revisions.isEmpty())
+    {
+        QMessageBox popup;
+        popup.setText("This page doesn't exist.");
+        popup.exec();
+        return;
+    }
     this->ui->plainTextEdit->setPlainText(revisions[0].content());
 }
 
@@ -46,7 +53,7 @@ void MainWindow::loginHandle(KJob* login)
     if(login->error()!= 0)
     {
         QMessageBox popup;
-        popup.setText("Erreur avec identification/Mot de passe");
+        popup.setText("Wrong authentication.");
         popup.exec();
     }else {
         Edit * job = new Edit( mediawiki,NULL);
@@ -60,8 +67,8 @@ void MainWindow::loginHandle(KJob* login)
 void MainWindow::editError(KJob* job)
 {
     QString errorMessage;
-    if(job->error() == 0) errorMessage = "Page wiki modifiee avec succes";
-    else errorMessage = "Erreur la page wiki n'a pas ete modifiee";
+    if(job->error() == 0) errorMessage = "The Wiki page modified successfully.";
+    else errorMessage = "The Wiki page can't be modified.";
     QMessageBox popup;
     popup.setText(errorMessage);
     popup.exec();
@@ -72,7 +79,7 @@ void MainWindow::revisionError(KJob* job)
     if(job->error() != 0)
     {
         QMessageBox popup;
-        popup.setText(QString("Erreur : La page n'a pas pu etre chargee").toLatin1());
+        popup.setText("The Wiki page can't be loaded.");
         popup.exec();
     }
 }
