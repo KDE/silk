@@ -48,13 +48,13 @@ void MainWindow::loginHandle(KJob* login)
         QMessageBox popup;
         popup.setText("Erreur avec identification/Mot de passe");
         popup.exec();
+    }else {
+        Edit * job = new Edit( mediawiki,NULL);
+        job->setPageName(this->ui->mPageEdit->text());
+        job->setText(this->ui->plainTextEdit->toPlainText());
+        connect(job, SIGNAL(result(KJob *)),this, SLOT(editError(KJob*)));
+        job->start();
     }
-
-    Edit * job = new Edit( mediawiki,NULL);
-    job->setPageName(this->ui->mPageEdit->text());
-    job->setText(this->ui->plainTextEdit->toPlainText());
-    connect(job, SIGNAL(result(KJob *)),this, SLOT(editError(KJob*)));
-    job->start();
 }
 
 void MainWindow::editError(KJob* job)
