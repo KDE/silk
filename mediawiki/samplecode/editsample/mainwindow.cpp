@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -24,7 +25,7 @@ void MainWindow::on_pushButton2_clicked()
     queryrevision->setLimit(1);
     connect(queryrevision, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
     connect(queryrevision, SIGNAL(result(KJob* )),this, SLOT(revisionError(KJob*)));
-    queryrevision->start();
+    queryrevision->start();   
 }
 
 void MainWindow::revisionHandle(const QList<Revision> & revisions)
@@ -42,7 +43,13 @@ void MainWindow::on_pushButton1_clicked()
 
 void MainWindow::loginHandle(KJob* login)
 {
-    qDebug() << "Login : " << login->error();
+    if(login->error() != 0)
+    {
+        QMessageBox popup;
+        popup.setText("Erreur avec identification/Mot de passe");
+        popup.exec();
+    }
+
     Edit * job = new Edit( mediawiki,NULL);
     job->setPageName(this->ui->mPageEdit->text());
     job->setText(this->ui->plainTextEdit->toPlainText());
@@ -52,10 +59,20 @@ void MainWindow::loginHandle(KJob* login)
 
 void MainWindow::editError(KJob* job)
 {
-    qDebug() << "Edit : " << job->error();
+    QString errorMessage;
+    if(job->error() == 0) errorMessage = "Page wiki modifiee avec succes";
+    else errorMessage = "Erreur la page wiki n'a pas ete modifiee";
+    QMessageBox popup;
+    popup.setText(errorMessage);
+    popup.exec();
 }
 
 void MainWindow::revisionError(KJob* job)
 {
-    qDebug() << "Revision : " << job->error();
+    if(job->error() != 0)
+    {
+        QMessageBox popup;
+        popup.setText(QString("Erreur : La page n'a pas pu etre chargee").toLatin1());
+        popup.exec();
+    }
 }
