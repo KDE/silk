@@ -112,7 +112,7 @@ public:
     /**
      * @brief Property.
      */
-    enum Prop {
+    enum Property {
         Ids         = 0x01,
         Flags       = 0x02,
         Timestamp   = 0x04,
@@ -121,7 +121,7 @@ public:
         Size        = 0x20,
         Content     = 0x40
     };
-    Q_DECLARE_FLAGS(Props, Prop)
+    Q_DECLARE_FLAGS(Properties, Property)
 
     /**
      * @brief Constructs a Revision job.
@@ -162,7 +162,7 @@ public:
      * @brief Which properties to get for each revision.
      * @param properties properties to get for each revision
      */
-    void setProp(Props properties); //FIXME: No abreviation
+    void setProperties(Properties properties);
 
     /**
      * @brief When more results are available, use this to continue.
@@ -276,7 +276,7 @@ private:
 
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QueryRevision::Props)
+Q_DECLARE_OPERATORS_FOR_FLAGS(QueryRevision::Properties)
 
 }
 #endif //QUERYREVISION_H

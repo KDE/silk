@@ -68,7 +68,7 @@ void QueryRevision::setPageName(const QString & pageName)
     d->requestParameter["titles"] = pageName;
 }
 
-void QueryRevision::setProp(Props properties)
+void QueryRevision::setProperties(Properties properties)
 {
     Q_D(QueryRevision);
     QString buff;

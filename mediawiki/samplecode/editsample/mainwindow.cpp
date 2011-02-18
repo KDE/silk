@@ -20,7 +20,7 @@ void MainWindow::on_pushButton2_clicked()
 {
     QueryRevision * const queryrevision(new QueryRevision(mediawiki));    
     queryrevision->setPageName(this->ui->mPageEdit->text());
-    queryrevision->setProp(QueryRevision::Content);
+    queryrevision->setProperties(QueryRevision::Content);
     queryrevision->setExpandTemplates(true);
     queryrevision->setLimit(1);
     connect(queryrevision, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
