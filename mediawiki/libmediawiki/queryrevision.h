@@ -132,7 +132,7 @@ public:
      *
      * @param Qstring title
      */
-    void setPageName(QString);
+    void setPageName(const QString &);
 
     /**
      * @brief Which properties to get for each revision.
@@ -168,25 +168,25 @@ public:
      * @brief Timestamp to start listing from.
      * @param QDateTime
      */
-    void setStart(QDateTime);
+    void setStart(const QDateTime &);
 
     /**
      * @brief Timestamp to stop listing at.
      * @param QDateTime
      */
-    void setEnd(QDateTime);
+    void setEnd(const QDateTime &);
 
     /**
      * @brief Only list revisions made by this user.
      * @param QString
      */
-    void setUser(QString);
+    void setUser(const QString &);
 
     /**
      * @brief Do not list revisions made by this user.
      * @param QString
      */
-    void setExcludeUser(QString);
+    void setExcludeUser(const QString &);
 
     /**
      * @brief Direction to list in.

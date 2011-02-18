@@ -62,7 +62,7 @@ void QueryRevision::start()
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
-void QueryRevision::setPageName(QString param)
+void QueryRevision::setPageName(const QString & param)
 {
     Q_D(QueryRevision);
     d->requestParameter["titles"] = param;
@@ -152,25 +152,25 @@ void QueryRevision::setEndId(int param)
     d->requestParameter["rvendid"] = QString::number(param);
 }
 
-void QueryRevision::setStart(QDateTime param)
+void QueryRevision::setStart(const QDateTime & param)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvstart"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void QueryRevision::setEnd(QDateTime param)
+void QueryRevision::setEnd(const QDateTime & param)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvend"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void QueryRevision::setUser(QString param)
+void QueryRevision::setUser(const QString & param)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvuser"] = param;
 }
 
-void QueryRevision::setExcludeUser(QString param)
+void QueryRevision::setExcludeUser(const QString & param)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvexcludeuser"] = param;
