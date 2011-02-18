@@ -28,6 +28,8 @@ private:
     Ui::MainWindow *ui;
     MediaWiki mediawiki;
 private slots:
+    void on_plainTextEdit_textChanged();
+    void on_mPageEdit_textChanged(QString );
     void on_pushButton1_clicked();
     void on_pushButton2_clicked();
     void loginHandle(KJob* login);    

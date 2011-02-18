@@ -76,3 +76,14 @@ void MainWindow::revisionError(KJob* job)
         popup.exec();
     }
 }
+
+void MainWindow::on_mPageEdit_textChanged(QString text)
+{
+    this->ui->pushButton2->setEnabled(!text.isEmpty() && !text.isNull());
+}
+
+void MainWindow::on_plainTextEdit_textChanged()
+{
+    QString text = this->ui->plainTextEdit->toPlainText();
+    this->ui->pushButton1->setEnabled(!text.isEmpty() && !text.isNull());
+}

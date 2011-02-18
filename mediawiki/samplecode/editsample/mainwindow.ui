@@ -19,6 +19,9 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="1" column="3">
        <widget class="QPushButton" name="pushButton2">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Charger page</string>
         </property>
@@ -86,6 +89,9 @@
       </item>
       <item row="1" column="4">
        <widget class="QPushButton" name="pushButton1">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Envoyer</string>
         </property>
