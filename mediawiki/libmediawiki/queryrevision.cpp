@@ -152,13 +152,13 @@ void QueryRevision::setEndId(int endId)
     d->requestParameter["rvendid"] = QString::number(endId);
 }
 
-void QueryRevision::setStart(const QDateTime & start)
+void QueryRevision::setStartTimestamp(const QDateTime & start)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvstart"] = start.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void QueryRevision::setEnd(const QDateTime & end)
+void QueryRevision::setEndTimestamp(const QDateTime & end)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvend"] = end.toString("yyyy-MM-ddThh:mm:ssZ");

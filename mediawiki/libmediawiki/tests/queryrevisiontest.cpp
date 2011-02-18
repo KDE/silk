@@ -382,7 +382,7 @@ private slots:
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvstart=2010-09-28T15:21:07Z&titles=API");
         QueryRevision job(mediawiki);
          job.setPageName("API");
-        job.setStart(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
+        job.setStartTimestamp(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
 
         FakeServer fakeserver;
         fakeserver.startAndWait();
@@ -404,7 +404,7 @@ private slots:
         FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvend=2010-09-28T15:21:07Z&titles=API");
         QueryRevision job(mediawiki);
         job.setPageName("API");
-        job.setEnd(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
+        job.setEndTimestamp(QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"));
 
         FakeServer fakeserver;
         fakeserver.startAndWait();

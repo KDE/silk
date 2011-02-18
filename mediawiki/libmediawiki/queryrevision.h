@@ -141,26 +141,26 @@ public:
     virtual void start();
 
     /**
-     * @param Id
-     * @param QueryRevision::IdType
+     * @brief Set the page id.
+     * @param pageId the page id
      */
     void setPageId(unsigned int pageId);
 
     /**
-     * @param Id
-     * @param QueryRevision::IdType
+     * @param Set the revision id.
+     * @param revisionId the revision id
      */
     void setRevisionId(unsigned int revisionId);
 
     /**
-     *
-     * @param Qstring title
+     * @brief Set the page name.
+     * @param pageName the page name
      */
     void setPageName(const QString & pageName);
 
     /**
      * @brief Which properties to get for each revision.
-     * @param int
+     * @param properties properties to get for each revision
      */
     void setProp(Props properties); //FIXME: No abreviation
 
@@ -171,44 +171,50 @@ public:
     void setContinue(int);
 
     /**
-     * @brief The maximum number of revisions to return.
-     * @param int
+     * @brief Set the maximum number of revisions to return.
+     * @param limit the maximum number of revisions to return
      */
     void setLimit(int limit);
 
     /**
-     * @brief Revision ID to stop listing at.
-     * @param int
+     * @brief Set the revision ID to start listing from.
+     * @param startId the revision ID to start listing from
      */
     void setStartId(int startId);
 
     /**
-     * @brief Revision ID to start listing from.
-     * @param int
+     * @brief Set the revision ID to stop listing at.
+     * @param endId the revision ID to stop listing at
      */
     void setEndId(int endId);
 
     /**
-     * @brief Timestamp to start listing from.
-     * @param QDateTime
+     * @brief Set the timestamp to start listing from.
+     * @param start the timestamp to start listing from
      */
-    void setStart(const QDateTime & start);
+    void setStartTimestamp(const QDateTime & start);
 
     /**
-     * @brief Timestamp to stop listing at.
-     * @param QDateTime
+     * @brief Set the timestamp to end listing at.
+     * @param end the timestamp to end listing at
      */
-    void setEnd(const QDateTime & end);
+    void setEndTimestamp(const QDateTime & end);
 
     /**
-     * @brief Only list revisions made by this user.
-     * @param QString
+     * @brief Set the user.
+     *
+     * Do list revisions made by this user.
+     *
+     * @param user the user
      */
     void setUser(const QString & user);
 
     /**
-     * @brief Do not list revisions made by this user.
-     * @param QString
+     * @brief Set the user to exclude.
+     *
+     * Do not list revisions made by this user
+     *
+     * @param excludeUser the user to exclude
      */
     void setExcludeUser(const QString & excludeUser);
 
@@ -220,25 +226,31 @@ public:
 
     /**
      * @brief Set XML generation to parse tree for revision content.
-     * @param bool
+     * @param generateXML if true set XML generation to parse tree for revision content
      */
     void setGenerateXML(bool generateXML);
 
     /**
-     * @brief If rvprop=content is set, only retrieve the contents of this section. NOTE: Only implemented in MediaWiki versions 1.13 and above.
-     * @param int
+     * @brief Set the section.
+     *
+     * If the property content is set, only retrieve the contents of this section.
+     *
+     * @param section the section
      */
     void setSection(int section);
 
     /**
-     * @brief Tokens to get for each revision
-     * @param QueryRevision::Token
+     * @brief Set the token to get for each revision.
+     * @param token the token to get for each revision
      */
     void setToken(QueryRevision::Token token);
 
     /**
-     * @brief Expand templates in rvprop=content output
-     * @param bool
+     * @brief Set expand templates.
+     *
+     * Only if the property content is set.
+     *
+     * @param expandTemplates if true set expand templates
      */
     void setExpandTemplates(bool expandTemplates);
 
@@ -247,7 +259,6 @@ signals:
     /**
      * @brief Provides a list of all user groups.
      * @param revision list of all user groups
-     * @see QueryRevision::Result
      */
     void revision(const QList<Revision> & revision);
 
