@@ -43,8 +43,7 @@ void MainWindow::on_pushButton1_clicked()
 
 void MainWindow::loginHandle(KJob* login)
 {
-    int loginError = login->error();
-    if(loginError != 0)
+    if(login->error()!= 0)
     {
         QMessageBox popup;
         popup.setText("Erreur avec identification/Mot de passe");
@@ -58,10 +57,10 @@ void MainWindow::loginHandle(KJob* login)
     }
 }
 
-void MainWindow::editError(KJob* job, int loginError)
+void MainWindow::editError(KJob* job)
 {
     QString errorMessage;
-    if(job->error() == 0 && loginError == 0) errorMessage = "Page wiki modifiee avec succes";
+    if(job->error() == 0) errorMessage = "Page wiki modifiee avec succes";
     else errorMessage = "Erreur la page wiki n'a pas ete modifiee";
     QMessageBox popup;
     popup.setText(errorMessage);
