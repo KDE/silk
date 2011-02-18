@@ -65,7 +65,17 @@ public:
         Newer
     };
 
-    enum Token {Rollback};
+    /**
+     * @brief Tokens can get for each revision.
+     */
+    enum Token {
+
+        /**
+         * @brief Rollback token.
+         */
+        Rollback
+
+    };
 
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
