@@ -291,27 +291,6 @@ private slots:
                 << int(QueryRevision::SectionNotFound);
 
     }
-    void testRvContinue()
-    {
-        MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));
-        FakeServer::Request requestSend("GET","","?format=xml&action=query&prop=revisions&rvcontinue=5555&titles=API");
-        QueryRevision job(mediawiki);
-        job.setPageName("API");
-        job.setContinue(5555);
-
-        FakeServer fakeserver;
-        fakeserver.startAndWait();
-
-        connect(&job, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
-
-        job.exec();
-
-        QList<FakeServer::Request> requests = fakeserver.getRequest();
-        QCOMPARE(requests.size(), 1);
-        QCOMPARE(requests[0].value, requestSend.value);
-        QCOMPARE(requests[0].type, requestSend.type);
-        QVERIFY(fakeserver.isAllScenarioDone());
-    }
     void testRvLimit()
     {
         MediaWiki mediawiki(QUrl("http://127.0.0.1:12566"));

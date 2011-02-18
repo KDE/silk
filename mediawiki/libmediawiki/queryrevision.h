@@ -165,12 +165,6 @@ public:
     void setProperties(Properties properties);
 
     /**
-     * @brief When more results are available, use this to continue.
-     * @param int
-     */
-    void setContinue(int);
-
-    /**
      * @brief Set the maximum number of revisions to return.
      * @param limit the maximum number of revisions to return
      */

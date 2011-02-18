@@ -119,11 +119,6 @@ void QueryRevision::setProperties(Properties properties)
     d->requestParameter["rvprop"] = buff;
 }
 
-void QueryRevision::setContinue(int param)
-{
-    Q_D(QueryRevision);
-    d->requestParameter["rvcontinue"] = QString::number(param);
-}
 void QueryRevision::setPageId(unsigned int pageId)
 {
     Q_D(QueryRevision);
