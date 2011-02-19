@@ -39,12 +39,33 @@ set(mediawiki_SRCS
     protection.cpp
     upload.cpp
 )
-
+set(mediawiki_HRCS
+    image.h
+    imageinfo.h
+    mediawiki.h
+    login.h
+    logout.h
+    queryimageinfo.h
+    queryimages.h
+    querysiteinfogeneral.h
+    generalinfo.h
+    querysiteinfousergroups.h
+    queryrevision.h
+    queryinfo.h
+    edit.h
+    job.h
+    usergroup.h
+    revision.h
+    page.h
+    parse.h
+    protection.h
+    upload.h
+)
 kde4_add_library( mediawiki ${LIBRARY_TYPE} ${mediawiki_SRCS} )
 target_link_libraries( mediawiki ${KDE4_KIO_LIBS} -fprofile-arcs )
 
 install( TARGETS mediawiki ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
+install( FILES ${mediawiki_HRCS} DESTINATION ${INCLUDE_INSTALL_DIR}/libmediawiki COMPONENT Devel)
 set( SILK_MEDIAWIKI_LIBS mediawiki ${KDE4_KIO_LIBS} PARENT_SCOPE )
 
 FIND_PATH(DOXYGEN_DIR doxygen
