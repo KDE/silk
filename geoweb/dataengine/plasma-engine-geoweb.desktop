@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Geoweb
+Name[es]=Geoweb
 Name[pt]=Geoweb
 Name[uk]=Geoweb
 Name[x-test]=xxGeowebxx
 Comment=Provides information about local services
+Comment[es]=Proporciona información sobre servicios locales
 Comment[pt]=Fornece informações sobre serviços locais
 Comment[sv]=Ger information om lokala tjänster
 Comment[uk]=Надає інформацію щодо локальних служб

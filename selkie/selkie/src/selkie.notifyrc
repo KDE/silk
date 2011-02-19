@@ -1,26 +1,31 @@
 [Global]
 IconName=internet-web-browser
 Comment=Selkie
+Comment[es]=Selkie
 Comment[pt]=Selkie
 Comment[uk]=Selkie
 Comment[x-test]=xxSelkiexx
 Name=Web Application
+Name[es]=Aplicación web
 Name[pt]=Aplicação Web
 Name[uk]=Веб-програма
 Name[x-test]=xxWeb Applicationxx
 
 [Context/group]
 Name=Selkie Notifications
+Name[es]=Notificaciones de Selkie
 Name[pt]=Notificações do Selkie
 Name[uk]=Сповіщення Selkie
 Name[x-test]=xxSelkie Notificationsxx
 Comment=Notifications from the Selkie Browser
+Comment[es]=Notificaciones del navegador Selkie
 Comment[pt]=Notificações do Navegador do Selkie
 Comment[uk]=Сповіщення від переглядача Selkie
 Comment[x-test]=xxNotifications from the Selkie Browserxx
 
 [Context/folder]
 Name=Selkie Notifications
+Name[es]=Notificaciones de Selkie
 Name[pt]=Notificações do Selkie
 Name[uk]=Сповіщення Selkie
 Name[x-test]=xxSelkie Notificationsxx
