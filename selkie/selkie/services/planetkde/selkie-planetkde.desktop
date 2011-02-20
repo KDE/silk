@@ -2,11 +2,14 @@
 Name=Planet KDE
 Name[nl]=Planet KDE
 Name[pt]=Planet KDE
+Name[pt_BR]=Planet KDE
 Name[sv]=Planet KDE
 Name[uk]=Планета KDE
 Name[x-test]=xxPlanet KDExx
 Comment=Developer Blogs
 Comment[pt]='Blogs' de Desenvolvimento
+Comment[pt_BR]=Blogs dos desenvolvedores
+Comment[sv]=Utvecklarnas bloggar
 Comment[uk]=Блоги розробників
 Comment[x-test]=xxDeveloper Blogsxx
 Exec=selkie planetkde

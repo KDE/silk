@@ -2,6 +2,8 @@
 Comment=Show a native system notification
 Comment[es]=Mostrar una notificación nativa del sistema
 Comment[pt]=Mostrar uma notificação nativa do sistema
+Comment[pt_BR]=Mostrar uma notificação de sistema nativa
+Comment[sv]=Visa en inbyggd systemunderrättelse
 Comment[uk]=Показ типового системного сповіщення
 Comment[x-test]=xxShow a native system notificationxx
 Icon=media-playlist-shuffle
@@ -9,6 +11,7 @@ Name=Notify
 Name[nds]=Bescheed
 Name[nl]=Melden
 Name[pt]=Notificação
+Name[pt_BR]=Notificação
 Name[sv]=Underrättelse
 Name[uk]=Сповіщення
 Name[x-test]=xxNotifyxx

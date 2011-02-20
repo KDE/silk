@@ -2,6 +2,7 @@
 Comment=Compose a New Email
 Comment[nl]=Een nieuwe e-mail maken
 Comment[pt]=Compor um Novo E-Mail
+Comment[pt_BR]=Compor um movo e-mail
 Comment[sv]=Skriv ett nytt brev
 Comment[uk]=Створення повідомлення електронної пошти
 Comment[x-test]=xxCompose a New Emailxx
@@ -9,6 +10,7 @@ Icon=im-status-message-edit
 Name=Compose
 Name[nl]=Maken
 Name[pt]=Compor
+Name[pt_BR]=Compor
 Name[sv]=Skriv brev
 Name[uk]=Створення
 Name[x-test]=xxComposexx

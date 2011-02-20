@@ -2,11 +2,14 @@
 Name=Planet KDE
 Name[nl]=Planet KDE
 Name[pt]=Planet KDE
+Name[pt_BR]=Planet KDE
 Name[sv]=Planet KDE
 Name[uk]=Планета KDE
 Name[x-test]=xxPlanet KDExx
 Comment=KDE Developer Weblogs
 Comment[pt]='Blogs' Web de Desenvolvimento do KDE
+Comment[pt_BR]=Blogs Web dos desenvolvedores do KDE
+Comment[sv]=KDE-utvecklarnas webbloggar
 Comment[uk]=Блоги розробників KDE
 Comment[x-test]=xxKDE Developer Weblogsxx
 Icon=kde

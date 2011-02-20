@@ -2,10 +2,14 @@
 Name=Buienradar
 Name[es]=Buienradar
 Name[pt]=Buienradar
+Name[pt_BR]=Buienradar
+Name[sv]=Buienradar
 Name[uk]=Buienradar
 Name[x-test]=xxBuienradarxx
 Comment=Rain in The Netherlands?
 Comment[pt]=Chove na Holanda?
+Comment[pt_BR]=Chove na Holanda?
+Comment[sv]=Regn i Nederländerna?
 Comment[uk]=Дощ у Нідерландах?
 Comment[x-test]=xxRain in The Netherlands?xx
 Icon=kweather

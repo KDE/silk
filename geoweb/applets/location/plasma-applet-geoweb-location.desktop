@@ -1,10 +1,14 @@
 [Desktop Entry]
 Name=Geoweb - Location
 Name[pt]=Geoweb - Localização
+Name[pt_BR]=Geoweb - Localização
+Name[sv]=Geoweb - Plats
 Name[uk]=Geoweb — Розташування
 Name[x-test]=xxGeoweb - Locationxx
 Comment=Applet for Geoweb source - Location (with dataengine configuration)
 Comment[pt]='Applet' da fonte do Geoweb - Localização (com configuração do motor de dados)
+Comment[pt_BR]=Miniaplicativo da fonte do Geoweb - Localização (com configuração do mecanismo de dados)
+Comment[sv]=Miniprogram för källan Geoweb - Plats (med inställning av datagränssnitt)
 Comment[uk]=Аплет даних Geoweb — Розташування (з налаштуванням джерела даних)
 Comment[x-test]=xxApplet for Geoweb source - Location (with dataengine configuration)xx
 Type=Service

@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=webappeditor
 Name[pt]=webappeditor
+Name[pt_BR]=webappeditor
+Name[sv]=Webbprogrameditor
 Name[uk]=webappeditor
 Name[x-test]=xxwebappeditorxx
 Exec=webappeditor %i -caption "%c"
@@ -9,6 +11,8 @@ Type=Application
 X-DocPath=webappeditor/index.html
 GenericName=An Application to create Selkie Applications
 GenericName[pt]=Uma Aplicação para Criar Aplicações do Selkie
+GenericName[pt_BR]=Um programa para criação de aplicativos do Selkie
+GenericName[sv]=Ett program för att skapa Selkie-program
 GenericName[uk]=Програма для створення програм Selkie
 GenericName[x-test]=xxAn Application to create Selkie Applicationsxx
 Terminal=false
