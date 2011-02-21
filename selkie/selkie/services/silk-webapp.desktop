@@ -6,13 +6,13 @@ Name=Silk WebApp
 Name[pt]=Aplicação Web do Silk
 Name[pt_BR]=Aplicativo Web do Silk
 Name[sv]=Silk-webbprogram
-Name[uk]=Веб-програма Silk
+Name[uk]=Вебпрограма Silk
 Name[x-test]=xxSilk WebAppxx
 Comment=Silk Web Application
 Comment[pt]=Aplicação Web do Silk
 Comment[pt_BR]=Aplicativo Web do Silk
 Comment[sv]=Silk-webbprogram
-Comment[uk]=Веб-програма Silk
+Comment[uk]=Вебпрограма Silk
 Comment[x-test]=xxSilk Web Applicationxx
 
 [PropertyDef::X-Silk-StartUrl]

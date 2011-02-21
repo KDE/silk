@@ -6,13 +6,13 @@ Name=Silk WebApp Action
 Name[pt]=Acção da Aplicação Web do Silk
 Name[pt_BR]=Ação do aplicativo Web do Silk
 Name[sv]=Silk-webbåtgärd program
-Name[uk]=Дія веб-програми Silk
+Name[uk]=Дія вебпрограми Silk
 Name[x-test]=xxSilk WebApp Actionxx
 Comment=Silk Web Action ServiceType
 Comment[pt]=Tipo de Serviço da Acção Web do Silk
 Comment[pt_BR]=Tipo de serviço da ação Web do Silk
 Comment[sv]=Silk-webbåtgärd servicetyp
-Comment[uk]=Тип служби веб-дій Silk
+Comment[uk]=Тип служби вебдій Silk
 Comment[x-test]=xxSilk Web Action ServiceTypexx
 
 [PropertyDef::X-Silk-WebApp]
