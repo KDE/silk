@@ -42,7 +42,7 @@ public:
     WmWidget(QWidget* parent, KIPI::Interface *iface);
     ~WmWidget();
 
-    void updateLabels(const QString& name = "", const QString& url = "", bool uplPerm = false);
+    void updateLabels(const QString& name = "", const QString& url = "");
 
     KIPIPlugins::ImagesList* imagesList() const;
 

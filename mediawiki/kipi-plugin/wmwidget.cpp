@@ -155,7 +155,7 @@ QProgressBar* WmWidget::progressBar() const
     return m_progressBar;
 }
 
-void WmWidget::updateLabels(const QString& name, const QString& url, bool uplPerm)
+void WmWidget::updateLabels(const QString& name, const QString& url)
 {
     QString web("http://commons.wikimedia.org");
     if (!url.isEmpty())
