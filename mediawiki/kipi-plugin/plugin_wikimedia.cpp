@@ -179,5 +179,5 @@ KIPI::Category Plugin_WikiMedia::category( KAction* action ) const
 KJob* Plugin_WikiMedia::exportFiles(const QString& album)
 {
     KIPI::Interface* interface = dynamic_cast<KIPI::Interface*>(parent());
-    return new KIPIWikiMediaPlugin::WikiMediaJob(album, interface->currentSelection().images());
+    return new KIPIWikiMediaPlugin::WikiMediaJob(interface, album);
 }

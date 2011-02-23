@@ -3,18 +3,24 @@
 #include <KJob>
 #include <QString>
 #include <KUrl>
-
+namespace KIPI
+{
+    class ImageInfo;
+    class Interface;
+}
 namespace KIPIWikiMediaPlugin
 {
 class WikiMediaJob : public KJob
 {
 public:
-    WikiMediaJob(const QString& albumName, const KUrl::List& url, QObject* parent=0);
-    void start(){};
+    WikiMediaJob(KIPI::Interface* interface, QString login, QObject* parent=0);
+    void start();
+    QString buildWikiText( KIPI::ImageInfo * info);
 private:
 
     KUrl::List m_urls;
-    QString    m_albumName;
+    KIPI::Interface* m_interface;
+    QString m_login;
 };
 }
 #endif // WIKIMEDIAJOB_H
