@@ -3,12 +3,10 @@
  * This file is a part of kipi-plugins project
  * http://www.kipi-plugins.org
  *
- * Date        : 2008-12-26
- * Description : a kipi plugin to import/export images to WikiMedia web service
+ * Date        : 2011-02-11
+ * Description : a kipi plugin to export images to WikiMedia web service
  *
- * Copyright (C) 2005-2008 by Vardhman Jain <vardhman at gmail dot com>
- * Copyright (C) 2008-2009 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C) 2008-2009 by Luka Renko <lure at kubuntu dot org>
+ * Copyright (C) 2011 by Alexandre Mendes <alex dot mendes1988 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
