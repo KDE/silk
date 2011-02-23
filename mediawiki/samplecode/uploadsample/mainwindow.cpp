@@ -9,6 +9,18 @@ MainWindow::MainWindow(QWidget *parent) :
     mediawiki(QUrl("http://test.wikipedia.org/w/api.php"))
 {
     ui->setupUi(this);
+    this->ui->comboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and GFDL"),QString("{{self|cc-by-sa-3.0|GFDL|migration=redundant}}"));
+    this->ui->comboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and older"),QString("{{self|cc-by-sa-3.0,2.5,2.0,1.0}}"));
+    this->ui->comboBox->addItem(QString("Creative Commons Attribution-Share Alike 3.0"),QString("{{self|cc-by-sa-3.0}}"));
+    this->ui->comboBox->addItem(QString("Own work, Creative Commons Attribution 3.0"),QString("{{self|cc-by-3.0}}"));
+    this->ui->comboBox->addItem(QString("Own work, release into public domain under the CC-Zero license"),QString("{{self|cc-zero}}"));
+    this->ui->comboBox->addItem(QString("Author died more than 100 years ago"),QString("{{PD-old}}"));
+    this->ui->comboBox->addItem(QString("Photo of a two-dimensional work whose author died more than 100 years ago"),QString("{{PD-art}}"));
+    this->ui->comboBox->addItem(QString("First published in the United States before 1923"),QString("{{PD-US}}"));
+    this->ui->comboBox->addItem(QString("Work of a U.S. government agency"),QString("{{PD-USGov}}"));
+    this->ui->comboBox->addItem(QString("Simple typefaces, individual words or geometric shapes"),QString("{{PD-text}}"));
+    this->ui->comboBox->addItem(QString("Logos with only simple typefaces, individual words or geometric shapes"),QString("{{PD-textlogo}}"));
+
 }
 
 MainWindow::~MainWindow()
@@ -30,24 +42,28 @@ void MainWindow::loginHandle(KJob* login)
         popup.setText("Wrong authentication.");
         popup.exec();
     }
+    else{
+        Upload * e1 = new Upload( mediawiki );
+        QFile file(this->ui->lineEdit->text());
+        file.open(QIODevice::ReadOnly);
+        e1->setFile(&file);
+        e1->setFilename(this->ui->lineEdit_2->text());
 
-    Upload * e1 = new Upload( mediawiki );
-    QFile file(this->ui->lineEdit->text());
-    file.open(QIODevice::ReadOnly);
-    e1->setFile(&file);
-    e1->setFilename(this->ui->lineEdit_2->text());
+        QString text("== {{int:filedesc}} == \n{{Information |Description=");
+        text.append(this->ui->descriptionEdit->text());
+        text.append("\n|Source=").append(this->ui->sourceEdit->text());
+        text.append("\n|Date=").append(this->ui->dateEdit->text());
+        text.append("\n|Author=").append(this->ui->authorEdit->text());
+        text.append("\n|Permission=").append(this->ui->permissionEdit->text());
+        text.append("\n|other_versions=").append(this->ui->versionsEdit->text());
+        text.append("\n}}\n== {{int:license}} ==\n");
+        text.append(this->ui->comboBox->itemData(this->ui->comboBox->currentIndex()).toString());
 
-    QString text("== {{int:filedesc}} == {{Information |Description=");
-    text.append(this->ui->descriptionEdit->text());
-    text.append(" |Source=").append(this->ui->sourceEdit->text());
-    text.append(" |Date=").append(this->ui->dateEdit->text());
-    text.append(" |Author=").append(this->ui->authorEdit->text());
-    text.append(" |Permission=").append(this->ui->permissionEdit->text());
-    text.append(" |other_versions=").append(this->ui->versionsEdit->text());
-    text.append("}} == {{int:license}} ==");
-    e1->setText(text);
-    connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
-    e1->exec();
+
+        e1->setText(text);
+        connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
+        e1->exec();
+    }
 }
 void MainWindow::uploadHandle(KJob* job)
 {
