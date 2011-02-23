@@ -52,101 +52,103 @@ class MEDIAWIKI_EXPORT Edit : public Job
 
 public:
 
-    //FIXME: Comments ?
+    /**
+     * @brief Indicates all possible error conditions found during the processing of the edit.
+     */
     enum
     {
         /**
-         * @brief
+         * @brief Text is missing.
          */
         TextMissing = Job::UserDefinedError+1,
 
         /**
-         * @brief
+         * @brief The section is invalid.
          */
         InvalidSection,
 
         /**
-         * @brief
+         * @brief The page name is protected.
          */
         TitleProtected,
 
         /**
-         * @brief
+         * @brief The permission for create page is missing.
          */
         CreatePagePermissionMissing,
 
         /**
-         * @brief
+         * @brief The permission for create page is missing for anonymous.
          */
         AnonymousCreatePagePermissionMissing,
 
         /**
-         * @brief
+         * @brief The article already exist.
          */
         ArticleDuplication,
 
         /**
-         * @brief
+         * @brief The permission for create image is missing for anonymous.
          */
         AnonymousCreateImagePermissionMissing,
 
         /**
-         * @brief
+         * @brief The permission for create image is missing.
          */
         CreateImagePermissionMissing,
 
         /**
-         * @brief
+         * @brief The mediawiki considers you are spamming.
          */
         SpamDetected,
 
         /**
-         * @brief
+         * @brief The mediawiki refuses your edit.
          */
         Filtered,
 
         /**
-         * @brief
+         * @brief The size of the article exceed.
          */
         ArticleSizeExceed,
 
         /**
-         * @brief
+         * @brief The permission for edit page is missing for anonymous.
          */
         AnonymousEditPagePermissionMissing,
 
         /**
-         * @brief
+         * @brief The permission for edit page is missing.
          */
         EditPagePermissionMissing,
 
         /**
-         * @brief
+         * @brief The page is deleted.
          */
         PageDeleted,
 
         /**
-         * @brief
+         * @brief The page is empty.
          */
         EmptyPage,
 
         /**
-         * @brief
+         * @brief The section is empty.
          */
         EmptySection,
 
         /**
-         * @brief
+         * @brief Mediwiki detect an edit conflict.
          */
         EditConflict,
 
         /**
-         * @brief
+         * @brief The revision isn't a valid revision.
          */
         RevWrongPage,
 
         /**
-         * @brief
+         * @brief The undo failed.
          */
         UndoFailed,
 
