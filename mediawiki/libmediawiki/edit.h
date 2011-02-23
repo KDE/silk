@@ -202,117 +202,113 @@ public:
 
     /**
      * @brief If set, suppress errors about the page having been deleted in the meantime and recreate it.
+     * @param recreate if set, suppress errors about the page having been deleted in the meantime and recreate it
      */
-    void setRecreate(bool);
+    void setRecreate(bool recreate);
 
     /**
      * @brief If set, throw an error if the page already exists.
+     * @param if set, throw an error if the page already exists
      */
-    void setCreateonly(bool);
+    void setCreateonly(bool createonly);
 
     /**
      * @brief If set, throw a missingtitle error if the page doesn't exist.
+     * @param norecreate if set, throw a missingtitle error if the page doesn't exist
      */
-    void setNocreate(bool);
+    void setNocreate(bool norecreate);
 
     /**
      * @brief If set to true, mark the edit as minor
-     * @param minor If set to true, mark the edit as minor
+     * @param minor if set to true, mark the edit as minor
      */
-    void setMinor(bool);
+    void setMinor(bool minor);
 
     /**
      * @brief Set the section.
-     * @param section Set the section. New or integer
+     * @param section new section or integer
      */
-    void setSection(const QString &);
+    void setSection(const QString & section);
 
     /**
      * @brief Set the summary.
-     * @param summary Set the summary
+     * @param summary the summary
      */
-    void setSummary(const QString &);
+    void setSummary(const QString & summary);
 
     /**
-     * @brief Which properties .
-     * @param undoafter Undo all revisions from undo to this one. If not set, just undo one revision.
+     * @brief Undo all revisions from undo to this one. If not set, just undo one revision.
+     * @param undoafter if true set the undo after property
      */
-    void setUndoAfter(int);
+    void setUndoAfter(int undoafter);
 
     /**
-     * @brief Which properties .
-     * @param undo Undo this revision. Overrides text, prependtext and appendtext.
+     * @brief Undo this revision. Overrides text, prependtext and appendtext.
+     * @param undo if true set the undo
      */
-    void setUndo(int);
+    void setUndo(int undo);
 
     /**
-     * @brief Which properties .
-     * @param prependtext the text added to the beginning of the page. Overrides text.
+     * @brief Set the text added to the beginning of the page. Overrides text.
+     * @param prependText the text added to the beginning of the page
      */
-    void setPrependText(const QString &);
+    void setPrependText(const QString & prependText);
 
     /**
-     * @brief Which properties .
-     * @param appendtext the text added to the end of the page. Overrides text.
+     * @brief Set the text added to the end of the page. Overrides text.
+     * @param appendText the text added to the end of the page
      */
-    void setAppendText(const QString &);
+    void setAppendText(const QString & appendText);
 
     /**
-     * @brief Which properties .
-     * @param title the page title
+     * @brief Set the page title.
+     * @param pageName the page title
      */
-    void setPageName(const QString &);
+    void setPageName(const QString & pageName);
 
     /**
-     * @brief Which properties .
-     * @param token the edit token. Gotten through prop=info.
+     * @brief Set the edit token. Retrieve from QueryInfo.
+     * @param token the edit token
      */
-    void setToken(const QString &);
+    void setToken(const QString & token);
 
     /**
-     * @brief Which properties .
-     * @param basetimestamp the timestamp of the base revision. Leave unset to ignore conflit.
+     * @brief Set the timestamp of the base revision. Leave unset to ignore conflit.
+     * @param baseTimestamp the timestamp of the base revision
      */
-    void setBaseTimesStamp(const QDateTime &);
+    void setBaseTimestamp(const QDateTime & baseTimestamp);
 
     /**
-     * @brief Which properties .
-     * @param  starttimestamp the timestamp when you obtained the edit token.
+     * @brief Set the timestamp when you obtained the edit token.
+     * @param startTimestamp the timestamp when you obtained the edit token
      */
-    void setStartTimesStamp(const QDateTime &);
+    void setStartTimestamp(const QDateTime & startTimestamp);
 
     /**
-     * @brief Which properties .
+     * @brief Set the page content.
      * @param text the page content.
      */
-    void setText(const QString &);
+    void setText(const QString & text);
 
 signals:
 
     /**
-     * @brief Emitted when a connection has been completed.
-     * @param success true if the connection was completed successfully.
+     * @brief Emit the captcha question.
+     * @param captcha the captcha question
      */
     void resultCaptcha(const QVariant & captcha);
 
 private slots:
 
-    /**
-     * @brief Send a request.
-     */
     void doWorkSendRequest(Page page);
 
-    /**
-     * @brief Reads the xml
-     * @param success true if the connection was completed successfully.
-     */
     void finishedEdit();
 
 public slots:
 
     /**
-     * @brief Reads the xml
-     * @param success true if the connection was completed successfully.
+     * @brief Put the captcha answer.
+     * @param captcha the captcha answer
      */
     void finishedCaptcha(const QString & captcha);
 

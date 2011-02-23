@@ -96,8 +96,8 @@ private slots:
         e1->setSummary("Hello World" );
         e1->setPageName( "Talk:Main Page" );
         e1->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e1->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
-        e1->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e1->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e1->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e1->setText( "Hello everyone!" );
         QTest::newRow("Text")
                 << "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B"
@@ -109,8 +109,8 @@ private slots:
         e2->setSummary("Hello World");
         e2->setPageName( "Talk:Main Page" );
         e2->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e2->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
-        e2->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e2->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e2->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e2->setAppendText( "Hello everyone!" );
         QTest::newRow("Append")
                 << "?format=xml&action=edit&appendtext=Hello%20everyone!&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B"
@@ -122,8 +122,8 @@ private slots:
         e3->setSummary("Hello World");
         e3->setPageName( "Talk:Main Page" );
         e3->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e3->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
-        e3->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e3->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e3->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e3->setPrependText( "Hello everyone!" );
         QTest::newRow("Prepend")
                 <<  "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&prependtext=Hello%20everyone!&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B"
@@ -134,8 +134,8 @@ private slots:
         e4->setSummary("Hello World");
         e4->setPageName( "Talk:Main Page" );
         e4->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e4->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
-        e4->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e4->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e4->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e4->setUndo(13585);
         QTest::newRow("Undo")
                 <<  "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&title=Talk:Main%20Page&undo=13585&token=cecded1f35005d22904a35cc7b736e18%252B"
@@ -146,8 +146,8 @@ private slots:
         e5->setSummary("Hello World");
         e5->setPageName( "Talk:Main Page" );
         e5->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e5->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
-        e5->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e5->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e5->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e5->setUndoAfter(13585);
         QTest::newRow("Undo After")
                 <<  "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&title=Talk:Main%20Page&undoafter=13585&token=cecded1f35005d22904a35cc7b736e18%252B"
@@ -158,11 +158,11 @@ private slots:
         e6->setSummary("Hello World");
         e6->setPageName( "Talk:Main Page" );
         e6->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e6->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e6->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e6->setText( "Hello everyone!" );
         e6->setRecreate(true);
         e6->setSection("new");
-        e6->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e6->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         QTest::newRow("Recreate")
                 <<  "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&recreate=on&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B"
                 << "<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>"
@@ -172,11 +172,11 @@ private slots:
         e7->setSummary("Hello World");
         e7->setPageName( "Talk:Main Page" );
         e7->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e7->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e7->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e7->setText( "Hello everyone!" );
         e7->setCreateonly(true);
         e7->setSection("new");
-        e7->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e7->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         QTest::newRow("CreateOnly")
                 <<  "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&createonly=on&md5=4d184ec6e8fe61abccb8ff62c4583cd0&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B"
                 << "<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>"
@@ -186,11 +186,11 @@ private slots:
         e8->setSummary("Hello World");
         e8->setPageName( "Talk:Main Page" );
         e8->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e8->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e8->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e8->setText( "Hello everyone!" );
         e8->setNocreate(true);
         e8->setSection("new");
-        e8->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e8->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         QTest::newRow("No Create")
                 <<  "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&nocreate=on&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B"
                 << "<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>"
@@ -200,11 +200,11 @@ private slots:
         e9->setSummary("Hello World");
         e9->setPageName( "Talk:Main Page" );
         e9->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e9->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e9->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e9->setText( "Hello everyone!" );
         e9->setMinor(true);
         e9->setSection("new");
-        e9->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e9->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         QTest::newRow("Minor")
                 <<  "?format=xml&action=edit&basetimestamp=2008-03-20T17:26:39Z&md5=4d184ec6e8fe61abccb8ff62c4583cd0&minor=on&section=new&starttimestamp=2008-03-27T21:15:39Z&summary=Hello%20World&text=Hello%20everyone!&title=Talk:Main%20Page&token=cecded1f35005d22904a35cc7b736e18%252B"
                 << "<api><edit result=\"Success\" pageid=\"12\" title=\"Talk:Main Page\" oldrevid=\"465\" newrevid=\"471\" /></api>"
@@ -214,7 +214,7 @@ private slots:
         e10->setSummary("Hello World");
         e10->setPageName( "Talk:Main Page" );
         e10->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e10->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e10->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e10->setText( "Hello everyone!" );
         e10->setWatchList(Edit::watch);
         QTest::newRow("WatchList watch")
@@ -226,7 +226,7 @@ private slots:
         e11->setSummary("Hello World");
         e11->setPageName( "Talk:Main Page" );
         e11->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e11->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e11->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e11->setText( "Hello everyone!" );
         e11->setWatchList(Edit::unwatch);
         QTest::newRow("WatchList unwatch")
@@ -238,7 +238,7 @@ private slots:
         e12->setSummary("Hello World");
         e12->setPageName( "Talk:Main Page" );
         e12->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e12->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e12->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e12->setText( "Hello everyone!" );
         e12->setWatchList(Edit::preferences);
         QTest::newRow("WatchList preferences")
@@ -250,7 +250,7 @@ private slots:
         e13->setSummary("Hello World");
         e13->setPageName( "Talk:Main Page" );
         e13->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        e13->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        e13->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
         e13->setText( "Hello everyone!" );
         e13->setWatchList(Edit::nochange);
         QTest::newRow("WatchList nochange")
@@ -280,8 +280,8 @@ private slots:
         job->setSummary("Hello World" );
         job->setPageName( "Talk:Main Page" );
         job->setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        job->setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
-        job->setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        job->setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        job->setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         job->setText( "Hello everyone!" );
         connect(job,  SIGNAL(result(KJob* )),this, SLOT(editHandle(KJob*)));
 
@@ -389,8 +389,8 @@ private slots:
         edit.setSummary("Hello World" );
         edit.setPageName( "Talk:Main Page" );
         edit.setToken( "cecded1f35005d22904a35cc7b736e18+\\" );
-        edit.setBaseTimesStamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
-        edit.setStartTimesStamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        edit.setBaseTimestamp( QDateTime::fromString("2008-03-20T17:26:39Z","yyyy-MM-ddThh:mm:ssZ") );
+        edit.setStartTimestamp( QDateTime::fromString("2008-03-27T21:15:39Z","yyyy-MM-ddThh:mm:ssZ") );
         edit.setText( "Hello everyone!" );
 
         connect(&edit, SIGNAL( resultCaptcha(const QVariant &) ), this, SLOT( editHandle(const QVariant &) ));

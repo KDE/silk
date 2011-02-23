@@ -35,26 +35,11 @@
 namespace mediawiki
 {
 
-/**
- * @brief An edit result.
- */
 struct Result
 {
-    /**
-     * @brief CAPTCHA ID from previous request.
-     */
     unsigned int m_captchaId;
-
-    /**
-     * @brief Question from the CAPTCHA.
-     */
     QVariant m_captchaQuestion;
-
-    /**
-     * @brief Answer to the CAPTCHA.
-     */
     QString m_captchaAnswer;
-
 };
 
 class EditPrivate : public JobPrivate
@@ -110,87 +95,87 @@ Edit::Edit(MediaWiki & media, QObject * parent)
     : Job(*new EditPrivate(media), parent)
 {}
 
-void Edit::setUndoAfter(int param)
+void Edit::setUndoAfter(int undoafter)
 {
     Q_D(Edit);
-    d->requestParameter["undoafter"] = QString::number(param);
+    d->requestParameter["undoafter"] = QString::number(undoafter);
 }
 
-void Edit::setUndo(int param)
+void Edit::setUndo(int undo)
 {
     Q_D(Edit);
-    d->requestParameter["undo"] = QString::number(param);
+    d->requestParameter["undo"] = QString::number(undo);
 }
 
-void Edit::setPrependText(const QString & param)
+void Edit::setPrependText(const QString & prependText)
 {
     Q_D(Edit);
-    d->requestParameter["prependtext"] = param;
+    d->requestParameter["prependtext"] = prependText;
     d->requestParameter["md5"] = "";
 }
 
-void Edit::setAppendText( const QString & param )
+void Edit::setAppendText(const QString & appendText)
 {
     Q_D(Edit);
-    d->requestParameter["appendtext"] = param;
+    d->requestParameter["appendtext"] = appendText;
     d->requestParameter["md5"] = "";
 }
 
-void Edit::setPageName(const QString & param)
+void Edit::setPageName(const QString & pageName)
 {
     Q_D(Edit);
-    d->requestParameter["title"] = param;
+    d->requestParameter["title"] = pageName;
 }
 
-void Edit::setToken(const QString & param)
+void Edit::setToken(const QString & token)
 {
     Q_D(Edit);
-    d->requestParameter["token"] = param;
+    d->requestParameter["token"] = token;
 }
 
-void Edit::setBaseTimesStamp(const QDateTime & param)
+void Edit::setBaseTimestamp(const QDateTime & baseTimestamp)
 {
     Q_D(Edit);
-    d->requestParameter["basetimestamp"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
+    d->requestParameter["basetimestamp"] = baseTimestamp.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void Edit::setStartTimesStamp(const QDateTime & param)
+void Edit::setStartTimestamp(const QDateTime & startTimestamp)
 {
     Q_D(Edit);
-    d->requestParameter["starttimestamp"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
+    d->requestParameter["starttimestamp"] = startTimestamp.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void Edit::setText(const QString & param)
+void Edit::setText(const QString & text)
 {
     Q_D(Edit);
-    d->requestParameter["text"] = param;
+    d->requestParameter["text"] = text;
     d->requestParameter["md5"] = "";
 }
 
-void Edit::setRecreate(bool param)
+void Edit::setRecreate(bool recreate)
 {
     Q_D(Edit);
-    if(param)
+    if(recreate)
     {
         d->requestParameter["recreate"] = "on";
         d->requestParameter["md5"] = "";
     }
 }
 
-void Edit::setCreateonly(bool param)
+void Edit::setCreateonly(bool createonly)
 {
     Q_D(Edit);
-    if(param)
+    if(createonly)
     {
         d->requestParameter["createonly"] = "on";
         d->requestParameter["md5"] = "";
     }
 }
 
-void Edit::setNocreate(bool param)
+void Edit::setNocreate(bool norecreate)
 {
     Q_D(Edit);
-    if(param)
+    if(norecreate)
     {
         d->requestParameter["nocreate"] = "on";
         d->requestParameter["md5"] = "";
