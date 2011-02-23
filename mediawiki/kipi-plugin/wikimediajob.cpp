@@ -45,15 +45,15 @@ QString WikiMediaJob::buildWikiText(KIPI::ImageInfo *info)
 {
     QString text;
     text.append(" == {{int:filedesc}} ==");
-    text.append( "{{Information");
-    text.append( "|Description=").append( info->description());
-    text.append( "|Source=").append( "{{own}}");
-    text.append( "|Author=").append( "[[").append(m_login).append( "]]");
-    text.append( "|Date=").append( info->time().toString(Qt::ISODate));
-    text.append( "|Permission=");
-    text.append( "|other_versions=");
+    text.append( "\n{{Information");
+    text.append( "\n|Description=").append( info->description());
+    text.append( "\n|Source=").append( "{{own}}");
+    text.append( "\n|Author=").append( "[[").append(m_login).append( "]]");
+    text.append( "\n|Date=").append( info->time().toString(Qt::ISODate));
+    text.append( "\n|Permission=");
+    text.append( "\n|other_versions=");
 
-    text.append( "}}");
+    text.append( "\n}}");
     QMap<QString,QVariant> attributes = info->attributes();
     double altitude = 0, longitude = 0, latitude = 0;
     if(attributes.contains("latitude") ||
@@ -69,23 +69,27 @@ QString WikiMediaJob::buildWikiText(KIPI::ImageInfo *info)
     }
     if(longitude && latitude)
     {
-        text.append( "{{Location dec");
-        text.append( "|").append( QString::number(longitude));
-        text.append( "|").append( QString::number(latitude));
-        text.append( "|}}");
+        text.append( "\n{{Location dec");
+        text.append( "\n|").append( QString::number(longitude));
+        text.append( "\n|").append( QString::number(latitude));
+        text.append( "\n}}");
     }
     text.append( " == {{int:license}} ==");
     if(attributes.contains("licence"))
         text.append( attributes["licence"].toString());
+
+    QList<QString> buff2 =  attributes.keys();
+    foreach(QString s , buff2)
+        qDebug() << s+" : " << attributes[s].typeName()+QString("\n");
+
+    QStringList buff = attributes["tags"].toStringList();
+    for(int i = 0; i < buff.size(); i++)
+        qDebug() << buff[i];
+
+    buff = attributes["tagspath"].toStringList();
+    for(int i = 0; i < buff.size(); i++)
+        qDebug() << buff[i];
     qDebug() << text;
     return text;
 }
 
-//        QString text("== {{int:filedesc}} == {{Information |Description=");
-//        text.append(this->ui->descriptionEdit->text());
-//        text.append(" |Source=").append(this->ui->sourceEdit->text());
-//        text.append(" |Date=").append(this->ui->dateEdit->text());
-//        text.append(" |Author=").append(this->ui->authorEdit->text());
-//        text.append(" |Permission=").append(this->ui->permissionEdit->text());
-//        text.append(" |other_versions=").append(this->ui->versionsEdit->text());
-//        text.append("}} == {{int:license}} ==");
