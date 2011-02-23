@@ -42,26 +42,15 @@ public:
     WmWidget(QWidget* parent, KIPI::Interface *iface);
     ~WmWidget();
 
-    QString getDestinationPath();
-
     void updateLabels(const QString& name = "", const QString& url = "", bool uplPerm = false);
-
-    long long getFriendID();
-    QString getAlbumID();
 
     KIPIPlugins::ImagesList* imagesList() const;
 
     QProgressBar* progressBar() const;
 
-Q_SIGNALS:
-
-    void reloadAlbums(long long userID);
 
 private Q_SLOTS:
 
-    void slotReloadAlbumsRequest();
-    void slotDownloadTypeChanged(int dlType);
-    void slotFriendsIndexChanged(int index);
     void slotResizeChecked();
 
 private:
@@ -71,15 +60,7 @@ private:
 
     QLabel*                  m_headerLbl;
     QLabel*                  m_userNameDisplayLbl;
-    QLabel*                  m_permissionLbl;
     KPushButton*             m_changeUserBtn;
-    KPushButton*             m_changePermBtn;
-
-    QButtonGroup*            m_dlGrp;
-    KComboBox*               m_friendsCoB;
-    KComboBox*               m_albumsCoB;
-    KPushButton*             m_newAlbumBtn;
-    KPushButton*             m_reloadAlbumsBtn;
 
     QCheckBox*               m_resizeChB;
     QSpinBox*                m_dimensionSpB;

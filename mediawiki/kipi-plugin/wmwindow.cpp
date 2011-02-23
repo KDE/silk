@@ -63,3 +63,7 @@ void WMWindow::reactivate()
 {
    show();
 }
+void WMWindow::slotHelp()
+{
+    KToolInvocation::invokeHelp("wikimedia", "kipi-plugins");
+}

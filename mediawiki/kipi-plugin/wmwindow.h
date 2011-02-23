@@ -24,6 +24,8 @@ public:
             QWidget *parent);
    void reactivate();
    ~WMWindow();
+private Q_SLOTS:
+   void slotHelp();
 private:
 
    QString                   m_tmpDir;
