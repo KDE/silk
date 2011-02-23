@@ -127,7 +127,7 @@ int Plugin_WikiMedia::runLWindow()
     m_mediawiki = new mediawiki::MediaWiki(m_wiki);
     mediawiki::Login login(*m_mediawiki, m_login, m_pass);
     login.exec();
-    m_uploadJob = m_uploadJob == NULL ? new KIPIWikiMediaPlugin::WikiMediaJob(interface,m_login,this) : m_uploadJob;
+    m_uploadJob = m_uploadJob == NULL ? new KIPIWikiMediaPlugin::WikiMediaJob(interface,m_login,m_mediawiki,this) : m_uploadJob;
     qDebug()<< login.error();
     return login.error();
 }
