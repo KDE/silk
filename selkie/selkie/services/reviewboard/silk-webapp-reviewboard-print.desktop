@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Print
+Name[de]=Drucken
 Name[es]=Imprimir
 Name[nds]=Drucken
 Name[nl]=Afdrukken
@@ -9,6 +10,7 @@ Name[sv]=Skriv ut
 Name[uk]=Друк
 Name[x-test]=xxPrintxx
 Comment=Print the current page
+Comment[de]=Die aktuelle Seite drucken
 Comment[es]=Imprimir la página actual
 Comment[nl]=De huidige pagina afdrukken
 Comment[pt]=Imprimir a página actual

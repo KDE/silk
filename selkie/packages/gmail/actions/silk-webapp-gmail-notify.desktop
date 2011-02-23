@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Notify
+Name[de]=Benachrichtigung
 Name[nds]=Bescheed
 Name[nl]=Melden
 Name[pt]=Notificação
@@ -8,6 +9,7 @@ Name[sv]=Underrättelse
 Name[uk]=Сповіщення
 Name[x-test]=xxNotifyxx
 Comment=Trigger a Notification
+Comment[de]=Eine Benachrichtigung auslösen
 Comment[nl]=Melding starten
 Comment[pt]=Emitir uma Notificação
 Comment[pt_BR]=Emitir uma notificação
