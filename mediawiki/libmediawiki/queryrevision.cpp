@@ -272,7 +272,7 @@ void QueryRevision::doWorkProcessReply()
                         if (rvprop.contains("size"))
                             tempR.setSize(reader.attributes().value("size").toString().toInt());
                         if (rvprop.contains("minor"))
-                            tempR.setMinor(reader.attributes().value("minor").toString());
+                            tempR.setMinorRevision(true);
                         if (rvprop.contains("user"))
                             tempR.setUser(reader.attributes().value("user").toString());
                         if (rvprop.contains("timestamp"))

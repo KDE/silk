@@ -27,7 +27,7 @@ namespace mediawiki {
         int revId;
         int parentId;
         int size;
-        QString minor;
+        bool minorRevision;
         QString user;
         QDateTime timestamp;
         QString comment;
@@ -41,6 +41,7 @@ using namespace mediawiki;
 Revision::Revision()
     :d(new RevisionPrivate())
 {
+    d->minorRevision = false;
     d->revId=-1;
     d->parentId=-1;
     d->size=-1;
@@ -90,13 +91,13 @@ int Revision::size() const
     return d->size;
 }
 
-void Revision::setMinor(const QString &  minor)
+void Revision::setMinorRevision(bool minorRevision)
 {
-    d->minor=minor;
+    d->minorRevision=minorRevision;
 }
-QString Revision::minor() const
+bool Revision::minorRevision() const
 {
-    return d->minor;
+    return d->minorRevision;
 }
 
 QDateTime Revision::timestamp() const
@@ -169,7 +170,7 @@ bool operator==(const mediawiki::Revision & lhs, const mediawiki::Revision & rhs
            lhs.comment() == rhs.comment() &&
            lhs.content()== rhs.content()&&
            lhs.size() == rhs.size() &&
-           lhs.minor()==rhs.minor()&&
+           lhs.minorRevision()==rhs.minorRevision()&&
            lhs.parseTree() == rhs.parseTree()&&
            lhs.parentId() == rhs.parentId()&&
            lhs.rollback() == rhs.rollback()&&

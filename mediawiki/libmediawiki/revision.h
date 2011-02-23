@@ -91,16 +91,16 @@ public:
     int size() const;
 
     /**
-     * @brief Whether the revision was a minor edit
-     * @param minor
+     * @brief Set true if the revsion is minor.
+     * @param minor true if the revsion is minor
      */
-    //FIXME: Must be a bool because in xml when minor="" is set means that a minor version.
-    void setMinor(const QString &  minor);
+    void setMinorRevision(bool minorRevision);
 
     /**
-     * @brief Get Tags if the revision is minor
+     * @brief Get true if the revsion is minor.
+     * @return true if the revsion is minor
      */
-    QString minor() const;
+    bool minorRevision() const;
 
     /**
      * @brief Get the date and time of the revision.

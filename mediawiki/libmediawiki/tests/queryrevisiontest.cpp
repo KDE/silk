@@ -45,13 +45,13 @@ Q_DECLARE_METATYPE(FakeServer::Request)
 Q_DECLARE_METATYPE(QueryRevision*)
 Q_DECLARE_METATYPE(QueryRevision::Properties)
 
-Revision constructRevision(int i,int p, int s, QString m, QString u, QDateTime t, QString cm, QString ct, QString pt, QString r){
+Revision constructRevision(int i,int p, int s, bool m, QString u, QDateTime t, QString cm, QString ct, QString pt, QString r){
 
     Revision rev;
     rev.setRevisionId(i);
     rev.setParentId(p);
     rev.setSize(s);
-    rev.setMinor(m);
+    rev.setMinorRevision(m);
     rev.setUser(u);
     rev.setTimestamp(t);
     rev.setComment(cm);
@@ -66,7 +66,7 @@ void debugRev(const Revision &rev)
     qDebug() << rev.revisionId();
     qDebug() << rev.parentId();
     qDebug() << rev.size();
-    //qDebug() << rev.minor();
+    qDebug() << rev.minorRevision();
     qDebug() << rev.user();
     qDebug() << rev.timestamp();
     qDebug() << rev.comment();
@@ -164,11 +164,11 @@ private slots:
                 << QueryRevision::Properties(QueryRevision::Ids | QueryRevision::Flags | QueryRevision::Timestamp |QueryRevision::User | QueryRevision::Comment | QueryRevision::Size | QueryRevision::Content)
                 << 2
                 << (QList<Revision>()
-                        << constructRevision(367741756, 367741564, 70, "", "Graham87",
+                        << constructRevision(367741756, 367741564, 70, false, "Graham87",
                                                            QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                                            "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
                                                            "#REDIRECT [[Application programming interface]]{{R from abbreviation}}","","")
-                        << constructRevision(387545037, 387542946, 5074, "", "Rich Farmbrough",
+                        << constructRevision(387545037, 387542946, 5074, false, "Rich Farmbrough",
                                                  QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"),
                                                  "[[Help:Reverting|Reverted]] edits by [[Special:Contributions/Rich Farmbrough|Rich Farmbrough]] ([[User talk:Rich Farmbrough|talk]]) to last version by David Levy",
                                                  QStringFromFile("./queryrevisiontest_content.rc"),"",""));
@@ -181,7 +181,7 @@ private slots:
                 << QueryRevision::Properties(QueryRevision::Ids | QueryRevision::Flags | QueryRevision::Timestamp |QueryRevision::User | QueryRevision::Comment | QueryRevision::Size | QueryRevision::Content)
                 << 1
                 << (QList<Revision>()
-                        << constructRevision(367741756, 367741564, 70, "", "Graham87",
+                        << constructRevision(367741756, 367741564, 70, false, "Graham87",
                                                  QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                                  "Protected API: restore protection ([edit=sysop] (indefinite) [move=sysop] (indefinite))",
                                                  "#REDIRECT [[Application programming interface]]{{R from abbreviation}}","",""));
@@ -194,11 +194,11 @@ private slots:
                 << QueryRevision::Properties(QueryRevision::Timestamp)
                 << 2
                 << (QList<Revision>()
-                    << constructRevision(-1, -1, -1, "", "",
+                    << constructRevision(-1, -1, -1, false, "",
                                              QDateTime::fromString("2010-06-13T08:41:17Z","yyyy-MM-ddThh:mm:ssZ"),
                                              "",
                                              "","","")
-                    << constructRevision(-1, -1, -1, "", "",
+                    << constructRevision(-1, -1, -1, false, "",
                                              QDateTime::fromString("2010-09-28T15:21:07Z","yyyy-MM-ddThh:mm:ssZ"),
                                              "",
                                              "","",""));
@@ -210,11 +210,11 @@ private slots:
                 << QueryRevision::Properties(QueryRevision::User)
                 << 2
                 << (QList<Revision>()
-                    << constructRevision(-1, -1, -1, "", "Graham87",
+                    << constructRevision(-1, -1, -1, false, "Graham87",
                                              QDateTime(),
                                              "",
                                              "","","")
-                    << constructRevision(-1, -1, -1, "", "Rich Farmbrough",
+                    << constructRevision(-1, -1, -1, false, "Rich Farmbrough",
                                              QDateTime(),
                                              "",
                                              "","",""));
@@ -572,7 +572,7 @@ private slots:
         int error = 0;
         int size = 1;
         QList<Revision> results;
-        results << constructRevision(-1, -1, -1, "", "",
+        results << constructRevision(-1, -1, -1, false, "",
                                            QDateTime(),
                                            "",
                                            "",
