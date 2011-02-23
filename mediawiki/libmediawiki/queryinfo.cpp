@@ -45,7 +45,6 @@ public:
     QVector<Protection> protections;
     QMap<QString, QString> requestParameter;
     Page page;
-    QString warning; //FIXME: Usefull ?
 
 };
 
@@ -82,16 +81,6 @@ void QueryInfo::setRevisionId(unsigned int id)
 {
     Q_D(QueryInfo);
     d->requestParameter["revids"] = QString::number(id);
-}
-
-QString QueryInfo::warning() const {
-    Q_D(const QueryInfo);
-    return d->warning;
-}
-
-void QueryInfo::setWarning(const QString & warning) {
-    Q_D(QueryInfo);
-    d->warning = warning;
 }
 
 void QueryInfo::start()
@@ -183,10 +172,6 @@ void QueryInfo::doWorkProcessReply()
                     p.setType(type);
                     p.setSource(source);
                     protect.push_back(p);
-                }
-                else if (reader.name() == "info") {
-                    reader.readNext();
-                    d->warning = reader.text().toString();
                 }
             } else if (token == QXmlStreamReader::EndElement) {
                 if (reader.name() == "page") {

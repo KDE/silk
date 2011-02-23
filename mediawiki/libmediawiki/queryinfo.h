@@ -92,17 +92,6 @@ public:
      */
     void setRevisionId(unsigned int id);
 
-    /**
-     * @brief Get the warning.
-     */
-    QString warning () const;
-
-    /**
-     * @brief Put a warning.
-     * @param warning the warning
-     */
-    void setWarning (const QString & warning);
-
 signals:
 
     /**
