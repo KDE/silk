@@ -37,9 +37,10 @@
 
 #include <libkipi/plugin.h>
 
-#if KDE_IS_VERSION(4,3,60)
-#include <libkipi/exportinterface.h>
-#endif
+// LibMediaWiki includes
+
+#include <libmediawiki/login.h>
+#include <libmediawiki/mediawiki.h>
 
 class KAction;
 
@@ -47,20 +48,15 @@ namespace KIPIWikiMediaPlugin
 {
     class WMWindow;
     class WmLogin;
+    class WikiMediaJob;
 }
 
 class KJob;
 
 class Plugin_WikiMedia
     : public KIPI::Plugin
-#if KDE_IS_VERSION(4,3,60)
-    , public KIPI::ExportInterface
-#endif
 {
 Q_OBJECT
-#if KDE_IS_VERSION(4,3,60)
-Q_INTERFACES( KIPI::ExportInterface )
-#endif
 
 public:
 
@@ -69,7 +65,6 @@ public:
 
     KIPI::Category category(KAction* action) const;
     void setup(QWidget*);
-    virtual KJob* exportFiles(const QString& album);
     int runLWindow();
     void runMWindow();
 
@@ -78,9 +73,14 @@ public Q_SLOTS:
 
 private:
 
-    KAction                       *m_actionExport;
-    KIPIWikiMediaPlugin::WmLogin *m_dlgLoginExport;
-    KIPIWikiMediaPlugin::WMWindow *m_dlgExport;
+    KAction                       * m_actionExport;
+    KIPIWikiMediaPlugin::WmLogin  * m_dlgLoginExport;
+    KIPIWikiMediaPlugin::WMWindow * m_dlgExport;
+    KIPIWikiMediaPlugin::WikiMediaJob * m_uploadJob;
+    QString                         m_login;
+    QString                         m_pass;
+    mediawiki::MediaWiki          * m_mediawiki;
+    QUrl                            m_wiki;
 };
 
 #endif // PLUGIN_WIKIMEDIA_H

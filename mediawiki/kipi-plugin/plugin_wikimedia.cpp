@@ -47,11 +47,6 @@ extern "C"
 
 #include <libkipi/interface.h>
 
-// LibMediaWiki includes
-
-#include <libmediawiki/login.h>
-#include <libmediawiki/mediawiki.h>
-
 // Local includes
 
 #include "wmwindow.h"
@@ -71,7 +66,7 @@ Plugin_WikiMedia::Plugin_WikiMedia(QObject* parent, const QVariantList& /*args*/
 void Plugin_WikiMedia::setup(QWidget* widget)
 {
     m_dlgExport = 0;
-
+    m_uploadJob = NULL;
     KIPI::Plugin::setup(widget);
 
     KIconLoader::global()->addAppDir("kipiplugin_wikimedia");
@@ -101,34 +96,40 @@ Plugin_WikiMedia::~Plugin_WikiMedia()
 }
 int Plugin_WikiMedia::runLWindow()
 {
+
+    KIPI::Interface* interface = dynamic_cast<KIPI::Interface*>(parent());
+    if (!interface)
+    {
+        kError() << "Kipi interface is null!";
+        return -1;
+    }
+
     m_dlgLoginExport = new KIPIWikiMediaPlugin::WmLogin(kapp->activeWindow(), i18n("Login"), QString(), QString());
 
-        QString username_edit, password_edit;
-        QUrl wiki;
+    if (!m_dlgLoginExport)
+    {
+        kDebug() << " Out of memory error " ;
+    }
 
-        if (!m_dlgLoginExport)
-        {
-            kDebug() << " Out of memory error " ;
-        }
-
-        if (m_dlgLoginExport->exec() == QDialog::Accepted)
-        {
-            username_edit = m_dlgLoginExport->username();
-            password_edit = m_dlgLoginExport->password();
-            wiki = m_dlgLoginExport->wiki();
-            delete m_dlgLoginExport;
-        }
-        else
-        {
-            delete m_dlgLoginExport;
-            //Return something which say authentication needed.
-            return -1;
-        }
-        mediawiki::MediaWiki mediawiki(wiki);
-        mediawiki::Login login(mediawiki, username_edit, password_edit);
-        login.exec();
-        qDebug()<< login.error();
-        return login.error();
+    if (m_dlgLoginExport->exec() == QDialog::Accepted)
+    {
+        m_login = m_dlgLoginExport->username();
+        m_pass  = m_dlgLoginExport->password();
+        m_wiki = m_dlgLoginExport->wiki();
+        delete m_dlgLoginExport;
+    }
+    else
+    {
+        delete m_dlgLoginExport;
+        //Return something which say authentication needed.
+        return -1;
+    }
+    m_mediawiki = new mediawiki::MediaWiki(m_wiki);
+    mediawiki::Login login(*m_mediawiki, m_login, m_pass);
+    login.exec();
+    m_uploadJob = m_uploadJob == NULL ? new KIPIWikiMediaPlugin::WikiMediaJob(interface,m_login,this) : m_uploadJob;
+    qDebug()<< login.error();
+    return login.error();
 }
 
 void Plugin_WikiMedia::runMWindow()
@@ -157,13 +158,15 @@ void Plugin_WikiMedia::runMWindow()
         KWindowSystem::activateWindow(m_dlgExport->winId());
     }
 
+    disconnect(m_dlgExport,SIGNAL(user1Clicked()),m_uploadJob,SLOT(begin()));
+    connect(m_dlgExport,SIGNAL(user1Clicked()),m_uploadJob,SLOT(begin()));
     m_dlgExport->reactivate();
 }
 
 void Plugin_WikiMedia::slotExport()
 {
     if(!runLWindow())
-        runMWindow();
+            runMWindow();
 }
 
 
@@ -174,10 +177,4 @@ KIPI::Category Plugin_WikiMedia::category( KAction* action ) const
 
     kWarning() << "Unrecognized action for plugin category identification";
     return KIPI::ExportPlugin;
-}
-
-KJob* Plugin_WikiMedia::exportFiles(const QString& album)
-{
-    KIPI::Interface* interface = dynamic_cast<KIPI::Interface*>(parent());
-    return new KIPIWikiMediaPlugin::WikiMediaJob(interface, album);
 }
