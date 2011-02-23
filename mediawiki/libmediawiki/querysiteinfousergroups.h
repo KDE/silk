@@ -83,12 +83,6 @@ private slots:
 
     void doWorkProcessReply();
 
-private:
-
-    QuerySiteinfoUsergroups(const QuerySiteinfoUsergroups &);
-
-    QuerySiteinfoUsergroups & operator=(const QuerySiteinfoUsergroups &);
-
 };
 
 }

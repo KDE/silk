@@ -262,12 +262,6 @@ private slots:
 
     void doWorkProcessReply();
 
-private:
-
-    QueryRevision(const QueryRevision &);
-
-    QueryRevision & operator=(const QueryRevision &);
-
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QueryRevision::Properties)

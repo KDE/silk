@@ -73,12 +73,6 @@ private:
 
     MediaWikiPrivate * const d_ptr;
 
-private:
-
-    MediaWiki(const MediaWiki &);
-
-    MediaWiki & operator=(const MediaWiki &);
-
 };
 
 }
