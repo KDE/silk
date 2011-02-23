@@ -105,7 +105,7 @@ void QuerySiteInfoGeneralTestAttribute()
     resultExpected.setDataBaseVersion(QString("5.1.46-facebook-r3489-log"));
     resultExpected.setRev(QString("75268"));
     resultExpected.setCas(QString("first-letter"));
-    resultExpected.setRights(QString("Creative Commons Attribution-Share Alike 3.0 Unported"));
+    resultExpected.setLicence(QString("Creative Commons Attribution-Share Alike 3.0 Unported"));
     resultExpected.setLanguage(QString("en"));
     resultExpected.setFallBack8bitEncoding(QString("windows-1252"));
     resultExpected.setWriteApi(QString(""));

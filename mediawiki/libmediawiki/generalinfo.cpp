@@ -36,7 +36,7 @@ namespace mediawiki {
        QString dataBaseVersion;
        QString rev;
        QString cas;
-       QString rights;
+       QString licence;
        QString language;
        QString fallBack8bitEncoding;
        QString writeApi;
@@ -174,14 +174,14 @@ void Generalinfo::setCas(const QString & cas)
     d->cas = cas;
 }
 
-QString Generalinfo::rights() const
+QString Generalinfo::licence() const
 {
-    return d->rights;
+    return d->licence;
 }
 
-void Generalinfo::setRights(const QString & rights)
+void Generalinfo::setLicence(const QString & licence)
 {
-    d->rights = rights;
+    d->licence = licence;
 }
 
 QString Generalinfo::language() const
@@ -315,7 +315,7 @@ bool operator==(const Generalinfo & lhs, const Generalinfo & rhs) {
            lhs.dataBaseVersion() == rhs.dataBaseVersion() &&
            lhs.rev() == rhs.rev() &&
            lhs.cas() == rhs.cas() &&
-           lhs.rights() == rhs.rights() &&
+           lhs.licence() == rhs.licence() &&
            lhs.language() == rhs.language() &&
            lhs.fallBack8bitEncoding() == rhs.fallBack8bitEncoding() &&
            lhs.writeApi() == rhs.writeApi() &&

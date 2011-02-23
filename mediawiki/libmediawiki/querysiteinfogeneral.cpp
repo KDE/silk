@@ -100,7 +100,7 @@ void QuerySiteInfoGeneral::doWorkProcessReply()
                 generalinfo.setDataBaseVersion(reader.attributes().value("dbversion").toString());
                 generalinfo.setRev(reader.attributes().value("rev").toString());
                 generalinfo.setCas(reader.attributes().value("case").toString());
-                generalinfo.setRights(reader.attributes().value("rights").toString());
+                generalinfo.setLicence(reader.attributes().value("rights").toString());
                 generalinfo.setLanguage(reader.attributes().value("lang").toString());
                 generalinfo.setFallBack8bitEncoding(reader.attributes().value("fallback8bitEncoding").toString());
                 generalinfo.setWriteApi(reader.attributes().value("writeapi").toString());

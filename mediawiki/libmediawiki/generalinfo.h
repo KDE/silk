@@ -178,17 +178,16 @@ public:
     void setCas(const QString & cas);
 
     /**
-     * @brief Get the rights titled.
-     * @return the rights titled
+     * @brief Get the licence.
+     * @return the licence
      */
-    //FIXME: mettre une liste pour unifier avec usergroups
-    QString rights() const;
+    QString licence() const;
 
     /**
-     * @brief Set the rights titled.
-     * @param rights the rights titled
+     * @brief Set the licence.
+     * @param licence the licence
      */
-    void setRights(const QString & rights);
+    void setLicence(const QString & licence);
 
     /**
      * @brief Get the language.
