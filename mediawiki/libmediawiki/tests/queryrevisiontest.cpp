@@ -48,7 +48,7 @@ Q_DECLARE_METATYPE(QueryRevision::Properties)
 Revision constructRevision(int i,int p, int s, QString m, QString u, QDateTime t, QString cm, QString ct, QString pt, QString r){
 
     Revision rev;
-    rev.setRevId(i);
+    rev.setRevisionId(i);
     rev.setParentId(p);
     rev.setSize(s);
     rev.setMinor(m);
@@ -63,7 +63,7 @@ Revision constructRevision(int i,int p, int s, QString m, QString u, QDateTime t
 }
 void debugRev(const Revision &rev)
 {
-    qDebug() << rev.revId();
+    qDebug() << rev.revisionId();
     qDebug() << rev.parentId();
     qDebug() << rev.size();
     //qDebug() << rev.minor();

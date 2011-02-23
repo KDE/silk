@@ -60,19 +60,19 @@ Revision & Revision::operator=(Revision other)
     return *this;
 }
 
-void Revision::setRevId(int id)
+void Revision::setRevisionId(int revisionId)
 {
-    d->revId=id;
+    d->revId=revisionId;
 }
 
-int Revision::revId() const
+int Revision::revisionId() const
 {
     return d->revId;
 }
 
-void Revision::setParentId(int id)
+void Revision::setParentId(int parentId)
 {
-    d->parentId=id;
+    d->parentId=parentId;
 }
 
 int Revision::parentId() const
@@ -173,5 +173,5 @@ bool operator==(const mediawiki::Revision & lhs, const mediawiki::Revision & rhs
            lhs.parseTree() == rhs.parseTree()&&
            lhs.parentId() == rhs.parentId()&&
            lhs.rollback() == rhs.rollback()&&
-           lhs.revId() == rhs.revId();
+           lhs.revisionId() == rhs.revisionId();
 }

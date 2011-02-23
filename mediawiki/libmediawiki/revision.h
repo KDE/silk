@@ -1,5 +1,5 @@
 /*
- *   Copyright 2011 Robin Bussenot bussenot.robin@gmail.com
+ *   Copyright 2011 Robin Bussenot <bussenot.robin@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -28,58 +28,65 @@ namespace mediawiki {
 /**
  * @brief An image info.
  */
-    //FIXME: virer les espaces doubles
 class MEDIAWIKI_EXPORT Revision {
 
 public:
-    Revision();
+
     /**
-     * @brief Destructs an image info.
+     * @brief Constructs a revision.
+     */
+    Revision();
+
+    /**
+     * @brief Destructs a revision.
      */
     ~Revision();
 
     /**
-     * @brief Construct by copy.
+     * @brief Constructs a revision from an other revision.
+     * @param other an other revision
      */
     Revision(const Revision & other);
 
-
     /**
-     * @brief Assingning an revision from an other revision .
+     * @brief Assingning a revision from an other revision.
      * @param other an other revision
      */
     Revision & operator=(Revision other);
 
     /**
-    * @brief Set the Revision ID
-    * @param Id Revision ID
+    * @brief Set the revision ID.
+    * @param revisionId the revision ID
     **/
-    void setRevId(int id);
+    void setRevisionId(int revisionId);
 
     /**
-     * @brief get the Revision ID
+     * @brief Get the revision ID.
+     * @return the revision ID
      */
-    int revId() const;
+    int revisionId() const;
 
     /**
-     * @briefSet the parent ID
-     * @param ID ID of parent
+     * @brief Set the parent ID.
+     * @param parentId the parent ID
      */
-    void setParentId(int id);
+    void setParentId(int parentId);
 
     /**
-     * @brief get parent ID
+     * @brief Get the parent ID.
+     * @return the parent ID
      */
     int parentId() const;
 
     /**
-     * @brief Set the size of the revision text in bytes
-     * @param size size of revision text
+     * @brief Set the size of the revision text in bytes.
+     * @param size the size of the revision text in bytes
      */
     void setSize(int size);
 
     /**
-     * @brief get the size of the revision text
+     * @brief Get the size of the revision text in bytes.
+     * @return the size of the revision text in bytes
      */
     int size() const;
 
@@ -87,6 +94,7 @@ public:
      * @brief Whether the revision was a minor edit
      * @param minor
      */
+    //FIXME: Must be a bool because in xml when minor="" is set means that a minor version.
     void setMinor(const QString &  minor);
 
     /**
@@ -94,72 +102,74 @@ public:
      */
     QString minor() const;
 
-
     /**
-     * @brief  Get the date and time the revision was made
+     * @brief Get the date and time of the revision.
+     * @return the date and time of the revision
      */
     QDateTime timestamp() const;
 
     /**
-     * @brief Set the date and time the revision was made
-     * @param timestamp
+     * @brief Set the date and time of the revision
+     * @param timestamp the date and time of the revision
      */
     void setTimestamp(const QDateTime & timestamp);
 
     /**
-     * @brief Adds the user who made the revision
+     * @brief Get the user who made the revision.
+     * @return the user who made the revision
      */
     QString user() const;
 
     /**
-     * @brief Set the list revisions made by this user
-     * @param user revision owner
+     * @brief Set the user who made the revision.
+     * @param user the user who made the revision
      */
     void setUser(const QString & user);
 
     /**
-     * @brief The revision content. If set, the maximum limit will be 10 times as low
+     * @brief The revision content.
      */
     QString content() const;
 
     /**
-     * @brief Set the revision content
-     * @param content
+     * @brief Set the revision content.
+     * @param content the revision content
      */
     void setContent(const QString & content);
 
-
     /**
-     * @brief Get the edit comment
+     * @brief Get the edit comment.
+     * @return the edit comment
      */
     QString comment() const;
 
     /**
-     * @brief Set the edit comment
-     * @param Comment the edit comment
+     * @brief Set the edit comment.
+     * @param comment the edit comment
      */
-    void setComment(const QString &  com);
+    void setComment(const QString & comment);
 
     /**
-     *  @brief Set parse tree for revision content
-     * @param parseTree
+     * @brief Set the parse tree of the revision content.
+     * @param parseTree the parse tree of the revision content
      */
-    void setParseTree(const QString &  parseTree);
-
+    void setParseTree(const QString & parseTree);
 
     /**
-     * @brief Get parseTree
+     * @brief Get the parse tree of the revision content.
+     * @return the parse tree of the revision content
      */
     QString parseTree() const;
 
     /**
-     * @brief Set rollback token
-     * @param rollback token needed to rollback edits from a page
+     * @brief Set the rollback token.
+     * @param rollback the rollback token
      */
     void setRollback(const QString &  rollback);
 
     /**
-     * @brief get rollback token
+     * @brief Get the rollback token.
+     * @return the rollback token
      */
     QString rollback() const;
 

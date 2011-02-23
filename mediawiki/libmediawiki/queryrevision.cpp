@@ -267,7 +267,7 @@ void QueryRevision::doWorkProcessReply()
                     {
                         QString rvprop = d->requestParameter["rvprop"];
                         if (rvprop.contains("ids")){
-                            tempR.setRevId(reader.attributes().value("revid").toString().toInt());
+                            tempR.setRevisionId(reader.attributes().value("revid").toString().toInt());
                             tempR.setParentId(reader.attributes().value("parentid").toString().toInt());}
                         if (rvprop.contains("size"))
                             tempR.setSize(reader.attributes().value("size").toString().toInt());
