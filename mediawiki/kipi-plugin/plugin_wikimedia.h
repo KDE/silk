@@ -46,6 +46,7 @@ class KAction;
 namespace KIPIWikiMediaPlugin
 {
     class WMWindow;
+    class WmLogin;
 }
 
 class KJob;
@@ -69,6 +70,8 @@ public:
     KIPI::Category category(KAction* action) const;
     void setup(QWidget*);
     virtual KJob* exportFiles(const QString& album);
+    int runLWindow();
+    void runMWindow();
 
 public Q_SLOTS:
     void slotExport();
@@ -76,6 +79,7 @@ public Q_SLOTS:
 private:
 
     KAction                       *m_actionExport;
+    KIPIWikiMediaPlugin::WmLogin *m_dlgLoginExport;
     KIPIWikiMediaPlugin::WMWindow *m_dlgExport;
 };
 

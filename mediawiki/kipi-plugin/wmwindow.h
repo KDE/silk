@@ -2,27 +2,36 @@
 #define WMWINDOW_H
 #include <KDialog>
 #include <libkipi/interface.h>
-
-namespace Ui {
-    class WMWindow;
+namespace KIPI
+{
+    class Interface;
 }
+
+namespace KIPIPlugins
+{
+    class KPAboutData;
+}
+
 namespace KIPIWikiMediaPlugin
 {
-class WMWindow : public KDialog {
+    class WmWidget;
+class WMWindow : public KDialog
+{
     Q_OBJECT
-public:
-    WMWindow(KIPI::Interface *interface, const QString& tmpFolder,
-                     bool import, QWidget *parent);
-    ~WMWindow();
-    void reactivate();
-protected:
-    void changeEvent(QEvent *e);
 
+public:
+   WMWindow(KIPI::Interface *interface, const QString& tmpFolder,
+            QWidget *parent);
+   void reactivate();
+   ~WMWindow();
 private:
-    Ui::WMWindow *ui;
-    bool                      m_import;
-    QString                   m_tmpDir;
-    KIPI::Interface          *m_interface;
+
+   QString                   m_tmpDir;
+   QString                   m_tmpPath;
+   WmWidget                 *m_widget;
+   KIPI::Interface          *m_interface;
+   KIPIPlugins::KPAboutData *m_about;
 };
+
 }
 #endif // WMWINDOW_H

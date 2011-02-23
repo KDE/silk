@@ -60,6 +60,7 @@ set(mediawiki_HRCS
     parse.h
     protection.h
     upload.h
+    mediawiki_export.h
 )
 kde4_add_library( mediawiki ${LIBRARY_TYPE} ${mediawiki_SRCS} )
 target_link_libraries( mediawiki ${KDE4_KIO_LIBS} -fprofile-arcs )

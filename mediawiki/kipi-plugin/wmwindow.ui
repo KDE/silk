@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WMWindow</class>
- <widget class="KDialog" name="WMWindow">
+ <class>Form</class>
+ <widget class="KDialog" name="Form">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>268</width>
-    <height>144</height>
+    <width>396</width>
+    <height>157</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="ImagesList" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>20</y>
-     <width>57</width>
-     <height>15</height>
+     <x>10</x>
+     <y>10</y>
+     <width>171</width>
+     <height>131</height>
     </rect>
-   </property>
-   <property name="text">
-    <string>Martine</string>
    </property>
   </widget>
  </widget>
@@ -32,6 +29,12 @@
    <class>KDialog</class>
    <extends>QDialog</extends>
    <header>kdialog.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ImagesList</class>
+   <extends>QWidget</extends>
+   <header>imageslist.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

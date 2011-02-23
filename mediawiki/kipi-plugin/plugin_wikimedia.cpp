@@ -47,9 +47,15 @@ extern "C"
 
 #include <libkipi/interface.h>
 
+// LibMediaWiki includes
+
+#include <libmediawiki/login.h>
+#include <libmediawiki/mediawiki.h>
+
 // Local includes
 
 #include "wmwindow.h"
+#include "wmlogin.h"
 #include "wikimediajob.h"
 
 K_PLUGIN_FACTORY( WikiMediaFactory, registerPlugin<Plugin_WikiMedia>(); )
@@ -93,9 +99,41 @@ void Plugin_WikiMedia::setup(QWidget* widget)
 Plugin_WikiMedia::~Plugin_WikiMedia()
 {
 }
-
-void Plugin_WikiMedia::slotExport()
+int Plugin_WikiMedia::runLWindow()
 {
+    m_dlgLoginExport = new KIPIWikiMediaPlugin::WmLogin(kapp->activeWindow(), i18n("Login"), QString(), QString());
+
+        QString username_edit, password_edit;
+        QUrl wiki;
+
+        if (!m_dlgLoginExport)
+        {
+            kDebug() << " Out of memory error " ;
+        }
+
+        if (m_dlgLoginExport->exec() == QDialog::Accepted)
+        {
+            username_edit = m_dlgLoginExport->username();
+            password_edit = m_dlgLoginExport->password();
+            wiki = m_dlgLoginExport->wiki();
+            delete m_dlgLoginExport;
+        }
+        else
+        {
+            delete m_dlgLoginExport;
+            //Return something which say authentication needed.
+            return -1;
+        }
+        mediawiki::MediaWiki mediawiki(wiki);
+        mediawiki::Login login(mediawiki, username_edit, password_edit);
+        login.exec();
+        qDebug()<< login.error();
+        return login.error();
+}
+
+void Plugin_WikiMedia::runMWindow()
+{
+
     KIPI::Interface* interface = dynamic_cast<KIPI::Interface*>(parent());
     if (!interface)
     {
@@ -120,6 +158,12 @@ void Plugin_WikiMedia::slotExport()
     }
 
     m_dlgExport->reactivate();
+}
+
+void Plugin_WikiMedia::slotExport()
+{
+    if(!runLWindow())
+        runMWindow();
 }
 
 
