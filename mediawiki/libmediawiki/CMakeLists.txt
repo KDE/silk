@@ -1,10 +1,6 @@
 project( mediawiki )
 
-find_package( KDE4 REQUIRED )
 set( CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage" )
-include( KDE4Defaults )
-include_directories( ${KDE4_INCLUDES} )
-
 option( STATIC_LIBRARY "Build libmediawiki as static libraries." FALSE )
 
 if( STATIC_LIBRARY )
@@ -69,6 +65,7 @@ install( TARGETS mediawiki ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install( FILES ${mediawiki_HRCS} DESTINATION ${INCLUDE_INSTALL_DIR}/libmediawiki COMPONENT Devel)
 set( SILK_MEDIAWIKI_LIBS mediawiki ${KDE4_KIO_LIBS} PARENT_SCOPE )
 
+if ( GENERATE_DOC )
 FIND_PATH(DOXYGEN_DIR doxygen
 /usr/local/bin
 /usr/bin
@@ -82,3 +79,5 @@ EXEC_PROGRAM(
 ELSE ( DOXYGEN_DIR )
 MESSAGE( STATUS "Doxygen not found, I cannot generate the documentation" )
 ENDIF ( DOXYGEN_DIR )
+
+endif ( GENERATE_DOC )

@@ -1,9 +1,5 @@
 project( editSample )
 
-find_package( KDE4 REQUIRED )
-include( KDE4Defaults )
-include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES} ${CMAKE_SOURCE_DIR}/mediawiki/libmediawiki )
-
 kde4_add_ui_files (ui_src mainwindow.ui)
 set(editSample_SRCS
     main.cpp

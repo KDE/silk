@@ -1,8 +1,3 @@
-FIND_PACKAGE(KDE4 REQUIRED)
-INCLUDE(KDE4Defaults)
-INCLUDE(MacroLibrary)
-include_directories( ${KDE4_INCLUDES} )
-
 # debug settings
 SET(AREA_CODE_GENERAL "51000")
 SET(AREA_CODE_LOADING "51001")
@@ -63,6 +58,7 @@ kde4_add_ui_files (ui_src wmwindow.ui)
 SET(kipiplugin_wikimedia_PART_SRCS
     plugin_wikimedia.cpp
     wmwindow.cpp
+    wmwidget.cpp
     wikimediajob.cpp
     wmwidget.cpp
     wmlogin.cpp
@@ -74,6 +70,7 @@ TARGET_LINK_LIBRARIES(kipiplugin_wikimedia
                       kipiplugins
                       mediawiki
                       ${KIPI_LIBRARIES}
+                      kipiplugins
                       ${KEXIV2_LIBRARIES}
                       ${KDCRAW_LIBRARIES}
                       ${KDE4_KIO_LIBS}

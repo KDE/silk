@@ -1,6 +1,6 @@
 if( KDE4_BUILD_TESTS )
 
-include_directories( ../ ${KDE4_INCLUDES} )
+include_directories( ../ )
 
 MACRO(MEDIAWIKI_UNIT_TESTS)
 
