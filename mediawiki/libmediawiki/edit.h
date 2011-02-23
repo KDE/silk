@@ -52,6 +52,7 @@ class MEDIAWIKI_EXPORT Edit : public Job
 
 public:
 
+    //FIXME: Comments ?
     enum
     {
         /**
@@ -155,7 +156,7 @@ public:
      * @brief Constructs an Edit job.
      * @param parent the QObject parent
      */
-    explicit Edit( MediaWiki & media, QObject * parent = 0);
+    explicit Edit(MediaWiki & media, QObject * parent = 0);
     /**
      * @brief Destroys the Edit job.
      */
@@ -192,7 +193,7 @@ public:
         nochange
 
     };
-    //FIXME: virer les espaces
+
     /**
      * @brief Specify how the watchlist is affected by this edit.
      * @param watchlist Specify how the watchlist is affected by this edit
@@ -224,60 +225,67 @@ public:
      * @brief Set the section.
      * @param section Set the section. New or integer
      */
-    void setSection(const QString&);
+    void setSection(const QString &);
 
     /**
      * @brief Set the summary.
      * @param summary Set the summary
      */
-    void setSummary(const QString&);
+    void setSummary(const QString &);
 
     /**
      * @brief Which properties .
      * @param undoafter Undo all revisions from undo to this one. If not set, just undo one revision.
      */
-    void setUndoAfter( int );
+    void setUndoAfter(int);
+
     /**
      * @brief Which properties .
      * @param undo Undo this revision. Overrides text, prependtext and appendtext.
      */
-    void setUndo( int );
+    void setUndo(int);
+
     /**
      * @brief Which properties .
      * @param prependtext the text added to the beginning of the page. Overrides text.
      */
-    void setPrependText( const QString& );
+    void setPrependText(const QString &);
+
     /**
      * @brief Which properties .
      * @param appendtext the text added to the end of the page. Overrides text.
      */
-    void setAppendText( const QString& );
+    void setAppendText(const QString &);
+
     /**
      * @brief Which properties .
      * @param title the page title
      */
-    void setPageName( const QString&);
+    void setPageName(const QString &);
+
     /**
      * @brief Which properties .
      * @param token the edit token. Gotten through prop=info.
      */
-    void setToken( const QString&);
+    void setToken(const QString &);
+
     /**
      * @brief Which properties .
      * @param basetimestamp the timestamp of the base revision. Leave unset to ignore conflit.
      */
-    void setBaseTimesStamp( const QDateTime&);
+    void setBaseTimesStamp(const QDateTime &);
+
     /**
      * @brief Which properties .
      * @param  starttimestamp the timestamp when you obtained the edit token.
      */
-    void setStartTimesStamp( const QDateTime&);
+    void setStartTimesStamp(const QDateTime &);
+
     /**
      * @brief Which properties .
      * @param text the page content.
      */
-
-    void setText( const QString&);
+    void setText(const QString &);
 
 signals:
 
@@ -301,11 +309,12 @@ private slots:
     void finishedEdit();
 
 public slots:
+
     /**
      * @brief Reads the xml
      * @param success true if the connection was completed successfully.
      */
-    void finishedCaptcha( const QString & captcha );
+    void finishedCaptcha(const QString & captcha);
 
 };
 

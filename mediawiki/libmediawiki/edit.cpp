@@ -106,61 +106,61 @@ public:
 
 using namespace mediawiki;
 
-Edit::Edit( MediaWiki  & media, QObject *parent)
+Edit::Edit(MediaWiki & media, QObject * parent)
     : Job(*new EditPrivate(media), parent)
 {}
 
-void Edit::setUndoAfter( int param )
+void Edit::setUndoAfter(int param)
 {
     Q_D(Edit);
     d->requestParameter["undoafter"] = QString::number(param);
 }
 
-void Edit::setUndo( int param )
+void Edit::setUndo(int param)
 {
     Q_D(Edit);
     d->requestParameter["undo"] = QString::number(param);
 }
 
-void Edit::setPrependText( const QString& param )
+void Edit::setPrependText(const QString & param)
 {
     Q_D(Edit);
     d->requestParameter["prependtext"] = param;
     d->requestParameter["md5"] = "";
 }
 
-void Edit::setAppendText( const QString& param )
+void Edit::setAppendText( const QString & param )
 {
     Q_D(Edit);
     d->requestParameter["appendtext"] = param;
     d->requestParameter["md5"] = "";
 }
 
-void Edit::setPageName( const QString& param )
+void Edit::setPageName(const QString & param)
 {
     Q_D(Edit);
     d->requestParameter["title"] = param;
 }
 
-void Edit::setToken( const QString& param )
+void Edit::setToken(const QString & param)
 {
     Q_D(Edit);
     d->requestParameter["token"] = param;
 }
 
-void Edit::setBaseTimesStamp( const QDateTime& param )
+void Edit::setBaseTimesStamp(const QDateTime & param)
 {
     Q_D(Edit);
     d->requestParameter["basetimestamp"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void Edit::setStartTimesStamp( const QDateTime& param )
+void Edit::setStartTimesStamp(const QDateTime & param)
 {
     Q_D(Edit);
     d->requestParameter["starttimestamp"] = param.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void Edit::setText( const QString& param )
+void Edit::setText(const QString & param)
 {
     Q_D(Edit);
     d->requestParameter["text"] = param;
@@ -206,7 +206,7 @@ void Edit::setMinor(bool minor)
         d->requestParameter["notminor"] = "on";
 }
 
-void Edit::setSection(const QString& section)
+void Edit::setSection(const QString & section)
 {
     Q_D(Edit);
     d->requestParameter["section"] = section;
@@ -306,7 +306,7 @@ void Edit::doWorkSendRequest(Page page)
 void Edit::finishedEdit()
 {
     Q_D(Edit);
-    disconnect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );
+    disconnect(d->reply, SIGNAL(finished()), this, SLOT(finishedEdit()));
 
     if ( d->reply->error() != QNetworkReply::NoError )
     {
@@ -358,10 +358,10 @@ void Edit::finishedEdit()
     }
     d->reply->close();
     d->reply->deleteLater();
-    emit resultCaptcha( d->result.m_captchaQuestion );
+    emit resultCaptcha(d->result.m_captchaQuestion);
 }
 
-void Edit::finishedCaptcha( const QString & captcha )
+void Edit::finishedCaptcha(const QString & captcha)
 {
     Q_D(Edit);
     d->result.m_captchaAnswer = captcha;
