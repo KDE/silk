@@ -37,7 +37,6 @@ namespace mediawiki
 
 /**
  * @brief An edit result.
- * FIXME: virer les getteur
  */
 struct Result
 {
@@ -55,12 +54,6 @@ struct Result
      * @brief Answer to the CAPTCHA.
      */
     QString m_captchaAnswer;
-
-    unsigned int captchaId(){ return this->m_captchaId; }
-
-    QVariant captchaQuestion(){ return this->m_captchaQuestion; }
-
-    QString captchaAnswer(){ return this->m_captchaAnswer; }
 
 };
 
