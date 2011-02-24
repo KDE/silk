@@ -27,6 +27,7 @@
 #include <KDE/KConfigDialog>
 #include <Plasma/Applet>
 #include <Plasma/Label>
+#include <Plasma/TextBrowser>
 #include <Plasma/PushButton>
 
 class QLabel;
@@ -61,7 +62,7 @@ private:
     void connectProvider(const QString & newProvider);
 
     Plasma::Label * const m_dateWidget;
-    Plasma::Label * const m_contentWidget;
+    Plasma::TextBrowser * const m_contentWidget;
     Plasma::PushButton * m_navigationWidget;
     QGraphicsLinearLayout * m_layoutH;
     QGraphicsLinearLayout * m_layout;

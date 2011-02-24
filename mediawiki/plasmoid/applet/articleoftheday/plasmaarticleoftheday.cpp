@@ -25,7 +25,7 @@
 PlasmaArticleOfTheDay::PlasmaArticleOfTheDay(QObject * parent, const QVariantList & args)
     : Plasma::Applet(parent, args)
     , m_dateWidget(new Plasma::Label(this))
-    , m_contentWidget(new Plasma::Label(this))
+    , m_contentWidget(new Plasma::TextBrowser(this))
     , m_layoutH(new QGraphicsLinearLayout(Qt::Horizontal, this))
     , m_layout(new QGraphicsLinearLayout(Qt::Vertical))
     , m_date(QDate::currentDate())
