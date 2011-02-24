@@ -34,6 +34,9 @@
 #include <KToolInvocation>
 #include "kpaboutdata.h"
 #include "wmwidget.h"
+#include "wmlogin.h"
+#include "wikimediajob.h"
+#include "imageslist.h"
 
 using namespace KIPIWikiMediaPlugin;
 
@@ -76,16 +79,77 @@ WMWindow::WMWindow(KIPI::Interface* interface, const QString &tmpFolder,
     helpMenu->menu()->insertAction(helpMenu->menu()->actions().first(), handbook);
     button(Help)->setMenu(helpMenu->menu());
 
+    disconnect(this,SIGNAL(user1Clicked()),this,SLOT(slotStartTransfer()));
+    connect(this,SIGNAL(user1Clicked()),this,SLOT(slotStartTransfer()));
+    connect(m_widget,SIGNAL(signalChangeUserRequest()), this, SLOT(slotChangeUserClicked()));
+
+    this->reactivate();
 }
+
 WMWindow::~WMWindow()
 {
     delete m_about;
 }
+
 void WMWindow::reactivate()
 {
-   show();
+    if (!(m_login.isEmpty() && runLWindow()))
+    {
+        m_widget->imagesList()->loadImagesFromCurrentSelection();
+        show();
+    }
 }
+
+int WMWindow::runLWindow()
+{
+    m_dlgLoginExport = new KIPIWikiMediaPlugin::WmLogin(this, i18n("Login"), QString(), QString());
+
+    if (!m_dlgLoginExport)
+    {
+        kDebug() << " Out of memory error " ;
+    }
+
+    if (m_dlgLoginExport->exec() == QDialog::Accepted)
+    {
+        m_login = m_dlgLoginExport->username();
+        m_pass  = m_dlgLoginExport->password();
+        m_wiki = m_dlgLoginExport->wiki();
+        delete m_dlgLoginExport;
+    }
+    else
+    {
+        delete m_dlgLoginExport;
+        //Return something which say authentication needed.
+        return -1;
+    }
+    m_mediawiki = new mediawiki::MediaWiki(m_wiki);
+    mediawiki::Login login(*m_mediawiki, m_login, m_pass);
+    login.exec();
+    m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_login,m_mediawiki,this);
+    qDebug()<< login.error();
+    if(login.error()){
+        m_login.clear();
+        m_pass.clear();
+        m_uploadJob = NULL;
+    }else{
+        m_widget->updateLabels(m_login,m_wiki.toString());
+    }
+    return login.error();
+}
+
 void WMWindow::slotHelp()
 {
     KToolInvocation::invokeHelp("wikimedia", "kipi-plugins");
+}
+
+void WMWindow::slotStartTransfer()
+{
+    this->m_uploadJob->begin();
+}
+
+void WMWindow::slotChangeUserClicked()
+{
+    if(runLWindow())
+        hide();
+        //login error
 }

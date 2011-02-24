@@ -70,10 +70,14 @@ public:
 
     QProgressBar* progressBar() const;
 
+Q_SIGNALS:
+
+    void signalChangeUserRequest();
 
 private Q_SLOTS:
 
     void slotResizeChecked();
+    void slotChangeUserClicked();
 
 private:
 

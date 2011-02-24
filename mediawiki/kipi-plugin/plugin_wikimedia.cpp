@@ -48,8 +48,6 @@ extern "C"
 // Local includes
 
 #include "wmwindow.h"
-#include "wmlogin.h"
-#include "wikimediajob.h"
 
 K_PLUGIN_FACTORY( WikiMediaFactory, registerPlugin<Plugin_WikiMedia>(); )
 K_EXPORT_PLUGIN ( WikiMediaFactory("kipiplugin_wikimedia") )
@@ -64,7 +62,6 @@ Plugin_WikiMedia::Plugin_WikiMedia(QObject* parent, const QVariantList& /*args*/
 void Plugin_WikiMedia::setup(QWidget* widget)
 {
     m_dlgExport = 0;
-    m_uploadJob = NULL;
     KIPI::Plugin::setup(widget);
 
     KIconLoader::global()->addAppDir("kipiplugin_wikimedia");
@@ -92,47 +89,9 @@ void Plugin_WikiMedia::setup(QWidget* widget)
 Plugin_WikiMedia::~Plugin_WikiMedia()
 {
 }
-int Plugin_WikiMedia::runLWindow()
+
+void Plugin_WikiMedia::slotExport()
 {
-
-    KIPI::Interface* interface = dynamic_cast<KIPI::Interface*>(parent());
-    if (!interface)
-    {
-        kError() << "Kipi interface is null!";
-        return -1;
-    }
-
-    m_dlgLoginExport = new KIPIWikiMediaPlugin::WmLogin(kapp->activeWindow(), i18n("Login"), QString(), QString());
-
-    if (!m_dlgLoginExport)
-    {
-        kDebug() << " Out of memory error " ;
-    }
-
-    if (m_dlgLoginExport->exec() == QDialog::Accepted)
-    {
-        m_login = m_dlgLoginExport->username();
-        m_pass  = m_dlgLoginExport->password();
-        m_wiki = m_dlgLoginExport->wiki();
-        delete m_dlgLoginExport;
-    }
-    else
-    {
-        delete m_dlgLoginExport;
-        //Return something which say authentication needed.
-        return -1;
-    }
-    m_mediawiki = new mediawiki::MediaWiki(m_wiki);
-    mediawiki::Login login(*m_mediawiki, m_login, m_pass);
-    login.exec();
-    m_uploadJob = m_uploadJob == NULL ? new KIPIWikiMediaPlugin::WikiMediaJob(interface,m_login,m_mediawiki,this) : m_uploadJob;
-    qDebug()<< login.error();
-    return login.error();
-}
-
-void Plugin_WikiMedia::runMWindow()
-{
-
     KIPI::Interface* interface = dynamic_cast<KIPI::Interface*>(parent());
     if (!interface)
     {
@@ -153,20 +112,9 @@ void Plugin_WikiMedia::runMWindow()
         if (m_dlgExport->isMinimized())
             KWindowSystem::unminimizeWindow(m_dlgExport->winId());
 
-        KWindowSystem::activateWindow(m_dlgExport->winId());
-    }
-
-    disconnect(m_dlgExport,SIGNAL(user1Clicked()),m_uploadJob,SLOT(begin()));
-    connect(m_dlgExport,SIGNAL(user1Clicked()),m_uploadJob,SLOT(begin()));
-    m_dlgExport->reactivate();
+        m_dlgExport->reactivate();
+    }    
 }
-
-void Plugin_WikiMedia::slotExport()
-{
-    if(!runLWindow())
-            runMWindow();
-}
-
 
 KIPI::Category Plugin_WikiMedia::category( KAction* action ) const
 {

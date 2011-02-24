@@ -160,6 +160,8 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
 
     connect(m_resizeChB, SIGNAL( clicked() ),
             this, SLOT( slotResizeChecked() ));
+    connect(m_changeUserBtn, SIGNAL(clicked()),
+            this, SLOT(slotChangeUserClicked()));
 
 }
 
@@ -201,4 +203,8 @@ void WmWidget::slotResizeChecked()
     m_imageQualitySpB->setEnabled(m_resizeChB->isChecked());
 }
 
+void WmWidget::slotChangeUserClicked()
+{
+    emit signalChangeUserRequest();
+}
 } // namespace KIPIWikimediaPlugin
