@@ -1,5 +1,10 @@
 project( mediawiki )
 
+FIND_PACKAGE(KDE4 REQUIRED)
+INCLUDE(KDE4Defaults)
+INCLUDE(MacroLibrary)
+include_directories( ${KDE4_INCLUDES} )
+
 set( CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage" )
 option( STATIC_LIBRARY "Build libmediawiki as static libraries." FALSE )
 
