@@ -4,7 +4,7 @@
  * http://www.kipi-plugins.org
  *
  * Date        : 2011-02-11
- * Description : a kipi plugin to export images to WikiMedia web service
+ * Description : a kipi plugin to export images to wikimedia commons
  *
  * Copyright (C) 2011 by Alexandre Mendes <alex dot mendes1988 at gmail dot com>
  *

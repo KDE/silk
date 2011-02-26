@@ -4,7 +4,7 @@
  * http://www.kipi-plugins.org
  *
  * Date        : 2011-02-11
- * Description : a kipi plugin to export images to WikiMedia web service
+ * Description : a kipi plugin to export images to wikimedia commons
  *
  * Copyright (C) 2011 by Alexandre Mendes <alex dot mendes1988 at gmail dot com>
  *
@@ -56,16 +56,16 @@ WMWindow::WMWindow(KIPI::Interface* interface, const QString &tmpFolder,
     setDefaultButton(Close);
     setModal(false);
 
-    setWindowTitle(i18n("Export to Wikimedia Web Service"));
+    setWindowTitle(i18n("Export to WikiMedia Commons"));
     setButtonGuiItem(User1,
                      KGuiItem(i18n("Start Upload"), "network-workgroup",
-                              i18n("Start upload to Wikimedia web service")));
+                              i18n("Start upload to WikiMedia Commons")));
     m_widget->setMinimumSize(700, 500);
 
-    m_about = new KIPIPlugins::KPAboutData(ki18n("Wikimedia Export"), 0,
+    m_about = new KIPIPlugins::KPAboutData(ki18n("WikiMedia Commons Export"), 0,
                           KAboutData::License_GPL,
                           ki18n("A Kipi plugin to export image collection "
-                                "to Wikimedia web service."),
+                                "to WikiMedia Commons."),
                           ki18n("(c) 2011, Alexandre Mendes"));
 
     m_about->addAuthor(ki18n("Alexandre Mendes"), ki18n("Author"),

@@ -4,7 +4,7 @@
  * http://www.kipi-plugins.org
  *
  * Date        : 2011-02-11
- * Description : a kipi plugin to export images to WikiMedia web service
+ * Description : a kipi plugin to export images to wikimedia commons
  *
  * Copyright (C) 2011 by Alexandre Mendes <alex dot mendes1988 at gmail dot com>
  *
@@ -86,7 +86,7 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
         i18n("This is the Wikimedia account that is currently logged in."));
     QGridLayout* accountBoxLayout = new QGridLayout(accountBox);
 
-    QLabel *userNameLbl     = new QLabel(i18nc("wikimedia account settings", "Name:"), accountBox);
+    QLabel *userNameLbl     = new QLabel(i18nc("Wikimedia account settings", "Account:"), accountBox);
     m_userNameDisplayLbl    = new QLabel(accountBox);
     m_changeUserBtn         = new KPushButton(
         KGuiItem(i18n("Change Account"), "system-switch-user",
@@ -185,7 +185,7 @@ void WmWidget::updateLabels(const QString& name, const QString& url)
     if (!url.isEmpty())
         web = url;
     m_headerLbl->setText(QString("<b><h2><a href='%1'>"
-                                 "<font color=\"#3B5998\">wikimedia</font>"
+                                 "<font color=\"#3B5998\">Wikimedia commons</font>"
                                  "</a></h2></b>").arg(web));
     if (name.isEmpty())
     {

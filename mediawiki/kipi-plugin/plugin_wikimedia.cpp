@@ -4,7 +4,7 @@
  * http://www.kipi-plugins.org
  *
  * Date        : 2011-02-11
- * Description : a kipi plugin to export images to WikiMedia web service
+ * Description : a kipi plugin to export images to wikimedia commons
  *
  * Copyright (C) 2011 by Alexandre Mendes <alex dot mendes1988 at gmail dot com>
  *
@@ -54,7 +54,7 @@ K_EXPORT_PLUGIN ( WikiMediaFactory("kipiplugin_wikimedia") )
 
 Plugin_WikiMedia::Plugin_WikiMedia(QObject* parent, const QVariantList& /*args*/)
                : KIPI::Plugin(WikiMediaFactory::componentData(),
-                              parent, "WikiMedia Export")
+                              parent, "Wikimedia Commons Export")
 {
     kDebug(AREA_CODE_LOADING) << "Plugin_WikiMedia plugin loaded";
 }
@@ -67,7 +67,7 @@ void Plugin_WikiMedia::setup(QWidget* widget)
     KIconLoader::global()->addAppDir("kipiplugin_wikimedia");
 
     m_actionExport = actionCollection()->addAction("wikimediaexport");
-    m_actionExport->setText(i18n("Export to &WikiMedia..."));
+    m_actionExport->setText(i18n("Export to &WikiMedia Commons..."));
     m_actionExport->setIcon(KIcon("wikimedia"));
 
     connect(m_actionExport, SIGNAL( triggered(bool) ),
