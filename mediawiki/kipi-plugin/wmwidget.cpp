@@ -88,7 +88,6 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
 
     // ------------------------------------------------------------------------
 
-
     QGroupBox* accountBox         = new QGroupBox(i18n("Account"), tab1Box);
     accountBox->setWhatsThis(
         i18n("This is the Wikimedia account that is currently logged in."));
@@ -107,7 +106,7 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     accountBoxLayout->setSpacing(KDialog::spacingHint());
     accountBoxLayout->setMargin(KDialog::spacingHint());
 
-    QGroupBox* optionsBox         = new QGroupBox(i18n("Options"), tab1Box);
+    QGroupBox* optionsBox         = new QGroupBox(i18n("Options"), tab2Box);
     optionsBox->setWhatsThis(
         i18n("These are options that will be applied to photos before upload."));
     QGridLayout* optionsBoxLayout = new QGridLayout(optionsBox);
@@ -150,7 +149,6 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
 
     settingsBoxLayout->addWidget(m_headerLbl);
     settingsBoxLayout->addWidget(accountBox);
-    settingsBoxLayout->addWidget(optionsBox);
     settingsBoxLayout->addWidget(m_progressBar);
     settingsBoxLayout->setSpacing(KDialog::spacingHint());
     settingsBoxLayout->setMargin(KDialog::spacingHint());
