@@ -42,6 +42,7 @@ void PlasmaArticleOfTheDay::setupButton()
     m_navigationWidget[1].setMaximumWidth(20);
     m_navigationWidget[0].setMaximumHeight(20);
     m_navigationWidget[1].setMaximumHeight(20);
+    m_navigationWidget[1].setEnabled(false);
     Plasma::Theme theme;
     m_navigationWidget[0].setImage(theme.imagePath("widgets/arrows"),"left-arrow");
     m_navigationWidget[1].setImage(theme.imagePath("widgets/arrows"),"right-arrow");
@@ -55,14 +56,21 @@ void PlasmaArticleOfTheDay::yesterday()
     engine->disconnectSource(provider(), this);
     m_date = this->m_date.addDays(-1);
     engine->connectSource(provider(), this);
+    m_navigationWidget[1].setEnabled(true);
 }
 
 void PlasmaArticleOfTheDay::tomorrow()
 {
-    Plasma::DataEngine * const engine = dataEngine("articleoftheday");
-    engine->disconnectSource(provider(), this);
-    m_date = this->m_date.addDays(1);
-    engine->connectSource(provider(), this);
+    if(m_date < QDate::currentDate())
+    {
+        Plasma::DataEngine * const engine = dataEngine("articleoftheday");
+        engine->disconnectSource(provider(), this);
+        m_date = this->m_date.addDays(1);
+        engine->connectSource(provider(), this);
+    }
+    if(m_date == QDate::currentDate())
+        m_navigationWidget[1].setEnabled(false);
+
 }
 
 PlasmaArticleOfTheDay::~PlasmaArticleOfTheDay()
