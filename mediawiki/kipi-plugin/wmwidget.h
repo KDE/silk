@@ -31,6 +31,7 @@ class QSpinBox;
 class QCheckBox;
 class QButtonGroup;
 class QProgressBar;
+class QTabWidget;
 class KComboBox;
 class KPushButton;
 
@@ -93,6 +94,8 @@ private:
     QSpinBox*                m_imageQualitySpB;
 
     QProgressBar*            m_progressBar;
+
+    QTabWidget*                 m_tabBar;
 
     friend class WmWindow;
 };

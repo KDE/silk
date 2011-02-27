@@ -34,6 +34,7 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QTabWidget>
 
 // KDE includes
 
@@ -70,10 +71,16 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     m_imgList->listView()->setWhatsThis(
         i18n("This is the list of images to upload to your Wikimedia account."));
 
-    QWidget* settingsBox           = new QWidget(this);
-    QVBoxLayout* settingsBoxLayout = new QVBoxLayout(settingsBox);
+    m_tabBar = new QTabWidget(this);
 
-    m_headerLbl = new QLabel(settingsBox);
+
+    QWidget* tab1Box           = new QWidget(this);
+    QWidget* tab2Box           = new QWidget(this);
+    QVBoxLayout* settingsBoxLayout = new QVBoxLayout(tab1Box);
+    m_tabBar->addTab(tab1Box,"Account");
+    m_tabBar->addTab(tab2Box,"Options");
+
+    m_headerLbl = new QLabel(tab1Box);
     m_headerLbl->setWhatsThis(
         i18n("This is a clickable link to open the Wikimedia home page in a web browser."));
     m_headerLbl->setOpenExternalLinks(true);
@@ -81,7 +88,8 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
 
     // ------------------------------------------------------------------------
 
-    QGroupBox* accountBox         = new QGroupBox(i18n("Account"), settingsBox);
+
+    QGroupBox* accountBox         = new QGroupBox(i18n("Account"), tab1Box);
     accountBox->setWhatsThis(
         i18n("This is the Wikimedia account that is currently logged in."));
     QGridLayout* accountBoxLayout = new QGridLayout(accountBox);
@@ -99,7 +107,7 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     accountBoxLayout->setSpacing(KDialog::spacingHint());
     accountBoxLayout->setMargin(KDialog::spacingHint());
 
-    QGroupBox* optionsBox         = new QGroupBox(i18n("Options"), settingsBox);
+    QGroupBox* optionsBox         = new QGroupBox(i18n("Options"), tab1Box);
     optionsBox->setWhatsThis(
         i18n("These are options that will be applied to photos before upload."));
     QGridLayout* optionsBoxLayout = new QGridLayout(optionsBox);
@@ -134,7 +142,7 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     optionsBoxLayout->setSpacing(KDialog::spacingHint());
     optionsBoxLayout->setMargin(KDialog::spacingHint());
 
-    m_progressBar = new QProgressBar(settingsBox);
+    m_progressBar = new QProgressBar(tab1Box);
     m_progressBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     m_progressBar->hide();
 
@@ -150,7 +158,7 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     // ------------------------------------------------------------------------
 
     mainLayout->addWidget(m_imgList);
-    mainLayout->addWidget(settingsBox);
+    mainLayout->addWidget(m_tabBar);
     mainLayout->setSpacing(KDialog::spacingHint());
     mainLayout->setMargin(0);
 
