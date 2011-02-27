@@ -34,6 +34,7 @@ class QProgressBar;
 class QTabWidget;
 class KComboBox;
 class KPushButton;
+class QComboBox;
 
 namespace KIPI
 {
@@ -92,6 +93,7 @@ private:
     QCheckBox*               m_resizeChB;
     QSpinBox*                m_dimensionSpB;
     QSpinBox*                m_imageQualitySpB;
+    QComboBox*               m_licenceComboBox;
 
     QProgressBar*            m_progressBar;
 

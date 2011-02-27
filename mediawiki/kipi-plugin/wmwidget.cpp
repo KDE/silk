@@ -35,6 +35,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QTabWidget>
+#include <QComboBox>
 
 // KDE includes
 
@@ -99,12 +100,29 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
         KGuiItem(i18n("Change Account"), "system-switch-user",
                  i18n("Logout and change Wikimedia Account used for transfer")),
         accountBox);
+    QLabel * licence = new QLabel(i18n("Licence","Licence:"), accountBox);
+    QComboBox * m_licenceComboBox = new QComboBox(this);
+    m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and GFDL"),QString("{{self|cc-by-sa-3.0|GFDL|migration=redundant}}"));
+    m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and older"),QString("{{self|cc-by-sa-3.0,2.5,2.0,1.0}}"));
+    m_licenceComboBox->addItem(QString("Creative Commons Attribution-Share Alike 3.0"),QString("{{self|cc-by-sa-3.0}}"));
+    m_licenceComboBox->addItem(QString("Own work, Creative Commons Attribution 3.0"),QString("{{self|cc-by-3.0}}"));
+    m_licenceComboBox->addItem(QString("Own work, release into public domain under the CC-Zero license"),QString("{{self|cc-zero}}"));
+    m_licenceComboBox->addItem(QString("Author died more than 100 years ago"),QString("{{PD-old}}"));
+    m_licenceComboBox->addItem(QString("Photo of a two-dimensional work whose author died more than 100 years ago"),QString("{{PD-art}}"));
+    m_licenceComboBox->addItem(QString("First published in the United States before 1923"),QString("{{PD-US}}"));
+    m_licenceComboBox->addItem(QString("Work of a U.S. government agency"),QString("{{PD-USGov}}"));
+    m_licenceComboBox->addItem(QString("Simple typefaces, individual words or geometric shapes"),QString("{{PD-text}}"));
+    m_licenceComboBox->addItem(QString("Logos with only simple typefaces, individual words or geometric shapes"),QString("{{PD-textlogo}}"));
 
     accountBoxLayout->addWidget(userNameLbl,            0, 0, 1, 2);
     accountBoxLayout->addWidget(m_userNameDisplayLbl,   0, 2, 1, 2);
     accountBoxLayout->addWidget(m_changeUserBtn,        2, 0, 1, 2);
+    accountBoxLayout->addWidget(licence,                3, 0, 1, 1);
+    accountBoxLayout->addWidget(m_licenceComboBox,      3, 2, 1, 1);
     accountBoxLayout->setSpacing(KDialog::spacingHint());
     accountBoxLayout->setMargin(KDialog::spacingHint());
+
+//------------------------------------------------------------------------------------
 
     QGroupBox* optionsBox         = new QGroupBox(i18n("Options"), tab2Box);
     optionsBox->setWhatsThis(
