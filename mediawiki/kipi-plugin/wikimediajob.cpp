@@ -47,6 +47,7 @@ void WikiMediaJob::start()
         qDebug() << "image path : " << info.path().url().remove("file://");
         QFile file(info.path().url().remove("file://"));
         file.open(QIODevice::ReadOnly);
+        //emit fileUploadProgress(done = 0, total file.size());
         e1->setFile(&file);
         qDebug() << "image name : " << file.fileName().split("/").last();
         e1->setFilename(file.fileName());

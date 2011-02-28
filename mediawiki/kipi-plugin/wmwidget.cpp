@@ -43,6 +43,7 @@
 #include <KDialog>
 #include <KComboBox>
 #include <KPushButton>
+#include <KLineEdit>
 
 // LibKIPI includes
 
@@ -89,18 +90,57 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
 
     // ------------------------------------------------------------------------
 
-    QGroupBox* accountBox         = new QGroupBox(i18n("Account"), tab1Box);
-    accountBox->setWhatsThis(
-        i18n("This is the Wikimedia account that is currently logged in."));
-    QGridLayout* accountBoxLayout = new QGridLayout(accountBox);
+    m_loginBox = new QGroupBox(i18n("Login"), tab1Box);
+    m_loginBox->setWhatsThis(
+        i18n("This is the login form to your Wikimedia account."));
+    QGridLayout* loginBoxLayout = new QGridLayout(m_loginBox);
 
-    QLabel *userNameLbl     = new QLabel(i18nc("Wikimedia account settings", "Account:"), accountBox);
-    m_userNameDisplayLbl    = new QLabel(accountBox);
+    m_nameEdit   = new KLineEdit(m_loginBox);
+    m_passwdEdit = new KLineEdit(m_loginBox);
+    m_wikiSelect = new QComboBox(m_loginBox);
+    m_passwdEdit->setEchoMode(KLineEdit::Password);
+
+    m_wikiSelect->addItem(QString("test wikipedia"), QUrl("http://test.wikipedia.org/w/api.php"));
+    m_wikiSelect->addItem(QString("en wikipedia"), QUrl("http://en.wikipedia.org/w/api.php"));
+    m_wikiSelect->addItem(QString("fr wikipedia"), QUrl("http://fr.wikipedia.org/w/api.php"));
+
+    QLabel* nameLabel = new QLabel(m_loginBox);
+    nameLabel->setText(i18n( "Wiki Login:" ));
+
+    QLabel* passwdLabel = new QLabel(m_loginBox);
+    passwdLabel->setText(i18n("Password:"));
+
+    QLabel* wikiLabel = new QLabel(m_loginBox);
+    wikiLabel->setText(i18n("Wiki:"));
+
+    QPushButton *loginBtn     = new QPushButton(m_loginBox);
+    loginBtn->setAutoDefault(true);
+    loginBtn->setDefault(true);
+    loginBtn->setText(i18n("&OK"));
+
+    loginBoxLayout->addWidget(m_nameEdit,   0, 1);
+    loginBoxLayout->addWidget(m_passwdEdit, 1, 1);
+    loginBoxLayout->addWidget(m_wikiSelect, 2, 1);
+    loginBoxLayout->addWidget(nameLabel,    0, 0);
+    loginBoxLayout->addWidget(passwdLabel,  1, 0);
+    loginBoxLayout->addWidget(wikiLabel,    2, 0);
+    loginBoxLayout->addWidget(loginBtn,3,0);
+    loginBoxLayout->setObjectName("m_loginBoxLayout");
+
+    // ------------------------------------------------------------------------
+
+    m_accountBox         = new QGroupBox(i18n("Account"), tab1Box);
+    m_accountBox->setWhatsThis(
+        i18n("This is the Wikimedia account that is currently logged in."));
+    QGridLayout* accountBoxLayout = new QGridLayout(m_accountBox);
+
+    QLabel *userNameLbl     = new QLabel(i18nc("Wikimedia account settings", "Account:"), m_accountBox);
+    m_userNameDisplayLbl    = new QLabel(m_accountBox);
     m_changeUserBtn         = new KPushButton(
         KGuiItem(i18n("Change Account"), "system-switch-user",
                  i18n("Logout and change Wikimedia Account used for transfer")),
-        accountBox);
-    QLabel * licence = new QLabel(i18n("Licence","Licence:"), accountBox);
+        m_accountBox);
+    QLabel * licence = new QLabel(i18n("Licence","Licence:"), m_accountBox);
     QComboBox * m_licenceComboBox = new QComboBox(this);
     m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and GFDL"),QString("{{self|cc-by-sa-3.0|GFDL|migration=redundant}}"));
     m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and older"),QString("{{self|cc-by-sa-3.0,2.5,2.0,1.0}}"));
@@ -166,10 +206,13 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     // ------------------------------------------------------------------------
 
     settingsBoxLayout->addWidget(m_headerLbl);
-    settingsBoxLayout->addWidget(accountBox);
+    settingsBoxLayout->addWidget(m_loginBox);
+    settingsBoxLayout->addWidget(m_accountBox);
     settingsBoxLayout->addWidget(m_progressBar);
     settingsBoxLayout->setSpacing(KDialog::spacingHint());
     settingsBoxLayout->setMargin(KDialog::spacingHint());
+
+    m_accountBox->hide();
 
     // ------------------------------------------------------------------------
 
@@ -186,7 +229,8 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
             this, SLOT( slotResizeChecked() ));
     connect(m_changeUserBtn, SIGNAL(clicked()),
             this, SLOT(slotChangeUserClicked()));
-
+    connect(loginBtn, SIGNAL(clicked()),
+            this, SLOT(slotLoginClicked()));
 }
 
 WmWidget::~WmWidget()
@@ -221,6 +265,18 @@ void WmWidget::updateLabels(const QString& name, const QString& url)
     }
 }
 
+void WmWidget::invertAccountLoginBox()
+{
+    if(m_accountBox->isHidden())
+    {
+        m_loginBox->hide();
+        m_accountBox->show();
+    }else{
+        m_loginBox->show();
+        m_accountBox->hide();
+    }
+}
+
 void WmWidget::slotResizeChecked()
 {
     m_dimensionSpB->setEnabled(m_resizeChB->isChecked());
@@ -231,4 +287,11 @@ void WmWidget::slotChangeUserClicked()
 {
     emit signalChangeUserRequest();
 }
+
+void WmWidget::slotLoginClicked()
+{
+    emit signalLoginRequest(m_nameEdit->text(), m_passwdEdit->text()
+                            ,m_wikiSelect->itemData(m_wikiSelect->currentIndex()).toUrl());
+}
+
 } // namespace KIPIWikimediaPlugin

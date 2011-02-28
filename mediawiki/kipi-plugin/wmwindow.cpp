@@ -22,6 +22,7 @@
 
 #include "wmwindow.h"
 #include <QLayout>
+#include <QProgressBar>
 #include <kdebug.h>
 #include <KConfig>
 #include <KLocale>
@@ -32,6 +33,7 @@
 #include <KPushButton>
 #include <KMessageBox>
 #include <KToolInvocation>
+#include <KMessageBox>
 #include "kpaboutdata.h"
 #include "wmwidget.h"
 #include "wmlogin.h"
@@ -48,6 +50,9 @@ WMWindow::WMWindow(KIPI::Interface* interface, const QString &tmpFolder,
     m_tmpDir      = tmpFolder;
     m_interface   = interface;
     m_widget      = new WmWidget(this, interface);
+    m_uploadJob = NULL;
+    m_login = QString();
+    m_pass = QString();
 
     setMainWidget(m_widget);
 
@@ -60,6 +65,7 @@ WMWindow::WMWindow(KIPI::Interface* interface, const QString &tmpFolder,
     setButtonGuiItem(User1,
                      KGuiItem(i18n("Start Upload"), "network-workgroup",
                               i18n("Start upload to WikiMedia Commons")));
+    enableButton(User1,false);
     m_widget->setMinimumSize(700, 500);
 
     m_about = new KIPIPlugins::KPAboutData(ki18n("WikiMedia Commons Export"), 0,
@@ -82,6 +88,7 @@ WMWindow::WMWindow(KIPI::Interface* interface, const QString &tmpFolder,
     disconnect(this,SIGNAL(user1Clicked()),this,SLOT(slotStartTransfer()));
     connect(this,SIGNAL(user1Clicked()),this,SLOT(slotStartTransfer()));
     connect(m_widget,SIGNAL(signalChangeUserRequest()), this, SLOT(slotChangeUserClicked()));
+    connect(m_widget,SIGNAL(signalLoginRequest(QString,QString,QUrl)),this,SLOT(slotDoLogin(QString,QString,QUrl)));
 
     this->reactivate();
 }
@@ -93,48 +100,8 @@ WMWindow::~WMWindow()
 
 void WMWindow::reactivate()
 {
-    if (!(m_login.isEmpty() && runLWindow()))
-    {
-        m_widget->imagesList()->loadImagesFromCurrentSelection();
-        show();
-    }
-}
-
-int WMWindow::runLWindow()
-{
-    m_dlgLoginExport = new KIPIWikiMediaPlugin::WmLogin(this, i18n("Login"), QString(), QString());
-
-    if (!m_dlgLoginExport)
-    {
-        kDebug() << " Out of memory error " ;
-    }
-
-    if (m_dlgLoginExport->exec() == QDialog::Accepted)
-    {
-        m_login = m_dlgLoginExport->username();
-        m_pass  = m_dlgLoginExport->password();
-        m_wiki = m_dlgLoginExport->wiki();
-        delete m_dlgLoginExport;
-    }
-    else
-    {
-        delete m_dlgLoginExport;
-        //Return something which say authentication needed.
-        return -1;
-    }
-    m_mediawiki = new mediawiki::MediaWiki(m_wiki);
-    mediawiki::Login login(*m_mediawiki, m_login, m_pass);
-    login.exec();
-    m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_login,m_mediawiki,this);
-    qDebug()<< login.error();
-    if(login.error()){
-        m_login.clear();
-        m_pass.clear();
-        m_uploadJob = NULL;
-    }else{
-        m_widget->updateLabels(m_login,m_wiki.toString());
-    }
-    return login.error();
+    m_widget->imagesList()->loadImagesFromCurrentSelection();
+    show();
 }
 
 void WMWindow::slotHelp()
@@ -144,12 +111,40 @@ void WMWindow::slotHelp()
 
 void WMWindow::slotStartTransfer()
 {
+    //this->m_widget->m_progressBar->show();
     this->m_uploadJob->begin();
 }
 
 void WMWindow::slotChangeUserClicked()
 {
-    if(runLWindow())
-        hide();
-        //login error
+    enableButton(User1,false);
+    m_widget->invertAccountLoginBox();
 }
+
+int WMWindow::slotDoLogin(const QString& login, const QString& pass, const QUrl& wiki)
+{
+    m_mediawiki = new mediawiki::MediaWiki(wiki);
+    mediawiki::Login loginJob(*m_mediawiki, login, pass);
+    loginJob.exec();
+
+    qDebug()<< loginJob.error();
+
+    if(loginJob.error()){
+        m_login.clear();
+        m_pass.clear();
+        m_uploadJob = NULL;
+        //TODO Message d'erreur de login
+        KMessageBox::error(this, i18n("Login Error\n Please re-entrer your information"));
+    }else{
+        m_login = login;
+        m_pass = pass;
+        m_wiki = wiki;
+        m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_login,m_mediawiki,this);
+
+        enableButton(User1,true);
+        m_widget->invertAccountLoginBox();
+        m_widget->updateLabels(m_login,m_wiki.toString());
+    }
+    return loginJob.error();
+}
+

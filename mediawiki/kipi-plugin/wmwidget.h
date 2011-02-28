@@ -25,6 +25,10 @@
 
 // Qt includes
 #include <QWidget>
+#include <QGroupBox>
+
+//KDE includes
+#include <KLineEdit>
 
 class QLabel;
 class QSpinBox;
@@ -68,6 +72,8 @@ public:
 
     void updateLabels(const QString& name = "", const QString& url = "");
 
+    void invertAccountLoginBox();
+
     KIPIPlugins::ImagesList* imagesList() const;
 
     QProgressBar* progressBar() const;
@@ -75,17 +81,26 @@ public:
 Q_SIGNALS:
 
     void signalChangeUserRequest();
+    void signalLoginRequest(const QString& login, const QString& pass, const QUrl& wiki);
 
 private Q_SLOTS:
 
     void slotResizeChecked();
     void slotChangeUserClicked();
+    void slotLoginClicked();
 
 private:
 
     KIPIPlugins::ImagesList* m_imgList;
     KIPI::UploadWidget*      m_uploadWidget;
 
+    QGroupBox*               m_loginBox;
+    QLabel*                  m_loginHeaderLbl;
+    KLineEdit*               m_nameEdit;
+    KLineEdit*               m_passwdEdit;
+    QComboBox*               m_wikiSelect;
+
+    QGroupBox*               m_accountBox;
     QLabel*                  m_headerLbl;
     QLabel*                  m_userNameDisplayLbl;
     KPushButton*             m_changeUserBtn;
