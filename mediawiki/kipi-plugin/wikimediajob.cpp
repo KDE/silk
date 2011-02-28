@@ -25,19 +25,20 @@
 #include <libkipi/imageinfo.h>
 #include <libmediawiki/upload.h>
 #include <libmediawiki/mediawiki.h>
+#include "imageslist.h"
 #include <QMessageBox>
 #include <QFile>
 #include <QDebug>
 
 using namespace KIPIWikiMediaPlugin;
 
-WikiMediaJob::WikiMediaJob(KIPI::Interface *interface, QString login, mediawiki::MediaWiki* mediawiki, QObject *parent)
-    : KJob(parent), m_interface(interface), m_mediawiki(mediawiki), m_login(login)
+WikiMediaJob::WikiMediaJob(KIPI::Interface *interface, QString login, mediawiki::MediaWiki* mediawiki,KIPIPlugins::ImagesList* imageList, QObject *parent)
+    : KJob(parent), m_interface(interface), m_mediawiki(mediawiki), m_login(login), m_imageList(imageList)
 {
 }
 void WikiMediaJob::start()
 {
-    m_urls = m_interface->currentSelection().images();
+    m_urls = m_imageList->imageUrls();
 
     for (KUrl::List::ConstIterator it = m_urls.constBegin(); it != m_urls.constEnd(); ++it)
     {

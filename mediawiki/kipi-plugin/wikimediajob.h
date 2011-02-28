@@ -25,6 +25,11 @@
 #include <KJob>
 #include <QString>
 #include <KUrl>
+
+// Local includes
+
+#include "imageslist.h"
+
 namespace KIPI
 {
     class ImageInfo;
@@ -40,7 +45,7 @@ class WikiMediaJob : public KJob
 {
     Q_OBJECT
 public:
-    WikiMediaJob(KIPI::Interface* interface, QString login ,mediawiki::MediaWiki* mediawiki, QObject* parent=0);
+    WikiMediaJob(KIPI::Interface* interface, QString login ,mediawiki::MediaWiki* mediawiki,KIPIPlugins::ImagesList* imageList, QObject* parent=0);
     QString buildWikiText( KIPI::ImageInfo * info);
     void start();
 public slots:
@@ -52,6 +57,7 @@ private:
     KIPI::Interface* m_interface;
     mediawiki::MediaWiki* m_mediawiki;
     QString m_login;
+    KIPIPlugins::ImagesList* m_imageList;
 };
 }
 #endif // WIKIMEDIAJOB_H

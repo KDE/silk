@@ -134,12 +134,12 @@ int WMWindow::slotDoLogin(const QString& login, const QString& pass, const QUrl&
         m_pass.clear();
         m_uploadJob = NULL;
         //TODO Message d'erreur de login
-        KMessageBox::error(this, i18n("Login Error\n Please re-entrer your information"));
+        KMessageBox::error(this, i18n("Login Error\n Please re-enter your information"));
     }else{
         m_login = login;
         m_pass = pass;
         m_wiki = wiki;
-        m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_login,m_mediawiki,this);
+        m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_login,m_mediawiki,m_widget->imagesList(),this);
 
         enableButton(User1,true);
         m_widget->invertAccountLoginBox();
