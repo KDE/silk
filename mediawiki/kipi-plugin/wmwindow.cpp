@@ -100,7 +100,7 @@ WMWindow::~WMWindow()
 
 void WMWindow::reactivate()
 {
-    m_widget->imagesList()->loadImagesFromCurrentSelection();
+    m_interface->imagesList()->loadImagesFromCurrentSelection();
     show();
 }
 
