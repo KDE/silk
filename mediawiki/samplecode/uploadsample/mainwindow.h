@@ -27,6 +27,7 @@ public:
 private:
     Ui::MainWindow *ui;
     MediaWiki mediawiki;
+    void init();
 private slots:
     void on_pushButton_clicked();
     void on_parcourir_clicked();

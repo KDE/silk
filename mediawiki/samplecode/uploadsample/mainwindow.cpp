@@ -9,6 +9,16 @@ MainWindow::MainWindow(QWidget *parent) :
     mediawiki(QUrl("http://test.wikipedia.org/w/api.php"))
 {
     ui->setupUi(this);
+    init();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::init()
+{
     this->ui->comboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and GFDL"),QString("{{self|cc-by-sa-3.0|GFDL|migration=redundant}}"));
     this->ui->comboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and older"),QString("{{self|cc-by-sa-3.0,2.5,2.0,1.0}}"));
     this->ui->comboBox->addItem(QString("Creative Commons Attribution-Share Alike 3.0"),QString("{{self|cc-by-sa-3.0}}"));
@@ -20,13 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->comboBox->addItem(QString("Work of a U.S. government agency"),QString("{{PD-USGov}}"));
     this->ui->comboBox->addItem(QString("Simple typefaces, individual words or geometric shapes"),QString("{{PD-text}}"));
     this->ui->comboBox->addItem(QString("Logos with only simple typefaces, individual words or geometric shapes"),QString("{{PD-textlogo}}"));
-
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -34,6 +39,7 @@ void MainWindow::on_pushButton_clicked()
     connect(login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
     login->start();
 }
+
 void MainWindow::loginHandle(KJob* login)
 {
     if(login->error() != 0)
@@ -65,6 +71,7 @@ void MainWindow::loginHandle(KJob* login)
         e1->exec();
     }
 }
+
 void MainWindow::uploadHandle(KJob* job)
 {
     QString errorMessage;
@@ -78,10 +85,16 @@ void MainWindow::uploadHandle(KJob* job)
 void MainWindow::on_parcourir_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "~", tr("Image Files (*.png *.jpg *.bmp *.jpeg *.gif)"));
-    if(fileName != NULL)
-        this->ui->lineEdit->setText(fileName);
-}
+    if(fileName != NULL){
+        QPixmap preview(fileName);
+        QSize size(preview.size());
+        size.scale(400,200,Qt::KeepAspectRatio);
+        preview = preview.scaled(size, Qt::KeepAspectRatio,Qt::FastTransformation);
 
+        this->ui->previewLabel->setPixmap(preview);
+        this->ui->lineEdit->setText(fileName);
+    }
+}
 
 void MainWindow::on_lineEdit_textChanged(QString text)
 {
