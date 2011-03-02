@@ -154,8 +154,14 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
         i18n("This is the login form to your Wikimedia account."));
     QGridLayout* textBoxLayout = new QGridLayout(m_textBox);
 
+    QLabel * desc = new QLabel(i18n("Description:","Description:"), m_textBox);
+    m_descriptionEdit = new KTextEdit(m_textBox);
 
-    QLabel * licence = new QLabel(i18n("Licence","Licence:"), m_textBox);
+    QLabel * aut = new QLabel(i18n("Author:","Author:"), m_textBox);
+    m_authorEdit = new KLineEdit(m_textBox);
+
+
+    QLabel * licence = new QLabel(i18n("Licence:","Licence:"), m_textBox);
     QComboBox * m_licenceComboBox = new QComboBox(this);
     m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and GFDL"),QString("{{self|cc-by-sa-3.0|GFDL|migration=redundant}}"));
     m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and older"),QString("{{self|cc-by-sa-3.0,2.5,2.0,1.0}}"));
@@ -170,8 +176,13 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     m_licenceComboBox->addItem(QString("Logos with only simple typefaces, individual words or geometric shapes"),QString("{{PD-textlogo}}"));
 
 
+    textBoxLayout->addWidget(desc,                   0, 0, 1, 1);
+    textBoxLayout->addWidget(m_descriptionEdit,      0, 2, 1, 2);
+    textBoxLayout->addWidget(aut,                    1, 0, 1, 1);
+    textBoxLayout->addWidget(m_authorEdit,           1, 2, 1, 2)
+            ;
     textBoxLayout->addWidget(licence,                3, 0, 1, 1);
-    textBoxLayout->addWidget(m_licenceComboBox,      3, 2, 1, 1);
+    textBoxLayout->addWidget(m_licenceComboBox,      3, 2, 1, 2);
     textBoxLayout->setObjectName("m_textBoxLayout");
 
 //------------------------------------------------------------------------------------

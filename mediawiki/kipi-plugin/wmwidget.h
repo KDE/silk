@@ -29,6 +29,7 @@
 
 //KDE includes
 #include <KLineEdit>
+#include <KTextEdit>
 
 class QLabel;
 class QSpinBox;
@@ -101,6 +102,8 @@ private:
     QComboBox*               m_wikiSelect;
 
     QGroupBox*               m_textBox;
+    KTextEdit*               m_descriptionEdit;
+    KLineEdit*               m_authorEdit;
 
     QGroupBox*               m_accountBox;
     QLabel*                  m_headerLbl;
