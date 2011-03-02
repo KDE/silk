@@ -60,6 +60,7 @@ void WikiMediaJob::begin()
 }
 void WikiMediaJob::uploadHandle(KJob* j)
 {
+    //error from previous upload
     if(j != 0)
     {
         qDebug() << "Upload" << (int)j->error();
@@ -68,33 +69,35 @@ void WikiMediaJob::uploadHandle(KJob* j)
         {
             m_error.append(i18n("Error on file : "));
             m_error.append(m_currentFile);
-            m_error.append(" : "+ (int)j->error());
-            KMessageBox::error(NULL,m_error);
+            m_error.append(" : "+ QVariant(j->error()).toString());
+            m_error.append('\n');
         }
     }
-
-    KIPI::ImageInfo info = m_interface->info(m_urls.first());
-    mediawiki::Upload * e1 = new mediawiki::Upload( *m_mediawiki, this);
-
-    qDebug() << "image path : " << info.path().url().remove("file://");
-    QFile* file = new QFile(info.path().url().remove("file://"),this);
-    file->open(QIODevice::ReadOnly);
-    //emit fileUploadProgress(done = 0, total file.size());
-    e1->setFile(file);
-    m_currentFile=file->fileName();
-    qDebug() << "image name : " << file->fileName().split("/").last();
-    e1->setFilename(file->fileName());
-    e1->setText(buildWikiText(&info));
-    connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
-
-    if(m_urls.size() > 0)
+    //upload next image
+    if(m_imageDesc.size() > 0)
     {
+        QMap<QString,QString> info = m_imageDesc.takeFirst();
+        mediawiki::Upload * e1 = new mediawiki::Upload( *m_mediawiki, this);
+
+        qDebug() << "image path : " << info["url"].remove("file://");
+        QFile* file = new QFile(info["url"].remove("file://"),this);
+        file->open(QIODevice::ReadOnly);
+        //emit fileUploadProgress(done = 0, total file.size());
+        e1->setFile(file);
+        m_currentFile=file->fileName();
+        qDebug() << "image name : " << file->fileName().split("/").last();
+        e1->setFilename(file->fileName());
+        e1->setText(buildWikiText(info));
+        if(m_imageDesc.size() > 0)
+            connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
         e1->start();
-        m_urls.removeFirst();
     }else {
-        KMessageBox::error(0,m_error);
+        //finish upload
+        if(m_error.size() > 0)
+            KMessageBox::error(0,m_error);
     }
 }
+
 QString WikiMediaJob::buildWikiText(QMap<QString,QString> info)
 {
     QString text;
