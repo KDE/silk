@@ -121,30 +121,35 @@ void WMWindow::slotChangeUserClicked()
     m_widget->invertAccountLoginBox();
 }
 
-int WMWindow::slotDoLogin(const QString& login, const QString& pass, const QUrl& wiki)
+void WMWindow::slotDoLogin(const QString& login, const QString& pass, const QUrl& wiki)
 {
+    m_login = login;
+    m_pass = pass;
+    m_wiki = wiki;
+
     m_mediawiki = new mediawiki::MediaWiki(wiki);
-    mediawiki::Login loginJob(*m_mediawiki, login, pass);
-    loginJob.exec();
+    mediawiki::Login *loginJob = new mediawiki::Login(*m_mediawiki, login, pass);
+    connect(loginJob,SIGNAL(result(KJob* )), this, SLOT(loginHandle(KJob* )));
+    loginJob->start();
+}
 
-    qDebug()<< loginJob.error();
+int WMWindow::loginHandle(KJob* loginJob)
+{
+    qDebug()<< loginJob->error();
 
-    if(loginJob.error()){
+    if(loginJob->error()){
         m_login.clear();
         m_pass.clear();
         m_uploadJob = NULL;
         //TODO Message d'erreur de login
         KMessageBox::error(this, i18n("Login Error\n Please re-enter your information"));
     }else{
-        m_login = login;
-        m_pass = pass;
-        m_wiki = wiki;
-        m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_login,m_mediawiki,m_widget->imagesList(),this);
 
+        m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_login,m_mediawiki,m_widget->imagesList(),this);
         enableButton(User1,true);
         m_widget->invertAccountLoginBox();
         m_widget->updateLabels(m_login,m_wiki.toString());
     }
-    return loginJob.error();
+    return loginJob->error();
 }
 
