@@ -285,7 +285,8 @@ void Edit::doWorkSendRequest(Page page)
     request.setRawHeader( "Cookie", cookie );
     // Send the request
     d->reply = d->manager->post( request, url.toString().toUtf8() );
-    connect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );
+    connectReply();
+    connect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );    
 }
 
 void Edit::finishedEdit()

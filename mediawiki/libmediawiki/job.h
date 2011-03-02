@@ -71,10 +71,17 @@ protected:
      */
     Job(JobPrivate & dd, QObject * parent = 0);
 
+    //TODO comment
+    void connectReply();
+
     /**
      * @brief The private d pointer.
      */
     JobPrivate * const d_ptr;
+
+private slots:
+
+    void processUploadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
 };
 

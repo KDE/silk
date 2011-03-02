@@ -35,6 +35,7 @@ void MainWindow::init()
 
 void MainWindow::on_pushButton_clicked()
 {
+    this->ui->progressBar->setValue(0);
     Login *login = new Login(mediawiki, this->ui->mLoginEdit->text(), this->ui->mMdpEdit->text());
     connect(login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
     login->start();
@@ -50,9 +51,9 @@ void MainWindow::loginHandle(KJob* login)
     }
     else{
         Upload * e1 = new Upload( mediawiki );
-        QFile file(this->ui->lineEdit->text());
-        file.open(QIODevice::ReadOnly);
-        e1->setFile(&file);
+        QFile *file = new QFile(this->ui->lineEdit->text());
+        file->open(QIODevice::ReadOnly);
+        e1->setFile(file);
         e1->setFilename(this->ui->lineEdit_2->text());
 
         QString text("== {{int:filedesc}} == \n{{Information |Description=");
@@ -68,18 +69,33 @@ void MainWindow::loginHandle(KJob* login)
 
         e1->setText(text);
         connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
-        e1->exec();
+        connect(e1,SIGNAL(processedSize(KJob*, qulonglong)),this,SLOT(processedUploadSize(KJob*, qulonglong)));
+        connect(e1,SIGNAL(totalSize(KJob*, qulonglong)),this,SLOT(TotalUploadSize(KJob*, qulonglong)));
+        e1->start();
     }
 }
 
 void MainWindow::uploadHandle(KJob* job)
 {
+    disconnect(SIGNAL(result(KJob* )), this, SLOT(uploadHandle(KJob*)));
+    disconnect(SIGNAL(processedSize(KJob *, qulonglong)), this, SLOT(processedUploadSize(KJob*, qulonglong)));
+    disconnect(SIGNAL(totalSize(KJob*, qulonglong)),this,SLOT(TotalUploadSize(KJob*, qulonglong)));
     QString errorMessage;
     if(job->error() == 0) errorMessage = "Image uploaded successfully.";
     else errorMessage = "Image upload failed.";
     QMessageBox popup;
     popup.setText(errorMessage);
     popup.exec();
+}
+
+void MainWindow::processedUploadSize(KJob* job, qulonglong size)
+{
+    this->ui->progressBar->setValue(size);
+}
+
+void MainWindow::TotalUploadSize(KJob* job, qulonglong size)
+{
+    this->ui->progressBar->setMaximum(size);
 }
 
 void MainWindow::on_parcourir_clicked()

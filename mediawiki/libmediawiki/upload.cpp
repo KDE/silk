@@ -198,6 +198,7 @@ void Upload::doWorkSendRequest(Page page)
     out += "--\r\n";
 
     d->reply = d->manager->post( request, out );
+    connectReply();
     connect( d->reply, SIGNAL( finished() ), this, SLOT( doWorkProcessReply() ) );
 }
 

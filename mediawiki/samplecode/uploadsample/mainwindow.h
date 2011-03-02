@@ -33,7 +33,9 @@ private slots:
     void on_parcourir_clicked();
     void on_lineEdit_textChanged(QString );
     void loginHandle(KJob* login);
-    void uploadHandle(KJob* job);    
+    void uploadHandle(KJob* job);
+    void processedUploadSize(KJob* job, qulonglong size);
+    void TotalUploadSize(KJob* job, qulonglong size);
 
 
 };

@@ -206,5 +206,6 @@ void Login::doWorkProcessReply()
     request.setRawHeader("Cookie", d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url()).at(0).toRawForm());
     // Send the request
     d->reply = d->manager->post(request, data.toUtf8());
+    connectReply();
     connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }

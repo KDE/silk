@@ -46,3 +46,15 @@ bool Job::doKill()
     }
     return true;
 }
+
+void Job::connectReply()
+{
+    Q_D(Job);
+    connect(d->reply,SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(processUploadProgress(qint64,qint64)));
+}
+
+void Job::processUploadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
+    setTotalAmount(Job::Bytes, bytesTotal);
+    setProcessedAmount(Job::Bytes, bytesReceived);
+}

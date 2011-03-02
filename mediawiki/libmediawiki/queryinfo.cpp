@@ -117,6 +117,7 @@ void QueryInfo::doWorkSendRequest()
     request.setRawHeader( "Cookie", cookie );
     // Send the request
     d->reply = d->manager->get(request);
+    connectReply();
     connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 

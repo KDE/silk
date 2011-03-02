@@ -76,6 +76,7 @@ void Logout::doWorkSendRequest()
     d->manager->setCookieJar(new QNetworkCookieJar);
     // Send the request
     d->reply = d->manager->get(request);
+    connectReply();
     connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 

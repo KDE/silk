@@ -84,6 +84,7 @@ void QuerySiteinfoUsergroups::doWorkSendRequest()
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     // Send the request
     d->reply = d->manager->get(request);
+    connectReply();
     connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
 }
 
