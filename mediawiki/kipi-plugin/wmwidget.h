@@ -100,6 +100,8 @@ private:
     KLineEdit*               m_passwdEdit;
     QComboBox*               m_wikiSelect;
 
+    QGroupBox*               m_textBox;
+
     QGroupBox*               m_accountBox;
     QLabel*                  m_headerLbl;
     QLabel*                  m_userNameDisplayLbl;
@@ -112,7 +114,7 @@ private:
 
     QProgressBar*            m_progressBar;
 
-    QTabWidget*                 m_tabBar;
+    QTabWidget*              m_tabBar;
 
     friend class WmWindow;
 };

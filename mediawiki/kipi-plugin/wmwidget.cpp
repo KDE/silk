@@ -140,7 +140,22 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
         KGuiItem(i18n("Change Account"), "system-switch-user",
                  i18n("Logout and change Wikimedia Account used for transfer")),
         m_accountBox);
-    QLabel * licence = new QLabel(i18n("Licence","Licence:"), m_accountBox);
+
+    accountBoxLayout->addWidget(userNameLbl,            0, 0, 1, 2);
+    accountBoxLayout->addWidget(m_userNameDisplayLbl,   0, 2, 1, 2);
+    accountBoxLayout->addWidget(m_changeUserBtn,        2, 0, 1, 2);
+    accountBoxLayout->setSpacing(KDialog::spacingHint());
+    accountBoxLayout->setMargin(KDialog::spacingHint());
+
+    // ------------------------------------------------------------------------
+
+    m_textBox = new QGroupBox(i18n("Text"), tab1Box);
+    m_textBox->setWhatsThis(
+        i18n("This is the login form to your Wikimedia account."));
+    QGridLayout* textBoxLayout = new QGridLayout(m_textBox);
+
+
+    QLabel * licence = new QLabel(i18n("Licence","Licence:"), m_textBox);
     QComboBox * m_licenceComboBox = new QComboBox(this);
     m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and GFDL"),QString("{{self|cc-by-sa-3.0|GFDL|migration=redundant}}"));
     m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and older"),QString("{{self|cc-by-sa-3.0,2.5,2.0,1.0}}"));
@@ -154,13 +169,10 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     m_licenceComboBox->addItem(QString("Simple typefaces, individual words or geometric shapes"),QString("{{PD-text}}"));
     m_licenceComboBox->addItem(QString("Logos with only simple typefaces, individual words or geometric shapes"),QString("{{PD-textlogo}}"));
 
-    accountBoxLayout->addWidget(userNameLbl,            0, 0, 1, 2);
-    accountBoxLayout->addWidget(m_userNameDisplayLbl,   0, 2, 1, 2);
-    accountBoxLayout->addWidget(m_changeUserBtn,        2, 0, 1, 2);
-    accountBoxLayout->addWidget(licence,                3, 0, 1, 1);
-    accountBoxLayout->addWidget(m_licenceComboBox,      3, 2, 1, 1);
-    accountBoxLayout->setSpacing(KDialog::spacingHint());
-    accountBoxLayout->setMargin(KDialog::spacingHint());
+
+    textBoxLayout->addWidget(licence,                3, 0, 1, 1);
+    textBoxLayout->addWidget(m_licenceComboBox,      3, 2, 1, 1);
+    textBoxLayout->setObjectName("m_textBoxLayout");
 
 //------------------------------------------------------------------------------------
 
@@ -208,6 +220,7 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     settingsBoxLayout->addWidget(m_headerLbl);
     settingsBoxLayout->addWidget(m_loginBox);
     settingsBoxLayout->addWidget(m_accountBox);
+    settingsBoxLayout->addWidget(m_textBox);
     settingsBoxLayout->addWidget(m_progressBar);
     settingsBoxLayout->setSpacing(KDialog::spacingHint());
     settingsBoxLayout->setMargin(KDialog::spacingHint());
