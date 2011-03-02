@@ -46,15 +46,15 @@ void WikiMediaJob::start()
         KIPI::ImageInfo info = m_interface->info(*it);
         mediawiki::Upload * e1 = new mediawiki::Upload( *m_mediawiki, this);
         qDebug() << "image path : " << info.path().url().remove("file://");
-        QFile file(info.path().url().remove("file://"));
-        file.open(QIODevice::ReadOnly);
+        QFile* file = new QFile(info.path().url().remove("file://"),this);
+        file->open(QIODevice::ReadOnly);
         //emit fileUploadProgress(done = 0, total file.size());
-        e1->setFile(&file);
-        qDebug() << "image name : " << file.fileName().split("/").last();
-        e1->setFilename(file.fileName());
+        e1->setFile(file);
+        qDebug() << "image name : " << file->fileName().split("/").last();
+        e1->setFilename(file->fileName());
         e1->setText(buildWikiText(&info));
         connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
-        e1->exec();
+        e1->start();
     }
 }
 void WikiMediaJob::begin()
