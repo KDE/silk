@@ -29,33 +29,20 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QDebug>
+#include <QTimer>
+#include <KMessageBox>
+#include <KLocale>
 
 using namespace KIPIWikiMediaPlugin;
 
 WikiMediaJob::WikiMediaJob(KIPI::Interface *interface, QString login, mediawiki::MediaWiki* mediawiki,KIPIPlugins::ImagesList* imageList, QObject *parent)
-    : KJob(parent), m_interface(interface), m_mediawiki(mediawiki), m_login(login), m_imageList(imageList)
+    : KJob(parent), m_interface(interface), m_mediawiki(mediawiki), m_login(login), m_imageList(imageList), m_currentFile(QString()), m_error(QString())
 {
 }
 void WikiMediaJob::start()
 {
-    m_urls = m_imageList->imageUrls();
-
-    for (KUrl::List::ConstIterator it = m_urls.constBegin(); it != m_urls.constEnd(); ++it)
-    {
-
-        KIPI::ImageInfo info = m_interface->info(*it);
-        mediawiki::Upload * e1 = new mediawiki::Upload( *m_mediawiki, this);
-        qDebug() << "image path : " << info.path().url().remove("file://");
-        QFile* file = new QFile(info.path().url().remove("file://"),this);
-        file->open(QIODevice::ReadOnly);
-        //emit fileUploadProgress(done = 0, total file.size());
-        e1->setFile(file);
-        qDebug() << "image name : " << file->fileName().split("/").last();
-        e1->setFilename(file->fileName());
-        e1->setText(buildWikiText(&info));
-        connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
-        e1->start();
-    }
+        m_urls = m_imageList->imageUrls();
+        QTimer::singleShot(0,this,SLOT(uploadHandle(KJob*)));
 }
 void WikiMediaJob::begin()
 {
@@ -63,7 +50,39 @@ void WikiMediaJob::begin()
 }
 void WikiMediaJob::uploadHandle(KJob* j)
 {
-    qDebug() << "Upload" << (int)j->error();
+    if(j != 0)
+    {
+        qDebug() << "Upload" << (int)j->error();
+        disconnect(j,SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
+        if((int)j->error() != 0)
+        {
+            m_error.append(i18n("Error on file : "));
+            m_error.append(m_currentFile);
+            m_error.append(" : "+ (int)j->error());
+        }
+    }
+
+    KIPI::ImageInfo info = m_interface->info(m_urls.first());
+    mediawiki::Upload * e1 = new mediawiki::Upload( *m_mediawiki, this);
+
+    qDebug() << "image path : " << info.path().url().remove("file://");
+    QFile* file = new QFile(info.path().url().remove("file://"),this);
+    file->open(QIODevice::ReadOnly);
+    //emit fileUploadProgress(done = 0, total file.size());
+    e1->setFile(file);
+    m_currentFile=file->fileName();
+    qDebug() << "image name : " << file->fileName().split("/").last();
+    e1->setFilename(file->fileName());
+    e1->setText(buildWikiText(&info));
+    connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
+
+    if(m_urls.size() > 0)
+    {
+        e1->start();
+        m_urls.removeFirst();
+    }else {
+        KMessageBox::error(0,m_error);
+    }
 }
 QString WikiMediaJob::buildWikiText(KIPI::ImageInfo *info)
 {

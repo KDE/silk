@@ -50,13 +50,15 @@ public:
     void start();
 public slots:
     void begin();
-    void uploadHandle(KJob* j);
+    void uploadHandle(KJob* j = 0);
 private:
 
     KUrl::List m_urls;
     KIPI::Interface* m_interface;
     mediawiki::MediaWiki* m_mediawiki;
     QString m_login;
+    QString m_error;
+    QString m_currentFile;
     KIPIPlugins::ImagesList* m_imageList;
 };
 }
