@@ -71,7 +71,10 @@ void WikiMediaJob::uploadHandle(KJob* j)
         {
             m_error.append(i18n("Error on file : "));
             m_error.append(m_currentFile);
-            m_error.append(" : "+ QVariant(j->error()).toString());
+            if(j->errorText()==0){
+                m_error.append(i18n(" : An error has occured"));
+            }
+            m_error.append(" : "+ j->errorText());
             m_error.append('\n');
         }
     }
@@ -102,6 +105,7 @@ void WikiMediaJob::uploadHandle(KJob* j)
         }else{
             emit endUpload();
         }
+        m_error.clear();
     }
 }
 

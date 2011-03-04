@@ -227,7 +227,8 @@ void Upload::doWorkProcessReply()
                 }
             }
             else if ( reader.name() == QString( "error" ) ) {
-                this->setError(UploadPrivate::error(attrs.value( QString( "code" ) ).toString()));
+                this->setErrorText(attrs.value( QString( "info" )).toString());
+                this->setError(UploadPrivate::error(attrs.value("code" ).toString()));
             }
         }
         else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
