@@ -69,6 +69,7 @@ void WikiMediaJob::uploadHandle(KJob* j)
             m_error.append(i18n("Error on file : "));
             m_error.append(m_currentFile);
             m_error.append(" : "+ (int)j->error());
+            KMessageBox::error(NULL,m_error);
         }
     }
 
