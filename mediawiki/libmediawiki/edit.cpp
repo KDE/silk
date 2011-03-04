@@ -245,18 +245,29 @@ void Edit::doWorkSendRequest(Page page)
             url.addQueryItem("action", "edit");
 
     // Add params
+    QString text = "";
     if(d->requestParameter.contains("md5"))
     {
-        QString text = "";
-        if(d->requestParameter.contains("text"))
-            text = d->requestParameter["text"];
         if(d->requestParameter.contains("prependtext"))
             text += d->requestParameter["prependtext"];
         if(d->requestParameter.contains("appendtext"))
             text += d->requestParameter["appendtext"];
+        if(d->requestParameter.contains("text"))
+            text = d->requestParameter["text"];
         QByteArray hash = QCryptographicHash::hash(text.toUtf8(),QCryptographicHash::Md5);
         d->requestParameter["md5"] = hash.toHex();
     }
+    text.replace(QString("$"), QString("%24"));
+    text.replace(QString("&"), QString("%26"));
+    text.replace(QString("+"), QString("%2B"));
+    text.replace(QString(","), QString("%2C"));
+    text.replace(QString("/"), QString("%2F"));
+    text.replace(QString(":"), QString("%3A"));
+    text.replace(QString(";"), QString("%3B"));
+    text.replace(QString("="), QString("%3D"));
+    text.replace(QString("?"), QString("%3F"));
+    text.replace(QString("@"), QString("%40"));
+    d->requestParameter["text"] = text;
 
     QMapIterator<QString, QString> i(d->requestParameter);
     while (i.hasNext()) {

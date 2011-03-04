@@ -90,11 +90,13 @@ void MainWindow::uploadHandle(KJob* job)
 
 void MainWindow::processedUploadSize(KJob* job, qulonglong size)
 {
+    Q_UNUSED(job)
     this->ui->progressBar->setValue(size);
 }
 
 void MainWindow::TotalUploadSize(KJob* job, qulonglong size)
 {
+    Q_UNUSED(job)
     this->ui->progressBar->setMaximum(size);
 }
 

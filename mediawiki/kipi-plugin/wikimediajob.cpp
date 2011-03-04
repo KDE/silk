@@ -154,8 +154,9 @@ QString WikiMediaJob::buildWikiText(QMap<QString,QString> info)
     return text;
 }
 
-void WikiMediaJob::slotUploadProgress(KJob *job, unsigned long percent)
+void WikiMediaJob::slotUploadProgress(KJob * job, unsigned long percent)
 {
+    Q_UNUSED(job)
     emit uploadProgress((int)percent);
 }
 
