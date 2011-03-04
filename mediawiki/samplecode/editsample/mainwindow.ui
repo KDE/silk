@@ -23,7 +23,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Charger page</string>
+         <string>Load page</string>
         </property>
        </widget>
       </item>
@@ -53,14 +53,14 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>Identifiant :</string>
+         <string>Username:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
        <widget class="QLabel" name="mMdpLabel">
         <property name="text">
-         <string>Mot de passe : </string>
+         <string>Password:</string>
         </property>
        </widget>
       </item>
@@ -93,7 +93,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Envoyer</string>
+         <string>Send</string>
         </property>
        </widget>
       </item>
