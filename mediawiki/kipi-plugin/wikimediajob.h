@@ -25,16 +25,15 @@
 #include <KJob>
 #include <QString>
 #include <KUrl>
+#include <QList>
+#include <QMap>
 
 // Local includes
 
 #include "imageslist.h"
-
-namespace KIPI
-{
-    class ImageInfo;
-    class Interface;
-}
+#include <KUrl>
+#include <libkipi/interface.h>
+#include <libkipi/imageinfo.h>
 namespace mediawiki
 {
     class MediaWiki;
@@ -45,8 +44,10 @@ class WikiMediaJob : public KJob
 {
     Q_OBJECT
 public:
-    WikiMediaJob(KIPI::Interface* interface, QString login ,mediawiki::MediaWiki* mediawiki,KIPIPlugins::ImagesList* imageList, QObject* parent=0);
-    QString buildWikiText( KIPI::ImageInfo * info);
+
+    WikiMediaJob(KIPI::Interface* interface ,mediawiki::MediaWiki* mediawiki, QObject* parent=0);
+    QString buildWikiText(QMap<QString,QString> info);
+    void setImageMap(QList<QMap<QString,QString> > imageDesc){m_imageDesc = imageDesc;}
     void start();
 public slots:
     void begin();
@@ -56,10 +57,7 @@ private:
     KUrl::List m_urls;
     KIPI::Interface* m_interface;
     mediawiki::MediaWiki* m_mediawiki;
-    QString m_login;
-    QString m_error;
-    QString m_currentFile;
-    KIPIPlugins::ImagesList* m_imageList;
+    QList<QMap<QString,QString> > m_imageDesc;
 };
 }
 #endif // WIKIMEDIAJOB_H

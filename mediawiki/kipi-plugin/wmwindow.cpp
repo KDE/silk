@@ -21,12 +21,14 @@
  * ============================================================ */
 
 #include "wmwindow.h"
+#include <QDebug>
 #include <QLayout>
 #include <QProgressBar>
 #include <kdebug.h>
 #include <KConfig>
 #include <KLocale>
 #include <KMenu>
+#include <KUrl>
 #include <KHelpMenu>
 #include <KLineEdit>
 #include <KComboBox>
@@ -111,7 +113,39 @@ void WMWindow::slotHelp()
 
 void WMWindow::slotStartTransfer()
 {
-    //this->m_widget->m_progressBar->show();
+    KUrl::List urls = m_interface->currentSelection().images();
+
+    QList<QMap<QString,QString> > m_imageDesc;
+    QString author = m_widget->author();
+    QString licence = m_widget->licence();
+    QString description = m_widget->description();
+    for (int i = 0; i < urls.size(); i++)
+    {
+        KIPI::ImageInfo info = m_interface->info(urls.at(i));
+
+        QMap<QString,QString> map;
+
+        map["url"]          = urls.at(i).url();
+        map["licence"]      = licence;
+        map["author"]       = author;
+        map["description"]  = description;
+        map["time"]         = info.time().toString(Qt::ISODate);
+
+        if(info.attributes().contains("latitude") ||
+           info.attributes().contains("longitude") ||
+           info.attributes().contains("altitude"))
+        {
+            if(info.attributes().contains("latitude"))
+                map["latitude"] = info.attributes()["latitude"].toString();
+            if(info.attributes().contains("longitude"))
+                map["longitude"] = info.attributes()["longitude"].toString();
+            if(info.attributes().contains("altitude"))
+                map["altitude"] = info.attributes()["altitude"].toString();
+        }
+        m_imageDesc << map;
+
+    }
+    this->m_uploadJob->setImageMap(m_imageDesc);
     this->m_uploadJob->begin();
 }
 
@@ -144,8 +178,11 @@ int WMWindow::loginHandle(KJob* loginJob)
         //TODO Message d'erreur de login
         KMessageBox::error(this, i18n("Login Error\n Please re-enter your information"));
     }else{
+        m_login = login;
+        m_pass = pass;
+        m_wiki = wiki;
+        m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_mediawiki,this);
 
-        m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_login,m_mediawiki,m_widget->imagesList(),this);
         enableButton(User1,true);
         m_widget->invertAccountLoginBox();
         m_widget->updateLabels(m_login,m_wiki.toString());

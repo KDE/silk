@@ -36,6 +36,8 @@
 #include <QVBoxLayout>
 #include <QTabWidget>
 #include <QComboBox>
+#include <QLineEdit>
+#include <QDebug>
 
 // KDE includes
 
@@ -155,14 +157,15 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     QGridLayout* textBoxLayout = new QGridLayout(m_textBox);
 
     QLabel * desc = new QLabel(i18n("Description:","Description:"), m_textBox);
-    m_descriptionEdit = new KTextEdit(m_textBox);
+    m_descriptionEdit = new QTextEdit(m_textBox);
 
     QLabel * aut = new QLabel(i18n("Author:","Author:"), m_textBox);
     m_authorEdit = new KLineEdit(m_textBox);
 
 
-    QLabel * licence = new QLabel(i18n("Licence:","Licence:"), m_textBox);
-    QComboBox * m_licenceComboBox = new QComboBox(this);
+    QLabel * licenceLabel = new QLabel(i18n("Licence:","Licence:"), m_textBox);
+    m_licenceComboBox = new QComboBox(m_textBox);
+
     m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and GFDL"),QString("{{self|cc-by-sa-3.0|GFDL|migration=redundant}}"));
     m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and older"),QString("{{self|cc-by-sa-3.0,2.5,2.0,1.0}}"));
     m_licenceComboBox->addItem(QString("Creative Commons Attribution-Share Alike 3.0"),QString("{{self|cc-by-sa-3.0}}"));
@@ -175,15 +178,18 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
     m_licenceComboBox->addItem(QString("Simple typefaces, individual words or geometric shapes"),QString("{{PD-text}}"));
     m_licenceComboBox->addItem(QString("Logos with only simple typefaces, individual words or geometric shapes"),QString("{{PD-textlogo}}"));
 
-
+    accountBoxLayout->addWidget(userNameLbl,            0, 0, 1, 2);
+    accountBoxLayout->addWidget(m_userNameDisplayLbl,   0, 2, 1, 2);
+    accountBoxLayout->addWidget(m_changeUserBtn,        2, 0, 1, 2);
     textBoxLayout->addWidget(desc,                   0, 0, 1, 1);
     textBoxLayout->addWidget(m_descriptionEdit,      0, 2, 1, 2);
     textBoxLayout->addWidget(aut,                    1, 0, 1, 1);
-    textBoxLayout->addWidget(m_authorEdit,           1, 2, 1, 2)
-            ;
-    textBoxLayout->addWidget(licence,                3, 0, 1, 1);
+    textBoxLayout->addWidget(m_authorEdit,           1, 2, 1, 2);
+    textBoxLayout->addWidget(licenceLabel,                3, 0, 1, 1);
     textBoxLayout->addWidget(m_licenceComboBox,      3, 2, 1, 2);
     textBoxLayout->setObjectName("m_textBoxLayout");
+    accountBoxLayout->setSpacing(KDialog::spacingHint());
+    accountBoxLayout->setMargin(KDialog::spacingHint());
 
 //------------------------------------------------------------------------------------
 
@@ -318,4 +324,20 @@ void WmWidget::slotLoginClicked()
                             ,m_wikiSelect->itemData(m_wikiSelect->currentIndex()).toUrl());
 }
 
+QString WmWidget::author()
+{
+    qDebug() << "WmWidget::author()";
+    return this->m_authorEdit->text();
+}
+
+QString WmWidget::description()
+{
+    qDebug() << "WmWidget::description()";
+    return this->m_descriptionEdit->toPlainText();
+}
+QString WmWidget::licence()
+{
+    qDebug() << "WmWidget::licence()";
+    return m_licenceComboBox->itemData(m_licenceComboBox->currentIndex()).toString();
+}
 } // namespace KIPIWikimediaPlugin

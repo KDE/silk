@@ -49,8 +49,8 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/common/libkipiplugins
 		    ${KEXIV2_INCLUDE_DIR}
 		    ${KDCRAW_INCLUDE_DIR}
 		    ${KIPI_INCLUDE_DIR}
-		    ${KDE4_INCLUDES}
-		    ${QT4_INCLUDES}
+                    ${KDE4_INCLUDES}
+                    ${QT4_INCLUDES}
 		    )
 subdirs(common)
 

@@ -21,8 +21,6 @@
  * ============================================================ */
 
 #include "wikimediajob.h"
-#include <libkipi/interface.h>
-#include <libkipi/imageinfo.h>
 #include <libmediawiki/upload.h>
 #include <libmediawiki/mediawiki.h>
 #include "imageslist.h"
@@ -35,14 +33,26 @@
 
 using namespace KIPIWikiMediaPlugin;
 
-WikiMediaJob::WikiMediaJob(KIPI::Interface *interface, QString login, mediawiki::MediaWiki* mediawiki,KIPIPlugins::ImagesList* imageList, QObject *parent)
-    : KJob(parent), m_interface(interface), m_mediawiki(mediawiki), m_login(login), m_imageList(imageList), m_currentFile(QString()), m_error(QString())
+WikiMediaJob::WikiMediaJob(KIPI::Interface *interface, mediawiki::MediaWiki* mediawiki, QObject *parent)
+    : KJob(parent), m_interface(interface), m_mediawiki(mediawiki)
 {
 }
 void WikiMediaJob::start()
 {
-        m_urls = m_imageList->imageUrls();
-        QTimer::singleShot(0,this,SLOT(uploadHandle(KJob*)));
+    qDebug() << "martine";
+    for(int i = 0; i < m_imageDesc.size(); i++){
+        qDebug() << buildWikiText(m_imageDesc.at(i));
+    }
+//        mediawiki::Upload * e1 = new mediawiki::Upload( *m_mediawiki, this);
+//        qDebug() << "image path : " << info.path().url().remove("file://");
+//        QFile file(info.path().url().remove("file://"));
+//        file.open(QIODevice::ReadOnly);
+//        e1->setFile(&file);
+//        qDebug() << "image name : " << file.fileName().split("/").last();
+//        e1->setFilename(file.fileName());
+//        e1->setText(buildWikiText(&info));
+//        connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
+//        e1->exec();
 }
 void WikiMediaJob::begin()
 {
@@ -84,55 +94,48 @@ void WikiMediaJob::uploadHandle(KJob* j)
         KMessageBox::error(0,m_error);
     }
 }
-QString WikiMediaJob::buildWikiText(KIPI::ImageInfo *info)
+QString WikiMediaJob::buildWikiText(QMap<QString,QString> info)
 {
     QString text;
     text.append(" == {{int:filedesc}} ==");
     text.append( "\n{{Information");
-    text.append( "\n|Description=").append( info->description());
+    text.append( "\n|Description=").append( info["description"]);
     text.append( "\n|Source=").append( "{{own}}");
-    text.append( "\n|Author=").append( "[[").append(m_login).append( "]]");
-    text.append( "\n|Date=").append( info->time().toString(Qt::ISODate));
+    text.append( "\n|Author=");
+
+    if(info.contains("author"))
+    {
+        text.append( "[[");
+        text.append( info["author"]);
+        text.append( "]]");
+    }
+    text.append( "\n|Date=").append( info["time"]);
     text.append( "\n|Permission=");
     text.append( "\n|other_versions=");
 
     text.append( "\n}}");
-    QMap<QString,QVariant> attributes = info->attributes();
-    double altitude = 0, longitude = 0, latitude = 0;
-    if(attributes.contains("latitude") ||
-       attributes.contains("longitude") ||
-       attributes.contains("altitude"))
+    QString altitude, longitude, latitude;
+    if(info.contains("latitude") ||
+       info.contains("longitude") ||
+       info.contains("altitude"))
     {
-        if(attributes.contains("latitude"))
-            latitude = attributes["latitude"].toDouble();
-        if(attributes.contains("longitude"))
-            longitude = attributes["longitude"].toDouble();
-        if(attributes.contains("altitude"))
-            altitude = attributes["altitude"].toDouble();
+        if(info.contains("latitude"))
+            latitude = info["latitude"];
+        if(info.contains("longitude"))
+            longitude = info["longitude"];
+        if(info.contains("altitude"))
+            altitude = info["altitude"];
     }
-    if(longitude && latitude)
+    if(!longitude.isEmpty() && !latitude.isEmpty())
     {
         text.append( "\n{{Location dec");
-        text.append( "\n|").append( QString::number(longitude));
-        text.append( "\n|").append( QString::number(latitude));
+        text.append( "\n|").append( longitude );
+        text.append( "\n|").append( latitude );
         text.append( "\n}}");
     }
     text.append( " == {{int:license}} ==");
-    if(attributes.contains("licence"))
-        text.append( attributes["licence"].toString());
-
-    QList<QString> buff2 =  attributes.keys();
-    foreach(QString s , buff2)
-        qDebug() << s+" : " << attributes[s].typeName()+QString("\n");
-
-    QStringList buff = attributes["tags"].toStringList();
-    for(int i = 0; i < buff.size(); i++)
-        qDebug() << buff[i];
-
-    buff = attributes["tagspath"].toStringList();
-    for(int i = 0; i < buff.size(); i++)
-        qDebug() << buff[i];
-    qDebug() << text;
+    if(info.contains("licence"))
+        text.append( info["licence"]);
     return text;
 }
 

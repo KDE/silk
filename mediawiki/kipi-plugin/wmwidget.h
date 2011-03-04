@@ -26,6 +26,7 @@
 // Qt includes
 #include <QWidget>
 #include <QGroupBox>
+#include <QTextEdit>
 
 //KDE includes
 #include <KLineEdit>
@@ -40,6 +41,7 @@ class QTabWidget;
 class KComboBox;
 class KPushButton;
 class QComboBox;
+class QLineEdit;
 
 namespace KIPI
 {
@@ -79,6 +81,10 @@ public:
 
     QProgressBar* progressBar() const;
 
+    QString author();
+    QString licence();
+    QString description();
+
 Q_SIGNALS:
 
     void signalChangeUserRequest();
@@ -102,7 +108,7 @@ private:
     QComboBox*               m_wikiSelect;
 
     QGroupBox*               m_textBox;
-    KTextEdit*               m_descriptionEdit;
+    QTextEdit*               m_descriptionEdit;
     KLineEdit*               m_authorEdit;
 
     QGroupBox*               m_accountBox;
