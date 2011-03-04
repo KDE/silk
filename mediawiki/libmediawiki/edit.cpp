@@ -245,29 +245,58 @@ void Edit::doWorkSendRequest(Page page)
             url.addQueryItem("action", "edit");
 
     // Add params
-    QString text = "";
     if(d->requestParameter.contains("md5"))
     {
-        if(d->requestParameter.contains("prependtext"))
-            text += d->requestParameter["prependtext"];
-        if(d->requestParameter.contains("appendtext"))
-            text += d->requestParameter["appendtext"];
-        if(d->requestParameter.contains("text"))
-            text = d->requestParameter["text"];
-        QByteArray hash = QCryptographicHash::hash(text.toUtf8(),QCryptographicHash::Md5);
+        QString textmd5 = "";
+        QString text = "";
+        if(d->requestParameter.contains("prependtext")) {
+            textmd5 += d->requestParameter["prependtext"];
+            text += textmd5;
+            text.replace(QString("$"), QString("%24"));
+            text.replace(QString("&"), QString("%26"));
+            text.replace(QString("+"), QString("%2B"));
+            text.replace(QString(","), QString("%2C"));
+            text.replace(QString("/"), QString("%2F"));
+            text.replace(QString(":"), QString("%3A"));
+            text.replace(QString(";"), QString("%3B"));
+            text.replace(QString("="), QString("%3D"));
+            text.replace(QString("?"), QString("%3F"));
+            text.replace(QString("@"), QString("%40"));
+            d->requestParameter["prependtext"] = text;
+        }
+        if(d->requestParameter.contains("appendtext")) {
+            textmd5 += d->requestParameter["appendtext"];
+            text += textmd5;
+            text.replace(QString("$"), QString("%24"));
+            text.replace(QString("&"), QString("%26"));
+            text.replace(QString("+"), QString("%2B"));
+            text.replace(QString(","), QString("%2C"));
+            text.replace(QString("/"), QString("%2F"));
+            text.replace(QString(":"), QString("%3A"));
+            text.replace(QString(";"), QString("%3B"));
+            text.replace(QString("="), QString("%3D"));
+            text.replace(QString("?"), QString("%3F"));
+            text.replace(QString("@"), QString("%40"));
+            d->requestParameter["appendtext"] = text;
+         }
+        if(d->requestParameter.contains("text")){
+            textmd5 = d->requestParameter["text"];
+            text = textmd5;
+            text.replace(QString("$"), QString("%24"));
+            text.replace(QString("&"), QString("%26"));
+            text.replace(QString("+"), QString("%2B"));
+            text.replace(QString(","), QString("%2C"));
+            text.replace(QString("/"), QString("%2F"));
+            text.replace(QString(":"), QString("%3A"));
+            text.replace(QString(";"), QString("%3B"));
+            text.replace(QString("="), QString("%3D"));
+            text.replace(QString("?"), QString("%3F"));
+            text.replace(QString("@"), QString("%40"));
+            d->requestParameter["text"] = text;
+        }
+        QByteArray hash = QCryptographicHash::hash(textmd5.toUtf8(),QCryptographicHash::Md5);
         d->requestParameter["md5"] = hash.toHex();
     }
-    text.replace(QString("$"), QString("%24"));
-    text.replace(QString("&"), QString("%26"));
-    text.replace(QString("+"), QString("%2B"));
-    text.replace(QString(","), QString("%2C"));
-    text.replace(QString("/"), QString("%2F"));
-    text.replace(QString(":"), QString("%3A"));
-    text.replace(QString(";"), QString("%3B"));
-    text.replace(QString("="), QString("%3D"));
-    text.replace(QString("?"), QString("%3F"));
-    text.replace(QString("@"), QString("%40"));
-    d->requestParameter["text"] = text;
 
     QMapIterator<QString, QString> i(d->requestParameter);
     while (i.hasNext()) {
