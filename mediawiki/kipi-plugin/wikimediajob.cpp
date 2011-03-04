@@ -59,12 +59,14 @@ void WikiMediaJob::begin()
     start();
 }
 void WikiMediaJob::uploadHandle(KJob* j)
-{
-    //error from previous upload
+{    
     if(j != 0)
     {
         qDebug() << "Upload" << (int)j->error();
+        emit uploadProgress(100);
         disconnect(j,SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
+        disconnect(j,SIGNAL(percent(KJob *, unsigned long)),this,SLOT(slotUploadProgress(KJob*,ulong)));
+        //error from previous upload
         if((int)j->error() != 0)
         {
             m_error.append(i18n("Error on file : "));
@@ -88,13 +90,18 @@ void WikiMediaJob::uploadHandle(KJob* j)
         qDebug() << "image name : " << file->fileName().split("/").last();
         e1->setFilename(file->fileName());
         e1->setText(buildWikiText(info));
-        if(m_imageDesc.size() > 0)
-            connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
+        connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
+        connect(e1,SIGNAL(percent(KJob *, unsigned long)),this,SLOT(slotUploadProgress(KJob*,ulong)));
+        emit uploadProgress(0);
         e1->start();
     }else {
         //finish upload
         if(m_error.size() > 0)
+        {
             KMessageBox::error(0,m_error);
+        }else{
+            emit endUpload();
+        }
     }
 }
 
@@ -142,4 +149,10 @@ QString WikiMediaJob::buildWikiText(QMap<QString,QString> info)
         text.append( info["licence"]);
     return text;
 }
+
+void WikiMediaJob::slotUploadProgress(KJob *job, unsigned long percent)
+{
+    emit uploadProgress((int)percent);
+}
+
 

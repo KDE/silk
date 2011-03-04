@@ -62,6 +62,7 @@ private Q_SLOTS:
    void slotChangeUserClicked();
    void slotDoLogin(const QString& login, const QString& pass, const QUrl& wiki);
    int loginHandle(KJob* loginJob);
+   void slotEndUpload();
 
 
 private:

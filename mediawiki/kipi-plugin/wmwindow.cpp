@@ -145,7 +145,14 @@ void WMWindow::slotStartTransfer()
         m_imageDesc << map;
 
     }
-    this->m_uploadJob->setImageMap(m_imageDesc);
+    this->m_uploadJob->setImageMap(imageDesc);
+
+    m_widget->progressBar()->setRange(0,100);
+    m_widget->progressBar()->setValue(0);
+    connect(m_uploadJob,SIGNAL(uploadProgress(int)),m_widget->progressBar(),SLOT(setValue(int)));
+    connect(m_uploadJob,SIGNAL(endUpload()),this,SLOT(slotEndUpload()));
+    m_widget->progressBar()->show();
+
     this->m_uploadJob->begin();
 }
 
@@ -188,5 +195,14 @@ int WMWindow::loginHandle(KJob* loginJob)
         m_widget->updateLabels(m_login,m_wiki.toString());
     }
     return loginJob->error();
+}
+
+void WMWindow::slotEndUpload()
+{
+    disconnect(m_uploadJob,SIGNAL(uploadProgress(int)),m_widget->progressBar(),SLOT(setValue(int)));
+    disconnect(m_uploadJob,SIGNAL(endUpload()),this,SLOT(slotEndUpload()));
+    KMessageBox::information(this,i18n("Upload finished with no errors."));
+    m_widget->progressBar()->hide();
+    hide();
 }
 

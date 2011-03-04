@@ -43,17 +43,24 @@ namespace KIPIWikiMediaPlugin
 class WikiMediaJob : public KJob
 {
     Q_OBJECT
+
 public:
 
     WikiMediaJob(KIPI::Interface* interface ,mediawiki::MediaWiki* mediawiki, QObject* parent=0);
     QString buildWikiText(QMap<QString,QString> info);
     void setImageMap(QList<QMap<QString,QString> > imageDesc){m_imageDesc = imageDesc;}
     void start();
+
+Q_SIGNALS:
+    void uploadProgress(int percent);
+    void endUpload();
+
 public slots:
     void begin();
     void uploadHandle(KJob* j = 0);
-private:
+    void slotUploadProgress(KJob *job, unsigned long percent);
 
+private:
     KUrl::List m_urls;
     KIPI::Interface* m_interface;
     mediawiki::MediaWiki* m_mediawiki;
