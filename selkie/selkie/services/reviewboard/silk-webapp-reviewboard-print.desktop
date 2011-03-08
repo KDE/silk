@@ -2,6 +2,7 @@
 Name=Print
 Name[de]=Drucken
 Name[es]=Imprimir
+Name[et]=Trükkimine
 Name[nds]=Drucken
 Name[nl]=Afdrukken
 Name[pt]=Imprimir
@@ -12,6 +13,7 @@ Name[x-test]=xxPrintxx
 Comment=Print the current page
 Comment[de]=Die aktuelle Seite drucken
 Comment[es]=Imprimir la página actual
+Comment[et]=Aktiivse lehekülje trükkimine
 Comment[nl]=De huidige pagina afdrukken
 Comment[pt]=Imprimir a página actual
 Comment[pt_BR]=Imprimir a página atual

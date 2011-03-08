@@ -1,11 +1,13 @@
 [Desktop Entry]
 Name=Geoweb - Open Street Map - Map
+Name[et]=Geoveeb - Open Street Map - Kaart
 Name[pt]=Geoweb - Open Street Map - Mapa
 Name[pt_BR]=Geoweb - Open Street Map - Mapa
 Name[sv]=Geoweb - Open Street Map - Karta
 Name[uk]=Geoweb — Open Street Map — Карта
 Name[x-test]=xxGeoweb - Open Street Map - Mapxx
 Comment=Applet for Geoweb - Open Street Map
+Comment[et]=Geoveebi aplett - Open Street Map
 Comment[pt]='Applet' para o Geoweb - Open Street Map
 Comment[pt_BR]=Miniaplicativo para o Geoweb - Open Street Map
 Comment[sv]=Miniprogram för Geoweb - Open Street Map

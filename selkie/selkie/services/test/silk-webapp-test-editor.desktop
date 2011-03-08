@@ -1,6 +1,7 @@
 [Desktop Entry]
 Comment=Show a native system notification
 Comment[es]=Mostrar una notificación nativa del sistema
+Comment[et]=Loomupärase süsteemi märguande näitamine
 Comment[pt]=Mostrar uma notificação nativa do sistema
 Comment[pt_BR]=Mostrar uma notificação de sistema nativa
 Comment[sv]=Visa en inbyggd systemunderrättelse
@@ -9,6 +10,7 @@ Comment[x-test]=xxShow a native system notificationxx
 Icon=media-playlist-shuffle
 Name=Notify
 Name[de]=Benachrichtigung
+Name[et]=Märguanne
 Name[nds]=Bescheed
 Name[nl]=Melden
 Name[pt]=Notificação

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=An action triggered by a Wildcard
+Comment[et]=Metamärgi käivitatud toiming
 Comment[pt]=Uma acção despoletada por uma sequência de caracteres especiais
 Comment[pt_BR]=Uma ação acionada por uma sequência de caracteres especiais
 Comment[sv]=En åtgärd utlöst av ett jokertecken
@@ -7,6 +8,7 @@ Comment[uk]=Дія, увімкнена шаблоном заміни
 Comment[x-test]=xxAn action triggered by a Wildcardxx
 Icon=flag-blue
 Name=Wildcard Match
+Name[et]=Metamärgi sobivus
 Name[pt]=Correspondência de Caracteres Especiais
 Name[pt_BR]=Correspondência de caracteres especiais
 Name[sv]=Jokertecken matchar

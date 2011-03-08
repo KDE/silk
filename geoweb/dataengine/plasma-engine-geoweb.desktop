@@ -2,6 +2,7 @@
 Name=Geoweb
 Name[de]=Geoweb
 Name[es]=Geoweb
+Name[et]=Geoveeb
 Name[pt]=Geoweb
 Name[pt_BR]=Geoweb
 Name[sv]=Geoweb
@@ -9,6 +10,7 @@ Name[uk]=Geoweb
 Name[x-test]=xxGeowebxx
 Comment=Provides information about local services
 Comment[es]=Proporciona información sobre servicios locales
+Comment[et]=Teave kohalike teenuste kohta
 Comment[pt]=Fornece informações sobre serviços locais
 Comment[pt_BR]=Fornece informações sobre os serviços locais
 Comment[sv]=Ger information om lokala tjänster

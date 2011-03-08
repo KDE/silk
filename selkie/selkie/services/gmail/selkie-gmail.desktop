@@ -2,6 +2,7 @@
 Name=GMail
 Name[de]=GMail
 Name[es]=GMail
+Name[et]=GMail
 Name[nds]=GMail
 Name[nl]=GMail
 Name[pt]=GMail
@@ -10,6 +11,7 @@ Name[sv]=Gmail
 Name[uk]=GMail
 Name[x-test]=xxGMailxx
 Comment=A GMail Browser
+Comment[et]=GMaili brauser
 Comment[pt]=Um Navegador do GMail
 Comment[pt_BR]=Um navegador do GMail
 Comment[sv]=En Gmail-bläddrare

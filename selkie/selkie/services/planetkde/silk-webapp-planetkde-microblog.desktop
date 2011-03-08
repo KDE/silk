@@ -1,6 +1,7 @@
 [Desktop Entry]
 Comment=Compose a New Email
 Comment[de]=Eine neue E-Mail erstellen
+Comment[et]=Uue kirja koostamine
 Comment[nl]=Een nieuwe e-mail maken
 Comment[pt]=Compor um Novo E-Mail
 Comment[pt_BR]=Compor um movo e-mail
@@ -10,6 +11,7 @@ Comment[x-test]=xxCompose a New Emailxx
 Icon=im-status-message-edit
 Name=Compose
 Name[de]=Erstellen
+Name[et]=Koostamine
 Name[nl]=Maken
 Name[pt]=Compor
 Name[pt_BR]=Compor

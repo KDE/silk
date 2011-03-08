@@ -2,6 +2,7 @@
 Name=GMail
 Name[de]=GMail
 Name[es]=GMail
+Name[et]=GMail
 Name[nds]=GMail
 Name[nl]=GMail
 Name[pt]=GMail
@@ -12,6 +13,7 @@ Name[x-test]=xxGMailxx
 Comment=Google's Email Service
 Comment[de]=E-Mail-Dienst von Google
 Comment[es]=Servicio de correo de Google
+Comment[et]=Google'i e-posti teenus
 Comment[nl]=E-mailservice van Google
 Comment[pt]=Serviço de E-Mail da Google
 Comment[pt_BR]=Serviço de e-mail do Google

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=Toggle the Chrome in Gitorious Interface
+Comment[et]=Chrome'i lülitamine Gitoriouse liidesele
 Comment[pt]=Activar o Chrome na Interface do Gitorious
 Comment[pt_BR]=Ativar o Chrome na interface do Gitorious
 Comment[sv]=Växla gränssnittet Chrome i Gitorious
@@ -7,6 +8,7 @@ Comment[uk]=Увімкнути або вимкнути Chrome у інтерфе�
 Comment[x-test]=xxToggle the Chrome in Gitorious Interfacexx
 Icon=view-fullscreen
 Name=Toggle Chrome
+Name[et]=Chrome'i lülitamine 
 Name[nl]=Chrome omschakelen
 Name[pt]=Activar o Chrome
 Name[pt_BR]=Ativar o Chrome
