@@ -46,7 +46,7 @@ void WikiMediaJob::begin()
     start();
 }
 void WikiMediaJob::uploadHandle(KJob* j)
-{
+{    
     if(j != 0)
     {
         qDebug() << "Upload" << (int)j->error();

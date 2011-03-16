@@ -48,7 +48,6 @@ void FakeServer::newConnection()
     QMutexLocker locker(&m_mutex);
     m_clientSocket = m_tcpServer->nextPendingConnection();
     connect(m_clientSocket, SIGNAL(readyRead()), this, SLOT(dataAvailable()));
-    //this->writeServerPart();
 }
 void FakeServer::dataAvailable()
 {

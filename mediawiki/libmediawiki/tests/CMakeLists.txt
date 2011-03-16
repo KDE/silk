@@ -2,7 +2,7 @@ if( KDE4_BUILD_TESTS )
 
 include_directories( ../ )
 
-MACRO(MEDIAWIKI_UNIT_TESTS)
+MACRO( MEDIAWIKI_UNIT_TESTS )
 
   FOREACH( _testname ${ARGN} )
 

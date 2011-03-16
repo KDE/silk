@@ -359,11 +359,11 @@ void Edit::finishedEdit()
                     this->setError(KJob::NoError);
                     reader.readNext();
                     attrs = reader.attributes();
-                    d->result.captchaId = attrs.value( QString( "id" ) ).toString().toUInt() ;
+                    d->result.m_captchaId = attrs.value( QString( "id" ) ).toString().toUInt() ;
                     if (!attrs.value( QString( "question" ) ).isEmpty())
-                        d->result.captchaQuestion = QVariant(attrs.value( QString( "question" ) ).toString()) ;
+                        d->result.m_captchaQuestion = QVariant(attrs.value( QString( "question" ) ).toString()) ;
                     else if (!attrs.value( QString( "url" ) ).isEmpty())
-                        d->result.captchaQuestion = QVariant(attrs.value( QString( "url" ) ).toString()) ;
+                        d->result.m_captchaQuestion = QVariant(attrs.value( QString( "url" ) ).toString()) ;
                 }
             }
             else if ( reader.name() == QString( "error" ) ) {
@@ -392,8 +392,8 @@ void Edit::finishedCaptcha(const QString & captcha)
     Q_D(Edit);
     d->result.m_captchaAnswer = captcha;
     QUrl url = d->baseUrl;
-    url.addQueryItem("CaptchaId", QString::number(d->result.captchaId));
-    url.addQueryItem("CaptchaAnswer", d->result.captchaAnswer);
+    url.addQueryItem("CaptchaId", QString::number(d->result.m_captchaId));
+    url.addQueryItem("CaptchaAnswer", d->result.m_captchaAnswer);
     QString data = url.toString();
     QByteArray cookie = "";
     QList<QNetworkCookie> mediawikiCookies = d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());

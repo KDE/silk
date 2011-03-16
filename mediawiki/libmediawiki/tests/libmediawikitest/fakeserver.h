@@ -24,6 +24,8 @@
 #include <QList>
 #include <QString>
 #include <QTcpSocket>
+#include <QThread>
+#include <QMutex>
 
 
 QT_BEGIN_NAMESPACE

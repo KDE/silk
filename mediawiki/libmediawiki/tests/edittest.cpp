@@ -43,7 +43,7 @@ class EditTest : public QObject
 
 signals:
 
-    void captchaSignal( const QString & captchaword);
+    void captchaSignal(const QString & CaptchaAnswer);
 
 public slots:
 

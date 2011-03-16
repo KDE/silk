@@ -115,7 +115,7 @@ void WMWindow::slotStartTransfer()
 {
     KUrl::List urls = m_interface->currentSelection().images();
 
-    QList<QMap<QString,QString> > m_imageDesc;
+    QList<QMap<QString,QString> > imageDesc;
     QString author = m_widget->author();
     QString licence = m_widget->licence();
     QString description = m_widget->description();
@@ -142,7 +142,7 @@ void WMWindow::slotStartTransfer()
             if(info.attributes().contains("altitude"))
                 map["altitude"] = info.attributes()["altitude"].toString();
         }
-        m_imageDesc << map;
+        imageDesc << map;
 
     }
     this->m_uploadJob->setImageMap(imageDesc);
@@ -185,11 +185,7 @@ int WMWindow::loginHandle(KJob* loginJob)
         //TODO Message d'erreur de login
         KMessageBox::error(this, i18n("Login Error\n Please re-enter your information"));
     }else{
-        m_login = login;
-        m_pass = pass;
-        m_wiki = wiki;
         m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_mediawiki,this);
-
         enableButton(User1,true);
         m_widget->invertAccountLoginBox();
         m_widget->updateLabels(m_login,m_wiki.toString());

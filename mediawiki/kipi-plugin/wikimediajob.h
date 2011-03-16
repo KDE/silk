@@ -65,6 +65,8 @@ private:
     KIPI::Interface* m_interface;
     mediawiki::MediaWiki* m_mediawiki;
     QList<QMap<QString,QString> > m_imageDesc;
+    QString m_error;
+    QString m_currentFile;
 };
 }
 #endif // WIKIMEDIAJOB_H
