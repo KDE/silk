@@ -39,27 +39,14 @@ WikiMediaJob::WikiMediaJob(KIPI::Interface *interface, mediawiki::MediaWiki* med
 }
 void WikiMediaJob::start()
 {
-    qDebug() << "martine";
-    for(int i = 0; i < m_imageDesc.size(); i++){
-        qDebug() << buildWikiText(m_imageDesc.at(i));
-    }
-//        mediawiki::Upload * e1 = new mediawiki::Upload( *m_mediawiki, this);
-//        qDebug() << "image path : " << info.path().url().remove("file://");
-//        QFile file(info.path().url().remove("file://"));
-//        file.open(QIODevice::ReadOnly);
-//        e1->setFile(&file);
-//        qDebug() << "image name : " << file.fileName().split("/").last();
-//        e1->setFilename(file.fileName());
-//        e1->setText(buildWikiText(&info));
-//        connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
-//        e1->exec();
+        QTimer::singleShot(0,this,SLOT(uploadHandle()));
 }
 void WikiMediaJob::begin()
 {
     start();
 }
 void WikiMediaJob::uploadHandle(KJob* j)
-{    
+{
     if(j != 0)
     {
         qDebug() << "Upload" << (int)j->error();
