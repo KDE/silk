@@ -1,7 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Wikimedia Export
+Name[pt]=Exportação para o Wikimedia
+Name[uk]=Експорт до Wikimedia
+Name[x-test]=xxWikimedia Exportxx
 Comment=A tool to export images to a remote Wikimedia web service
+Comment[pt]=Uma ferramenta de exportação de imagens para um serviço Web remoto do Wikimedia
+Comment[uk]=Інструмент для експорту зображень до віддаленої служби Wikimedia
+Comment[x-test]=xxA tool to export images to a remote Wikimedia web servicexx
 Type=Service
 ServiceTypes=KIPI/Plugin
 X-KDE-Library=kipiplugin_wikimedia

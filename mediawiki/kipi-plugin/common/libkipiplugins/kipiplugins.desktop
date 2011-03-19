@@ -2,7 +2,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KIPI Plugins
+Name[pt]='Plugins' do KIPI
+Name[uk]=Додатки KIPI
+Name[x-test]=xxKIPI Pluginsxx
 Comment=KDE Image Plugins Interface
+Comment[pt]=Interface de 'Plugins' de Imagens do KDE
+Comment[uk]=Інтерфейс додатків KDE для роботи з зображеннями
+Comment[x-test]=xxKDE Image Plugins Interfacexx
 X-DocPath=kipi-plugins/index.html
 #Categories=Qt;KDE;Graphics;
 NoDisplay=true

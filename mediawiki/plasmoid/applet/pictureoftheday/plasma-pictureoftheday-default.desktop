@@ -1,5 +1,8 @@
 [Desktop Entry]
 Name=WikiMedia picture of the day
+Name[pt]=Imagem do dia do Wikimedia
+Name[uk]=Зображення дня Wikimedia
+Name[x-test]=xxWikiMedia picture of the dayxx
 Comment=
 Type=Service
 ServiceTypes=Plasma/Applet
