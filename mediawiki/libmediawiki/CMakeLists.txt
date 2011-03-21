@@ -1,24 +1,29 @@
-project( mediawiki )
+PROJECT( mediawiki )
 
 FIND_PACKAGE(KDE4 REQUIRED)
 INCLUDE(KDE4Defaults)
 INCLUDE(MacroLibrary)
-include_directories( ${KDE4_INCLUDES} )
 
-set( CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage" )
-option( STATIC_LIBRARY "Build libmediawiki as static libraries." FALSE )
+INCLUDE_DIRECTORIES( ${KDE4_INCLUDES} )
 
-if( STATIC_LIBRARY )
-    set( LIBRARY_TYPE STATIC )
-    add_definitions( -DMEDIAWIKI_STATIC_LIBS )
-    message( STATUS "Building libmediawiki as static libraries" )
-else( STATIC_LIBRARY )
-    set( LIBRARY_TYPE SHARED )
-endif( STATIC_LIBRARY )
+SET( CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage" )
+OPTION( STATIC_LIBRARY "Build libmediawiki as static libraries." FALSE )
 
-add_subdirectory( tests )
+IF( STATIC_LIBRARY )
 
-set(mediawiki_SRCS
+    SET( LIBRARY_TYPE STATIC )
+    ADD_DEFINITIONS( -DMEDIAWIKI_STATIC_LIBS )
+    MESSAGE( STATUS "Building libmediawiki as static libraries" )
+
+ELSE( STATIC_LIBRARY )
+
+    SET( LIBRARY_TYPE SHARED )
+
+ENDIF( STATIC_LIBRARY )
+
+ADD_SUBDIRECTORY( tests )
+
+SET(mediawiki_SRCS
     image.cpp
     imageinfo.cpp
     mediawiki.cpp
@@ -40,7 +45,8 @@ set(mediawiki_SRCS
     protection.cpp
     upload.cpp
 )
-set(mediawiki_HRCS
+
+SET(mediawiki_HRCS
     image.h
     imageinfo.h
     mediawiki.h
@@ -63,26 +69,29 @@ set(mediawiki_HRCS
     upload.h
     mediawiki_export.h
 )
-kde4_add_library( mediawiki ${LIBRARY_TYPE} ${mediawiki_SRCS} )
-target_link_libraries( mediawiki ${KDE4_KIO_LIBS} -fprofile-arcs )
 
-install( TARGETS mediawiki ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install( FILES ${mediawiki_HRCS} DESTINATION ${INCLUDE_INSTALL_DIR}/libmediawiki COMPONENT Devel)
-set( SILK_MEDIAWIKI_LIBS mediawiki ${KDE4_KIO_LIBS} PARENT_SCOPE )
+SET( SILK_MEDIAWIKI_LIBS mediawiki ${KDE4_KIO_LIBS} PARENT_SCOPE )
 
-if ( GENERATE_DOC )
-FIND_PATH(DOXYGEN_DIR doxygen
-/usr/local/bin
-/usr/bin
-)
-IF ( DOXYGEN_DIR )
-MESSAGE( STATUS " Doxygen generation of the documentation" )
-MESSAGE( STATUS ${CMAKE_CURRENT_SOURCE_DIR} )
-EXEC_PROGRAM(
-"cd  ${CMAKE_CURRENT_SOURCE_DIR}; ${DOXYGEN_DIR}/doxygen"
-)
-ELSE ( DOXYGEN_DIR )
-MESSAGE( STATUS "Doxygen not found, I cannot generate the documentation" )
-ENDIF ( DOXYGEN_DIR )
+KDE4_ADD_LIBRARY( mediawiki ${LIBRARY_TYPE} ${mediawiki_SRCS} )
+TARGET_LINK_LIBRARIES( mediawiki ${KDE4_KIO_LIBS} -fprofile-arcs )
 
-endif ( GENERATE_DOC )
+INSTALL( TARGETS mediawiki ${INSTALL_TARGETS_DEFAULT_ARGS} )
+INSTALL( FILES ${mediawiki_HRCS} DESTINATION ${INCLUDE_INSTALL_DIR}/libmediawiki COMPONENT Devel)
+
+IF ( GENERATE_DOC )
+
+    FIND_PATH(DOXYGEN_DIR doxygen /usr/local/bin /usr/bin)
+
+    IF ( DOXYGEN_DIR )
+
+        MESSAGE( STATUS " Doxygen generation of the documentation" )
+        MESSAGE( STATUS ${CMAKE_CURRENT_SOURCE_DIR} )
+        EXEC_PROGRAM("cd  ${CMAKE_CURRENT_SOURCE_DIR}; ${DOXYGEN_DIR}/doxygen")
+
+    ELSE ( DOXYGEN_DIR )
+
+        MESSAGE( STATUS "Doxygen not found, I cannot generate the documentation" )
+
+    ENDIF ( DOXYGEN_DIR )
+
+ENDIF ( GENERATE_DOC )

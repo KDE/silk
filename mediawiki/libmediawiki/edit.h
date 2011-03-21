@@ -22,11 +22,15 @@
 #ifndef MEDIAWIKI_EDIT_H
 #define MEDIAWIKI_EDIT_H
 
+// Qt includes
+
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
 #include <QtNetwork/QNetworkCookieJar>
+
+// Local includes
 
 #include "job.h"
 #include "queryinfo.h"
@@ -34,7 +38,8 @@
 
 class QNetworkReply;
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class MediaWiki;
 class EditPrivate;
@@ -46,7 +51,6 @@ class EditPrivate;
  */
 class MEDIAWIKI_EXPORT Edit : public Job
 {
-
     Q_OBJECT
     Q_DECLARE_PRIVATE(Edit)
 
@@ -151,14 +155,13 @@ public:
          * @brief The undo failed.
          */
         UndoFailed,
-
     };
 
     /**
      * @brief Constructs an Edit job.
      * @param parent the QObject parent
      */
-    explicit Edit(MediaWiki & media, QObject * parent = 0);
+    explicit Edit(MediaWiki& media, QObject* parent = 0);
     /**
      * @brief Destroys the Edit job.
      */
@@ -172,8 +175,8 @@ public:
     /**
      * @brief Specify how the watchlist is affected by this edit.
      */
-    enum Watchlist {
-
+    enum Watchlist
+    {
         /**
          * @brief Add the page to the watchlist
          */
@@ -193,7 +196,6 @@ public:
          * @brief Don't change the watchlist
          */
         nochange
-
     };
 
     /**
@@ -230,13 +232,13 @@ public:
      * @brief Set the section.
      * @param section new section or integer
      */
-    void setSection(const QString & section);
+    void setSection(const QString& section);
 
     /**
      * @brief Set the summary.
      * @param summary the summary
      */
-    void setSummary(const QString & summary);
+    void setSummary(const QString& summary);
 
     /**
      * @brief Undo all revisions from undo to this one. If not set, just undo one revision.
@@ -254,68 +256,67 @@ public:
      * @brief Set the text added to the beginning of the page. Overrides text.
      * @param prependText the text added to the beginning of the page
      */
-    void setPrependText(const QString & prependText);
+    void setPrependText(const QString& prependText);
 
     /**
      * @brief Set the text added to the end of the page. Overrides text.
      * @param appendText the text added to the end of the page
      */
-    void setAppendText(const QString & appendText);
+    void setAppendText(const QString& appendText);
 
     /**
      * @brief Set the page title.
      * @param pageName the page title
      */
-    void setPageName(const QString & pageName);
+    void setPageName(const QString& pageName);
 
     /**
      * @brief Set the edit token. Retrieve from QueryInfo.
      * @param token the edit token
      */
-    void setToken(const QString & token);
+    void setToken(const QString& token);
 
     /**
      * @brief Set the timestamp of the base revision. Leave unset to ignore conflit.
      * @param baseTimestamp the timestamp of the base revision
      */
-    void setBaseTimestamp(const QDateTime & baseTimestamp);
+    void setBaseTimestamp(const QDateTime& baseTimestamp);
 
     /**
      * @brief Set the timestamp when you obtained the edit token.
      * @param startTimestamp the timestamp when you obtained the edit token
      */
-    void setStartTimestamp(const QDateTime & startTimestamp);
+    void setStartTimestamp(const QDateTime& startTimestamp);
 
     /**
      * @brief Set the page content.
      * @param text the page content.
      */
-    void setText(const QString & text);
+    void setText(const QString& text);
 
-signals:
+Q_SIGNALS:
 
     /**
      * @brief Emit the captcha question.
      * @param captcha the captcha question
      */
-    void resultCaptcha(const QVariant & captcha);
+    void resultCaptcha(const QVariant& captcha);
 
-private slots:
+private Q_SLOTS:
 
     void doWorkSendRequest(Page page);
 
     void finishedEdit();
 
-public slots:
+public Q_SLOTS:
 
     /**
      * @brief Put the captcha answer.
      * @param captcha the captcha answer
      */
-    void finishedCaptcha(const QString & captcha);
-
+    void finishedCaptcha(const QString& captcha);
 };
 
-}
+} // namespace mediawiki
 
 #endif // EDIT_H

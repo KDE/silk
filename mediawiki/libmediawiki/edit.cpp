@@ -20,6 +20,8 @@
 
 #include "edit.moc"
 
+// Qt includes
+
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
 #include <QtCore/QXmlStreamReader>
@@ -28,6 +30,8 @@
 #include <QtCore/QCryptographicHash>
 #include <QtNetwork/QNetworkCookieJar>
 #include <QtCore/QStringList>
+
+// Local includes
 
 #include "mediawiki.h"
 #include "queryinfo.h"
@@ -39,22 +43,22 @@ namespace mediawiki
 struct Result
 {
     unsigned int m_captchaId;
-    QVariant m_captchaQuestion;
-    QString m_captchaAnswer;
+    QVariant     m_captchaQuestion;
+    QString      m_captchaAnswer;
 };
 
 class EditPrivate : public JobPrivate
 {
-
 public:
 
-    EditPrivate(MediaWiki & mediawiki)
+    EditPrivate(MediaWiki& mediawiki)
         : JobPrivate(mediawiki)
     {}
 
-    static int error(const QString & error) {
+    static int error(const QString& error)
+    {
         QString temp = error;
-        int ret = 0;
+        int ret      = 0;
         QStringList list;
         list    << "notext"
                 << "invalidsection"
@@ -76,23 +80,23 @@ public:
                 << "revwrongpage"
                 << "undofailure";
         ret = list.indexOf(temp.remove(QChar('-')));
-        if(ret == -1){
+        if(ret == -1)
+        {
             ret = 0;
         }
         return  ret + (int)Edit::TextMissing ;
     }
 
-    QUrl baseUrl;
+    QUrl                   baseUrl;
     QMap<QString, QString> requestParameter;
-    Result result;
-
+    Result                 result;
 };
 
-}
+} // namespace mediawiki
 
 using namespace mediawiki;
 
-Edit::Edit(MediaWiki & media, QObject * parent)
+Edit::Edit(MediaWiki& media, QObject* parent)
     : Job(*new EditPrivate(media), parent)
 {}
 
@@ -108,49 +112,49 @@ void Edit::setUndo(int undo)
     d->requestParameter["undo"] = QString::number(undo);
 }
 
-void Edit::setPrependText(const QString & prependText)
+void Edit::setPrependText(const QString& prependText)
 {
     Q_D(Edit);
     d->requestParameter["prependtext"] = prependText;
     d->requestParameter["md5"] = "";
 }
 
-void Edit::setAppendText(const QString & appendText)
+void Edit::setAppendText(const QString& appendText)
 {
     Q_D(Edit);
     d->requestParameter["appendtext"] = appendText;
-    d->requestParameter["md5"] = "";
+    d->requestParameter["md5"]        = "";
 }
 
-void Edit::setPageName(const QString & pageName)
+void Edit::setPageName(const QString& pageName)
 {
     Q_D(Edit);
     d->requestParameter["title"] = pageName;
 }
 
-void Edit::setToken(const QString & token)
+void Edit::setToken(const QString& token)
 {
     Q_D(Edit);
     d->requestParameter["token"] = token;
 }
 
-void Edit::setBaseTimestamp(const QDateTime & baseTimestamp)
+void Edit::setBaseTimestamp(const QDateTime& baseTimestamp)
 {
     Q_D(Edit);
     d->requestParameter["basetimestamp"] = baseTimestamp.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void Edit::setStartTimestamp(const QDateTime & startTimestamp)
+void Edit::setStartTimestamp(const QDateTime& startTimestamp)
 {
     Q_D(Edit);
     d->requestParameter["starttimestamp"] = startTimestamp.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void Edit::setText(const QString & text)
+void Edit::setText(const QString& text)
 {
     Q_D(Edit);
     d->requestParameter["text"] = text;
-    d->requestParameter["md5"] = "";
+    d->requestParameter["md5"]  = "";
 }
 
 void Edit::setRecreate(bool recreate)
@@ -159,7 +163,7 @@ void Edit::setRecreate(bool recreate)
     if(recreate)
     {
         d->requestParameter["recreate"] = "on";
-        d->requestParameter["md5"] = "";
+        d->requestParameter["md5"]      = "";
     }
 }
 
@@ -169,7 +173,7 @@ void Edit::setCreateonly(bool createonly)
     if(createonly)
     {
         d->requestParameter["createonly"] = "on";
-        d->requestParameter["md5"] = "";
+        d->requestParameter["md5"]        = "";
     }
 }
 
@@ -179,7 +183,7 @@ void Edit::setNocreate(bool norecreate)
     if(norecreate)
     {
         d->requestParameter["nocreate"] = "on";
-        d->requestParameter["md5"] = "";
+        d->requestParameter["md5"]      = "";
     }
 }
 
@@ -192,13 +196,13 @@ void Edit::setMinor(bool minor)
         d->requestParameter["notminor"] = "on";
 }
 
-void Edit::setSection(const QString & section)
+void Edit::setSection(const QString& section)
 {
     Q_D(Edit);
     d->requestParameter["section"] = section;
 }
 
-void Edit::setSummary(const QString & summary)
+void Edit::setSummary(const QString& summary)
 {
     Q_D(Edit);
     d->requestParameter["summary"] = summary;
@@ -223,15 +227,18 @@ void Edit::setWatchList(Edit::Watchlist watchlist)
     }
 }
 
-Edit::~Edit() {}
+Edit::~Edit()
+{
+}
 
 void Edit::start()
 {
     Q_D(Edit);
-    QueryInfo *info = new QueryInfo(d->mediawiki,this);
+    QueryInfo* info = new QueryInfo(d->mediawiki,this);
     info->setPageName(d->requestParameter["title"]);
     info->setToken("edit");
-    connect(info,SIGNAL(page(Page )),this,SLOT(doWorkSendRequest(Page )));
+    connect(info, SIGNAL(page(Page )), 
+            this, SLOT(doWorkSendRequest(Page )));
     info->start();
 
 }
@@ -249,10 +256,11 @@ void Edit::doWorkSendRequest(Page page)
     if(d->requestParameter.contains("md5"))
     {
         QString textmd5 = "";
-        QString text = "";
-        if(d->requestParameter.contains("prependtext")) {
+        QString text    = "";
+        if(d->requestParameter.contains("prependtext"))
+        {
             textmd5 += d->requestParameter["prependtext"];
-            text += textmd5;
+            text    += textmd5;
             text.replace(QString("$"), QString("%24"));
             text.replace(QString("&"), QString("%26"));
             text.replace(QString("+"), QString("%2B"));
@@ -265,9 +273,10 @@ void Edit::doWorkSendRequest(Page page)
             text.replace(QString("@"), QString("%40"));
             d->requestParameter["prependtext"] = text;
         }
-        if(d->requestParameter.contains("appendtext")) {
+        if(d->requestParameter.contains("appendtext"))
+        {
             textmd5 += d->requestParameter["appendtext"];
-            text += textmd5;
+            text    += textmd5;
             text.replace(QString("$"), QString("%24"));
             text.replace(QString("&"), QString("%26"));
             text.replace(QString("+"), QString("%2B"));
@@ -280,9 +289,10 @@ void Edit::doWorkSendRequest(Page page)
             text.replace(QString("@"), QString("%40"));
             d->requestParameter["appendtext"] = text;
          }
-        if(d->requestParameter.contains("text")){
+        if(d->requestParameter.contains("text"))
+        {
             textmd5 = d->requestParameter["text"];
-            text = textmd5;
+            text    = textmd5;
             text.replace(QString("$"), QString("%24"));
             text.replace(QString("&"), QString("%26"));
             text.replace(QString("+"), QString("%2B"));
@@ -300,7 +310,8 @@ void Edit::doWorkSendRequest(Page page)
     }
 
     QMapIterator<QString, QString> i(d->requestParameter);
-    while (i.hasNext()) {
+    while (i.hasNext())
+    {
         i.next();
         if(i.key() != "token")
             url.addQueryItem(i.key(),i.value());
@@ -308,7 +319,8 @@ void Edit::doWorkSendRequest(Page page)
 
     QByteArray cookie = "";
     QList<QNetworkCookie> mediawikiCookies = d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());
-    for(int i = 0 ; i < mediawikiCookies.size(); ++i){
+    for(int i = 0 ; i < mediawikiCookies.size(); ++i)
+    {
         cookie += mediawikiCookies.at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
         cookie += ";";
     }
@@ -327,13 +339,15 @@ void Edit::doWorkSendRequest(Page page)
     // Send the request
     d->reply = d->manager->post( request, url.toString().toUtf8() );
     connectReply();
-    connect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );    
+    connect( d->reply, SIGNAL( finished() ),
+             this, SLOT( finishedEdit() ) );
 }
 
 void Edit::finishedEdit()
 {
     Q_D(Edit);
-    disconnect(d->reply, SIGNAL(finished()), this, SLOT(finishedEdit()));
+    disconnect(d->reply, SIGNAL(finished()), 
+               this, SLOT(finishedEdit()));
 
     if ( d->reply->error() != QNetworkReply::NoError )
     {
@@ -344,19 +358,24 @@ void Edit::finishedEdit()
         return;
     }
     QXmlStreamReader reader( d->reply );
-    while ( !reader.atEnd() && !reader.hasError() ) {
+    while ( !reader.atEnd() && !reader.hasError() )
+    {
         QXmlStreamReader::TokenType token = reader.readNext();
-        if ( token == QXmlStreamReader::StartElement ) {
+        if ( token == QXmlStreamReader::StartElement )
+        {
             QXmlStreamAttributes attrs = reader.attributes();
-            if ( reader.name() == QString( "edit" ) ) {
-                if ( attrs.value( QString( "result" ) ).toString() == "Success" ) {
+            if ( reader.name() == QString( "edit" ) )
+            {
+                if ( attrs.value( QString( "result" ) ).toString() == "Success" )
+                {
                     this->setError(KJob::NoError);
                     d->reply->close();
                     d->reply->deleteLater();
                     emitResult();
                     return;
                 }
-                else if ( attrs.value( QString( "result" ) ).toString() == "Failure" ) {
+                else if ( attrs.value( QString( "result" ) ).toString() == "Failure" )
+                {
                     this->setError(KJob::NoError);
                     reader.readNext();
                     attrs = reader.attributes();
@@ -367,7 +386,8 @@ void Edit::finishedEdit()
                         d->result.m_captchaQuestion = QVariant(attrs.value( QString( "url" ) ).toString()) ;
                 }
             }
-            else if ( reader.name() == QString( "error" ) ) {
+            else if ( reader.name() == QString( "error" ) )
+            {
                 this->setError(EditPrivate::error(attrs.value( QString( "code" ) ).toString()));
                 d->reply->close();
                 d->reply->deleteLater();
@@ -375,7 +395,8 @@ void Edit::finishedEdit()
                 return;
             }
         }
-        else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError){
+        else if ( token == QXmlStreamReader::Invalid && reader.error() != QXmlStreamReader::PrematureEndOfDocumentError)
+        {
             this->setError(this->XmlError);
             d->reply->close();
             d->reply->deleteLater();
@@ -388,17 +409,18 @@ void Edit::finishedEdit()
     emit resultCaptcha(d->result.m_captchaQuestion);
 }
 
-void Edit::finishedCaptcha(const QString & captcha)
+void Edit::finishedCaptcha(const QString& captcha)
 {
     Q_D(Edit);
     d->result.m_captchaAnswer = captcha;
-    QUrl url = d->baseUrl;
+    QUrl url                  = d->baseUrl;
     url.addQueryItem("CaptchaId", QString::number(d->result.m_captchaId));
     url.addQueryItem("CaptchaAnswer", d->result.m_captchaAnswer);
-    QString data = url.toString();
+    QString data      = url.toString();
     QByteArray cookie = "";
     QList<QNetworkCookie> mediawikiCookies = d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());
-    for(int i = 0 ; i < mediawikiCookies.size(); ++i){
+    for(int i = 0 ; i < mediawikiCookies.size(); ++i)
+    {
         cookie += mediawikiCookies.at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
         cookie += ";";
     }
@@ -409,5 +431,6 @@ void Edit::finishedCaptcha(const QString & captcha)
     request.setRawHeader( "Cookie", cookie );
     // Send the request
     d->reply = d->manager->post( request, data.toUtf8() );
-    connect( d->reply, SIGNAL( finished() ), this, SLOT( finishedEdit() ) );
+    connect( d->reply, SIGNAL( finished() ),
+             this, SLOT( finishedEdit() ) );
 }
