@@ -48,21 +48,26 @@ namespace KIPIPlugins
 
 namespace KIPIWikiMediaPlugin
 {
-    class WmWidget;
-    class WmLogin;
-    class WikiMediaJob;
+
+class WmWidget;
+class WmLogin;
+class WikiMediaJob;
+
 class WMWindow : public KDialog
 {
     Q_OBJECT
 
 public:
-   WMWindow(KIPI::Interface *interface, const QString& tmpFolder,
-            QWidget *parent);
-   void reactivate();
-    int runLWindow();
+
+   WMWindow(KIPI::Interface* interface, const QString& tmpFolder,
+            QWidget* parent);
    ~WMWindow();
 
+   void reactivate();
+   int runLWindow();
+
 private Q_SLOTS:
+
    void slotHelp();
    void slotStartTransfer();
    void slotChangeUserClicked();
@@ -70,20 +75,21 @@ private Q_SLOTS:
    int loginHandle(KJob* loginJob);
    void slotEndUpload();
 
-
 private:
 
-   QString                   m_tmpDir;
-   QString                   m_tmpPath;
-   QString                         m_login;
-   QString                         m_pass;
-   WmWidget                 *m_widget;
-   KIPI::Interface          *m_interface;
-   KIPIPlugins::KPAboutData *m_about;
-   KIPIWikiMediaPlugin::WmLogin  * m_dlgLoginExport;
-   KIPIWikiMediaPlugin::WikiMediaJob * m_uploadJob;
-   mediawiki::MediaWiki          * m_mediawiki;
-   QUrl                            m_wiki;
+   QString                            m_tmpDir;
+   QString                            m_tmpPath;
+   QString                            m_login;
+   QString                            m_pass;
+   QUrl                               m_wiki;
+
+   WmWidget*                          m_widget;
+   mediawiki::MediaWiki*              m_mediawiki;
+
+   KIPI::Interface*                   m_interface;
+   KIPIPlugins::KPAboutData*          m_about;
+   KIPIWikiMediaPlugin::WmLogin*      m_dlgLoginExport;
+   KIPIWikiMediaPlugin::WikiMediaJob* m_uploadJob;
 };
 
 }
