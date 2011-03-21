@@ -15,44 +15,47 @@ FIND_PACKAGE(TIFF REQUIRED)
 
 subdirs(icons)
 
+# ==================================================================================================
+# Create git version header
 
-FIND_FILE(SVN_MARKER entries PATHS ${CMAKE_SOURCE_DIR}/.svn)
+# We only do this IF we are in a .git dir
+FIND_FILE(GIT_MARKER entries PATHS ${CMAKE_SOURCE_DIR}/.git)
 
-IF(NOT SVN_MARKER)
-    SET (SVN_MARKER ${CMAKE_SOURCE_DIR}/CMakeLists.txt)  # Dummy file
-ENDIF(NOT SVN_MARKER)
+IF(NOT GIT_MARKER)
+    SET (GIT_MARKER ${CMAKE_SOURCE_DIR}/CMakeLists.txt)  # Dummy file
+ENDIF(NOT GIT_MARKER)
 
-# Add a custom command to drive the svn script whenever the svn entries
+# Add a custom command to drive the git script whenever the git entries
 # file changes.
-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/svnscript.cmake.in_cmake"
-		"${CMAKE_CURRENT_BINARY_DIR}/svnscript.cmake"
-		@ONLY)
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/gitscript.cmake.in_cmake"
+                "${CMAKE_CURRENT_BINARY_DIR}/gitscript.cmake"
+                @ONLY)
 
-ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/svnversion.h"
-		    DEPENDS ${SVN_MARKER}
-		    COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/svnscript.cmake")
+ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/gitversion.h"
+                    DEPENDS ${GIT_MARKER}
+                    COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/gitscript.cmake")
 
 # Add a custom target to drive the custom command.
-ADD_CUSTOM_TARGET(kipiplugins-svnversion
-		  ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/svnversion.h")
+ADD_CUSTOM_TARGET(kipiplugins-gitversion
+                  ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/gitversion.h")
 
 # ==================================================================================================
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/common/libkipiplugins
-		    ${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins
-		    ${CMAKE_CURRENT_SOURCE_DIR}/common/libkipiplugins/dialogs
-		    ${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/dialogs
-		    ${CMAKE_CURRENT_SOURCE_DIR}/common/libkipiplugins/widgets
-		    ${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/widgets
-		    ${CMAKE_CURRENT_SOURCE_DIR}/common/libkipiplugins/tools
-		    ${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/tools
-		    ${KEXIV2_INCLUDE_DIR}
-		    ${KDCRAW_INCLUDE_DIR}
-		    ${KIPI_INCLUDE_DIR}
+                    ${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins
+                    ${CMAKE_CURRENT_SOURCE_DIR}/common/libkipiplugins/dialogs
+                    ${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/dialogs
+                    ${CMAKE_CURRENT_SOURCE_DIR}/common/libkipiplugins/widgets
+                    ${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/widgets
+                    ${CMAKE_CURRENT_SOURCE_DIR}/common/libkipiplugins/tools
+                    ${CMAKE_CURRENT_BINARY_DIR}/common/libkipiplugins/tools
+                    ${KEXIV2_INCLUDE_DIR}
+                    ${KDCRAW_INCLUDE_DIR}
+                    ${KIPI_INCLUDE_DIR}
                     ${KDE4_INCLUDES}
                     ${QT4_INCLUDES}
-		    )
-subdirs(common)
+                   )
+SUBDIRS(common)
 
 kde4_add_ui_files (ui_src wmwindow.ui)
 SET(kipiplugin_wikimedia_PART_SRCS
@@ -69,8 +72,8 @@ KDE4_ADD_PLUGIN(kipiplugin_wikimedia ${kipiplugin_wikimedia_PART_SRCS} ${ui_src}
 TARGET_LINK_LIBRARIES(kipiplugin_wikimedia
                       kipiplugins
                       mediawiki
-                      ${KIPI_LIBRARIES}
                       kipiplugins
+                      ${KIPI_LIBRARIES}
                       ${KEXIV2_LIBRARIES}
                       ${KDCRAW_LIBRARIES}
                       ${KDE4_KIO_LIBS}
