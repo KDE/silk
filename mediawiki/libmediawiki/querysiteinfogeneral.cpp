@@ -18,6 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "querysiteinfogeneral.moc"
+
 #include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
 #include <QtNetwork/QNetworkAccessManager>
@@ -26,7 +28,6 @@
 
 #include "mediawiki.h"
 #include "job_p.h"
-#include "querysiteinfogeneral.h"
 
 namespace mediawiki {
 

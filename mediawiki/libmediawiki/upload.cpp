@@ -17,6 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "upload.moc"
+
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
 #include <QtCore/QXmlStreamReader>
@@ -28,7 +30,6 @@
 #include <QtCore/QFile>
 
 #include "job_p.h"
-#include "upload.h"
 #include "mediawiki.h"
 #include "queryinfo.h"
 

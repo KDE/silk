@@ -17,12 +17,12 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "job.moc"
+#include "job_p.h"
+
 #include <QtNetwork/QNetworkReply>
 
 #include "mediawiki.h"
-#include "job_p.h"
-
-#include "job.h"
 
 using namespace mediawiki;
 

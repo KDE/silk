@@ -30,7 +30,7 @@
 class QNetworkReply;
 
 namespace mediawiki {
-    
+
 class MediaWiki;
 class LoginPrivate;
 

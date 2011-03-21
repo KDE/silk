@@ -18,6 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "queryrevision.moc"
+
 #include <QtCore/QDateTime>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
@@ -28,7 +30,6 @@
 
 #include "mediawiki.h"
 #include "job_p.h"
-#include "queryrevision.h"
 
 namespace mediawiki
 {
