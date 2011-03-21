@@ -22,18 +22,27 @@
 
 #ifndef WIKIMEDIAJOB_H
 #define WIKIMEDIAJOB_H
-#include <KJob>
+
+// Qt includes
+
 #include <QString>
-#include <KUrl>
 #include <QList>
 #include <QMap>
+
+// KDE includes
+
+#include <KUrl>
+#include <KJob>
+
+// KIPI includes
+
+#include <libkipi/interface.h>
+#include <libkipi/imageinfo.h>
 
 // Local includes
 
 #include "imageslist.h"
-#include <KUrl>
-#include <libkipi/interface.h>
-#include <libkipi/imageinfo.h>
+
 namespace mediawiki
 {
     class MediaWiki;

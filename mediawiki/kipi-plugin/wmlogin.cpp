@@ -20,7 +20,7 @@
  *
  * ============================================================ */
 
-#include "wmlogin.h"
+#include "wmlogin.moc"
 
 // Qt includes
 

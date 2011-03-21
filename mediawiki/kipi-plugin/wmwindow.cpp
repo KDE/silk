@@ -20,10 +20,16 @@
  *
  * ============================================================ */
 
-#include "wmwindow.h"
+#include "wmwindow.moc"
+
+// Qt includes
+
 #include <QDebug>
 #include <QLayout>
 #include <QProgressBar>
+
+// KDE includes
+
 #include <kdebug.h>
 #include <KConfig>
 #include <KLocale>
@@ -37,6 +43,9 @@
 #include <KToolInvocation>
 #include <KMessageBox>
 #include "kpaboutdata.h"
+
+// Local includes
+
 #include "wmwidget.h"
 #include "wmlogin.h"
 #include "wikimediajob.h"
@@ -201,4 +210,3 @@ void WMWindow::slotEndUpload()
     m_widget->progressBar()->hide();
     hide();
 }
-

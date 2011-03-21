@@ -20,7 +20,7 @@
  *
  * ============================================================ */
 
-#include "plugin_wikimedia.h"
+#include "plugin_wikimedia.moc"
 
 // C ANSI includes
 
@@ -113,7 +113,7 @@ void Plugin_WikiMedia::slotExport()
             KWindowSystem::unminimizeWindow(m_dlgExport->winId());
 
         m_dlgExport->reactivate();
-    }    
+    }
 }
 
 KIPI::Category Plugin_WikiMedia::category( KAction* action ) const

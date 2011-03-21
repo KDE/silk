@@ -24,11 +24,13 @@
 #define WMWIDGET_H
 
 // Qt includes
+
 #include <QWidget>
 #include <QGroupBox>
 #include <QTextEdit>
 
 //KDE includes
+
 #include <KLineEdit>
 #include <KTextEdit>
 

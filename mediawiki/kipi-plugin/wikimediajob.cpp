@@ -20,16 +20,28 @@
  *
  * ============================================================ */
 
-#include "wikimediajob.h"
-#include <libmediawiki/upload.h>
-#include <libmediawiki/mediawiki.h>
-#include "imageslist.h"
+#include "wikimediajob.moc"
+
+// Qt includes
+
 #include <QMessageBox>
 #include <QFile>
 #include <QDebug>
 #include <QTimer>
+
+// KDE includes
+
 #include <KMessageBox>
 #include <KLocale>
+
+// Mediawiki includes
+
+#include <libmediawiki/upload.h>
+#include <libmediawiki/mediawiki.h>
+
+// Local includes
+
+#include "imageslist.h"
 
 using namespace KIPIWikiMediaPlugin;
 

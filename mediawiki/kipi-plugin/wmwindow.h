@@ -22,10 +22,16 @@
 
 #ifndef WMWINDOW_H
 #define WMWINDOW_H
+
+// KDE includes
+
 #include <KDialog>
+
+// KIPI includes
+
 #include <libkipi/interface.h>
 
-// LibMediaWiki includes
+// MediaWiki includes
 
 #include <libmediawiki/login.h>
 #include <libmediawiki/mediawiki.h>

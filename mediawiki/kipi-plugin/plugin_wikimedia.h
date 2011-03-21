@@ -31,11 +31,11 @@
 
 #include <kdeversion.h>
 
-// LibKIPI includes
+// KIPI includes
 
 #include <libkipi/plugin.h>
 
-// LibMediaWiki includes
+// MediaWiki includes
 
 #include <libmediawiki/login.h>
 #include <libmediawiki/mediawiki.h>

@@ -20,7 +20,7 @@
  *
  * ============================================================ */
 
-#include "wmwidget.h"
+#include "wmwidget.moc"
 
 // Qt includes
 
