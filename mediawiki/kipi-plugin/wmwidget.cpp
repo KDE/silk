@@ -156,14 +156,14 @@ WmWidget::WmWidget(QWidget* parent, KIPI::Interface *iface)
         i18n("This is the login form to your Wikimedia account."));
     QGridLayout* textBoxLayout = new QGridLayout(m_textBox);
 
-    QLabel * desc = new QLabel(i18n("Description:","Description:"), m_textBox);
+    QLabel * desc = new QLabel(i18nc("Description:","Description:"), m_textBox);
     m_descriptionEdit = new QTextEdit(m_textBox);
 
-    QLabel * aut = new QLabel(i18n("Author:","Author:"), m_textBox);
+    QLabel * aut = new QLabel(i18nc("Author:","Author:"), m_textBox);
     m_authorEdit = new KLineEdit(m_textBox);
 
 
-    QLabel * licenceLabel = new QLabel(i18n("Licence:","Licence:"), m_textBox);
+    QLabel * licenceLabel = new QLabel(i18nc("Licence:","Licence:"), m_textBox);
     m_licenceComboBox = new QComboBox(m_textBox);
 
     m_licenceComboBox->addItem(QString("Own work, multi-license with CC-BY-SA-3.0 and GFDL"),QString("{{self|cc-by-sa-3.0|GFDL|migration=redundant}}"));
