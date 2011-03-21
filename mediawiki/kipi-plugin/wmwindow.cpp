@@ -24,7 +24,6 @@
 
 // Qt includes
 
-#include <QDebug>
 #include <QLayout>
 #include <QProgressBar>
 
@@ -53,17 +52,17 @@
 
 using namespace KIPIWikiMediaPlugin;
 
-WMWindow::WMWindow(KIPI::Interface* interface, const QString &tmpFolder,
-                  QWidget* /*parent*/)
+WMWindow::WMWindow(KIPI::Interface* interface, const QString& tmpFolder,
+                   QWidget* /*parent*/)
        : KDialog(0)
 {
     m_tmpPath.clear();
     m_tmpDir      = tmpFolder;
     m_interface   = interface;
     m_widget      = new WmWidget(this, interface);
-    m_uploadJob = NULL;
-    m_login = QString();
-    m_pass = QString();
+    m_uploadJob   = NULL;
+    m_login       = QString();
+    m_pass        = QString();
 
     setMainWidget(m_widget);
 
@@ -174,8 +173,8 @@ void WMWindow::slotChangeUserClicked()
 void WMWindow::slotDoLogin(const QString& login, const QString& pass, const QUrl& wiki)
 {
     m_login = login;
-    m_pass = pass;
-    m_wiki = wiki;
+    m_pass  = pass;
+    m_wiki  = wiki;
 
     m_mediawiki = new mediawiki::MediaWiki(wiki);
     mediawiki::Login *loginJob = new mediawiki::Login(*m_mediawiki, login, pass);
@@ -185,15 +184,18 @@ void WMWindow::slotDoLogin(const QString& login, const QString& pass, const QUrl
 
 int WMWindow::loginHandle(KJob* loginJob)
 {
-    qDebug()<< loginJob->error();
+    kDebug()<< loginJob->error();
 
-    if(loginJob->error()){
+    if(loginJob->error())
+    {
         m_login.clear();
         m_pass.clear();
         m_uploadJob = NULL;
         //TODO Message d'erreur de login
         KMessageBox::error(this, i18n("Login Error\n Please re-enter your information"));
-    }else{
+    }
+    else
+    {
         m_uploadJob = new KIPIWikiMediaPlugin::WikiMediaJob(m_interface,m_mediawiki,this);
         enableButton(User1,true);
         m_widget->invertAccountLoginBox();

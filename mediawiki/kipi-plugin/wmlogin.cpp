@@ -41,8 +41,8 @@ namespace KIPIWikiMediaPlugin
 {
 
 WmLogin::WmLogin(QWidget* parent, const QString& header,
-                               const QString& _name, const QString& _passwd)
-              : QDialog(parent)
+                 const QString& _name, const QString& _passwd)
+    : QDialog(parent)
 {
     setSizeGripEnabled(false);
 
@@ -65,11 +65,9 @@ WmLogin::WmLogin(QWidget* parent, const QString& header,
     m_wikiSelect = new QComboBox(this);
     m_passwdEdit->setEchoMode(KLineEdit::Password);
 
-
-
     m_wikiSelect->addItem(QString("test wikipedia"), QUrl("http://test.wikipedia.org/w/api.php"));
-    m_wikiSelect->addItem(QString("en wikipedia"), QUrl("http://en.wikipedia.org/w/api.php"));
-    m_wikiSelect->addItem(QString("fr wikipedia"), QUrl("http://fr.wikipedia.org/w/api.php"));
+    m_wikiSelect->addItem(QString("en wikipedia"),   QUrl("http://en.wikipedia.org/w/api.php"));
+    m_wikiSelect->addItem(QString("fr wikipedia"),   QUrl("http://fr.wikipedia.org/w/api.php"));
 
     QLabel* nameLabel = new QLabel(this);
     nameLabel->setText(i18n( "Wiki Login:" ));
@@ -89,12 +87,12 @@ WmLogin::WmLogin(QWidget* parent, const QString& header,
     centerLayout->addWidget(wikiLabel,    2, 0);
 
     QHBoxLayout* btnLayout = new QHBoxLayout();
-    QPushButton *okBtn     = new QPushButton(this);
+    QPushButton* okBtn     = new QPushButton(this);
     okBtn->setAutoDefault(true);
     okBtn->setDefault(true);
     okBtn->setText(i18n("&OK"));
 
-    QPushButton *cancelBtn = new QPushButton(this);
+    QPushButton* cancelBtn = new QPushButton(this);
     cancelBtn->setText(i18n("&Cancel"));
 
     btnLayout->addItem(new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
@@ -149,7 +147,7 @@ QString WmLogin::username() const
 
 QUrl WmLogin::wiki() const
 {
-    qDebug() << m_wikiSelect->itemData(m_wikiSelect->currentIndex()).toUrl();
+    kDebug() << m_wikiSelect->itemData(m_wikiSelect->currentIndex()).toUrl();
     return m_wikiSelect->itemData(m_wikiSelect->currentIndex()).toUrl();
 }
 
@@ -165,4 +163,4 @@ void WmLogin::setPassword(const QString& password)
     m_passwdEdit->setText(password);
 }
 
-}
+} // namespace KIPIWikiMediaPlugin

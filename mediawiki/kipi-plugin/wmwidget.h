@@ -58,13 +58,14 @@ namespace KIPIPlugins
 
 namespace KIPIWikiMediaPlugin
 {
-    enum WmDownloadType
-    {
-        WmMyAlbum = 0,
-        WmFriendAlbum,
-        WmPhotosMe,
-        WmPhotosFriend
-    };
+
+enum WmDownloadType
+{
+    WmMyAlbum = 0,
+    WmFriendAlbum,
+    WmPhotosMe,
+    WmPhotosFriend
+};
 
 class WmWidget : public QWidget
 {
@@ -72,7 +73,7 @@ class WmWidget : public QWidget
 
 public:
 
-    WmWidget(QWidget* parent, KIPI::Interface *iface);
+    WmWidget(QWidget* parent, KIPI::Interface* iface);
     ~WmWidget();
 
     void updateLabels(const QString& name = "", const QString& url = "");
@@ -130,6 +131,6 @@ private:
     friend class WmWindow;
 };
 
-}
+} // namespace KIPIWikiMediaPlugin
 
-#endif
+#endif // WMWIDGET_H

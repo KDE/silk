@@ -19,6 +19,7 @@
  * GNU General Public License for more details.
  *
  * ============================================================ */
+
 #ifndef WMLOGIN_H
 #define WMLOGIN_H
 
@@ -41,13 +42,13 @@ class WmLogin : public QDialog
 public:
 
     WmLogin(QWidget* parent, const QString& header, const QString& _name=QString(),
-                   const QString& _passwd=QString());
+            const QString& _passwd=QString());
     ~WmLogin();
 
     QString name()     const;
     QString password() const;
     QString username() const;
-    QUrl wiki() const;
+    QUrl wiki()        const;
     void setUsername(const QString&);
     void setPassword(const QString&);
 
@@ -59,6 +60,6 @@ private:
     QComboBox* m_wikiSelect;
 };
 
-}
+} // namespace KIPIWikiMediaPlugin
 
 #endif // WMLOGIN_H

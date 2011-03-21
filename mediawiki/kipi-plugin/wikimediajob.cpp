@@ -26,13 +26,13 @@
 
 #include <QMessageBox>
 #include <QFile>
-#include <QDebug>
 #include <QTimer>
 
 // KDE includes
 
 #include <KMessageBox>
 #include <KLocale>
+#include <kdebug.h>
 
 // Mediawiki includes
 
@@ -43,28 +43,40 @@
 
 #include "imageslist.h"
 
-using namespace KIPIWikiMediaPlugin;
+namespace KIPIWikiMediaPlugin
+{
 
-WikiMediaJob::WikiMediaJob(KIPI::Interface *interface, mediawiki::MediaWiki* mediawiki, QObject *parent)
+WikiMediaJob::WikiMediaJob(KIPI::Interface* interface, mediawiki::MediaWiki* mediawiki, QObject* parent)
     : KJob(parent), m_interface(interface), m_mediawiki(mediawiki)
 {
 }
 void WikiMediaJob::start()
 {
-        QTimer::singleShot(0,this,SLOT(uploadHandle()));
+    QTimer::singleShot(0, this, SLOT(uploadHandle()));
 }
 void WikiMediaJob::begin()
 {
     start();
 }
+
+void WikiMediaJob::setImageMap(QList<QMap<QString, QString> > imageDesc)
+{
+    m_imageDesc = imageDesc;
+}
+
 void WikiMediaJob::uploadHandle(KJob* j)
-{    
+{
     if(j != 0)
     {
-        qDebug() << "Upload" << (int)j->error();
+        kDebug() << "Upload" << (int)j->error();
         emit uploadProgress(100);
-        disconnect(j,SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
-        disconnect(j,SIGNAL(percent(KJob *, unsigned long)),this,SLOT(slotUploadProgress(KJob*,ulong)));
+
+        disconnect(j, SIGNAL(result(KJob* )), 
+                   this, SLOT(uploadHandle(KJob*)));
+
+        disconnect(j, SIGNAL(percent(KJob *, unsigned long)),
+                   this, SLOT(slotUploadProgress(KJob*,ulong)));
+
         //error from previous upload
         if((int)j->error() != 0)
         {
@@ -81,34 +93,42 @@ void WikiMediaJob::uploadHandle(KJob* j)
     if(m_imageDesc.size() > 0)
     {
         QMap<QString,QString> info = m_imageDesc.takeFirst();
-        mediawiki::Upload * e1 = new mediawiki::Upload( *m_mediawiki, this);
+        mediawiki::Upload * e1     = new mediawiki::Upload( *m_mediawiki, this);
 
-        qDebug() << "image path : " << info["url"].remove("file://");
+        kDebug() << "image path : " << info["url"].remove("file://");
         QFile* file = new QFile(info["url"].remove("file://"),this);
         file->open(QIODevice::ReadOnly);
         //emit fileUploadProgress(done = 0, total file.size());
         e1->setFile(file);
         m_currentFile=file->fileName();
-        qDebug() << "image name : " << file->fileName().split("/").last();
+        kDebug() << "image name : " << file->fileName().split("/").last();
         e1->setFilename(file->fileName());
         e1->setText(buildWikiText(info));
-        connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
-        connect(e1,SIGNAL(percent(KJob *, unsigned long)),this,SLOT(slotUploadProgress(KJob*,ulong)));
+
+        connect(e1, SIGNAL(result(KJob* )),
+                this, SLOT(uploadHandle(KJob*)));
+        connect(e1, SIGNAL(percent(KJob *, unsigned long)),
+                this, SLOT(slotUploadProgress(KJob*, ulong)));
+
         emit uploadProgress(0);
         e1->start();
-    }else {
+    }
+    else
+    {
         //finish upload
         if(m_error.size() > 0)
         {
             KMessageBox::error(0,m_error);
-        }else{
+        }
+        else
+        {
             emit endUpload();
         }
         m_error.clear();
     }
 }
 
-QString WikiMediaJob::buildWikiText(QMap<QString,QString> info)
+QString WikiMediaJob::buildWikiText(QMap<QString, QString> info)
 {
     QString text;
     text.append(" == {{int:filedesc}} ==");
@@ -129,7 +149,8 @@ QString WikiMediaJob::buildWikiText(QMap<QString,QString> info)
 
     text.append( "\n}}");
     QString altitude, longitude, latitude;
-    if(info.contains("latitude") ||
+
+    if(info.contains("latitude")  ||
        info.contains("longitude") ||
        info.contains("altitude"))
     {
@@ -140,6 +161,7 @@ QString WikiMediaJob::buildWikiText(QMap<QString,QString> info)
         if(info.contains("altitude"))
             altitude = info["altitude"];
     }
+
     if(!longitude.isEmpty() && !latitude.isEmpty())
     {
         text.append( "\n{{Location dec");
@@ -147,16 +169,18 @@ QString WikiMediaJob::buildWikiText(QMap<QString,QString> info)
         text.append( "\n|").append( latitude );
         text.append( "\n}}");
     }
+
     text.append( " == {{int:license}} ==");
     if(info.contains("licence"))
         text.append( info["licence"]);
+
     return text;
 }
 
-void WikiMediaJob::slotUploadProgress(KJob * job, unsigned long percent)
+void WikiMediaJob::slotUploadProgress(KJob* job, unsigned long percent)
 {
     Q_UNUSED(job)
     emit uploadProgress((int)percent);
 }
 
-
+} // namespace KIPIWikiMediaPlugin

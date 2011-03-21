@@ -49,14 +49,13 @@ namespace KIPIWikiMediaPlugin
 
 class KJob;
 
-class Plugin_WikiMedia
-    : public KIPI::Plugin
+class Plugin_WikiMedia : public KIPI::Plugin
 {
 Q_OBJECT
 
 public:
 
-    Plugin_WikiMedia(QObject *parent, const QVariantList &args);
+    Plugin_WikiMedia(QObject* parent, const QVariantList& args);
     ~Plugin_WikiMedia();
 
     KIPI::Category category(KAction* action) const;
@@ -64,12 +63,13 @@ public:
     void runMWindow();
 
 public Q_SLOTS:
+
     void slotExport();
 
 private:
 
-    KAction                       * m_actionExport;
-    KIPIWikiMediaPlugin::WMWindow * m_dlgExport;
+    KAction*                       m_actionExport;
+    KIPIWikiMediaPlugin::WMWindow* m_dlgExport;
 };
 
 #endif // PLUGIN_WIKIMEDIA_H

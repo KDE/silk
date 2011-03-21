@@ -47,8 +47,10 @@ namespace mediawiki
 {
     class MediaWiki;
 }
+
 namespace KIPIWikiMediaPlugin
 {
+
 class WikiMediaJob : public KJob
 {
     Q_OBJECT
@@ -56,26 +58,32 @@ class WikiMediaJob : public KJob
 public:
 
     WikiMediaJob(KIPI::Interface* interface ,mediawiki::MediaWiki* mediawiki, QObject* parent=0);
-    QString buildWikiText(QMap<QString,QString> info);
-    void setImageMap(QList<QMap<QString,QString> > imageDesc){m_imageDesc = imageDesc;}
+    QString buildWikiText(QMap<QString, QString> info);
+
+    void setImageMap(QList<QMap<QString, QString> > imageDesc);
     void start();
 
 Q_SIGNALS:
+
     void uploadProgress(int percent);
     void endUpload();
 
-public slots:
+public Q_SLOTS:
+
     void begin();
     void uploadHandle(KJob* j = 0);
-    void slotUploadProgress(KJob *job, unsigned long percent);
+    void slotUploadProgress(KJob* job, unsigned long percent);
 
 private:
-    KUrl::List m_urls;
-    KIPI::Interface* m_interface;
-    mediawiki::MediaWiki* m_mediawiki;
+
+    KUrl::List                    m_urls;
+    KIPI::Interface*              m_interface;
+    mediawiki::MediaWiki*         m_mediawiki;
     QList<QMap<QString,QString> > m_imageDesc;
-    QString m_error;
-    QString m_currentFile;
+    QString                       m_error;
+    QString                       m_currentFile;
 };
-}
+
+} // namespace KIPIWikiMediaPlugin
+
 #endif // WIKIMEDIAJOB_H

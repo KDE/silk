@@ -53,8 +53,8 @@ K_PLUGIN_FACTORY( WikiMediaFactory, registerPlugin<Plugin_WikiMedia>(); )
 K_EXPORT_PLUGIN ( WikiMediaFactory("kipiplugin_wikimedia") )
 
 Plugin_WikiMedia::Plugin_WikiMedia(QObject* parent, const QVariantList& /*args*/)
-               : KIPI::Plugin(WikiMediaFactory::componentData(),
-                              parent, "Wikimedia Commons Export")
+    : KIPI::Plugin(WikiMediaFactory::componentData(),
+                   parent, "Wikimedia Commons Export")
 {
     kDebug(AREA_CODE_LOADING) << "Plugin_WikiMedia plugin loaded";
 }
