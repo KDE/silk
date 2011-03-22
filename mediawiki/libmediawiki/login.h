@@ -30,15 +30,20 @@
 #ifndef MEDIAWIKI_LOGIN_H
 #define MEDIAWIKI_LOGIN_H
 
+// Qt includes
+
 #include <QtCore/QString>
 #include <QtNetwork/QNetworkCookieJar>
+
+// Local includes
 
 #include "job.h"
 #include "mediawiki_export.h"
 
 class QNetworkReply;
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class MediaWiki;
 class LoginPrivate;
@@ -50,7 +55,6 @@ class LoginPrivate;
  */
 class MEDIAWIKI_EXPORT Login : public Job
 {
-
     Q_OBJECT
     Q_DECLARE_PRIVATE(Login)
 
@@ -58,7 +62,6 @@ public:
 
     enum
     {
-
         /**
          * @brief You didn't set the login parameter
          */
@@ -108,8 +111,9 @@ public:
         * @brief Either you did not provide the login token or the sessionid cookie. Request again with the token and cookie given in this response
         */
         TokenNeeded,
+    };
 
-    };    
+public:
 
     /**
      * @brief Constructs a Login job.
@@ -117,8 +121,8 @@ public:
      * @param login the QObject parent
      * @param password the QObject parent
      * @param parent the QObject parent
-     */    
-    explicit Login(MediaWiki & mediawiki, const QString & login, const QString & password, QObject * parent = 0);
+     */
+    explicit Login(MediaWiki& mediawiki, const QString& login, const QString& password, QObject* parent = 0);
 
     /**
      * @brief Destroys the Login job.
@@ -128,9 +132,9 @@ public:
     /**
      * @brief Starts the job asynchronously.
      */
-    virtual void start();    
+    virtual void start();
 
-private slots:
+private Q_SLOTS:
 
     /**
      * @brief Send a request to get the token and the cookie.
@@ -144,9 +148,8 @@ private slots:
      * @param success true if the connection was completed successfully.
      */
     void doWorkProcessReply();
-
 };
 
-}
+} // namespace mediawiki
 
 #endif // LOGIN_H
