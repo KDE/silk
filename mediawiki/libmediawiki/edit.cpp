@@ -1,6 +1,7 @@
 /*
  *   Copyright 2010 by Alexandre Mendes <alex.mendes1988@gmail.com>
  *   Copyright 2011 by Manuel Campomanes <campomanes.manuel@gmail.com>
+ *   Copyright 2011 by Gilles Caulier <caulier.gilles@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -237,7 +238,7 @@ void Edit::start()
     QueryInfo* info = new QueryInfo(d->mediawiki,this);
     info->setPageName(d->requestParameter["title"]);
     info->setToken("edit");
-    connect(info, SIGNAL(page(Page )), 
+    connect(info, SIGNAL(page(Page )),
             this, SLOT(doWorkSendRequest(Page )));
     info->start();
 
@@ -346,7 +347,7 @@ void Edit::doWorkSendRequest(Page page)
 void Edit::finishedEdit()
 {
     Q_D(Edit);
-    disconnect(d->reply, SIGNAL(finished()), 
+    disconnect(d->reply, SIGNAL(finished()),
                this, SLOT(finishedEdit()));
 
     if ( d->reply->error() != QNetworkReply::NoError )
