@@ -29,20 +29,16 @@
 
 #include "image.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
-class ImagePrivate {
-
+class ImagePrivate
+{
 public:
 
-    qint64 namespaceId;
+    qint64  namespaceId;
     QString title;
-
 };
-
-}
-
-using namespace mediawiki;
 
 Image::Image()
     : d(new ImagePrivate())
@@ -50,7 +46,7 @@ Image::Image()
     d->namespaceId = -1;
 }
 
-Image::Image(const Image & other)
+Image::Image(const Image& other)
     : d(new ImagePrivate(*(other.d)))
 {}
 
@@ -59,30 +55,36 @@ Image::~Image()
     delete d;
 }
 
-Image & Image::operator=(Image other)
+Image& Image::operator=(Image other)
 {
     std::swap(d, other.d);
     return *this;
 }
 
-qint64 Image::namespaceId() const {
+qint64 Image::namespaceId() const
+{
     return d->namespaceId;
 }
 
-void Image::setNamespaceId(qint64 namespaceId) {
+void Image::setNamespaceId(qint64 namespaceId)
+{
     d->namespaceId = namespaceId;
 }
 
-QString Image::title() const {
+QString Image::title() const
+{
     return d->title;
 }
 
-void Image::setTitle(const QString & title) {
+void Image::setTitle(const QString& title)
+{
     d->title = title;
 }
 
-bool operator==(const Image & lhs, const Image & rhs) {
+} // namespace mediawiki
+
+bool operator==(const mediawiki::Image& lhs, const mediawiki::Image& rhs)
+{
     return lhs.namespaceId() == rhs.namespaceId() &&
            lhs.title() == rhs.title();
 }
-

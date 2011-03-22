@@ -30,16 +30,22 @@
 #ifndef MEDIAWIKI_IMAGE_H
 #define MEDIAWIKI_IMAGE_H
 
+// Qt includes
+
 #include <QtCore/QString>
+
+// Locla includes
 
 #include "mediawiki_export.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 /**
  * @brief A image.
  */
-class MEDIAWIKI_EXPORT Image {
+class MEDIAWIKI_EXPORT Image
+{
 
 public:
 
@@ -52,7 +58,7 @@ public:
      * @brief Constructs an image from an other image.
      * @param other an other image
      */
-    Image(const Image & other);
+    Image(const Image& other);
 
     /**
      * @brief Destructs an image.
@@ -63,7 +69,7 @@ public:
      * @brief Assingning an image from an other image.
      * @param other an other image
      */
-    Image & operator=(Image other);
+    Image& operator=(Image other);
 
     /**
      * @brief Returns the namespace id of the image.
@@ -87,15 +93,14 @@ public:
      * @brief Set the title.
      * @param title the title of the image
      */
-    void setTitle(const QString & title);
+    void setTitle(const QString& title);
 
 private:
 
-    class ImagePrivate * d;
-
+    class ImagePrivate* d;
 };
 
-}
+} // namespace mediawiki
 
 /**
  * @brief Returns true if lhs and rhs are equal, else false.
@@ -103,6 +108,6 @@ private:
  * @param rhs right-hand side image info
  * @return true if lhs and rhs are equal, else false
  */
-MEDIAWIKI_EXPORT bool operator==(const mediawiki::Image & lhs, const mediawiki::Image & rhs);
+MEDIAWIKI_EXPORT bool operator==(const mediawiki::Image& lhs, const mediawiki::Image& rhs);
 
-#endif
+#endif // MEDIAWIKI_IMAGE_H
