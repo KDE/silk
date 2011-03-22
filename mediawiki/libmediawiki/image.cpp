@@ -27,6 +27,8 @@
  *
  * ============================================================ */
 
+// Local includes
+
 #include "image.h"
 
 namespace mediawiki
@@ -86,5 +88,5 @@ void Image::setTitle(const QString& title)
 bool operator==(const mediawiki::Image& lhs, const mediawiki::Image& rhs)
 {
     return lhs.namespaceId() == rhs.namespaceId() &&
-           lhs.title() == rhs.title();
+           lhs.title()       == rhs.title();
 }
