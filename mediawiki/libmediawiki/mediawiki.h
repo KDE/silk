@@ -28,10 +28,15 @@
 #ifndef MEDIAWIKI_MEDIAWIKI_H
 #define MEDIAWIKI_MEDIAWIKI_H
 
+// Qt includes
+
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QNetworkAccessManager>
 #include <QNetworkCookieJar>
+
+// Local includes
+
 #include "mediawiki_export.h"
 
 namespace mediawiki
@@ -44,10 +49,7 @@ class MediaWikiPrivate;
  */
 class MEDIAWIKI_EXPORT MediaWiki
 {
-
     Q_DECLARE_PRIVATE(MediaWiki)
-
-    friend class JobPrivate;
 
 public:
 
@@ -58,7 +60,7 @@ public:
                               wich will be concatenated with the postfix user agent
      *                        else the postfix user agent is used only
      */
-    explicit MediaWiki(const QUrl & url,const QString & customUserAgent = QString());
+    explicit MediaWiki(const QUrl& url,const QString& customUserAgent = QString());
 
     /**
      * @brief Destructs the MediaWiki.
@@ -79,10 +81,11 @@ public:
 
 private:
 
-    MediaWikiPrivate * const d_ptr;
+    MediaWikiPrivate* const d_ptr;
 
+    friend class JobPrivate;
 };
 
-}
+} // namespace mediawiki
 
-#endif
+#endif // MEDIAWIKI_MEDIAWIKI_H

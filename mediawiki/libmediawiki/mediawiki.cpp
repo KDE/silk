@@ -28,14 +28,15 @@
 #include "mediawiki_p.h"
 #include "mediawiki.h"
 
-using namespace mediawiki;
+namespace mediawiki
+{
 
-MediaWiki::MediaWiki(const QUrl & url, const QString & customUserAgent)
+MediaWiki::MediaWiki(const QUrl& url, const QString& customUserAgent)
     : d_ptr(new MediaWikiPrivate(url,
                                  (customUserAgent.isEmpty() ? "" : customUserAgent + "-") + MediaWikiPrivate::POSTFIX_USER_AGENT,
                                  new QNetworkAccessManager()))
-
-{}
+{
+}
 
 MediaWiki::~MediaWiki()
 {
@@ -53,3 +54,5 @@ QString MediaWiki::userAgent() const
 }
 
 const QString MediaWikiPrivate::POSTFIX_USER_AGENT = "mediawiki-silk";
+
+} // namespace mediawiki

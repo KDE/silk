@@ -28,12 +28,15 @@
 #ifndef MEDIAWIKI_LOGOUT_H
 #define MEDIAWIKI_LOGOUT_H
 
+// Local includes
+
 #include "job.h"
 #include "mediawiki_export.h"
 
 class QNetworkReply;
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class MediaWiki;
 class LogoutPrivate;
@@ -45,7 +48,6 @@ class LogoutPrivate;
  */
 class MEDIAWIKI_EXPORT Logout : public Job
 {
-
     Q_OBJECT
     Q_DECLARE_PRIVATE(Logout)
 
@@ -55,7 +57,7 @@ public:
      * @brief Constructs a Logout job.
      * @param parent the QObject parent
      */
-    explicit Logout(MediaWiki & mediawiki, QObject * parent = 0);
+    explicit Logout(MediaWiki& mediawiki, QObject* parent = 0);
 
     /**
      * @brief Destroys the Logout job.
@@ -67,12 +69,12 @@ public:
      */
     virtual void start();
 
-private slots:
+private Q_SLOTS:
 
     void doWorkSendRequest();
     void doWorkProcessReply();
-
 };
 
-}
+} // namespace mediawiki
+
 #endif // LOGOUT_H

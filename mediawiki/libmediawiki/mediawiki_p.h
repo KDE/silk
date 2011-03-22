@@ -28,6 +28,8 @@
 #ifndef MEDIAWIKI_P_H
 #define MEDIAWIKI_P_H
 
+// Qt includes
+
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>

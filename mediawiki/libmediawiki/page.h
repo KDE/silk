@@ -28,16 +28,23 @@
 #ifndef MEDIAWIKI_PAGE_H
 #define MEDIAWIKI_PAGE_H
 
-#include "mediawiki_export.h"
-#include <QDateTime>
+// Qt includes
+
+#include <QtCore/QDateTime>
 #include <QtCore/QUrl>
 
-namespace mediawiki {
+// Local includes
+
+#include "mediawiki_export.h"
+
+namespace mediawiki
+{
 
 /**
  * @brief An image info.
  */
-class MEDIAWIKI_EXPORT Page {
+class MEDIAWIKI_EXPORT Page
+{
 
 public:
 
@@ -50,7 +57,7 @@ public:
      * @brief Constructs a page from an other page.
      * @param other an other page
      */
-    Page(const Page & other);
+    Page(const Page& other);
 
     /**
      * @brief Destructs a page.
@@ -61,7 +68,7 @@ public:
      * @brief Assingning a page from an other page.
      * @param other an other page
      */
-    Page & operator=(Page other);
+    Page& operator=(Page other);
 
     /**
      * @brief Set the pageId of the page.
@@ -79,7 +86,7 @@ public:
      * @brief Set the title of the page.
      * @param title the title of the page
      */
-    void setTitle(QString title);
+    void setTitle(const QString& title);
 
     /**
      * @brief Return the title of the page.
@@ -139,7 +146,7 @@ public:
      * @brief Set the page token.
      * @param editToken the page token
      */
-    void setEditToken(QString editToken);
+    void setEditToken(const QString& editToken);
 
     /**
      * @brief Return the page token.
@@ -163,7 +170,7 @@ public:
      * @brief Set the full url of the page.
      * @param fullurl the full url of the page
      */
-    void setFullurl(QUrl fullurl);
+    void setFullurl(const QUrl& fullurl);
 
     /**
      * @brief Return the full url of the page.
@@ -175,7 +182,7 @@ public:
      * @brief Set the edit url of the page.
      * @param editurl the edit url of the page
      */
-    void setEditurl(QUrl editurl);
+    void setEditurl(const QUrl& editurl);
 
     /**
      * @brief Return the edit url of the page.
@@ -187,7 +194,7 @@ public:
      * @brief Set the readability of the page.
      * @param readable the readability of the page
      */
-    void setReadable(QString readable);
+    void setReadable(const QString& readable);
 
     /**
      * @brief Return the readability of the page.
@@ -199,7 +206,7 @@ public:
      * @brief Set the text returned by EditFormPreloadText.
      * @param preload the text returned by EditFormPreloadText
      */
-    void setPreload(QString preload);
+    void setPreload(const QString& preload);
 
     /**
      * @brief Return the text returned by EditFormPreloadText.
@@ -211,7 +218,7 @@ public:
      * @brief Set the last touched timestamp.
      * @param touched the last touched timestamp
      */
-    void setTouched(QDateTime touched);
+    void setTouched(const QDateTime& touched);
 
     /**
      * @brief Return the last touched timestamp.
@@ -223,7 +230,7 @@ public:
      * @brief Set the timestamp when you obtained the edit token.
      * @param starttimestamp the timestamp when you obtained the edit token
      */
-    void setStarttimestamp(QDateTime starttimestamp);
+    void setStarttimestamp(const QDateTime& starttimestamp);
 
     /**
      * @brief Return the timestamp when you obtained the edit token.
@@ -233,10 +240,10 @@ public:
 
 private:
 
-    struct PagePrivate * d;
-
+    class PagePrivate* d;
 };
-}
+
+} // namespace mediawiki
 
 MEDIAWIKI_EXPORT bool operator==(const mediawiki::Page & lhs,const mediawiki::Page & rhs);
 

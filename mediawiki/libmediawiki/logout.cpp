@@ -27,6 +27,8 @@
 
 #include "logout.moc"
 
+// Qt includes
+
 #include <QtCore/QDateTime>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
@@ -34,30 +36,32 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
+// Local includes
+
 #include "mediawiki.h"
 #include "job_p.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
-    class LogoutPrivate : public JobPrivate {
+class LogoutPrivate : public JobPrivate
+{
+public:
 
-    public:
+    LogoutPrivate(MediaWiki& mediawiki)
+        : JobPrivate(mediawiki)
+    {
+    }
+};
 
-        LogoutPrivate(MediaWiki & mediawiki)
-            : JobPrivate(mediawiki)
-        {}
-
-    };
-
+Logout::Logout(MediaWiki& mediawiki, QObject* parent)
+    : Job(*new LogoutPrivate(mediawiki), parent)
+{
 }
 
-using namespace mediawiki;
-
-Logout::Logout(MediaWiki & mediawiki, QObject *parent)
-    : Job(*new LogoutPrivate(mediawiki), parent)
-{}
-
-Logout::~Logout() {}
+Logout::~Logout()
+{
+}
 
 void Logout::start()
 {
@@ -68,33 +72,43 @@ void Logout::doWorkSendRequest()
 {
     Q_D(Logout);
     // Set the url
-    QUrl url = d->mediawiki.url();
+    QUrl url                               = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "logout");
-    QByteArray cookie = "";
+    QByteArray cookie                      = "";
     QList<QNetworkCookie> mediawikiCookies = d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());
-    for(int i = 0 ; i < mediawikiCookies.size(); ++i){
+
+    for(int i = 0 ; i < mediawikiCookies.size(); ++i)
+    {
         cookie += mediawikiCookies.at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
         cookie += ";";
     }
+
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     request.setRawHeader( "Cookie", cookie );
+
     // Delete cookies
     d->manager->setCookieJar(new QNetworkCookieJar);
+
     // Send the request
     d->reply = d->manager->get(request);
     connectReply();
-    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    connect(d->reply, SIGNAL(finished()),
+            this, SLOT(doWorkProcessReply()));
 }
 
 void Logout::doWorkProcessReply()
 {
     Q_D(Logout);
-    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    disconnect(d->reply, SIGNAL(finished()),
+               this, SLOT(doWorkProcessReply()));
+
     this->setError(KJob::NoError);
     d->reply->close();
     d->reply->deleteLater();
     emitResult();
 }
+
+} // namespace mediawiki

@@ -25,36 +25,40 @@
  *
  * ============================================================ */
 
-#include "page.h"
+// Qt includes
 
 #include <QtCore/QUrl>
 
-namespace mediawiki {
+// Local includes
 
-    struct PagePrivate {
+#include "page.h"
 
-        unsigned int m_pageid;
-        QString m_title;
-        unsigned int m_ns;
-        unsigned int m_lastrevid;
-        unsigned int m_counter;
-        unsigned int m_length;
-        QString m_edittoken ;
-        unsigned int m_talkid ;
-        QUrl m_fullurl;
-        QUrl m_editurl;
-        QString m_readable;
-        QString m_preload;
-        QDateTime m_touched;
-        QDateTime m_starttimestamp;
-    };
-}
-using namespace mediawiki;
+namespace mediawiki
+{
+
+class PagePrivate
+{
+public:
+
+    unsigned int m_pageid;
+    unsigned int m_ns;
+    unsigned int m_lastrevid;
+    unsigned int m_counter;
+    unsigned int m_length;
+    unsigned int m_talkid ;
+    QString      m_edittoken ;
+    QString      m_title;
+    QString      m_readable;
+    QString      m_preload;
+    QUrl         m_fullurl;
+    QUrl         m_editurl;
+    QDateTime    m_touched;
+    QDateTime    m_starttimestamp;
+};
 
 Page::Page()
     :d(new PagePrivate())
 {
-
 }
 
 Page::~Page()
@@ -62,13 +66,12 @@ Page::~Page()
     delete d;
 }
 
-
-Page::Page( const Page & other)
+Page::Page( const Page& other)
         : d(new PagePrivate(*(other.d)))
 {
 }
 
-Page & Page::operator=(Page other)
+Page& Page::operator=(Page other)
 {
     std::swap(d, other.d);
     return *this;
@@ -84,7 +87,7 @@ unsigned int Page::pageId() const
     return d->m_pageid;
 }
 
-void Page::setTitle(QString title)
+void Page::setTitle(const QString& title)
 {
     d->m_title=title;
 }
@@ -134,7 +137,7 @@ unsigned int Page::pageLength() const
      return d->m_length;
 }
 
-void Page::setEditToken(QString editToken)
+void Page::setEditToken(const QString& editToken)
 {
     d->m_edittoken=editToken;
 }
@@ -154,7 +157,7 @@ unsigned int Page::pageTalkid() const
      return d->m_talkid;
 }
 
-void Page::setFullurl(QUrl fullurl)
+void Page::setFullurl(const QUrl& fullurl)
 {
     d->m_fullurl=fullurl;
 }
@@ -164,7 +167,7 @@ QUrl Page::pageFullurl() const
     return d->m_fullurl;
 }
 
-void Page::setEditurl(QUrl editurl)
+void Page::setEditurl(const QUrl& editurl)
 {
     d->m_editurl=editurl;
 }
@@ -174,7 +177,7 @@ QUrl Page::pageEditurl() const
     return d->m_editurl;
 }
 
-void Page::setReadable(QString readable)
+void Page::setReadable(const QString& readable)
 {
     d->m_readable=readable;
 }
@@ -184,7 +187,7 @@ QString Page::pageReadable() const
     return d->m_readable;
 }
 
-void Page::setPreload(QString preload)
+void Page::setPreload(const QString& preload)
 {
     d->m_preload=preload;
 }
@@ -194,7 +197,7 @@ QString Page::pagePreload() const
     return d->m_preload;
 }
 
-void Page::setTouched(QDateTime touched)
+void Page::setTouched(const QDateTime& touched)
 {
     d->m_touched=touched;
 }
@@ -204,7 +207,7 @@ QDateTime Page::pageTouched() const
     return d->m_touched;
 }
 
-void Page::setStarttimestamp(QDateTime starttimestamp)
+void Page::setStarttimestamp(const QDateTime& starttimestamp)
 {
     d->m_starttimestamp=starttimestamp;
 }
@@ -214,20 +217,22 @@ QDateTime Page::pageStarttimestamp() const
     return d->m_starttimestamp;
 }
 
-bool operator==(const mediawiki::Page & lhs,const mediawiki::Page & rhs)
+} // namespace mediawiki;
+
+bool operator==(const mediawiki::Page& lhs,const mediawiki::Page& rhs)
 {
-    return lhs.pageId() == rhs.pageId() &&
-           lhs.pageTitle() == rhs.pageTitle() &&
-           lhs.pageNs() == rhs.pageNs() &&
-           lhs.pageLastRevId() == rhs.pageLastRevId() &&
-           lhs.pageCounter() == rhs.pageCounter() &&
-           lhs.pageLength() == rhs.pageLength() &&
-           lhs.pageEditToken() == rhs.pageEditToken() &&
-           lhs.pageTalkid() == rhs.pageTalkid() &&
-           lhs.pageFullurl() == rhs.pageFullurl() &&
-           lhs.pageEditurl() == rhs.pageEditurl() &&
-           lhs.pageReadable() == rhs.pageReadable() &&
-           lhs.pagePreload() == rhs.pagePreload() &&
-           lhs.pageTouched() == rhs.pageTouched() &&
+    return lhs.pageId()             == rhs.pageId()        &&
+           lhs.pageTitle()          == rhs.pageTitle()     &&
+           lhs.pageNs()             == rhs.pageNs()        &&
+           lhs.pageLastRevId()      == rhs.pageLastRevId() &&
+           lhs.pageCounter()        == rhs.pageCounter()   &&
+           lhs.pageLength()         == rhs.pageLength()    &&
+           lhs.pageEditToken()      == rhs.pageEditToken() &&
+           lhs.pageTalkid()         == rhs.pageTalkid()    &&
+           lhs.pageFullurl()        == rhs.pageFullurl()   &&
+           lhs.pageEditurl()        == rhs.pageEditurl()   &&
+           lhs.pageReadable()       == rhs.pageReadable()  &&
+           lhs.pagePreload()        == rhs.pagePreload()   &&
+           lhs.pageTouched()        == rhs.pageTouched()   &&
            lhs.pageStarttimestamp() == rhs.pageStarttimestamp();
 }
