@@ -28,7 +28,12 @@
 #ifndef MEDIAWIKIJOB_H
 #define MEDIAWIKIJOB_H
 
+// KDE includes
+
 #include <KDE/KJob>
+
+// Local includes
+
 #include "mediawiki_export.h"
 
 namespace mediawiki
@@ -40,8 +45,8 @@ class JobPrivate;
 /**
  * @brief The base class for all MediaWiki jobs.
  */
-class MEDIAWIKI_EXPORT Job : public KJob {
-
+class MEDIAWIKI_EXPORT Job : public KJob
+{
     Q_OBJECT
     Q_DECLARE_PRIVATE(Job)
 
@@ -50,15 +55,14 @@ public:
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
      */
-    enum {
-
-        NetworkError = KJob::UserDefinedError + 1,
-
+    enum
+    {
+        NetworkError            = KJob::UserDefinedError + 1,
         XmlError,
-
         UserRequestDefinedError = KJob::UserDefinedError + 100,
-
     };
+
+public:
 
     /**
      * @brief Destructs the Job.
@@ -77,7 +81,7 @@ protected:
      * @param dd a private class
      * @param parent the QObject parent
      */
-    Job(JobPrivate & dd, QObject * parent = 0);
+    Job(JobPrivate& dd, QObject* parent = 0);
 
     //TODO comment
     void connectReply();
@@ -85,12 +89,11 @@ protected:
     /**
      * @brief The private d pointer.
      */
-    JobPrivate * const d_ptr;
+    JobPrivate* const d_ptr;
 
-private slots:
+private Q_SLOTS:
 
     void processUploadProgress(qint64 bytesReceived, qint64 bytesTotal);
-
 };
 
 }

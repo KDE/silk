@@ -28,15 +28,20 @@
 #include "job.moc"
 #include "job_p.h"
 
+// Qt includes
+
 #include <QtNetwork/QNetworkReply>
+
+// Local include
 
 #include "mediawiki.h"
 
-using namespace mediawiki;
+namespace mediawiki
+{
 
-Job::Job(JobPrivate & dd, QObject * parent)
-    : KJob(parent)
-    , d_ptr(&dd)
+Job::Job(JobPrivate& dd, QObject* parent)
+    : KJob(parent),
+      d_ptr(&dd)
 {
     setCapabilities(Job::Killable);
 }
@@ -49,7 +54,8 @@ Job::~Job()
 bool Job::doKill()
 {
     Q_D(Job);
-    if (d->reply != 0) {
+    if (d->reply != 0)
+    {
         d->reply->abort();
     }
     return true;
@@ -58,7 +64,8 @@ bool Job::doKill()
 void Job::connectReply()
 {
     Q_D(Job);
-    connect(d->reply,SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(processUploadProgress(qint64,qint64)));
+    connect(d->reply, SIGNAL(uploadProgress(qint64,qint64)), 
+            this, SLOT(processUploadProgress(qint64,qint64)));
 }
 
 void Job::processUploadProgress(qint64 bytesReceived, qint64 bytesTotal)
@@ -66,3 +73,5 @@ void Job::processUploadProgress(qint64 bytesReceived, qint64 bytesTotal)
     setTotalAmount(Job::Bytes, bytesTotal);
     setProcessedAmount(Job::Bytes, bytesReceived);
 }
+
+} // namespace mediawiki

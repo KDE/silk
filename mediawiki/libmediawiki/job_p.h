@@ -31,22 +31,24 @@
 #include "mediawiki.h"
 #include "mediawiki_p.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
-class JobPrivate {
-
+class JobPrivate
+{
 public:
 
-    explicit JobPrivate(MediaWiki & mediawiki)
-        : mediawiki(mediawiki)
-        , manager(mediawiki.d_ptr->manager)
-    {}
+    explicit JobPrivate(MediaWiki& mediawiki)
+        : mediawiki(mediawiki),
+          manager(mediawiki.d_ptr->manager)
+    {
+    }
 
-    MediaWiki & mediawiki;
-    QNetworkAccessManager * const manager;
-    QNetworkReply * reply;
-
+    MediaWiki&                   mediawiki;
+    QNetworkAccessManager* const manager;
+    QNetworkReply*               reply;
 };
 
-}
+} // namespace mediawiki
+
 #endif // MEDIAWIKIJOB_P_H
