@@ -25,48 +25,48 @@
  *
  * ============================================================ */
 
+// C++ includes
+
 #include <algorithm>
+
+// Local includes
 
 #include "imageinfo.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
-class ImageinfoPrivate {
-
+class ImageinfoPrivate
+{
 public:
 
-    QDateTime timestamp;
-    QString user;
-    QString comment;
-    QUrl url;
-    QUrl descriptionUrl;
-    QUrl thumbUrl;
-    qint64 thumbWidth;
-    qint64 thumbHeight;
-    qint64 size;
-    qint64 width;
-    qint64 height;
-    QString sha1;
-    QString mime;
+    QDateTime                timestamp;
+    QString                  user;
+    QString                  comment;
+    QUrl                     url;
+    QUrl                     descriptionUrl;
+    QUrl                     thumbUrl;
+    qint64                   thumbWidth;
+    qint64                   thumbHeight;
+    qint64                   size;
+    qint64                   width;
+    qint64                   height;
+    QString                  sha1;
+    QString                  mime;
     QHash<QString, QVariant> metadata;
-
 };
-
-}
-
-using namespace mediawiki;
 
 Imageinfo::Imageinfo()
     : d(new ImageinfoPrivate())
 {
-    d->thumbWidth = -1;
+    d->thumbWidth  = -1;
     d->thumbHeight = -1;
-    d->size = -1;
-    d->width = -1;
-    d->height = -1;
+    d->size        = -1;
+    d->width       = -1;
+    d->height      = -1;
 }
 
-Imageinfo::Imageinfo(const Imageinfo & other)
+Imageinfo::Imageinfo(const Imageinfo& other)
     : d(new ImageinfoPrivate(*(other.d)))
 {}
 
@@ -75,7 +75,7 @@ Imageinfo::~Imageinfo()
     delete d;
 }
 
-Imageinfo & Imageinfo::operator=(Imageinfo other)
+Imageinfo& Imageinfo::operator=(Imageinfo other)
 {
     std::swap(d, other.d);
     return *this;
@@ -86,7 +86,7 @@ QDateTime Imageinfo::timestamp() const
     return d->timestamp;
 }
 
-void Imageinfo::setTimestamp(const QDateTime & timestamp)
+void Imageinfo::setTimestamp(const QDateTime& timestamp)
 {
     d->timestamp = timestamp;
 }
@@ -96,7 +96,7 @@ QString Imageinfo::user() const
     return d->user;
 }
 
-void Imageinfo::setUser(const QString & user)
+void Imageinfo::setUser(const QString& user)
 {
     d->user = user;
 }
@@ -106,7 +106,7 @@ QString Imageinfo::comment() const
     return d->comment;
 }
 
-void Imageinfo::setComment(const QString & comment)
+void Imageinfo::setComment(const QString& comment)
 {
     d->comment = comment;
 }
@@ -116,7 +116,7 @@ QUrl Imageinfo::url() const
     return d->url;
 }
 
-void Imageinfo::setUrl(const QUrl & url)
+void Imageinfo::setUrl(const QUrl& url)
 {
     d->url = url;
 }
@@ -126,7 +126,7 @@ QUrl Imageinfo::descriptionUrl() const
     return d->url;
 }
 
-void Imageinfo::setDescriptionUrl(const QUrl & descriptionUrl)
+void Imageinfo::setDescriptionUrl(const QUrl& descriptionUrl)
 {
     d->descriptionUrl = descriptionUrl;
 }
@@ -136,7 +136,7 @@ QUrl Imageinfo::thumbUrl() const
     return d->thumbUrl;
 }
 
-void Imageinfo::setThumbUrl(const QUrl & thumbUrl)
+void Imageinfo::setThumbUrl(const QUrl& thumbUrl)
 {
     d->thumbUrl = thumbUrl;
 }
@@ -196,7 +196,7 @@ QString Imageinfo::sha1() const
     return d->sha1;
 }
 
-void Imageinfo::setSha1(const QString & sha1)
+void Imageinfo::setSha1(const QString& sha1)
 {
     d->sha1 = sha1;
 }
@@ -206,35 +206,42 @@ QString Imageinfo::mime() const
     return d->mime;
 }
 
-void Imageinfo::setMime(const QString & mime)
+void Imageinfo::setMime(const QString& mime)
 {
     d->mime = mime;
 }
 
-const QHash<QString, QVariant> & Imageinfo::metadata() const
+const QHash<QString, QVariant>& Imageinfo::metadata() const
 {
     return d->metadata;
 }
 
-QHash<QString, QVariant> & Imageinfo::metadata()
+QHash<QString, QVariant>& Imageinfo::metadata()
 {
     return d->metadata;
 }
 
-void Imageinfo::setMetadata(const QHash<QString, QVariant> & metadata)
+void Imageinfo::setMetadata(const QHash<QString, QVariant>& metadata)
 {
      d->metadata = metadata;
 }
 
-bool operator==(const Imageinfo & lhs, const Imageinfo & rhs)
+} // namespace mediawiki
+
+bool operator==(const mediawiki::Imageinfo& lhs, const mediawiki::Imageinfo& rhs)
 {
-    return lhs.timestamp() == rhs.timestamp() &&
-           lhs.user() == rhs.user() &&
-           lhs.comment() == rhs.comment() &&
-           lhs.url() == rhs.url() && lhs.descriptionUrl() == rhs.descriptionUrl() &&
-           lhs.thumbUrl() == rhs.thumbUrl() && lhs.thumbWidth() == rhs.thumbWidth() && lhs.thumbHeight() == rhs.thumbHeight() &&
-           lhs.size() == rhs.size() && lhs.width() == rhs.width() && lhs.height() == rhs.height() &&
-           lhs.sha1() == rhs.sha1() &&
-           lhs.mime() == rhs.mime() &&
-           lhs.metadata() == rhs.metadata();
+    return lhs.timestamp()      == rhs.timestamp()      &&
+           lhs.user()           == rhs.user()           &&
+           lhs.comment()        == rhs.comment()        &&
+           lhs.url()            == rhs.url()            &&
+           lhs.descriptionUrl() == rhs.descriptionUrl() &&
+           lhs.thumbUrl()       == rhs.thumbUrl()       &&
+           lhs.thumbWidth()     == rhs.thumbWidth()     &&
+           lhs.thumbHeight()    == rhs.thumbHeight()    &&
+           lhs.size()           == rhs.size()           &&
+           lhs.width()          == rhs.width()          &&
+           lhs.height()         == rhs.height()         &&
+           lhs.sha1()           == rhs.sha1()           &&
+           lhs.mime()           == rhs.mime()           &&
+           lhs.metadata()       == rhs.metadata();
 }

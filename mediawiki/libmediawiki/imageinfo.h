@@ -28,21 +28,26 @@
 #ifndef MEDIAWIKI_IMAGEINFO_H
 #define MEDIAWIKI_IMAGEINFO_H
 
+// Qt includes
+
 #include <QtCore/QDateTime>
 #include <QtCore/QHash>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
 
+// Local includes
+
 #include "mediawiki_export.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 /**
  * @brief An image info.
  */
-class MEDIAWIKI_EXPORT Imageinfo {
-
+class MEDIAWIKI_EXPORT Imageinfo
+{
 public:
 
     /**
@@ -54,7 +59,7 @@ public:
      * @brief Constructs an image info from an other image info.
      * @param other an other image info
      */
-    Imageinfo(const Imageinfo & other);
+    Imageinfo(const Imageinfo& other);
 
     /**
      * @brief Destructs an image info.
@@ -65,7 +70,7 @@ public:
      * @brief Assingning an image info from an other image info.
      * @param other an other image info
      */
-    Imageinfo & operator=(Imageinfo other);
+    Imageinfo& operator=(Imageinfo other);
 
     /**
      * @brief Get the time and date of the revision.
@@ -77,7 +82,7 @@ public:
      * @brief Set the time and date of the revision.
      * @param timestamp the time and date of the revision
      */
-    void setTimestamp(const QDateTime & timestamp);
+    void setTimestamp(const QDateTime& timestamp);
 
     /**
      * @brief Get the user who made the revision.
@@ -89,7 +94,7 @@ public:
      * @brief Set the user who made the revision.
      * @param user the user who made the revision
      */
-    void setUser(const QString & user);
+    void setUser(const QString& user);
 
     /**
      * @brief Get the edit comment.
@@ -101,7 +106,7 @@ public:
      * @brief Set the edit comment.
      * @param comment the edit comment
      */
-    void setComment(const QString & comment);
+    void setComment(const QString& comment);
 
     /**
      * @brief Get the URL of the image.
@@ -113,7 +118,7 @@ public:
      * @brief Set the URL of the image.
      * @param url the URL of the image
      */
-    void setUrl(QUrl const & url);
+    void setUrl(const QUrl& url);
 
     /**
      * @brief Get the description URL of the image.
@@ -125,7 +130,7 @@ public:
      * @brief Set the description URL of the image.
      * @param descriptionUrl the description URL of the image
      */
-    void setDescriptionUrl(const QUrl & descriptionUrl);
+    void setDescriptionUrl(const QUrl& descriptionUrl);
 
     /**
      * @brief Get the thumb URL of the image.
@@ -137,7 +142,7 @@ public:
      * @brief Get the thumb URL of the image.
      * @param thumbUrl the thumb URL of the image
      */
-    void setThumbUrl(const QUrl & thumbUrl);
+    void setThumbUrl(const QUrl& thumbUrl);
 
     /**
      * @brief Get the thumb width of the image.
@@ -209,7 +214,7 @@ public:
      * @brief Set the image's SHA-1 hash.
      * @param sha1 the image's SHA-1 hash
      */
-    void setSha1(const QString & sha1);
+    void setSha1(const QString& sha1);
 
     /**
      * @brief Get the image's MIME type.
@@ -221,33 +226,32 @@ public:
      * @brief Set the image's MIME type.
      * @param mime the image's MIME type
      */
-    void setMime(const QString & mime);
+    void setMime(const QString& mime);
 
     /**
      * @brief Get image metadata.
      * @return image metadata
      */
-    const QHash<QString, QVariant> & metadata() const;
+    const QHash<QString, QVariant>& metadata() const;
 
     /**
      * @brief Get image metadata.
      * @return image metadata
      */
-    QHash<QString, QVariant> & metadata();
+    QHash<QString, QVariant>& metadata();
 
     /**
      * @brief Set image metadata.
      * @param metadata image metadata
      */
-     void setMetadata(const QHash<QString, QVariant> & metadata);
+     void setMetadata(const QHash<QString, QVariant>& metadata);
 
 private:
 
-    class ImageinfoPrivate * d;
-
+    class ImageinfoPrivate* d;
 };
 
-}
+} // namespace mediawiki
 
 /**
  * @brief Returns true if lhs and rhs are equal, else false.
@@ -257,4 +261,4 @@ private:
  */
 MEDIAWIKI_EXPORT bool operator==(const mediawiki::Imageinfo & lhs, const mediawiki::Imageinfo & rhs);
 
-#endif
+#endif // MEDIAWIKI_IMAGEINFO_H
