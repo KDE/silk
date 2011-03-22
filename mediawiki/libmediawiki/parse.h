@@ -30,20 +30,26 @@
 #ifndef PARSE_H
 #define PARSE_H
 
+// Qt includes
+
 #include <QtCore/QString>
-#include <QLocale>
+#include <QtCore/QLocale>
+
+// Local includes
+
 #include "job.h"
 #include "mediawiki_export.h"
 
 class QNetworkReply;
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class MediaWiki;
 class ParsePrivate;
 
-class MEDIAWIKI_EXPORT Parse : public Job {
-
+class MEDIAWIKI_EXPORT Parse : public Job
+{
     Q_OBJECT
     Q_DECLARE_PRIVATE(Parse)
 
@@ -52,9 +58,9 @@ public:
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
      */
-    enum {
-
-        /**
+    enum
+    {
+         /**
          * @brief An internal error occurred.
          */
         InternalError= Job::UserDefinedError+1,
@@ -68,36 +74,31 @@ public:
          * @brief The page you specified doesn't exist
          */
         MissingPage
-
     };
 
-    explicit Parse(MediaWiki & mediawiki, QObject * parent = 0);
-
+    explicit Parse(MediaWiki& mediawiki, QObject* parent = 0);
     virtual ~Parse();
 
-    void setText(const QString & param);
+    void setText(const QString& param);
 
-    void setTitle(const QString & param);
+    void setTitle(const QString& param);
 
-    void setPageName(const QString & param);
+    void setPageName(const QString& param);
 
-    void setUseLang(const QString & param);
+    void setUseLang(const QString& param);
 
     virtual void start();
 
-private slots:
+    Q_SIGNALS:
+
+    void result(const QString& text);
+
+private Q_SLOTS:
 
     void doWorkSendRequest();
-
     void doWorkProcessReply();
-
-signals:
-
-    void result(const QString & text);
-
-
 };
 
-}
+} // namespace mediawiki
 
 #endif // PARSE_H

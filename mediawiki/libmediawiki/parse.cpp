@@ -29,11 +29,15 @@
 
 #include "parse.moc"
 
+// Qt includes
+
 #include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 #include <QDebug>
+
+// Local includes
 
 #include "job_p.h"
 #include "mediawiki.h"
@@ -41,47 +45,47 @@
 namespace mediawiki
 {
 
-class ParsePrivate : public JobPrivate {
+class ParsePrivate : public JobPrivate
+{
 
 public:
 
-    ParsePrivate(MediaWiki & mediawiki)
+    ParsePrivate(MediaWiki& mediawiki)
         : JobPrivate(mediawiki)
-    {}
+    {
+    }
 
     QMap<QString, QString> requestParameter;
-
 };
 
+Parse::Parse(MediaWiki& mediawiki, QObject* parent)
+    : Job(*new ParsePrivate(mediawiki), parent)
+{
 }
 
-using namespace mediawiki ;
+Parse::~Parse()
+{
+}
 
-Parse::Parse(MediaWiki & mediawiki, QObject * parent)
-    : Job(*new ParsePrivate(mediawiki), parent)
-{}
-
-Parse::~Parse() {}
-
-void Parse::setText(const QString & param)
+void Parse::setText(const QString& param)
 {
     Q_D(Parse);
     d->requestParameter["text"] = param;
 }
 
-void Parse::setTitle(const QString & param)
+void Parse::setTitle(const QString& param)
 {
     Q_D(Parse);
     d->requestParameter["title"] = param;
 }
 
-void Parse::setPageName(const QString & param)
+void Parse::setPageName(const QString& param)
 {
     Q_D(Parse);
     d->requestParameter["page"] = param;
 }
 
-void Parse::setUseLang(const QString &param)
+void Parse::setUseLang(const QString& param)
 {
     Q_D(Parse);
     d->requestParameter["uselang"] = param;
@@ -95,36 +99,49 @@ void Parse::start()
 void Parse::doWorkSendRequest()
 {
     Q_D(Parse);
+
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "parse");
 
     QMapIterator<QString, QString> i(d->requestParameter);
-    while (i.hasNext()) {
+    while (i.hasNext())
+    {
         i.next();
         url.addEncodedQueryItem(QByteArray(i.key().toStdString().c_str()), QByteArray(i.value().toStdString().c_str()));
     }
+
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+
     // Send the request
     d->reply = d->manager->get(request);
     connectReply();
-    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    connect(d->reply, SIGNAL(finished()),
+            this, SLOT(doWorkProcessReply()));
 }
 
 void Parse::doWorkProcessReply()
 {
     Q_D(Parse);
-    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
-    if (d->reply->error() == QNetworkReply::NoError) {
+    disconnect(d->reply, SIGNAL(finished()),
+               this, SLOT(doWorkProcessReply()));
+
+    if (d->reply->error() == QNetworkReply::NoError)
+    {
         QXmlStreamReader reader(d->reply);
         QString text;
-        while (!reader.atEnd() && !reader.hasError()) {
+
+        while (!reader.atEnd() && !reader.hasError())
+        {
             QXmlStreamReader::TokenType token = reader.readNext();
-            if (token == QXmlStreamReader::StartElement) {
-                if (reader.name() == "text") {
+
+            if (token == QXmlStreamReader::StartElement)
+            {
+                if (reader.name() == "text")
+                {
                     text = reader.text().toString();
                     setError(Parse::NoError);
                 }
@@ -142,17 +159,24 @@ void Parse::doWorkProcessReply()
                 }
             }
         }
-        if (!reader.hasError()) {
-            emit result(text);
 
-        } else {
+        if (!reader.hasError())
+        {
+            emit result(text);
+        }
+        else
+        {
             setError(Parse::XmlError);
         }
     }
-    else {
+    else
+    {
         setError(Parse::NetworkError);
     }
+
     d->reply->close();
     d->reply->deleteLater();
     emitResult();
 }
+
+} // namespace mediawiki
