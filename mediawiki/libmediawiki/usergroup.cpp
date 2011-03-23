@@ -25,22 +25,23 @@
  *
  * ============================================================ */
 
+// Local includes
+
 #include "usergroup.h"
 
-namespace mediawiki {
-
-struct UserGroupPrivate
+namespace mediawiki
 {
-    QString name;
+
+class UserGroupPrivate
+{
+public:
+
+    unsigned int   number;
+
+    QString        name;
 
     QList<QString> rights;
-
-    unsigned int number;
 };
-
-}
-
-using namespace mediawiki;
 
 UserGroup::UserGroup()
     : d(new UserGroupPrivate())
@@ -48,16 +49,17 @@ UserGroup::UserGroup()
     d->number = -1;
 }
 
-UserGroup::UserGroup(const UserGroup & other)
+UserGroup::UserGroup(const UserGroup& other)
     : d(new UserGroupPrivate(*(other.d)))
-{}
+{
+}
 
 UserGroup::~UserGroup()
 {
     delete d;
 }
 
-UserGroup & UserGroup::operator=(UserGroup other)
+UserGroup& UserGroup::operator=(UserGroup other)
 {
     std::swap(d, other.d);
     return *this;
@@ -68,22 +70,22 @@ QString UserGroup::name() const
     return d->name;
 }
 
-void UserGroup::setName(const QString & name)
+void UserGroup::setName(const QString& name)
 {
     d->name = name;
 }
 
-const QList<QString> & UserGroup::rights() const
+const QList<QString>& UserGroup::rights() const
 {
     return d->rights;
 }
 
-QList<QString> & UserGroup::rights()
+QList<QString>& UserGroup::rights()
 {
     return d->rights;
 }
 
-void UserGroup::setRights(const QList<QString> & rights)
+void UserGroup::setRights(const QList<QString>& rights)
 {
     d->rights = rights;
 }
@@ -98,9 +100,11 @@ void UserGroup::setNumber(qint64 number)
     d->number = number;
 }
 
-bool operator==(const UserGroup & lhs, const UserGroup & rhs)
+} // namespace mediawiki
+
+bool operator==(const mediawiki::UserGroup& lhs, const mediawiki::UserGroup& rhs)
 {
     return lhs.number() == rhs.number() &&
            lhs.rights() == rhs.rights() &&
-           lhs.name() == rhs.name() ;
+           lhs.name()   == rhs.name() ;
 }

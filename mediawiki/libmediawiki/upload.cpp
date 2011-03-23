@@ -128,7 +128,7 @@ void Upload::start()
 {
     Q_D(Upload);
 
-    QueryInfo *info = new QueryInfo(d->mediawiki,this);
+    QueryInfo* info = new QueryInfo(d->mediawiki, this);
     info->setPageName("File:" + d->filename);
     info->setToken("edit");
 

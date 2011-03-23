@@ -28,12 +28,17 @@
 #ifndef USERGROUP_H
 #define USERGROUP_H
 
+// Qt includes
+
 #include <QtCore/QString>
 #include <QtCore/QList>
 
+// Local includes
+
 #include "mediawiki_export.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 /**
  * @brief A user group.
@@ -52,7 +57,7 @@ public:
      * @brief Constructs a user group from an other user group.
      * @param other an other user group
      */
-    UserGroup(const UserGroup & other);
+    UserGroup(const UserGroup& other);
 
     /**
      * @brief Destructs a user group.
@@ -63,7 +68,7 @@ public:
      * @brief Assingning a user group from an other user group.
      * @param other an other user group
      */
-    UserGroup & operator=(UserGroup other);
+    UserGroup& operator=(UserGroup other);
 
     /**
      * @brief Returns the name of the user group.
@@ -75,25 +80,25 @@ public:
      * @brief Set the name of the user group.
      * @param name the name of the user group
      */
-    void setName(const QString & name);
+    void setName(const QString& name);
 
     /**
      * @brief Returns rights of the user group.
      * @return rights of the user group
      */
-    const QList<QString> & rights() const;
+    const QList<QString>& rights() const;
 
     /**
      * @brief Returns rights of the user group.
      * @return rights of the user group
      */
-    QList<QString> & rights();
+    QList<QString>& rights();
 
     /**
      * @brief Set rights of the user group.
      * @param rights rights of the user group
      */
-     void setRights(const QList<QString> & rights);
+     void setRights(const QList<QString>& rights);
 
     /**
      * @brief Returns the numbers of users in the user group.
@@ -109,11 +114,10 @@ public:
 
 private:
 
-    struct UserGroupPrivate * d;
-
+    class UserGroupPrivate* d;
 };
 
-}
+} // namespace mediawiki
 
 /**
  * @brief Returns true if lhs and rhs are equal, else false.
@@ -121,6 +125,6 @@ private:
  * @param rhs right-hand side user group
  * @return true if lhs and rhs are equal, else false
  */
-MEDIAWIKI_EXPORT bool operator==(const mediawiki::UserGroup & lhs, const mediawiki::UserGroup & rhs);
+MEDIAWIKI_EXPORT bool operator==(const mediawiki::UserGroup& lhs, const mediawiki::UserGroup& rhs);
 
 #endif // USERGROUP_H
