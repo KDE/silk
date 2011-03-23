@@ -28,7 +28,9 @@
 #ifndef MEDIAWIKI_QUERYSITEINFOUSERGROUPS_H
 #define MEDIAWIKI_QUERYSITEINFOUSERGROUPS_H
 
-#include <job.h>
+// Local includes
+
+#include "job.h"
 #include "mediawiki_export.h"
 #include "usergroup.h"
 
@@ -47,7 +49,6 @@ class QuerySiteinfoUsergroupsPrivate;
  */
 class MEDIAWIKI_EXPORT QuerySiteinfoUsergroups : public Job
 {
-
     Q_OBJECT
     Q_DECLARE_PRIVATE(QuerySiteinfoUsergroups)
 
@@ -58,7 +59,7 @@ public:
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QuerySiteinfoUsergroups(MediaWiki & mediawiki, QObject * parent = 0);
+    explicit QuerySiteinfoUsergroups(MediaWiki& mediawiki, QObject* parent = 0);
 
     /**
      * @brief Destroys the UserGroups job.
@@ -76,23 +77,21 @@ public:
      */
     virtual void start();
 
-signals:
+Q_SIGNALS:
 
     /**
      * @brief Provides a list of all user groups.
      * @param usergroups list of all user groups
      * @see QuerySiteinfoUsergroups::Result
      */
-    void usergroups(const QList<UserGroup> & usergroups);
+    void usergroups(const QList<UserGroup>& usergroups);
 
-private slots:
+private Q_SLOTS:
 
     void doWorkSendRequest();
-
     void doWorkProcessReply();
-
 };
 
-}
+} // namespace mediawiki
 
-#endif
+#endif // MEDIAWIKI_QUERYSITEINFOUSERGROUPS_H

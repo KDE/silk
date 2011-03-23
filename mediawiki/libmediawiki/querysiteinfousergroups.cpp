@@ -27,11 +27,15 @@
 
 #include "querysiteinfousergroups.moc"
 
+// Qt includes
+
 #include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
+
+// Local includes
 
 #include "mediawiki.h"
 #include "job_p.h"
@@ -39,31 +43,29 @@
 namespace mediawiki
 {
 
-class QuerySiteinfoUsergroupsPrivate : public JobPrivate {
-
+class QuerySiteinfoUsergroupsPrivate : public JobPrivate
+{
 public:
 
-    QuerySiteinfoUsergroupsPrivate(MediaWiki & mediawiki, QNetworkAccessManager * const manager, bool includeNumber)
-            : JobPrivate(mediawiki)
-            , manager(manager)
-            , includeNumber(includeNumber)
-    {}
+    QuerySiteinfoUsergroupsPrivate(MediaWiki& mediawiki, QNetworkAccessManager* const manager, bool includeNumber)
+            : JobPrivate(mediawiki),
+              manager(manager),
+              includeNumber(includeNumber)
+    {
+    }
 
-    QNetworkAccessManager * const manager;
-    bool includeNumber;
-
+    QNetworkAccessManager* const manager;
+    bool                         includeNumber;
 };
 
+QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(MediaWiki& mediawiki, QObject* parent)
+    : Job(*new QuerySiteinfoUsergroupsPrivate(mediawiki, new QNetworkAccessManager(), false), parent)
+{
 }
 
-using namespace mediawiki;
-
-QuerySiteinfoUsergroups::QuerySiteinfoUsergroups(MediaWiki & mediawiki, QObject * parent)
-        : Job(*new QuerySiteinfoUsergroupsPrivate(mediawiki, new QNetworkAccessManager(), false), parent)
-{}
-
 QuerySiteinfoUsergroups::~QuerySiteinfoUsergroups()
-{}
+{
+}
 
 void QuerySiteinfoUsergroups::setIncludeNumber(bool includeNumber)
 {
@@ -79,69 +81,103 @@ void QuerySiteinfoUsergroups::start()
 void QuerySiteinfoUsergroups::doWorkSendRequest()
 {
     Q_D(QuerySiteinfoUsergroups);
+
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "query");
     url.addQueryItem("meta",   "siteinfo");
     url.addQueryItem("siprop", "usergroups");
-    if (d->includeNumber) {
+    if (d->includeNumber)
+    {
         url.addQueryItem("sinumberingroup", QString());
     }
+
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+
     // Send the request
     d->reply = d->manager->get(request);
     connectReply();
-    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+
+    connect(d->reply, SIGNAL(finished()),
+            this, SLOT(doWorkProcessReply()));
 }
 
 void QuerySiteinfoUsergroups::doWorkProcessReply()
 {
     Q_D(QuerySiteinfoUsergroups);
-    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
-    if (d->reply->error() == QNetworkReply::NoError) {
+
+    disconnect(d->reply, SIGNAL(finished()),
+               this, SLOT(doWorkProcessReply()));
+
+    if (d->reply->error() == QNetworkReply::NoError)
+    {
         QList<UserGroup> results;
         QString name;
         QList<QString> rights;
         unsigned int number;
         QXmlStreamReader reader(d->reply);
-        while (!reader.atEnd() && !reader.hasError()) {
+
+        while (!reader.atEnd() && !reader.hasError())
+        {
             QXmlStreamReader::TokenType token = reader.readNext();
-            if (token == QXmlStreamReader::StartElement) {
-                if (reader.name() == "group") {
+
+            if (token == QXmlStreamReader::StartElement)
+            {
+                if (reader.name() == "group")
+                {
                     name = reader.attributes().value("name").toString();
-                    if (d->includeNumber) {
+                    if (d->includeNumber)
+                    {
                         number = reader.attributes().value("number").toString().toUInt();
                     }
-                } else if (reader.name() == "rights") {
+                }
+                else if (reader.name() == "rights")
+                {
                     rights.clear();
-                } else if (reader.name() == "permission") {
+                }
+                else if (reader.name() == "permission")
+                {
                     reader.readNext();
                     rights.push_back(reader.text().toString());
                 }
-            } else if (token == QXmlStreamReader::EndElement) {
-                if (reader.name() == "group") {
+            }
+            else if (token == QXmlStreamReader::EndElement)
+            {
+                if (reader.name() == "group")
+                {
                     UserGroup usergroup;
                     usergroup.setName(name);
                     usergroup.setRights(rights);
-                    if(d->includeNumber){
+
+                    if(d->includeNumber)
+                    {
                         usergroup.setNumber(number);
                     }
+
                     results.push_back(usergroup);
                 }
             }
         }
-        if (!reader.hasError()) {
+
+        if (!reader.hasError())
+        {
             setError(Job::NoError);
             emit usergroups(results);
-        } else {
+        }
+        else
+        {
             setError(QuerySiteinfoUsergroups::XmlError);
         }
     }
-    else {
+    else
+    {
         setError(QuerySiteinfoUsergroups::NetworkError);
     }
+
     emitResult();
 }
+
+} // namespace mediawiki
