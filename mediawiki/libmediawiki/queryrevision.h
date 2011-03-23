@@ -30,9 +30,13 @@
 #ifndef QUERYREVISION_H
 #define QUERYREVISION_H
 
+// Qt includes
+
 #include <QtCore/QDateTime>
 #include <QtCore/QList>
 #include <QtCore/QString>
+
+// Local includes
 
 #include "job.h"
 #include "revision.h"
@@ -40,7 +44,8 @@
 
 class QNetworkReply;
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class MediaWiki;
 class QueryRevisionPrivate;
@@ -52,7 +57,6 @@ class QueryRevisionPrivate;
  */
 class MEDIAWIKI_EXPORT QueryRevision : public Job
 {
-
     Q_OBJECT
     Q_DECLARE_PRIVATE(QueryRevision)
 
@@ -61,8 +65,8 @@ public:
     /**
      * @brief Direction to list revisions.
      */
-    enum Direction {
-
+    enum Direction
+    {
         /**
          * @brief List newest revisions first.
          */
@@ -77,20 +81,19 @@ public:
     /**
      * @brief Tokens can get for each revision.
      */
-    enum Token {
-
+    enum Token
+    {
         /**
          * @brief Rollback token.
          */
         Rollback
-
     };
 
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
      */
-    enum {
-
+    enum
+    {
         /**
          * @brief The revids= parameter may not be used with the list options (limit, startid, endid, dirNewer, start, end).
          */
@@ -115,13 +118,13 @@ public:
          * @brief There is no section section in rrevid
          */
         SectionNotFound
-
     };
 
     /**
      * @brief Property.
      */
-    enum Property {
+    enum Property
+    {
         Ids         = 0x01,
         Flags       = 0x02,
         Timestamp   = 0x04,
@@ -132,12 +135,14 @@ public:
     };
     Q_DECLARE_FLAGS(Properties, Property)
 
+public:
+
     /**
      * @brief Constructs a Revision job.
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QueryRevision(MediaWiki & mediawiki, QObject * parent = 0);
+    explicit QueryRevision(MediaWiki& mediawiki, QObject* parent = 0);
 
     /**
      * @brief Destroys the QueryRevision job.
@@ -165,7 +170,7 @@ public:
      * @brief Set the page name.
      * @param pageName the page name
      */
-    void setPageName(const QString & pageName);
+    void setPageName(const QString& pageName);
 
     /**
      * @brief Which properties to get for each revision.
@@ -195,13 +200,13 @@ public:
      * @brief Set the timestamp to start listing from.
      * @param start the timestamp to start listing from
      */
-    void setStartTimestamp(const QDateTime & start);
+    void setStartTimestamp(const QDateTime& start);
 
     /**
      * @brief Set the timestamp to end listing at.
      * @param end the timestamp to end listing at
      */
-    void setEndTimestamp(const QDateTime & end);
+    void setEndTimestamp(const QDateTime& end);
 
     /**
      * @brief Set the user.
@@ -210,7 +215,7 @@ public:
      *
      * @param user the user
      */
-    void setUser(const QString & user);
+    void setUser(const QString& user);
 
     /**
      * @brief Set the user to exclude.
@@ -219,7 +224,7 @@ public:
      *
      * @param excludeUser the user to exclude
      */
-    void setExcludeUser(const QString & excludeUser);
+    void setExcludeUser(const QString& excludeUser);
 
     /**
      * @brief Set the direction to list revisions.
@@ -257,23 +262,22 @@ public:
      */
     void setExpandTemplates(bool expandTemplates);
 
-signals:
+Q_SIGNALS:
 
     /**
      * @brief Provides a list of all user groups.
      * @param revision list of all user groups
      */
-    void revision(const QList<Revision> & revision);
+    void revision(const QList<Revision>& revision);
 
-private slots:
+private Q_SLOTS:
 
     void doWorkSendRequest();
-
     void doWorkProcessReply();
-
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QueryRevision::Properties)
 
-}
+} // namespace mediawiki
+
 #endif //QUERYREVISION_H

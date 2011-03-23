@@ -29,6 +29,8 @@
 
 #include "queryrevision.moc"
 
+// Qt includes
+
 #include <QtCore/QDateTime>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
@@ -37,42 +39,44 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
+// Local includes
+
 #include "mediawiki.h"
 #include "job_p.h"
 
 namespace mediawiki
 {
 
-class QueryRevisionPrivate : public JobPrivate {
+class QueryRevisionPrivate : public JobPrivate
+{
 
 public:
 
-    QueryRevisionPrivate(MediaWiki & mediawiki)
+    QueryRevisionPrivate(MediaWiki& mediawiki)
          : JobPrivate(mediawiki)
-    {}
+    {
+    }
+
+    int                    id;
 
     QMap<QString, QString> requestParameter;
-
-    int id;
-
 };
 
+QueryRevision::QueryRevision(MediaWiki& mediawiki, QObject* parent)
+    : Job(*new QueryRevisionPrivate(mediawiki), parent)
+{
 }
 
-using namespace mediawiki;
-
-QueryRevision::QueryRevision(MediaWiki & mediawiki, QObject * parent)
-    : Job(*new QueryRevisionPrivate(mediawiki), parent)
-{}
-
-QueryRevision::~QueryRevision() {}
+QueryRevision::~QueryRevision()
+{
+}
 
 void QueryRevision::start()
 {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
-void QueryRevision::setPageName(const QString & pageName)
+void QueryRevision::setPageName(const QString& pageName)
 {
     Q_D(QueryRevision);
     d->requestParameter["titles"] = pageName;
@@ -89,6 +93,7 @@ void QueryRevision::setProperties(Properties properties)
     {
         if (buff.length())
             buff.append('|');
+
         buff.append("flags");
     }
 
@@ -96,6 +101,7 @@ void QueryRevision::setProperties(Properties properties)
     {
         if (buff.length())
             buff.append('|');
+
         buff.append("timestamp");
     }
 
@@ -103,6 +109,7 @@ void QueryRevision::setProperties(Properties properties)
     {
         if (buff.length())
             buff.append('|');
+
         buff.append("user");
     }
 
@@ -110,6 +117,7 @@ void QueryRevision::setProperties(Properties properties)
     {
         if (buff.length())
             buff.append('|');
+
         buff.append("comment");
     }
 
@@ -117,6 +125,7 @@ void QueryRevision::setProperties(Properties properties)
     {
         if (buff.length())
             buff.append('|');
+
         buff.append("size");
     }
 
@@ -124,8 +133,10 @@ void QueryRevision::setProperties(Properties properties)
     {
         if (buff.length())
             buff.append('|');
+
         buff.append("content");
     }
+
     d->requestParameter["rvprop"] = buff;
 }
 
@@ -134,6 +145,7 @@ void QueryRevision::setPageId(unsigned int pageId)
     Q_D(QueryRevision);
     d->requestParameter["pageids"] = QString::number(pageId);
 }
+
 void QueryRevision::setRevisionId(unsigned int revisionId)
 {
     Q_D(QueryRevision);
@@ -151,31 +163,32 @@ void QueryRevision::setStartId(int startId)
     Q_D(QueryRevision);
     d->requestParameter["rvstartid"] = QString::number(startId);
 }
+
 void QueryRevision::setEndId(int endId)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvendid"] = QString::number(endId);
 }
 
-void QueryRevision::setStartTimestamp(const QDateTime & start)
+void QueryRevision::setStartTimestamp(const QDateTime& start)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvstart"] = start.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void QueryRevision::setEndTimestamp(const QDateTime & end)
+void QueryRevision::setEndTimestamp(const QDateTime& end)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvend"] = end.toString("yyyy-MM-ddThh:mm:ssZ");
 }
 
-void QueryRevision::setUser(const QString & user)
+void QueryRevision::setUser(const QString& user)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvuser"] = user;
 }
 
-void QueryRevision::setExcludeUser(const QString & excludeUser)
+void QueryRevision::setExcludeUser(const QString& excludeUser)
 {
     Q_D(QueryRevision);
     d->requestParameter["rvexcludeuser"] = excludeUser;
@@ -184,10 +197,13 @@ void QueryRevision::setExcludeUser(const QString & excludeUser)
 void QueryRevision::setDirection(QueryRevision::Direction direction)
 {
     Q_D(QueryRevision);
-    if (direction == QueryRevision::Older) {
+
+    if (direction == QueryRevision::Older)
+    {
         d->requestParameter["rvdir"] = QString("older");
     }
-    else if (direction == QueryRevision::Newer) {
+    else if (direction == QueryRevision::Newer)
+    {
         d->requestParameter["rvdir"] = QString("newer");
     }
 }
@@ -195,7 +211,9 @@ void QueryRevision::setDirection(QueryRevision::Direction direction)
 void QueryRevision::setGenerateXML(bool generateXML)
 {
     Q_D(QueryRevision);
-    if (generateXML) {
+
+    if (generateXML)
+    {
         d->requestParameter["rvgeneratexml"] = QString("on");
     }
 }
@@ -209,7 +227,9 @@ void QueryRevision::setSection(int section)
 void QueryRevision::setToken(QueryRevision::Token token)
 {
     Q_D(QueryRevision);
-    if (QueryRevision::Rollback == token) {
+
+    if (QueryRevision::Rollback == token)
+    {
         d->requestParameter["rvtoken"] = QString("rollback");
     }
 }
@@ -217,13 +237,16 @@ void QueryRevision::setToken(QueryRevision::Token token)
 void QueryRevision::setExpandTemplates(bool expandTemplates)
 {
     Q_D(QueryRevision);
-    if (expandTemplates) {
+
+    if (expandTemplates)
+    {
         d->requestParameter["rvexpandtemplates"] = QString("on");
     }
 }
 void QueryRevision::doWorkSendRequest()
 {
     Q_D(QueryRevision);
+
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
@@ -231,27 +254,37 @@ void QueryRevision::doWorkSendRequest()
     url.addQueryItem("prop", "revisions");
 
     QMapIterator<QString, QString> i(d->requestParameter);
-    while (i.hasNext()) {
+    while (i.hasNext())
+    {
         i.next();
         url.addEncodedQueryItem(QByteArray(i.key().toStdString().c_str()), QByteArray(i.value().toStdString().c_str()));
     }
+
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+
     // Send the request
     d->reply = d->manager->get(request);
     connectReply();
-    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+
+    connect(d->reply, SIGNAL(finished()), 
+            this, SLOT(doWorkProcessReply()));
 }
 
 void QueryRevision::doWorkProcessReply()
 {
     Q_D(QueryRevision);
-    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
-    if (d->reply->error() == QNetworkReply::NoError) {
+
+    disconnect(d->reply, SIGNAL(finished()),
+               this, SLOT(doWorkProcessReply()));
+
+    if (d->reply->error() == QNetworkReply::NoError)
+    {
         QList<Revision> results;
-        Revision   tempR;
-        QString replytmp = d->reply->readAll();
+        Revision        tempR;
+        QString         replytmp = d->reply->readAll();
+
         if (d->requestParameter.contains("rvgeneratexml"))
         {
             for (int i = replytmp.indexOf("parsetree"); i != -1; i = replytmp.indexOf("parsetree", i+1))
@@ -266,79 +299,103 @@ void QueryRevision::doWorkProcessReply()
                 }
             }
         }
+
         QXmlStreamReader reader(replytmp);
-        while (!reader.atEnd() && !reader.hasError()) {
+        while (!reader.atEnd() && !reader.hasError())
+        {
             QXmlStreamReader::TokenType token = reader.readNext();
-            if (token == QXmlStreamReader::StartElement) {
-                if (reader.name() == "page" && d->requestParameter.contains("rvtoken")) {
+
+            if (token == QXmlStreamReader::StartElement)
+            {
+                if (reader.name() == "page" && d->requestParameter.contains("rvtoken"))
+                {
                     tempR.setRollback(reader.attributes().value("rollbacktoken").toString());
                 }
-                if (reader.name() == "rev") {
+
+                if (reader.name() == "rev")
+                {
                     if (d->requestParameter.contains("rvprop"))
                     {
                         QString rvprop = d->requestParameter["rvprop"];
-                        if (rvprop.contains("ids")){
+
+                        if (rvprop.contains("ids"))
+                        {
                             tempR.setRevisionId(reader.attributes().value("revid").toString().toInt());
                             tempR.setParentId(reader.attributes().value("parentid").toString().toInt());}
-                        if (rvprop.contains("size"))
-                            tempR.setSize(reader.attributes().value("size").toString().toInt());
-                        if (rvprop.contains("minor"))
-                            tempR.setMinorRevision(true);
-                        if (rvprop.contains("user"))
-                            tempR.setUser(reader.attributes().value("user").toString());
-                        if (rvprop.contains("timestamp"))
-                            tempR.setTimestamp(QDateTime::fromString(reader.attributes().value("timestamp").toString(),"yyyy-MM-ddThh:mm:ssZ"));
-                        if (rvprop.contains("comment"))
-                            tempR.setComment(reader.attributes().value("comment").toString());
-                        if (d->requestParameter.contains("rvgeneratexml"))
-                            tempR.setParseTree(reader.attributes().value("parsetree").toString());
-                        if (rvprop.contains("content"))
-                            tempR.setContent(reader.readElementText());
-                    }
-            results << tempR;
-            }
-            else if (reader.name() == "error")
-            {
-                if (reader.attributes().value("code").toString() == QString("rvrevids"))
-                    this->setError(this->WrongRevisionId);
-                else if (reader.attributes().value("code").toString() == QString("rvmultpages"))
-                    this->setError(this->MultiPagesNotAllowed);
-                else if (reader.attributes().value("code").toString() == QString("rvaccessdenied"))
-                    this->setError(this->TitleAccessDenied);
-                else if (reader.attributes().value("code").toString() == QString("rvbadparams"))
-                    this->setError(this->TooManyParams);
-                else if (reader.attributes().value("code").toString() == QString("rvnosuchsection"))
-                    this->setError(this->SectionNotFound);
 
-                d->reply->close();
-                d->reply->deleteLater();
-                //emit revision(QList<Revision>());
-                emitResult();
-                return;
-            }
+                            if (rvprop.contains("size"))
+                                tempR.setSize(reader.attributes().value("size").toString().toInt());
+
+                            if (rvprop.contains("minor"))
+                                tempR.setMinorRevision(true);
+
+                            if (rvprop.contains("user"))
+                                tempR.setUser(reader.attributes().value("user").toString());
+
+                            if (rvprop.contains("timestamp"))
+                                tempR.setTimestamp(QDateTime::fromString(reader.attributes().value("timestamp").toString(),"yyyy-MM-ddThh:mm:ssZ"));
+
+                            if (rvprop.contains("comment"))
+                                tempR.setComment(reader.attributes().value("comment").toString());
+
+                            if (d->requestParameter.contains("rvgeneratexml"))
+                                tempR.setParseTree(reader.attributes().value("parsetree").toString());
+
+                            if (rvprop.contains("content"))
+                                tempR.setContent(reader.readElementText());
+                        }
+
+                        results << tempR;
+                    }
+                    else if (reader.name() == "error")
+                    {
+                        if (reader.attributes().value("code").toString() == QString("rvrevids"))
+                            this->setError(this->WrongRevisionId);
+                        else if (reader.attributes().value("code").toString() == QString("rvmultpages"))
+                            this->setError(this->MultiPagesNotAllowed);
+                        else if (reader.attributes().value("code").toString() == QString("rvaccessdenied"))
+                            this->setError(this->TitleAccessDenied);
+                        else if (reader.attributes().value("code").toString() == QString("rvbadparams"))
+                            this->setError(this->TooManyParams);
+                        else if (reader.attributes().value("code").toString() == QString("rvnosuchsection"))
+                            this->setError(this->SectionNotFound);
+
+                        d->reply->close();
+                        d->reply->deleteLater();
+                        //emit revision(QList<Revision>());
+                        emitResult();
+                        return;
+                    }
+              }
         }
-      }
-        if (!reader.hasError()) {
+        if (!reader.hasError())
+        {
             setError(KJob::NoError);
             for (int i = 0; i < results.length(); i++)
             {
-                results[i].setParseTree(results[i].parseTree().replace(QChar(254),'>'));
-                results[i].setParseTree(results[i].parseTree().replace(QChar(255),'<'));
+                results[i].setParseTree(results[i].parseTree().replace(QChar(254), '>'));
+                results[i].setParseTree(results[i].parseTree().replace(QChar(255), '<'));
             }
 
             emit revision(results);
-        } else {
+        }
+        else
+        {
             setError(XmlError);
             d->reply->close();
             d->reply->deleteLater();
             //emit revision(QList<Revision>());
         }
     }
-    else {
+    else
+    {
         setError(NetworkError);
         d->reply->close();
         d->reply->deleteLater();
         //emit revision(QList<Revision>());
     }
+
     emitResult();
 }
+
+} // namespace mediawiki
