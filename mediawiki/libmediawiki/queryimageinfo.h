@@ -28,7 +28,11 @@
 #ifndef MEDIAWIKI_QUERYIMAGEINFO_H
 #define MEDIAWIKI_QUERYIMAGEINFO_H
 
+// Qt includes
+
 #include <QtCore/QList>
+
+// Local includes
 
 #include "imageinfo.h"
 #include "job.h"
@@ -36,7 +40,8 @@
 
 class QNetworkReply;
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class MediaWiki;
 class QueryImageinfoPrivate;
@@ -46,10 +51,28 @@ class QueryImageinfoPrivate;
  *
  * Gets image information for an image.
  */
-class MEDIAWIKI_EXPORT QueryImageinfo : public Job {
-
+class MEDIAWIKI_EXPORT QueryImageinfo : public Job
+{
     Q_OBJECT
     Q_DECLARE_PRIVATE(QueryImageinfo)
+
+public:
+
+    /**
+    * @brief Property.
+    */
+    enum Property
+    {
+        Timestamp = 0x01,
+        User      = 0x02,
+        Comment   = 0x04,
+        Url       = 0x08,
+        Size      = 0x10,
+        Sha1      = 0x20,
+        Mime      = 0x40,
+        Metadata  = 0x80
+    };
+    Q_DECLARE_FLAGS(Properties, Property)
 
 public:
 
@@ -63,7 +86,7 @@ public:
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    QueryImageinfo(MediaWiki & mediawiki, QObject * parent = 0);
+    QueryImageinfo(MediaWiki& mediawiki, QObject* parent = 0);
 
     /**
      * @brief Destructs a query image info job.
@@ -74,22 +97,7 @@ public:
      * @brief Set the title of the image requested.
      * @param title the title of the image requested
      */
-    void setTitle(const QString & title);
-
-    /**
-     * @brief Property.
-     */
-    enum Property {
-        Timestamp    = 0x01,
-        User         = 0x02,
-        Comment      = 0x04,
-        Url          = 0x08,
-        Size         = 0x10,
-        Sha1         = 0x20,
-        Mime         = 0x40,
-        Metadata     = 0x80
-    };
-    Q_DECLARE_FLAGS(Properties, Property)
+    void setTitle(const QString& title);
 
     /**
      * @brief Set which properties to get.
@@ -113,13 +121,13 @@ public:
      * @brief Set timestamp to start listing from.
      * @param begin timestamp to start listing from
      */
-    void setBeginTimestamp(const QDateTime & begin);
+    void setBeginTimestamp(const QDateTime& begin);
 
     /**
      * @brief Set timestamp to stop listing at.
      * @param end timestamp to stop listing at
      */
-    void setEndTimestamp(const QDateTime & end);
+    void setEndTimestamp(const QDateTime& end);
 
     /**
      * @brief Set width scale.
@@ -144,24 +152,22 @@ public:
      */
     virtual void start();
 
-private slots:
-
-    void doWorkSendRequest();
-
-    void doWorkProcessReply();
-
-signals:
+Q_SIGNALS:
 
     /**
-     * @brief Provides a list of imageinfos.
-     * @param imageinfos a list of imageinfos
-     */
-    void result(const QList<Imageinfo> & imageinfos);
+    * @brief Provides a list of imageinfos.
+    * @param imageinfos a list of imageinfos
+    */
+    void result(const QList<Imageinfo>& imageinfos);
 
+private Q_SLOTS:
+
+    void doWorkSendRequest();
+    void doWorkProcessReply();
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QueryImageinfo::Properties)
 
-}
+} // namespace mediawiki
 
-#endif
+#endif // MEDIAWIKI_QUERYIMAGEINFO_H

@@ -28,18 +28,24 @@
 #ifndef PROTECTION_H
 #define PROTECTION_H
 
+// Qt includes
+
 #include <QtCore/QString>
+
+// Local includes
 
 #include "mediawiki_export.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 /**
  * @brief Protection info job.
  *
  * Represent protection parameters in a page.
  */
-class MEDIAWIKI_EXPORT Protection {
+class MEDIAWIKI_EXPORT Protection
+{
 
 public:
 
@@ -54,7 +60,7 @@ public:
      * @brief Constructs an protection from an other protection.
      * @param other an other protection
      */
-    Protection(const Protection & other);
+    Protection(const Protection& other);
 
     /**
      * @brief Destructs a protection.
@@ -65,13 +71,13 @@ public:
      * @brief Assingning an protection from an other protection.
      * @param other an other protection
      */
-    Protection & operator=(Protection other);
+    Protection& operator=(Protection other);
 
     /**
      * @brief Set the protection type.
      * @param type the protection type
      */
-    void setType(const QString & type);
+    void setType(const QString& type);
 
     /**
      * @brief Get the protection type.
@@ -83,7 +89,7 @@ public:
      * @brief Set the page protection level.
      * @param level the page protection level
      */
-    void setLevel(const QString & level);
+    void setLevel(const QString& level);
 
     /**
      * @brief Get the page protection level.
@@ -95,7 +101,7 @@ public:
      * @brief Set the expiry date.
      * @param expiry the expiry date
      */
-    void setExpiry(const QString & expiry);
+    void setExpiry(const QString& expiry);
 
     /**
    ² * @brief Get the expiry date.
@@ -107,7 +113,7 @@ public:
      * @brief Set the source.
      * @param source the source
      */
-    void setSource(const QString & source);
+    void setSource(const QString& source);
 
     /**
      * @brief Get the source.
@@ -117,12 +123,11 @@ public:
 
 private:
 
-    class ProtectionInfo * d;
-
+    class ProtectionInfo* d;
 };
 
-}
+} // namespace mediawiki
 
-MEDIAWIKI_EXPORT bool operator==(const mediawiki::Protection & lhs, const mediawiki::Protection & rhs);
+MEDIAWIKI_EXPORT bool operator==(const mediawiki::Protection& lhs, const mediawiki::Protection& rhs);
 
 #endif // PROTECTION_H

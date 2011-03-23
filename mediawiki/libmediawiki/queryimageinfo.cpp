@@ -27,137 +27,166 @@
 
 #include "queryimageinfo.moc"
 
+// Qt includes
+
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
+// Local includes
+
 #include "mediawiki.h"
 #include "job_p.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
-class QueryImageinfoPrivate : public JobPrivate {
+class QueryImageinfoPrivate : public JobPrivate
+{
 
 public:
 
-    QueryImageinfoPrivate(MediaWiki & mediawiki)
+    QueryImageinfoPrivate(MediaWiki& mediawiki)
         : JobPrivate(mediawiki)
-    {}
+    {
+        onlyOneSignal = false;
+    }
 
-    QString title;
-    QString iiprop;
-    QString limit;
-    bool onlyOneSignal;
-    QString begin;
-    QString end;
-    QString width;
-    QString height;
-
-    static inline qint64 toQInt64(const QString & qstring)
+    static inline qint64 toQInt64(const QString& qstring)
     {
         bool ok;
         qint64 result = qstring.toLongLong(&ok);
         return ok ? result : -1;
     }
 
-    static inline void addQueryItemIfNotNull(QUrl & url, const QString & key, const QString & value) {
-        if (!value.isNull()) {
+    static inline void addQueryItemIfNotNull(QUrl& url, const QString& key, const QString& value)
+    {
+        if (!value.isNull())
+        {
             url.addQueryItem(key, value);
         }
     }
 
+public:
+
+    bool    onlyOneSignal;
+
+    QString title;
+    QString iiprop;
+    QString limit;
+    QString begin;
+    QString end;
+    QString width;
+    QString height;
 };
 
-}
-
-using namespace mediawiki;
-
-QueryImageinfo::QueryImageinfo(MediaWiki & mediawiki, QObject * parent)
+QueryImageinfo::QueryImageinfo(MediaWiki& mediawiki, QObject* parent)
     : Job(*new QueryImageinfoPrivate(mediawiki), parent)
 {
     Q_D(QueryImageinfo);
-    d->onlyOneSignal = false;
 }
 
-QueryImageinfo::~QueryImageinfo() {}
+QueryImageinfo::~QueryImageinfo()
+{
+}
 
-void QueryImageinfo::setTitle(const QString & title) {
+void QueryImageinfo::setTitle(const QString& title)
+{
     Q_D(QueryImageinfo);
     d->title = title;
 }
 
-void QueryImageinfo::setProperties(Properties properties) {
+void QueryImageinfo::setProperties(Properties properties)
+{
     Q_D(QueryImageinfo);
     QString iiprop;
-    if (properties & QueryImageinfo::Timestamp) {
+    if (properties & QueryImageinfo::Timestamp)
+    {
         iiprop.append("timestamp|");
     }
-    if (properties & QueryImageinfo::User) {
+    if (properties & QueryImageinfo::User)
+    {
         iiprop.append("user|");
     }
-    if (properties & QueryImageinfo::Comment) {
+    if (properties & QueryImageinfo::Comment)
+    {
         iiprop.append("comment|");
     }
-    if (properties & QueryImageinfo::Url) {
+    if (properties & QueryImageinfo::Url)
+    {
         iiprop.append("url|");
     }
-    if (properties & QueryImageinfo::Size) {
+    if (properties & QueryImageinfo::Size)
+    {
         iiprop.append("size|");
     }
-    if (properties & QueryImageinfo::Sha1) {
+    if (properties & QueryImageinfo::Sha1)
+    {
         iiprop.append("sha1|");
     }
-    if (properties & QueryImageinfo::Mime) {
+    if (properties & QueryImageinfo::Mime)
+    {
         iiprop.append("mime|");
     }
-    if (properties & QueryImageinfo::Metadata) {
+    if (properties & QueryImageinfo::Metadata)
+    {
         iiprop.append("metadata|");
     }
     iiprop.chop(1);
     d->iiprop = iiprop;
 }
 
-void QueryImageinfo::setLimit(unsigned int limit) {
+void QueryImageinfo::setLimit(unsigned int limit)
+{
     Q_D(QueryImageinfo);
     d->limit = limit > 0u ? QString::number(limit) : QString();
 }
 
-void QueryImageinfo::setOnlyOneSignal(bool onlyOneSignal) {
+void QueryImageinfo::setOnlyOneSignal(bool onlyOneSignal)
+{
     Q_D(QueryImageinfo);
     d->onlyOneSignal = onlyOneSignal;
 }
 
-void QueryImageinfo::setBeginTimestamp(const QDateTime & begin) {
+void QueryImageinfo::setBeginTimestamp(const QDateTime& begin)
+{
     Q_D(QueryImageinfo);
     d->begin = begin.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
 }
 
-void QueryImageinfo::setEndTimestamp(const QDateTime & end) {
+void QueryImageinfo::setEndTimestamp(const QDateTime& end)
+{
     Q_D(QueryImageinfo);
     d->end = end.toString("yyyy-MM-dd'T'hh:mm:ss'Z'");
 }
 
-void QueryImageinfo::setWidthScale(unsigned int width) {
+void QueryImageinfo::setWidthScale(unsigned int width)
+{
     Q_D(QueryImageinfo);
     d->width = width > 0u ? QString::number(width) : QString();
 }
 
-void QueryImageinfo::setHeightScale(unsigned int height) {
+void QueryImageinfo::setHeightScale(unsigned int height)
+{
     Q_D(QueryImageinfo);
     d->height = height > 0u ? QString::number(height) : QString();
-    if (d->width.isNull()) {
+    if (d->width.isNull())
+    {
         d->width = d->height;
     }
 }
 
-void QueryImageinfo::start() {
+void QueryImageinfo::start()
+{
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
-void QueryImageinfo::doWorkSendRequest() {
+void QueryImageinfo::doWorkSendRequest()
+{
     Q_D(QueryImageinfo);
+
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
@@ -170,31 +199,47 @@ void QueryImageinfo::doWorkSendRequest() {
     QueryImageinfoPrivate::addQueryItemIfNotNull(url, "iiend", d->end);
     QueryImageinfoPrivate::addQueryItemIfNotNull(url, "iiurlwidth", d->width);
     QueryImageinfoPrivate::addQueryItemIfNotNull(url, "iiurlheight", d->height);
+
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+
     // Send the request
     d->reply = d->manager->get(request);
     connectReply();
-    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    connect(d->reply, SIGNAL(finished()),
+            this, SLOT(doWorkProcessReply()));
 }
 
-void QueryImageinfo::doWorkProcessReply() {
+void QueryImageinfo::doWorkProcessReply()
+{
     Q_D(QueryImageinfo);
-    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+
+    disconnect(d->reply, SIGNAL(finished()),
+               this, SLOT(doWorkProcessReply()));
     d->begin = QString();
-    if (d->reply->error() == QNetworkReply::NoError) {
+
+    if (d->reply->error() == QNetworkReply::NoError)
+    {
         QXmlStreamReader reader(d->reply);
         QList<Imageinfo> imageinfos;
         Imageinfo imageinfo;
-        while (!reader.atEnd() && !reader.hasError()) {
+
+        while (!reader.atEnd() && !reader.hasError())
+        {
             QXmlStreamReader::TokenType token = reader.readNext();
-            if (token == QXmlStreamReader::StartElement) {
-                if (reader.name() == "imageinfo") {
-                    if (!reader.attributes().value("iistart").isNull()) {
+
+            if (token == QXmlStreamReader::StartElement)
+            {
+                if (reader.name() == "imageinfo")
+                {
+                    if (!reader.attributes().value("iistart").isNull())
+                    {
                         d->begin = reader.attributes().value("iistart").toString();
                     }
-                } else if (reader.name() == "ii") {
+                }
+                else if (reader.name() == "ii")
+                {
                     imageinfo.setTimestamp(QDateTime::fromString(reader.attributes().value("timestamp").toString(), "yyyy-MM-dd'T'hh:mm:ss'Z'"));
                     imageinfo.setUser(reader.attributes().value("user").toString());
                     imageinfo.setComment(reader.attributes().value("comment").toString());
@@ -208,33 +253,50 @@ void QueryImageinfo::doWorkProcessReply() {
                     imageinfo.setHeight(QueryImageinfoPrivate::toQInt64(reader.attributes().value("height").toString()));
                     imageinfo.setSha1(reader.attributes().value("sha1").toString());
                     imageinfo.setMime(reader.attributes().value("mime").toString());
-                } else if (reader.name() == "metadata") {
-                    if (!reader.attributes().isEmpty()) {
+                }
+                else if (reader.name() == "metadata")
+                {
+                    if (!reader.attributes().isEmpty())
+                    {
                         imageinfo.metadata()[reader.attributes().value("name").toString()] = reader.attributes().value("value").toString();
                     }
                 }
-            } else if (token == QXmlStreamReader::EndElement) {
-                if (reader.name() == "ii") {
+            }
+            else if (token == QXmlStreamReader::EndElement)
+            {
+                if (reader.name() == "ii")
+                {
                     imageinfos.push_back(imageinfo);
                     imageinfo = Imageinfo();
                 }
             }
         }
-        if (!reader.hasError()) {
+
+        if (!reader.hasError())
+        {
             emit result(imageinfos);
-            if (d->begin.isNull() || d->onlyOneSignal) {
+
+            if (d->begin.isNull() || d->onlyOneSignal)
+            {
                 setError(KJob::NoError);
             }
-            else {
+            else
+            {
                 QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
                 return;
             }
-        } else {
+        }
+        else
+        {
             setError(QueryImageinfo::XmlError);
         }
     }
-    else {
+    else
+    {
         setError(QueryImageinfo::NetworkError);
     }
+
     emitResult();
 }
+
+} // namespace mediawiki

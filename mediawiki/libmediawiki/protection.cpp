@@ -28,54 +28,45 @@
 #include "protection.h"
 #include <algorithm>
 
-namespace mediawiki {
+namespace mediawiki
+{
 
-    class ProtectionInfo {
+class ProtectionInfo
+{
+public:
 
-    public:
-
-        QString type;
-        QString level;
-        QString expiry;
-        QString source;
-    };
-}
-//un truc
-using namespace mediawiki;
+    QString type;
+    QString level;
+    QString expiry;
+    QString source;
+};
 
 Protection::Protection()
     : d(new ProtectionInfo())
 {
-    d->type = "";
-    d->level = "";
+    d->type   = "";
+    d->level  = "";
     d->expiry = "";
     d->source = "";
 }
 
 Protection::~Protection()
 {
-        delete d;
+    delete d;
 }
 
-Protection::Protection(const Protection & other)
+Protection::Protection(const Protection& other)
     : d(new ProtectionInfo(*(other.d)))
-{}
-
-Protection & Protection::operator=(Protection other)
 {
-        std::swap(d, other.d);
-        return *this;
 }
 
-bool operator==(const Protection & ptc, const Protection & ptc2)
+Protection& Protection::operator=(Protection other)
 {
-return ptc.type() == ptc2.type() &&
-       ptc.level() == ptc2.level() &&
-       ptc.expiry() == ptc2.expiry() &&
-       ptc.source() == ptc2.source() ;
+    std::swap(d, other.d);
+    return *this;
 }
 
-void Protection::setType(const QString & type)
+void Protection::setType(const QString& type)
 {
     d->type = type;
 }
@@ -85,7 +76,7 @@ QString Protection::type() const
     return d->type;
 }
 
-void Protection::setLevel(const QString & level)
+void Protection::setLevel(const QString& level)
 {
     d->level = level;
 }
@@ -95,7 +86,7 @@ QString Protection::level() const
     return d->level;
 }
 
-void Protection::setExpiry(const QString & expiry)
+void Protection::setExpiry(const QString& expiry)
 {
     d->expiry = expiry;
 }
@@ -105,7 +96,7 @@ QString Protection::expiry() const
     return d->expiry;
 }
 
-void Protection::setSource(const QString & source)
+void Protection::setSource(const QString& source)
 {
     d->source = source;
 }
@@ -113,4 +104,14 @@ void Protection::setSource(const QString & source)
 QString Protection::source() const
 {
     return d->source;
+}
+
+} // namespace mediawiki
+
+bool operator==(const mediawiki::Protection& ptc, const mediawiki::Protection& ptc2)
+{
+    return ptc.type()   == ptc2.type()   &&
+           ptc.level()  == ptc2.level()  &&
+           ptc.expiry() == ptc2.expiry() &&
+           ptc.source() == ptc2.source();
 }
