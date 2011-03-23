@@ -28,10 +28,14 @@
 #ifndef MEDIAWIKI_UPLOAD_H
 #define MEDIAWIKI_UPLOAD_H
 
+// Qt includes
+
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
 #include <QtNetwork/QNetworkCookieJar>
 #include <QtCore/QUrl>
+
+// Local includes
 
 #include "mediawiki_export.h"
 #include "job.h"
@@ -39,7 +43,8 @@
 
 class QNetworkReply;
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class MediaWiki;
 class UploadPrivate;
@@ -49,8 +54,8 @@ class UploadPrivate;
  *
  * Uses for upload files.
  */
-class MEDIAWIKI_EXPORT Upload : public Job {
-
+class MEDIAWIKI_EXPORT Upload : public Job
+{
     Q_OBJECT
     Q_DECLARE_PRIVATE(Upload)
 
@@ -58,7 +63,6 @@ public:
 
     enum
     {
-
         /**
          * @brief An internal error occurred.
          */
@@ -122,14 +126,15 @@ public:
          * @brief Stashing temporary file failed.
          */
         StashFailed,
-
     };
+
+public:
 
     /**
      * @brief Constructs an Upload job.
      * @param parent the QObject parent
      */
-    Upload( MediaWiki & mediawiki, QObject * parent = 0);
+    Upload(MediaWiki& mediawiki, QObject* parent = 0);
 
     /**
      * @brief Destroys the Upload job.
@@ -168,11 +173,9 @@ public:
 private slots:
 
     void doWorkSendRequest(Page page);
-
     void doWorkProcessReply();
-
 };
 
-}
+} // namespace mediawiki
 
 #endif // UPLOAD_H
