@@ -25,41 +25,44 @@
  *
  * ============================================================ */
 
+// Local includes.
+
 #include "revision.h"
 
-#include <QDateTime>
+namespace mediawiki
+{
 
-namespace mediawiki {
+class RevisionPrivate
+{
+public:
 
-    struct RevisionPrivate {
-
-        int revId;
-        int parentId;
-        int size;
-        bool minorRevision;
-        QString user;
-        QDateTime timestamp;
-        QString comment;
-        QString content;
-        QString parseTree;
-        QString rollback;
-    };
-}
-using namespace mediawiki;
+    int       revId;
+    int       parentId;
+    int       size;
+    bool      minorRevision;
+    QString   user;
+    QDateTime timestamp;
+    QString   comment;
+    QString   content;
+    QString   parseTree;
+    QString   rollback;
+};
 
 Revision::Revision()
-    :d(new RevisionPrivate())
+    : d(new RevisionPrivate())
 {
     d->minorRevision = false;
-    d->revId=-1;
-    d->parentId=-1;
-    d->size=-1;
+    d->revId         = -1;
+    d->parentId      = -1;
+    d->size          = -1;
 }
+
 Revision::~Revision()
 {
     delete d;
 }
-Revision::Revision( const Revision & other)
+
+Revision::Revision( const Revision& other)
         : d(new RevisionPrivate(*(other.d)))
 {
 }
@@ -114,7 +117,7 @@ QDateTime Revision::timestamp() const
     return d->timestamp;
 }
 
-void Revision::setTimestamp(const QDateTime & timestamp)
+void Revision::setTimestamp(const QDateTime& timestamp)
 {
     d->timestamp = timestamp;
 }
@@ -124,12 +127,12 @@ QString Revision::user() const
     return d->user;
 }
 
-void Revision::setUser(const QString & user)
+void Revision::setUser(const QString& user)
 {
     d->user = user;
 }
 
-void Revision::setComment(const QString &  com)
+void Revision::setComment(const QString& com)
 {
     d->comment = com;
 }
@@ -144,44 +147,43 @@ QString Revision::content() const
     return d->content;
 }
 
-void Revision::setContent(const QString &  content)
+void Revision::setContent(const QString& content)
 {
     d->content=content;
 }
 
-void Revision::setParseTree(const QString &  parseTree)
+void Revision::setParseTree(const QString& parseTree)
 {
     d->parseTree=parseTree;
 }
-
 
 QString Revision::parseTree() const
 {
     return d->parseTree;
 }
 
-void Revision::setRollback(const QString &  rollback)
+void Revision::setRollback(const QString& rollback)
 {
     d->parseTree=rollback;
 }
-
 
 QString Revision::rollback() const
 {
     return d->rollback;
 }
 
+} // namespace mediawiki
 
-bool operator==(const mediawiki::Revision & lhs, const mediawiki::Revision & rhs)
+bool operator==(const mediawiki::Revision& lhs, const mediawiki::Revision& rhs)
 {
-    return lhs.timestamp() == rhs.timestamp() &&
-           lhs.user() == rhs.user() &&
-           lhs.comment() == rhs.comment() &&
-           lhs.content()== rhs.content()&&
-           lhs.size() == rhs.size() &&
-           lhs.minorRevision()==rhs.minorRevision()&&
-           lhs.parseTree() == rhs.parseTree()&&
-           lhs.parentId() == rhs.parentId()&&
-           lhs.rollback() == rhs.rollback()&&
-           lhs.revisionId() == rhs.revisionId();
+    return lhs.timestamp()     == rhs.timestamp()     &&
+           lhs.user()          == rhs.user()          &&
+           lhs.comment()       == rhs.comment()       &&
+           lhs.content()       == rhs.content()       &&
+           lhs.size()          == rhs.size()          &&
+           lhs.minorRevision() == rhs.minorRevision() &&
+           lhs.parseTree()     == rhs.parseTree()     &&
+           lhs.parentId()      == rhs.parentId()      &&
+           lhs.rollback()      == rhs.rollback()      &&
+           lhs.revisionId()    == rhs.revisionId();
 }

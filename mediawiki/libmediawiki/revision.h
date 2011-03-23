@@ -28,15 +28,22 @@
 #ifndef MEDIAWIKI_REVISION_H
 #define MEDIAWIKI_REVISION_H
 
-#include "mediawiki_export.h"
-#include <QDateTime>
+// Qt includes
 
-namespace mediawiki {
+#include <QtCore/QDateTime>
+
+// Local includes
+
+#include "mediawiki_export.h"
+
+namespace mediawiki
+{
 
 /**
  * @brief An image info.
  */
-class MEDIAWIKI_EXPORT Revision {
+class MEDIAWIKI_EXPORT Revision
+{
 
 public:
 
@@ -54,13 +61,13 @@ public:
      * @brief Constructs a revision from an other revision.
      * @param other an other revision
      */
-    Revision(const Revision & other);
+    Revision(const Revision& other);
 
     /**
      * @brief Assingning a revision from an other revision.
      * @param other an other revision
      */
-    Revision & operator=(Revision other);
+    Revision& operator=(Revision other);
 
     /**
     * @brief Set the revision ID.
@@ -120,7 +127,7 @@ public:
      * @brief Set the date and time of the revision
      * @param timestamp the date and time of the revision
      */
-    void setTimestamp(const QDateTime & timestamp);
+    void setTimestamp(const QDateTime& timestamp);
 
     /**
      * @brief Get the user who made the revision.
@@ -132,7 +139,7 @@ public:
      * @brief Set the user who made the revision.
      * @param user the user who made the revision
      */
-    void setUser(const QString & user);
+    void setUser(const QString& user);
 
     /**
      * @brief The revision content.
@@ -143,7 +150,7 @@ public:
      * @brief Set the revision content.
      * @param content the revision content
      */
-    void setContent(const QString & content);
+    void setContent(const QString& content);
 
     /**
      * @brief Get the edit comment.
@@ -155,13 +162,13 @@ public:
      * @brief Set the edit comment.
      * @param comment the edit comment
      */
-    void setComment(const QString & comment);
+    void setComment(const QString& comment);
 
     /**
      * @brief Set the parse tree of the revision content.
      * @param parseTree the parse tree of the revision content
      */
-    void setParseTree(const QString & parseTree);
+    void setParseTree(const QString& parseTree);
 
     /**
      * @brief Get the parse tree of the revision content.
@@ -173,7 +180,7 @@ public:
      * @brief Set the rollback token.
      * @param rollback the rollback token
      */
-    void setRollback(const QString &  rollback);
+    void setRollback(const QString& rollback);
 
     /**
      * @brief Get the rollback token.
@@ -183,12 +190,11 @@ public:
 
 private:
 
-    struct RevisionPrivate * d;
-
+    class RevisionPrivate* d;
 };
-}
 
+} // namespace mediawiki
 
-MEDIAWIKI_EXPORT bool operator==(const mediawiki::Revision & lhs,const mediawiki::Revision & rhs);
+MEDIAWIKI_EXPORT bool operator==(const mediawiki::Revision& lhs,const mediawiki::Revision& rhs);
 
-#endif
+#endif // MEDIAWIKI_REVISION_H
