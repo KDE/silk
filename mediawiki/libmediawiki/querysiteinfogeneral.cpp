@@ -29,64 +29,77 @@
 
 #include "querysiteinfogeneral.moc"
 
+// Qt includes
+
 #include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
+// Local includes
+
 #include "mediawiki.h"
 #include "job_p.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class QuerySiteInfoGeneralPrivate : public JobPrivate
 {
 
 public:
 
-    QuerySiteInfoGeneralPrivate(MediaWiki & mediawiki)
+    QuerySiteInfoGeneralPrivate(MediaWiki& mediawiki)
         : JobPrivate(mediawiki)
-    {}
-
+    {
+    }
 };
 
+QuerySiteInfoGeneral::QuerySiteInfoGeneral(MediaWiki& mediawiki, QObject* parent)
+    : Job(*new QuerySiteInfoGeneralPrivate(mediawiki))
+{
 }
 
-using namespace mediawiki;
-
-QuerySiteInfoGeneral::QuerySiteInfoGeneral(MediaWiki & mediawiki, QObject *parent)
-    : Job(*new QuerySiteInfoGeneralPrivate(mediawiki))
-{}
-
-QuerySiteInfoGeneral::~QuerySiteInfoGeneral() {}
+QuerySiteInfoGeneral::~QuerySiteInfoGeneral()
+{
+}
 
 void QuerySiteInfoGeneral::start()
 {
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
+
 void QuerySiteInfoGeneral::doWorkSendRequest()
 {
     Q_D(QuerySiteInfoGeneral);
+
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "query");
-    url.addQueryItem("meta", "siteinfo");
+    url.addQueryItem("meta",   "siteinfo");
     url.addQueryItem("siprop", "general");
+
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+
     // Send the request
     d->reply = d->manager->get(request);
     connectReply();
-    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+
+    connect(d->reply, SIGNAL(finished()), 
+            this, SLOT(doWorkProcessReply()));
 }
 
 void QuerySiteInfoGeneral::doWorkProcessReply()
 {
     Q_D(QuerySiteInfoGeneral);
-    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+
+    disconnect(d->reply, SIGNAL(finished()),
+               this, SLOT(doWorkProcessReply()));
+
     if (d->reply->error() != QNetworkReply::NoError)
     {
         this->setError(Job::NetworkError);
@@ -95,12 +108,18 @@ void QuerySiteInfoGeneral::doWorkProcessReply()
         emitResult();
         return;
     }
+
     Generalinfo generalinfo;
     QXmlStreamReader reader(d->reply);
-    while(!reader.atEnd() && !reader.hasError()) {
+
+    while(!reader.atEnd() && !reader.hasError())
+    {
         QXmlStreamReader::TokenType token = reader.readNext();
-        if(token == QXmlStreamReader::StartElement) {
-            if(reader.name() == "general") {
+
+        if(token == QXmlStreamReader::StartElement)
+        {
+            if(reader.name() == "general")
+            {
                 generalinfo.setMainPage(reader.attributes().value("mainpage").toString());
                 generalinfo.setUrl(reader.attributes().value("base").toString());
                 generalinfo.setSiteName(reader.attributes().value("sitename").toString());
@@ -135,14 +154,20 @@ void QuerySiteInfoGeneral::doWorkProcessReply()
             }
         }
     }
-    if (reader.hasError()) {
+
+    if (reader.hasError())
+    {
         this->setError(Job::XmlError);
     }
-    else {
+    else
+    {
         emit result(generalinfo);
         this->setError(Job::NoError);
     }
+
     d->reply->close();
     d->reply->deleteLater();
     emitResult();
 }
+
+} // namespace mediawiki

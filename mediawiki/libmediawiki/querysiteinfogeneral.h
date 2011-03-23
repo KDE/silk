@@ -30,8 +30,12 @@
 #ifndef QUERYSITEINFOGENERAL_H
 #define QUERYSITEINFOGENERAL_H
 
+// Qt includes
+
 #include <QtCore/QList>
 #include <QtCore/QString>
+
+// Local includes
 
 #include "mediawiki_export.h"
 #include "job.h"
@@ -39,7 +43,8 @@
 
 class QNetworkReply;
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class MediaWiki;
 class QuerySiteInfoGeneralPrivate;
@@ -51,7 +56,6 @@ class QuerySiteInfoGeneralPrivate;
  */
 class MEDIAWIKI_EXPORT QuerySiteInfoGeneral : public Job
 {
-
     Q_OBJECT
     Q_DECLARE_PRIVATE(QuerySiteInfoGeneral)
 
@@ -62,12 +66,14 @@ public:
         IncludeAllDenied = Job::UserDefinedError + 1,
     };
 
+public:
+
     /**
      * @brief Constructs a QuerySiteInfoGeneral job.
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QuerySiteInfoGeneral(MediaWiki & mediawiki, QObject * parent = 0);
+    explicit QuerySiteInfoGeneral(MediaWiki& mediawiki, QObject* parent = 0);
 
     /**
      * @brief Destroys the QuerySiteInfoGeneral job.
@@ -79,20 +85,20 @@ public:
      */
     virtual void start();
 
-signals:
+Q_SIGNALS:
 
     /**
      * @brief Provide general info.
      * @param generalinfo the general info
      */
-    void result(const Generalinfo & generalinfo);
+    void result(const Generalinfo& generalinfo);
 
-private slots:
+private Q_SLOTS:
 
     void doWorkSendRequest();
     void doWorkProcessReply();
-
 };
 
-}
+} // namespace mediawiki
+
 #endif // QUERYSITEINFOGENERAL_H
