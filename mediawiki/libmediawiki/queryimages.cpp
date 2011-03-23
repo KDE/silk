@@ -27,58 +27,67 @@
 
 #include "queryimages.moc"
 
+// Qt includes
+
 #include <QtCore/QTimer>
 #include <QtCore/QXmlStreamReader>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
+// Local includes
+
 #include "mediawiki.h"
 #include "job_p.h"
 
-namespace mediawiki {
+namespace mediawiki
+{
 
-class QueryImagesPrivate : public JobPrivate {
-
+class QueryImagesPrivate : public JobPrivate
+{
 public:
 
-    QueryImagesPrivate(MediaWiki & mediawiki, const QString & limit)
-        : JobPrivate(mediawiki)
-        , limit(limit)
-    {}
+    QueryImagesPrivate(MediaWiki& mediawiki, const QString& limit)
+        : JobPrivate(mediawiki),
+          limit(limit)
+    {
+    }
 
     QString title;
     QString limit;
     QString imcontinue;
-
 };
 
+QueryImages::QueryImages(MediaWiki& mediawiki, QObject* parent)
+    : Job(*new QueryImagesPrivate(mediawiki, "10"), parent)
+{
 }
 
-using namespace mediawiki;
+QueryImages::~QueryImages()
+{
+}
 
-QueryImages::QueryImages(MediaWiki & mediawiki, QObject * parent)
-    : Job(*new QueryImagesPrivate(mediawiki, "10"), parent)
-{}
-
-void QueryImages::setTitle(const QString & title) {
+void QueryImages::setTitle(const QString& title)
+{
     Q_D(QueryImages);
     d->title = title;
 }
 
-void QueryImages::setLimit(unsigned int limit) {
+void QueryImages::setLimit(unsigned int limit)
+{
     Q_D(QueryImages);
     d->limit = QString::number(limit);
 }
 
-QueryImages::~QueryImages() {}
-
-void QueryImages::start() {
+void QueryImages::start()
+{
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
-void QueryImages::doWorkSendRequest() {
+void QueryImages::doWorkSendRequest()
+{
     Q_D(QueryImages);
+
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
@@ -86,35 +95,53 @@ void QueryImages::doWorkSendRequest() {
     url.addQueryItem("titles", d->title);
     url.addQueryItem("prop", "images");
     url.addQueryItem("imlimit", d->limit);
-    if (!d->imcontinue.isNull()) {
+    if (!d->imcontinue.isNull())
+    {
         url.addQueryItem("imcontinue", d->imcontinue);
     }
+
     // Set the request
     QNetworkRequest request(url);
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
+
     // Send the request
     d->reply = d->manager->get(request);
     connectReply();
-    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+    connect(d->reply, SIGNAL(finished()),
+            this, SLOT(doWorkProcessReply()));
 }
 
-void QueryImages::doWorkProcessReply() {
+void QueryImages::doWorkProcessReply()
+{
     Q_D(QueryImages);
-    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
-    if (d->reply->error() == QNetworkReply::NoError) {
+
+    disconnect(d->reply, SIGNAL(finished()),
+               this, SLOT(doWorkProcessReply()));
+
+    if (d->reply->error() == QNetworkReply::NoError)
+    {
         QList<Image> imagesReceived;
         d->imcontinue = QString();
         QXmlStreamReader reader(d->reply);
-        while (!reader.atEnd() && !reader.hasError()) {
+
+        while (!reader.atEnd() && !reader.hasError())
+        {
             QXmlStreamReader::TokenType token = reader.readNext();
-            if (token == QXmlStreamReader::StartElement) {
-                if (reader.name() == "images") {
-                    if (reader.attributes().value("imcontinue").isNull()) {
+            if (token == QXmlStreamReader::StartElement)
+            {
+                if (reader.name() == "images")
+                {
+                    if (reader.attributes().value("imcontinue").isNull())
+                    {
                         imagesReceived.clear();
-                    } else {
+                    }
+                    else
+                    {
                         d->imcontinue = reader.attributes().value("imcontinue").toString();
                     }
-                } else if (reader.name() == "im") {
+                }
+                else if (reader.name() == "im")
+                {
                     Image image;
                     image.setNamespaceId( reader.attributes().value("ns").toString().toUInt());
                     image.setTitle(reader.attributes().value("title").toString());
@@ -122,20 +149,32 @@ void QueryImages::doWorkProcessReply() {
                 }
             }
         }
-        if (!reader.hasError()) {
+
+        if (!reader.hasError())
+        {
             emit images(imagesReceived);
-            if (!d->imcontinue.isNull()) {
+
+            if (!d->imcontinue.isNull())
+            {
                 QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
                 return;
-            } else {
+            }
+            else
+            {
                 setError(KJob::NoError);
             }
-        } else {
+        }
+        else
+        {
             setError(QueryImages::XmlError);
         }
     }
-    else {
+    else
+    {
         setError(QueryImages::NetworkError);
     }
+
     emitResult();
 }
+
+} // namespace mediawiki;

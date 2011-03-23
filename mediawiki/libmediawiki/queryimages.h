@@ -30,7 +30,11 @@
 #ifndef MEDIAWIKI_QUERYIMAGES_H
 #define MEDIAWIKI_QUERYIMAGES_H
 
-#include <KDE/KJob>
+// KDE includes
+
+#include <kjob.h>
+
+// Local includes
 
 #include "job.h"
 #include "mediawiki_export.h"
@@ -38,7 +42,8 @@
 
 class QNetworkReply;
 
-namespace mediawiki {
+namespace mediawiki
+{
 
 class MediaWiki;
 class QueryImagesPrivate;
@@ -48,8 +53,8 @@ class QueryImagesPrivate;
  *
  * Gets a list of all images used on pages.
  */
-class MEDIAWIKI_EXPORT QueryImages : public Job {
-
+class MEDIAWIKI_EXPORT QueryImages : public Job
+{
     Q_OBJECT
     Q_DECLARE_PRIVATE(QueryImages)
 
@@ -58,8 +63,8 @@ public:
     /**
      * @brief Indicates all possible error conditions found during the processing of the job.
      */
-    enum {
-
+    enum
+    {
         /**
          * @brief A network error has occured.
          */
@@ -69,15 +74,16 @@ public:
          * @brief A XML error has occured.
          */
         XmlError,
-
     };
+
+public:
 
     /**
      * @brief Constructs a query images job.
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QueryImages(MediaWiki & mediawiki, QObject * parent = 0);
+    explicit QueryImages(MediaWiki& mediawiki, QObject* parent = 0);
 
     /**
      * @brief Destroys a query images job.
@@ -88,7 +94,7 @@ public:
      * @brief Set the title.
      * @param title the title of the page
      */
-    void setTitle(const QString & title);
+    void setTitle(const QString& title);
 
     /**
      * @brief Set the limit.
@@ -101,7 +107,7 @@ public:
      */
     virtual void start();
 
-signals:
+Q_SIGNALS:
 
     /**
      * @brief Provides a list of all images used on pages
@@ -112,14 +118,12 @@ signals:
      */
     void images(const QList<Image> & images);
 
-private slots:
+private Q_SLOTS:
 
     void doWorkSendRequest();
-
     void doWorkProcessReply();
-
 };
 
-}
+} // namespace mediawiki
 
-#endif
+#endif // MEDIAWIKI_QUERYIMAGES_H
