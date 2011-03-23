@@ -1,8 +1,10 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QDebug>
 #include <QFileDialog>
 #include <QFile>
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -32,12 +34,12 @@ void MainWindow::init()
     this->ui->comboBox->addItem(QString("Logos with only simple typefaces, individual words or geometric shapes"),QString("{{PD-textlogo}}"));
 }
 
-
 void MainWindow::on_pushButton_clicked()
 {
     this->ui->progressBar->setValue(0);
-    Login *login = new Login(mediawiki, this->ui->mLoginEdit->text(), this->ui->mMdpEdit->text());
-    connect(login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+    Login* login = new Login(mediawiki, this->ui->mLoginEdit->text(), this->ui->mMdpEdit->text());
+    connect(login, SIGNAL(result(KJob*)),
+            this, SLOT(loginHandle(KJob*)));
     login->start();
 }
 
@@ -49,9 +51,10 @@ void MainWindow::loginHandle(KJob* login)
         popup.setText("Wrong authentication.");
         popup.exec();
     }
-    else{
-        Upload * e1 = new Upload( mediawiki );
-        QFile *file = new QFile(this->ui->lineEdit->text());
+    else
+    {
+        Upload* e1  = new Upload( mediawiki );
+        QFile* file = new QFile(this->ui->lineEdit->text());
         file->open(QIODevice::ReadOnly);
         e1->setFile(file);
         e1->setFilename(this->ui->lineEdit_2->text());
@@ -66,20 +69,30 @@ void MainWindow::loginHandle(KJob* login)
         text.append("\n}}\n== {{int:license}} ==\n");
         text.append(this->ui->comboBox->itemData(this->ui->comboBox->currentIndex()).toString());
 
-
         e1->setText(text);
-        connect(e1, SIGNAL(result(KJob* )),this, SLOT(uploadHandle(KJob*)));
-        connect(e1,SIGNAL(processedSize(KJob*, qulonglong)),this,SLOT(processedUploadSize(KJob*, qulonglong)));
-        connect(e1,SIGNAL(totalSize(KJob*, qulonglong)),this,SLOT(TotalUploadSize(KJob*, qulonglong)));
+        connect(e1, SIGNAL(result(KJob* )),
+                this, SLOT(uploadHandle(KJob*)));
+
+        connect(e1,SIGNAL(processedSize(KJob*, qulonglong)),
+                this, SLOT(processedUploadSize(KJob*, qulonglong)));
+
+        connect(e1,SIGNAL(totalSize(KJob*, qulonglong)),
+                this,SLOT(TotalUploadSize(KJob*, qulonglong)));
         e1->start();
     }
 }
 
 void MainWindow::uploadHandle(KJob* job)
 {
-    disconnect(SIGNAL(result(KJob* )), this, SLOT(uploadHandle(KJob*)));
-    disconnect(SIGNAL(processedSize(KJob *, qulonglong)), this, SLOT(processedUploadSize(KJob*, qulonglong)));
-    disconnect(SIGNAL(totalSize(KJob*, qulonglong)),this,SLOT(TotalUploadSize(KJob*, qulonglong)));
+    disconnect(this, SIGNAL(result(KJob* )), 
+               this, SLOT(uploadHandle(KJob*)));
+
+    disconnect(this, SIGNAL(processedSize(KJob *, qulonglong)), 
+               this, SLOT(processedUploadSize(KJob*, qulonglong)));
+
+    disconnect(this, SIGNAL(totalSize(KJob*, qulonglong)),
+               this, SLOT(TotalUploadSize(KJob*, qulonglong)));
+
     QString errorMessage;
     if(job->error() == 0) errorMessage = "Image uploaded successfully.";
     else errorMessage = "Image upload failed.";
@@ -103,7 +116,8 @@ void MainWindow::TotalUploadSize(KJob* job, qulonglong size)
 void MainWindow::on_parcourir_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"), "~", tr("Image Files (*.png *.jpg *.bmp *.jpeg *.gif)"));
-    if(fileName != NULL){
+    if(fileName != NULL)
+    {
         QPixmap preview(fileName);
         QSize size(preview.size());
         size.scale(400,200,Qt::KeepAspectRatio);

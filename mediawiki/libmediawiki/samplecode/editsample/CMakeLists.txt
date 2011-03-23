@@ -1,10 +1,12 @@
-project( editSample )
+PROJECT( editSample )
 
-kde4_add_ui_files (ui_src mainwindow.ui)
-set(editSample_SRCS
+KDE4_ADD_UI_FILES (ui_src mainwindow.ui)
+
+SET(editSample_SRCS
     main.cpp
     mainwindow.cpp
-)
+   )
+
 KDE4_ADD_EXECUTABLE( editSample ${editSample_SRCS} ${ui_src} )
-target_link_libraries( editSample ${KDE4_KIO_LIBS} mediawiki)
-install( TARGETS editSample ${INSTALL_TARGETS_DEFAULT_ARGS} )
+TARGET_LINK_LIBRARIES( editSample ${KDE4_KIO_LIBS} mediawiki)
+INSTALL( TARGETS editSample ${INSTALL_TARGETS_DEFAULT_ARGS} )

@@ -1,8 +1,9 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QDebug>
 
-MainWindow::MainWindow(QWidget *parent) :
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+
+MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mediawiki(QUrl("http://test.wikipedia.org/w/api.php"))
@@ -18,17 +19,22 @@ MainWindow::~MainWindow()
 //Load page
 void MainWindow::on_pushButton2_clicked()
 {
-    QueryRevision * const queryrevision(new QueryRevision(mediawiki));    
+    QueryRevision* const queryrevision(new QueryRevision(mediawiki));    
     queryrevision->setPageName(this->ui->mPageEdit->text());
     queryrevision->setProperties(QueryRevision::Content);
     queryrevision->setExpandTemplates(true);
     queryrevision->setLimit(1);
-    connect(queryrevision, SIGNAL(revision(const QList<Revision> &)), this, SLOT(revisionHandle(const QList<Revision> &)));
-    connect(queryrevision, SIGNAL(result(KJob* )),this, SLOT(revisionError(KJob*)));
+
+    connect(queryrevision, SIGNAL(revision(const QList<Revision>&)), 
+            this, SLOT(revisionHandle(const QList<Revision>&)));
+
+    connect(queryrevision, SIGNAL(result(KJob* )),
+            this, SLOT(revisionError(KJob*)));
+
     queryrevision->start();   
 }
 
-void MainWindow::revisionHandle(const QList<Revision> & revisions)
+void MainWindow::revisionHandle(const QList<Revision>& revisions)
 {
     if(revisions.isEmpty())
     {
@@ -43,8 +49,9 @@ void MainWindow::revisionHandle(const QList<Revision> & revisions)
 //Send page
 void MainWindow::on_pushButton1_clicked()
 {
-    Login *login = new Login(mediawiki, this->ui->mLoginEdit->text(), this->ui->mMdpEdit->text());
-    connect(login, SIGNAL(result(KJob* )),this, SLOT(loginHandle(KJob*)));
+    Login* login = new Login(mediawiki, this->ui->mLoginEdit->text(), this->ui->mMdpEdit->text());
+    connect(login, SIGNAL(result(KJob* )),
+            this, SLOT(loginHandle(KJob*)));
     login->start();
 }
 
@@ -55,11 +62,14 @@ void MainWindow::loginHandle(KJob* login)
         QMessageBox popup;
         popup.setText("Wrong authentication.");
         popup.exec();
-    }else {
-        Edit * job = new Edit( mediawiki,NULL);
+    }
+    else
+    {
+        Edit* job = new Edit( mediawiki,NULL);
         job->setPageName(this->ui->mPageEdit->text());
         job->setText(this->ui->plainTextEdit->toPlainText());
-        connect(job, SIGNAL(result(KJob *)),this, SLOT(editError(KJob*)));
+        connect(job, SIGNAL(result(KJob *)),
+                this, SLOT(editError(KJob*)));
         job->start();
     }
 }
