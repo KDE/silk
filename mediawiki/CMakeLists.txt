@@ -5,7 +5,6 @@ include_directories( ${KDE4_INCLUDES} )
 
 add_subdirectory( libmediawiki )
 add_subdirectory( plasmoid )
-add_subdirectory( samplecode )
 if( KIPI_PLUGIN )
 add_subdirectory( kipi-plugin )
 endif( KIPI_PLUGIN )

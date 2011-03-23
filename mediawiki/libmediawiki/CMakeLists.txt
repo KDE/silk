@@ -22,6 +22,7 @@ ELSE( STATIC_LIBRARY )
 ENDIF( STATIC_LIBRARY )
 
 ADD_SUBDIRECTORY( tests )
+ADD_SUBDIRECTORY( samplecode )
 
 SET(mediawiki_SRCS
     image.cpp
