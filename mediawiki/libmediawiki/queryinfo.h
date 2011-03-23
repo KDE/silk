@@ -28,10 +28,14 @@
 #ifndef QUERYINFO_H
 #define QUERYINFO_H
 
+// Qt includes
+
 #include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QDateTime>
+
+// Local includes
 
 #include "page.h"
 #include "protection.h"
@@ -53,7 +57,6 @@ class QueryInfoPrivate;
  */
 class MEDIAWIKI_EXPORT QueryInfo : public Job
 {
-
     Q_OBJECT
     Q_DECLARE_PRIVATE(QueryInfo)
 
@@ -64,7 +67,7 @@ public:
      * @param mediawiki the mediawiki concerned by the job
      * @param parent the QObject parent
      */
-    explicit QueryInfo(MediaWiki & mediawiki, QObject * parent = 0);
+    explicit QueryInfo(MediaWiki& mediawiki, QObject * parent = 0);
 
     /**
      * @brief Destroys the QuerySiteInfoGeneral job.
@@ -80,13 +83,13 @@ public:
      * @brief Set the page name.
      * @param title the page name
      */
-    void setPageName(const QString & title);
+    void setPageName(const QString& title);
 
     /**
      * @brief Set the token to perform a data-modifying action on a page
      * @param token the token
      */
-    void setToken(const QString & token);
+    void setToken(const QString& token);
 
     /**
      * @brief Set the page id.
@@ -100,16 +103,16 @@ public:
      */
     void setRevisionId(unsigned int id);
 
-signals:
+Q_SIGNALS:
 
     /**
      * @brief Provides a page
      * @param
      */
-    void page(const Page & p);
-    void protection(const QVector <Protection> & protect);
+    void page(const Page& p);
+    void protection(const QVector<Protection>& protect);
 
-private slots:
+private Q_SLOTS:
 
     /**
      * @brief Send a request.
@@ -117,8 +120,8 @@ private slots:
     void doWorkSendRequest();
 
     void doWorkProcessReply();
-
 };
 
-}
+} // namespace mediawiki
+
 #endif // QUERYINFO_H

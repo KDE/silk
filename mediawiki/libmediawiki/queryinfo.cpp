@@ -27,6 +27,8 @@
 
 #include "queryinfo.moc"
 
+// Qt includes
+
 #include <QtCore/QDateTime>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
@@ -35,6 +37,8 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
+
+// Local includes
 
 #include "mediawiki.h"
 #include "job_p.h"
@@ -47,34 +51,31 @@ class QueryInfoPrivate : public JobPrivate
 
 public:
 
-    QueryInfoPrivate(MediaWiki & mediawiki)
+    QueryInfoPrivate(MediaWiki& mediawiki)
         : JobPrivate(mediawiki)
     {}
 
-    QVector<Protection> protections;
+    QVector<Protection>    protections;
     QMap<QString, QString> requestParameter;
-    Page page;
-
+    Page                   page;
 };
 
+QueryInfo::QueryInfo(MediaWiki& mediawiki, QObject* parent)
+    : Job(*new QueryInfoPrivate(mediawiki), parent)
+{
 }
 
-using namespace mediawiki;
+QueryInfo::~QueryInfo()
+{
+}
 
-QueryInfo::QueryInfo(MediaWiki & mediawiki, QObject * parent)
-    : Job(*new QueryInfoPrivate(mediawiki), parent)
-{}
-
-
-QueryInfo::~QueryInfo() {}
-
-void QueryInfo::setPageName(const QString & title)
+void QueryInfo::setPageName(const QString& title)
 {
     Q_D(QueryInfo);
     d->requestParameter["titles"] = title;
 }
 
-void QueryInfo::setToken(const QString & token)
+void QueryInfo::setToken(const QString& token)
 {
     Q_D(QueryInfo);
     d->requestParameter["intoken"] = token;
@@ -101,6 +102,7 @@ void QueryInfo::start()
 void QueryInfo::doWorkSendRequest()
 {
     Q_D(QueryInfo);
+
     // Set the url
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
@@ -109,7 +111,8 @@ void QueryInfo::doWorkSendRequest()
     url.addEncodedQueryItem("inprop", QString("protection|talkid|watched|subjectid|url|readable|preload").toUtf8());
 
     QMapIterator<QString, QString> i(d->requestParameter);
-    while (i.hasNext()) {
+    while (i.hasNext())
+    {
         i.next();
         url.addEncodedQueryItem(QByteArray(i.key().toStdString().c_str()),QByteArray(i.value().toStdString().c_str()));
     }
@@ -119,23 +122,31 @@ void QueryInfo::doWorkSendRequest()
     request.setRawHeader("User-Agent", d->mediawiki.userAgent().toUtf8());
     QByteArray cookie = "";
     QList<QNetworkCookie> mediawikiCookies = d->manager->cookieJar()->cookiesForUrl(d->mediawiki.url());
-    for(int i = 0 ; i < mediawikiCookies.size(); ++i){
+
+    for(int i = 0 ; i < mediawikiCookies.size(); ++i)
+    {
         cookie += mediawikiCookies.at(i).toRawForm(QNetworkCookie::NameAndValueOnly);
         cookie += ";";
     }
     request.setRawHeader( "Cookie", cookie );
+
     // Send the request
     d->reply = d->manager->get(request);
     connectReply();
-    connect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
+
+    connect(d->reply, SIGNAL(finished()),
+            this, SLOT(doWorkProcessReply()));
 }
 
 void QueryInfo::doWorkProcessReply()
 {
     Q_D(QueryInfo);
-    disconnect(d->reply, SIGNAL(finished()), this, SLOT(doWorkProcessReply()));
-    if (d->reply->error() == QNetworkReply::NoError) {
 
+    disconnect(d->reply, SIGNAL(finished()), 
+               this, SLOT(doWorkProcessReply()));
+
+    if (d->reply->error() == QNetworkReply::NoError)
+    {
         // Replace & in &amp;
         QString content(d->reply->readAll());
         QRegExp regex("&(?!\\w+;)");
@@ -143,11 +154,15 @@ void QueryInfo::doWorkProcessReply()
         QXmlStreamReader reader(content);
         QVector<Protection> protect;
 
-        while (!reader.atEnd() && !reader.hasError()) {
+        while (!reader.atEnd() && !reader.hasError())
+        {
             QXmlStreamReader::TokenType token = reader.readNext();
             QXmlStreamAttributes attrs = reader.attributes();
-            if (token == QXmlStreamReader::StartElement) {
-                if (reader.name() == "page") {
+
+            if (token == QXmlStreamReader::StartElement)
+            {
+                if (reader.name() == "page")
+                {
                     d->page.setPageId(attrs.value( QString( "pageid" ) ).toString().toUInt());
                     d->page.setTitle(attrs.value( QString( "title" ) ).toString());
                     d->page.setNs(attrs.value( QString( "ns" ) ).toString().toUInt());
@@ -163,19 +178,26 @@ void QueryInfo::doWorkProcessReply()
                     d->page.setReadable(attrs.value( QString( "readable" ) ).toString());
                     d->page.setPreload(attrs.value( QString( "preload" ) ).toString());
                 }
-                else if (reader.name() == "protection") {
+                else if (reader.name() == "protection")
+                {
                     protect.clear();
                 }
-                else if (reader.name() == "pr") {
+                else if (reader.name() == "pr")
+                {
                     QString expiry(attrs.value( QString( "expiry" ) ).toString());
                     QString level(attrs.value( QString( "level" ) ).toString());
                     QString type(attrs.value( QString( "type" ) ).toString());
                     QString source = "";
-                    if(attrs.value( QString( "source" ) ).toString() != "") {
+
+                    if(attrs.value( QString( "source" ) ).toString() != "")
+                    {
                         source = attrs.value( QString( "source" ) ).toString();
-                    }else if(attrs.value( QString( "cascade" ) ).toString() != "") {
+                    }
+                    else if(attrs.value( QString( "cascade" ) ).toString() != "")
+                    {
                         source = attrs.value( QString( "cascade" ) ).toString();
                     }
+
                     Protection p;
                     p.setExpiry(expiry);
                     p.setLevel(level);
@@ -183,22 +205,32 @@ void QueryInfo::doWorkProcessReply()
                     p.setSource(source);
                     protect.push_back(p);
                 }
-            } else if (token == QXmlStreamReader::EndElement) {
-                if (reader.name() == "page") {
+            }
+            else if (token == QXmlStreamReader::EndElement)
+            {
+                if (reader.name() == "page")
+                {
                     d->protections = protect;
                 }
             }
         }
-        if (!reader.hasError()) {
+        if (!reader.hasError())
+        {
             setError(KJob::NoError);
             emit protection(protect);
             emit page(d->page);
-        } else {
+        }
+        else
+        {
             setError(Job::XmlError);
         }
     }
-    else {
+    else
+    {
         setError(Job::NetworkError);
     }
+
     emitResult();
 }
+
+} // namespace mediawiki
