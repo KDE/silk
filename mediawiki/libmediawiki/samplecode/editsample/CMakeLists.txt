@@ -9,4 +9,3 @@ SET(editSample_SRCS
 
 KDE4_ADD_EXECUTABLE( editSample ${editSample_SRCS} ${ui_src} )
 TARGET_LINK_LIBRARIES( editSample ${KDE4_KIO_LIBS} mediawiki)
-INSTALL( TARGETS editSample ${INSTALL_TARGETS_DEFAULT_ARGS} )
