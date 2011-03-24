@@ -22,7 +22,7 @@
 
 #include <Plasma/DataEngine>
 
-#include "queryrevision.h"
+#include <libmediawiki/queryrevision.h>
 
 using namespace mediawiki;
 

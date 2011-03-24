@@ -22,9 +22,9 @@
 
 #include <Plasma/DataEngine>
 
-#include "queryimageinfo.h"
-#include "queryimages.h"
-#include "queryrevision.h"
+#include <libmediawiki/queryimageinfo.h>
+#include <libmediawiki/queryimages.h>
+#include <libmediawiki/queryrevision.h>
 
 using namespace mediawiki;
 

@@ -17,9 +17,11 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "pictureofthedayengine.moc"
+
 #include <KDE/KIO/Job>
 
-#include "mediawiki.h"
+#include <libmediawiki/mediawiki.h>
 
 #include "pictureofthedayengine.h"
 
@@ -133,5 +135,3 @@ bool PictureOfTheDayEngine::searchText(MediaWiki & mediawiki, const QString & pa
 
 
 K_EXPORT_PLASMA_DATAENGINE(pictureoftheday, PictureOfTheDayEngine)
-
-#include "pictureofthedayengine.moc"

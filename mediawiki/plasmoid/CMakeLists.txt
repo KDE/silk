@@ -1,2 +1,4 @@
-add_subdirectory( applet )
-add_subdirectory( engine )
+FIND_PACKAGE(Mediawiki)
+
+ADD_SUBDIRECTORY( applet )
+ADD_SUBDIRECTORY( engine )

@@ -17,9 +17,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "mediawiki.h"
+#include "articleofthedayengine.moc"
 
-#include "articleofthedayengine.h"
+#include <libmediawiki/mediawiki.h>
 
 ArticleOfTheDayEngine::ArticleOfTheDayEngine(QObject * parent, const QVariantList & args)
     : Plasma::DataEngine(parent,args)
@@ -97,5 +97,3 @@ bool ArticleOfTheDayEngine::searchText(MediaWiki & mediawiki, const QString & pa
 }
 
 K_EXPORT_PLASMA_DATAENGINE(articleoftheday, ArticleOfTheDayEngine)
-
-#include "articleofthedayengine.moc"
