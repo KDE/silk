@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "setting.h"
+#include "setting.moc"
 
 Setting::Setting(const Plasma::DataEngine::Data &, QWidget * parent)
     : QWidget(parent)
