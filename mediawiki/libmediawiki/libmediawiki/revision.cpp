@@ -25,6 +25,10 @@
  *
  * ============================================================ */
 
+// C++ includes
+
+#include <algorithm>
+
 // Local includes.
 
 #include "revision.h"

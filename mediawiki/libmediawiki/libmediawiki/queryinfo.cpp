@@ -95,7 +95,6 @@ void QueryInfo::setRevisionId(unsigned int id)
 
 void QueryInfo::start()
 {
-    Q_D(QueryInfo);
     QTimer::singleShot(0, this, SLOT(doWorkSendRequest()));
 }
 
@@ -107,14 +106,15 @@ void QueryInfo::doWorkSendRequest()
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "query");
-    url.addQueryItem("prop", "info");
+    url.addQueryItem("prop",   "info");
     url.addEncodedQueryItem("inprop", QString("protection|talkid|watched|subjectid|url|readable|preload").toUtf8());
 
     QMapIterator<QString, QString> i(d->requestParameter);
     while (i.hasNext())
     {
         i.next();
-        url.addEncodedQueryItem(QByteArray(i.key().toStdString().c_str()),QByteArray(i.value().toStdString().c_str()));
+        url.addEncodedQueryItem(QByteArray(i.key().toAscii()),              // TODO : check UTF-8 support
+                                QByteArray(i.value().toAscii()));           // TODO : check UTF-8 support
     }
 
     // Set the request

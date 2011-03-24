@@ -25,6 +25,10 @@
  *
  * ============================================================ */
 
+// C++ includes
+
+#include <algorithm>
+
 // Qt includes
 
 #include <QtCore/QUrl>
@@ -45,8 +49,8 @@ public:
     unsigned int m_lastrevid;
     unsigned int m_counter;
     unsigned int m_length;
-    unsigned int m_talkid ;
-    QString      m_edittoken ;
+    unsigned int m_talkid;
+    QString      m_edittoken;
     QString      m_title;
     QString      m_readable;
     QString      m_preload;

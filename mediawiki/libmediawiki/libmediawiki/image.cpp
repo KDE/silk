@@ -27,6 +27,10 @@
  *
  * ============================================================ */
 
+// C++ includes
+
+#include <algorithm>
+
 // Local includes
 
 #include "image.h"

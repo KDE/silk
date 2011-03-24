@@ -109,7 +109,8 @@ void Parse::doWorkSendRequest()
     while (i.hasNext())
     {
         i.next();
-        url.addEncodedQueryItem(QByteArray(i.key().toStdString().c_str()), QByteArray(i.value().toStdString().c_str()));
+        url.addEncodedQueryItem(QByteArray(i.key().toAscii()),              // TODO : check UTF-8 support
+                                QByteArray(i.value().toAscii()));           // TODO : check UTF-8 support
     }
 
     // Set the request

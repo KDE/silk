@@ -51,7 +51,6 @@ public:
     QueryImageinfoPrivate(MediaWiki& mediawiki)
         : JobPrivate(mediawiki)
     {
-        onlyOneSignal = false;
     }
 
     static inline qint64 toQInt64(const QString& qstring)
@@ -86,6 +85,7 @@ QueryImageinfo::QueryImageinfo(MediaWiki& mediawiki, QObject* parent)
     : Job(*new QueryImageinfoPrivate(mediawiki), parent)
 {
     Q_D(QueryImageinfo);
+    d->onlyOneSignal = false;
 }
 
 QueryImageinfo::~QueryImageinfo()

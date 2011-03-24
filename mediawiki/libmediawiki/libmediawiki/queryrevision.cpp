@@ -251,13 +251,14 @@ void QueryRevision::doWorkSendRequest()
     QUrl url = d->mediawiki.url();
     url.addQueryItem("format", "xml");
     url.addQueryItem("action", "query");
-    url.addQueryItem("prop", "revisions");
+    url.addQueryItem("prop",   "revisions");
 
     QMapIterator<QString, QString> i(d->requestParameter);
     while (i.hasNext())
     {
         i.next();
-        url.addEncodedQueryItem(QByteArray(i.key().toStdString().c_str()), QByteArray(i.value().toStdString().c_str()));
+        url.addEncodedQueryItem(QByteArray(i.key().toAscii()),           // TODO : check UTF-8 support
+                                QByteArray(i.value().toAscii()));        // TODO : check UTF-8 support
     }
 
     // Set the request

@@ -210,10 +210,10 @@ void Upload::doWorkSendRequest(Page page)
 
     // the actual file
     out += "Content-Disposition: form-data; name=\"file\"; filename=\"";
-    out += d->filename;
+    out += d->filename.toAscii();   // TODO : check UTF-8 support
     out += "\"\r\n";
     out += "Content-Type: image/";
-    out += extension;
+    out += extension.toAscii();     // TODO : check UTF-8 support
     out += "\r\n\r\n";
     out += d->file->readAll();
     out += "\r\n";
@@ -222,7 +222,7 @@ void Upload::doWorkSendRequest(Page page)
     // description page
     out += "Content-Disposition: form-data; name=\"text\"\r\n";
     out += "Content-Type: text/plain\r\n\r\n";
-    out += d->text;
+    out += d->text.toAscii();       // TODO : check UTF-8 support
     out += "\r\n";
     out += boundary.mid(0, boundary.length() - 2);
     out += "--\r\n";
