@@ -15,6 +15,3 @@ SET(MEDIAWIKI_LOCAL_DIR libmediawiki)
 # -----------------------------------------------------------------------
 ADD_SUBDIRECTORY( plasmoid )
 
-IF( KIPI_PLUGIN )
-ADD_SUBDIRECTORY( kipi-plugin )
-ENDIF( KIPI_PLUGIN )
