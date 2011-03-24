@@ -1,9 +1,5 @@
 ADD_DEFINITIONS(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
-INCLUDE_DIRECTORIES(${KDE4_INCLUDES}
-                    ${MEDIAWIKI_INCLUDE_DIR}
-                   )
-
 KDE4_ADD_PLUGIN(plasma_engine_articleoftheday articleofthedayengine.cpp)
 
 TARGET_LINK_LIBRARIES(plasma_engine_articleoftheday ${KDE4_KDECORE_LIBS}

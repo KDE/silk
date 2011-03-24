@@ -1,4 +1,9 @@
+
 FIND_PACKAGE(Mediawiki)
 
-ADD_SUBDIRECTORY( applet )
-ADD_SUBDIRECTORY( engine )
+INCLUDE_DIRECTORIES(${KDE4_INCLUDES}
+                    ${MEDIAWIKI_INCLUDE_DIR}
+                   )
+
+ADD_SUBDIRECTORY(applet)
+ADD_SUBDIRECTORY(engine)

@@ -56,7 +56,7 @@ public:
     }
 };
 
-QuerySiteInfoGeneral::QuerySiteInfoGeneral(MediaWiki& mediawiki, QObject* parent)
+QuerySiteInfoGeneral::QuerySiteInfoGeneral(MediaWiki& mediawiki, QObject* /*parent*/)
     : Job(*new QuerySiteInfoGeneralPrivate(mediawiki))
 {
 }

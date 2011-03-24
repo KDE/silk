@@ -1,10 +1,20 @@
 FIND_PACKAGE(KDE4 REQUIRED)
 INCLUDE(KDE4Defaults)
 INCLUDE(MacroLibrary)
-include_directories( ${KDE4_INCLUDES} )
+INCLUDE_DIRECTORIES( ${KDE4_INCLUDES} )
 
-add_subdirectory( libmediawiki )
-add_subdirectory( plasmoid )
-if( KIPI_PLUGIN )
-add_subdirectory( kipi-plugin )
-endif( KIPI_PLUGIN )
+ADD_SUBDIRECTORY( libmediawiki )
+
+# -----------------------------------------------------------------------
+# Until libmediawiki is not moved to kdereview, use local version.
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+                      ${CMAKE_CURRENT_SOURCE_DIR}/libmediawiki/cmake/modules
+   )
+SET(MEDIAWIKI_LOCAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libmediawiki)
+#
+# -----------------------------------------------------------------------
+ADD_SUBDIRECTORY( plasmoid )
+
+IF( KIPI_PLUGIN )
+ADD_SUBDIRECTORY( kipi-plugin )
+ENDIF( KIPI_PLUGIN )

@@ -1,2 +1,2 @@
-add_subdirectory( pictureoftheday )
-add_subdirectory( articleoftheday )
+ADD_SUBDIRECTORY(pictureoftheday)
+ADD_SUBDIRECTORY(articleoftheday)
