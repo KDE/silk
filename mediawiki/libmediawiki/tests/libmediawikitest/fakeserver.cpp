@@ -22,20 +22,20 @@
 #include <iostream>
 #include <QDebug>
 
-#include "fakeserver.h"
+#include "fakeserver.moc"
 
 FakeServer::FakeServer(QObject* parent)
 :  QThread( parent )
 {
-
     moveToThread(this);
-
 }
+
 FakeServer::~FakeServer()
 {
   quit();
   wait();
 }
+
 void FakeServer::startAndWait()
 {
   start();
@@ -49,12 +49,14 @@ void FakeServer::newConnection()
     m_clientSocket = m_tcpServer->nextPendingConnection();
     connect(m_clientSocket, SIGNAL(readyRead()), this, SLOT(dataAvailable()));
 }
+
 void FakeServer::dataAvailable()
 {
     QMutexLocker locker(&m_mutex);
     readClientPart();
     writeServerPart();
 }
+
 void FakeServer::run()
 {
     m_tcpServer = new QTcpServer();
@@ -75,6 +77,7 @@ void FakeServer::started()
 {
   // do nothing: this is a dummy slot used by startAndWait()
 }
+
 void FakeServer::setScenario( const QString &scenario, const QString &cookie)
 {
     QMutexLocker locker(&m_mutex);
@@ -84,14 +87,13 @@ void FakeServer::setScenario( const QString &scenario, const QString &cookie)
     m_cookie.clear();
     m_cookie << cookie;
 }
+
 void FakeServer::addScenario( const QString &scenario, const QString &cookie )
 {
     QMutexLocker locker(&m_mutex);
 
     m_scenarios << scenario;
     m_cookie << cookie;
-
-
 }
 
 void FakeServer::addScenarioFromFile( const QString &fileName, const QString &cookie )
@@ -136,6 +138,7 @@ bool FakeServer::isAllScenarioDone() const
   }
   return true;
 }
+
 void FakeServer::writeServerPart()
 {
 
@@ -146,9 +149,11 @@ void FakeServer::writeServerPart()
     m_clientSocket->close();
 
 }
+
 void FakeServer::readClientPart()
 {
-    if (m_clientSocket->canReadLine()) {
+    if (m_clientSocket->canReadLine())
+    {
         QStringList token = QString(m_clientSocket->readAll()).split(QRegExp("[ \r\n][ \r\n]*"));
         FakeServer::Request request;
         if(token.empty())return;

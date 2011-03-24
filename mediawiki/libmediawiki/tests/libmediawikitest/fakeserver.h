@@ -19,6 +19,7 @@
 
 #ifndef SERVER_H
 #define SERVER_H
+
 #include <QObject>
 #include <QStringList>
 #include <QList>
@@ -27,7 +28,6 @@
 #include <QThread>
 #include <QMutex>
 
-
 QT_BEGIN_NAMESPACE
 class QTcpServer;
 class QNetworkSession;
@@ -35,12 +35,12 @@ QT_END_NAMESPACE
 
 //! [0]
 
-
 class FakeServer : QThread
 {
     Q_OBJECT
 
 public:
+
     struct Request{
         Request(){}
         Request(QString t, QString a, QString v){type=t;agent=a;value=v;}
@@ -48,10 +48,12 @@ public:
         QString agent;
         QString value;
     };
+
     FakeServer(QObject* parent = 0);
     ~FakeServer();
+
     void startAndWait();
-    virtual void run();    
+    virtual void run();
     void setScenario( const QString &scenario, const QString &cookie = QString("empty"));
     void addScenario( const QString &scenario, const QString &cookie = QString("empty"));
     void addScenarioFromFile( const QString &fileName, const QString &cookie = QString("empty"));
@@ -63,12 +65,14 @@ public:
     FakeServer::Request takeFirstRequest(){return m_request.takeFirst();}
     void clearRequest(){return m_request.clear();}
 
-private slots:
+private Q_SLOTS:
+
     void newConnection();
     void dataAvailable();
     void started();
 
 private:
+
     void writeServerPart();
     void readClientPart();
 
