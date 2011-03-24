@@ -89,3 +89,8 @@ IF(NOT WIN32)
   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libmediawiki.lsm.cmake ${CMAKE_CURRENT_BINARY_DIR}/libmediawiki.lsm)
   INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libmediawiki.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
 ENDIF(NOT WIN32)
+
+# Install find cmake script to the system for client applications.
+
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/FindMediawiki.cmake
+        DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
