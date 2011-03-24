@@ -1,4 +1,4 @@
-KIPI Library (KDE Image Program Interface)
+MEDIAWIKI C++ INTERFACE FOR KDE.
 
 This library is a part of digiKam project (http://www.digikam.org)
 
@@ -8,10 +8,14 @@ See AUTHORS file for details.
 
 -- ABOUT --------------------------------------------------------------
 
-Libkipi is an interface to use kipi-plugins from a KDE image management 
-program like digiKam (http://www.digikam.org).
+libmediawiki is an interface for MediaWiki based web service as wikipedia.org
 
-The library documentation is available on header files.
+This library is used by kipi-plugins, digiKam and other kipi host programs.
+
+The library documentation is available in the header and cpp files in doxygen style. You can use doxygen ( http://www.doxygen.org ) to generate documentation in HTML format:
+
+# cd libkmap
+# doxygen Doxyfile
 
 -- DEPENDENCIES -------------------------------------------------------
 
@@ -56,7 +60,7 @@ A mail will be automatically sent to the Kipi mailing list.
 There is no need to contact directly the Kipi mailing list for a bug report 
 or a devel wish.
 
-The current libkipi bugs and devel wishes reported to the KDE bugzilla can be see 
+The current libmediawiki bugs and devel wishes reported to the KDE bugzilla can be see
 at this url:
 
-http://bugs.kde.org/buglist.cgi?product=digikam&component=libkipi&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED
+http://bugs.kde.org/buglist.cgi?product=digikam&component=libmediawiki&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED

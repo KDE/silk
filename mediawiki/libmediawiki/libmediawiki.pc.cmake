@@ -4,7 +4,7 @@ libdir=${LIB_INSTALL_DIR}
 includedir=${INCLUDE_INSTALL_DIR}
 
 Name: libmediawiki
-Description: KDE Image Plugin Interface, a C++ library to share plugins among graphic applications.
+Description: a MediaWiki C++ interface for KDE.
 URL: http://www.digikam.org
 Requires:
 Version: ${MEDIAWIKI_LIB_VERSION_STRING}
