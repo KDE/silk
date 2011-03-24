@@ -10,7 +10,7 @@ ADD_SUBDIRECTORY( libmediawiki )
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
                       ${CMAKE_CURRENT_SOURCE_DIR}/libmediawiki/cmake/modules
    )
-SET(MEDIAWIKI_LOCAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libmediawiki)
+SET(MEDIAWIKI_LOCAL_DIR libmediawiki)
 #
 # -----------------------------------------------------------------------
 ADD_SUBDIRECTORY( plasmoid )

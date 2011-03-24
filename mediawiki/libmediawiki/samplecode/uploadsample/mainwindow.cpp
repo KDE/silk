@@ -2,13 +2,13 @@
 #include <QFileDialog>
 #include <QFile>
 
-#include "mainwindow.h"
+#include "mainwindow.moc"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    mediawiki(QUrl("http://test.wikipedia.org/w/api.php"))
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow),
+      mediawiki(QUrl("http://test.wikipedia.org/w/api.php"))
 {
     ui->setupUi(this);
     init();

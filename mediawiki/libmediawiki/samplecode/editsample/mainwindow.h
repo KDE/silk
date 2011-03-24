@@ -38,7 +38,7 @@ private Q_SLOTS:
     void revisionError(KJob* job);
 
 private:
-  
+
     Ui::MainWindow* ui;
     MediaWiki       mediawiki;
 };

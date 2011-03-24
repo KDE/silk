@@ -1,12 +1,12 @@
 #include <QDebug>
 
-#include "mainwindow.h"
+#include "mainwindow.moc"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget* parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    mediawiki(QUrl("http://test.wikipedia.org/w/api.php"))
+MainWindow::MainWindow(QWidget* parent)
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow),
+      mediawiki(QUrl("http://test.wikipedia.org/w/api.php"))
 {
     ui->setupUi(this);
 }
@@ -31,7 +31,7 @@ void MainWindow::on_pushButton2_clicked()
     connect(queryrevision, SIGNAL(result(KJob* )),
             this, SLOT(revisionError(KJob*)));
 
-    queryrevision->start();   
+    queryrevision->start();
 }
 
 void MainWindow::revisionHandle(const QList<Revision>& revisions)
