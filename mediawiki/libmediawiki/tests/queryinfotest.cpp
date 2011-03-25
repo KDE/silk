@@ -22,7 +22,9 @@
 
 #include <QObject>
 #include <QtTest/QtTest>
+
 #include <KJob>
+#include <kdebug.h>
 
 #include "mediawiki.h"
 #include "queryinfo.h"
@@ -43,30 +45,30 @@ Q_DECLARE_METATYPE( QVector <Protection> )
 
 void debugPages(Page p)
 {
-    qDebug() << p.pageId();
-    qDebug() << p.pageTitle();
-    qDebug() << p.pageNs();
-    qDebug() << p.pageLastRevId();
-    qDebug() << p.pageCounter();
-    qDebug() << p.pageLength();
-    qDebug() << p.pageEditToken();
-    qDebug() << p.pageTalkid();
-    qDebug() << p.pageFullurl();
-    qDebug() << p.pageEditurl();
-    qDebug() << p.pageReadable();
-    qDebug() << p.pagePreload();
-    qDebug() << p.pageTouched();
-    qDebug() << p.pageStarttimestamp();
+    kDebug() << p.pageId();
+    kDebug() << p.pageTitle();
+    kDebug() << p.pageNs();
+    kDebug() << p.pageLastRevId();
+    kDebug() << p.pageCounter();
+    kDebug() << p.pageLength();
+    kDebug() << p.pageEditToken();
+    kDebug() << p.pageTalkid();
+    kDebug() << p.pageFullurl();
+    kDebug() << p.pageEditurl();
+    kDebug() << p.pageReadable();
+    kDebug() << p.pagePreload();
+    kDebug() << p.pageTouched();
+    kDebug() << p.pageStarttimestamp();
 }
 
 void debugProtection(QVector <Protection> p)
 {
     foreach(Protection pr, p)
     {
-        qDebug() << pr.type();
-        qDebug() << pr.level();
-        qDebug() << pr.expiry();
-        qDebug() << pr.source();
+        kDebug() << pr.type();
+        kDebug() << pr.level();
+        kDebug() << pr.expiry();
+        kDebug() << pr.source();
     }
 }
 

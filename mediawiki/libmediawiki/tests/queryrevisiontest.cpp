@@ -25,9 +25,11 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtTest/QTest>
-#include <KDE/KJob>
 #include <QFile>
 #include <QTextStream>
+
+#include <KDE/KJob>
+#include <kdebug.h>
 
 #include "libmediawikitest/fakeserver.h"
 
@@ -63,16 +65,16 @@ Revision constructRevision(int i,int p, int s, bool m, QString u, QDateTime t, Q
 }
 void debugRev(const Revision &rev)
 {
-    qDebug() << rev.revisionId();
-    qDebug() << rev.parentId();
-    qDebug() << rev.size();
-    qDebug() << rev.minorRevision();
-    qDebug() << rev.user();
-    qDebug() << rev.timestamp();
-    qDebug() << rev.comment();
-    qDebug() << rev.content();
-    qDebug() << rev.parseTree();
-    qDebug() << rev.rollback();
+    kDebug() << rev.revisionId();
+    kDebug() << rev.parentId();
+    kDebug() << rev.size();
+    kDebug() << rev.minorRevision();
+    kDebug() << rev.user();
+    kDebug() << rev.timestamp();
+    kDebug() << rev.comment();
+    kDebug() << rev.content();
+    kDebug() << rev.parseTree();
+    kDebug() << rev.rollback();
 }
 
 QString QStringFromFile( const QString &fileName )
@@ -95,9 +97,9 @@ class QueryRevisionTest : public QObject
 {
 
     Q_OBJECT
-    
+
 public slots:
-    
+
     void revisionHandle(const QList<Revision> & revision) {
         ++revisionCount;
         revisionResults = revision;
@@ -144,7 +146,7 @@ private slots:
         QCOMPARE(revisionResults.size(), size);
 
         QCOMPARE(revisionResults, results);
-        
+
         QVERIFY(fakeserver.isAllScenarioDone());
     }
     void testrvpropall_data() {
@@ -693,9 +695,9 @@ private slots:
     }
 
 private:
-    
+
     int revisionCount;
-    
+
     QList<Revision> revisionResults;
 
 };
