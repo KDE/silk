@@ -83,7 +83,7 @@ void WikiMediaJob::uploadHandle(KJob* j)
             m_error.append(i18n("Error on file : "));
             m_error.append(m_currentFile);
             if(j->errorText()==0){
-                m_error.append(i18n(" : An error has occured"));
+                m_error.append(i18n(" : An error has occurred"));
             }
             m_error.append(" : "+ j->errorText());
             m_error.append('\n');

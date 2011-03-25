@@ -66,12 +66,12 @@ public:
     enum
     {
         /**
-         * @brief A network error has occured.
+         * @brief A network error has occurred.
          */
         NetworkError = KJob::UserDefinedError + 1,
 
         /**
-         * @brief A XML error has occured.
+         * @brief A XML error has occurred.
          */
         XmlError,
     };
