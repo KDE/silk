@@ -1,6 +1,7 @@
 [Desktop Entry]
 Comment=Triggers an action on a URL
 Comment[et]=Toimingu käivitamine URL-iga
+Comment[nb]=Utløser en handling på en URL
 Comment[nl]=Start een actie op een URL
 Comment[pt]=Despoleta uma acção num dado URL
 Comment[pt_BR]=Ativa uma ação em uma URL
@@ -10,6 +11,7 @@ Comment[x-test]=xxTriggers an action on a URLxx
 Icon=flag-yellow
 Name=Toggle Header
 Name[et]=Päise lülitamine
+Name[nb]=Slå topptekst av/på
 Name[pt]=Comutar o Cabeçalho
 Name[pt_BR]=Trocar o cabeçalho
 Name[sv]=Växla rubrik

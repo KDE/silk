@@ -2,6 +2,7 @@
 Name=Notify
 Name[de]=Benachrichtigung
 Name[et]=Märguanne
+Name[nb]=Varsle
 Name[nds]=Bescheed
 Name[nl]=Melden
 Name[pt]=Notificação
@@ -12,6 +13,7 @@ Name[x-test]=xxNotifyxx
 Comment=Trigger a Notification
 Comment[de]=Eine Benachrichtigung auslösen
 Comment[et]=Märguande käivitamine
+Comment[nb]=Løs ut en varsling
 Comment[nl]=Melding starten
 Comment[pt]=Emitir uma Notificação
 Comment[pt_BR]=Emitir uma notificação

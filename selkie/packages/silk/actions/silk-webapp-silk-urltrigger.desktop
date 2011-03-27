@@ -1,6 +1,7 @@
 [Desktop Entry]
 Comment=Triggers an action on a URL
 Comment[et]=Toimingu käivitamine URL-iga
+Comment[nb]=Utløser en handling på en URL
 Comment[nl]=Start een actie op een URL
 Comment[pt]=Despoleta uma acção num dado URL
 Comment[pt_BR]=Ativa uma ação em uma URL
@@ -11,6 +12,7 @@ Icon=flag-green
 Name=Trigger
 Name[cs]=Spouštěč
 Name[et]=Esilekutsuja
+Name[nb]=Utløser
 Name[nl]=Starter
 Name[pt]=Despoletar
 Name[pt_BR]=Ativar

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=webappeditor
 Name[et]=Veebirakenduse redaktor
+Name[nb]=webappeditor
 Name[pt]=webappeditor
 Name[pt_BR]=webappeditor
 Name[sv]=Webbprogrameditor
@@ -12,6 +13,7 @@ Type=Application
 X-DocPath=webappeditor/index.html
 GenericName=An Application to create Selkie Applications
 GenericName[et]=Rakendus Selkie rakenduste loomiseks
+GenericName[nb]=Et program for å lage Selkie-programmer
 GenericName[pt]=Uma Aplicação para Criar Aplicações do Selkie
 GenericName[pt_BR]=Um programa para criação de aplicativos do Selkie
 GenericName[sv]=Ett program för att skapa Selkie-program

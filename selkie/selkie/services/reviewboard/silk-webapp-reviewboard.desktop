@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Review Board
 Name[et]=Ülevaatetahvel
+Name[nb]=Review Board
 Name[pt]=Painel de Revisão
 Name[pt_BR]=Painel de revisão
 Name[sv]=Reviewboard
@@ -8,6 +9,7 @@ Name[uk]=Review Board
 Name[x-test]=xxReview Boardxx
 Comment=KDE's ReviewBoard Instance
 Comment[et]=KDE ReviewBoardi isend
+Comment[nb]=KDEs ReviewBoard-instans
 Comment[pt]=Instância do ReviewBoard (Painel de Revisão) do KDE
 Comment[pt_BR]=Instância do ReviewBoard do KDE
 Comment[sv]=KDE:s instans av granskningstavlan Reviewboard

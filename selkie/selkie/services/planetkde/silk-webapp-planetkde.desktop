@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Planet KDE
 Name[et]=Planet KDE
+Name[nb]=Planet KDE
 Name[nl]=Planet KDE
 Name[pt]=Planet KDE
 Name[pt_BR]=Planet KDE
@@ -9,6 +10,7 @@ Name[uk]=Планета KDE
 Name[x-test]=xxPlanet KDExx
 Comment=KDE Developer Weblogs
 Comment[et]=KDE arendajate ajaveebid
+Comment[nb]=Weblogger for KDE-utviklere
 Comment[pt]='Blogs' Web de Desenvolvimento do KDE
 Comment[pt_BR]=Blogs Web dos desenvolvedores do KDE
 Comment[sv]=KDE-utvecklarnas webbloggar
