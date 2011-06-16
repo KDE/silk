@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Source Tree
 Name[et]=Lähtekoodipuu
+Name[km]=មែកធាង​ប្រភព
 Name[nb]=Kildetre
 Name[nds]=Bornboom
 Name[nl]=Boomstructuur van bron
@@ -11,6 +12,7 @@ Name[uk]=Структура коду
 Name[x-test]=xxSource Treexx
 Comment=View Project Silk's Commit Log
 Comment[et]=Projekti Silk sissekannete logi näitamine
+Comment[km]=មើល​កំណត់ហេតុ Commit របស់ Project Silk
 Comment[nb]=Vis innsendingsloggen for Prosjekt Silk
 Comment[nl]=Log van vastleggen van project Silk bekijken
 Comment[pt]=Ver o Registo de Envios para o Projecto Silk

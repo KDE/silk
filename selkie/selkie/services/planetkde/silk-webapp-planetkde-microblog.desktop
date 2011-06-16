@@ -2,6 +2,7 @@
 Comment=Compose a New Email
 Comment[de]=Eine neue E-Mail erstellen
 Comment[et]=Uue kirja koostamine
+Comment[km]=តែង​អ៊ីមែល​ថ្មី
 Comment[nb]=Lag en ny e-post
 Comment[nl]=Een nieuwe e-mail maken
 Comment[pt]=Compor um Novo E-Mail
@@ -13,6 +14,7 @@ Icon=im-status-message-edit
 Name=Compose
 Name[de]=Erstellen
 Name[et]=Koostamine
+Name[km]=តែង
 Name[nb]=Sett sammen
 Name[nl]=Maken
 Name[pt]=Compor

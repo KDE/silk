@@ -2,6 +2,7 @@
 Name=Buienradar
 Name[es]=Buienradar
 Name[et]=Buienradar
+Name[km]=Buienradar
 Name[nb]=Buienradar
 Name[pt]=Buienradar
 Name[pt_BR]=Buienradar
@@ -10,6 +11,7 @@ Name[uk]=Buienradar
 Name[x-test]=xxBuienradarxx
 Comment=Rain in The Netherlands?
 Comment[et]=Vihm Hollandis?
+Comment[km]=តើ​ភ្លៀង​នៅ​ក្នុង​ប្រទេស​ហូឡង់​ឬ ?
 Comment[nb]=Regner det i Nederland?
 Comment[pt]=Chove na Holanda?
 Comment[pt_BR]=Chove na Holanda?
