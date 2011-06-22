@@ -1,6 +1,7 @@
 [Desktop Entry]
 Comment=Local Test Pages for Selkie
 Comment[et]=Selkie kohalikud testleheküljed
+Comment[km]=ទំព័រ​សាកល្បង​មូលដ្ឋាន​សម្រាប់ Selkie
 Comment[nb]=Lokale testsider for Selkie
 Comment[pt]=Páginas de Teste Locais do Selkie
 Comment[pt_BR]=Páginas de teste locais do Selkie
@@ -10,6 +11,7 @@ Comment[x-test]=xxLocal Test Pages for Selkiexx
 Icon=kdf
 Name=Selkie Test
 Name[et]=Selkie test
+Name[km]=សាកល្បង Selkie
 Name[nb]=Selkie Test
 Name[pt]=Teste do Selkie
 Name[pt_BR]=Teste do Selkie

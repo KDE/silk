@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Selkie Test
 Name[et]=Selkie test
+Name[km]=សាកល្បង Selkie
 Name[nb]=Selkie Test
 Name[pt]=Teste do Selkie
 Name[pt_BR]=Teste do Selkie
@@ -9,6 +10,7 @@ Name[uk]=Тест Selkie
 Name[x-test]=xxSelkie Testxx
 GenericName=Test Web Application
 GenericName[et]=Veebirakenduse test
+GenericName[km]=កម្មវិធី​សាកល្បង​បណ្ដញ
 GenericName[nb]=Et test-vevprogram
 GenericName[pt]=Aplicação Web de Testes
 GenericName[pt_BR]=Aplicativo Web de testes
@@ -17,6 +19,7 @@ GenericName[uk]=Тестова вебпрограма
 GenericName[x-test]=xxTest Web Applicationxx
 Comment=Local Test Webpage Application for Selkie
 Comment[et]=Selkie kohalik veebilehekülje testimise rakendus
+Comment[km]=កម្មវិធី​​ទំព័រ​បណ្ដាញ​សាកល្បង​មូលដ្ឋាន​សម្រាប់ Selkie
 Comment[nb]=Lokal nettsideprogramtest for Selkie
 Comment[pt]=Aplicação de Páginas Web de Testes Locais para o Selkie
 Comment[pt_BR]=Aplicativo de páginas Web de testes locais para o Selkie

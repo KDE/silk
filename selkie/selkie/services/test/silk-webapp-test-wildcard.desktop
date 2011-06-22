@@ -1,6 +1,7 @@
 [Desktop Entry]
 Comment=An action triggered by a Wildcard
 Comment[et]=Metamärgi käivitatud toiming
+Comment[km]=សកម្មភាព​ដែល​បាន​កេះ​ដោយ Wildcard
 Comment[nb]=En handling utløst av et jokertegn
 Comment[pt]=Uma acção despoletada por uma sequência de caracteres especiais
 Comment[pt_BR]=Uma ação acionada por uma sequência de caracteres especiais
@@ -10,6 +11,7 @@ Comment[x-test]=xxAn action triggered by a Wildcardxx
 Icon=flag-blue
 Name=Wildcard Match
 Name[et]=Metamärgi sobivus
+Name[km]=ផ្គូផ្គង Wildcard
 Name[nb]=Jokertegn-treff
 Name[pt]=Correspondência de Caracteres Especiais
 Name[pt_BR]=Correspondência de caracteres especiais
