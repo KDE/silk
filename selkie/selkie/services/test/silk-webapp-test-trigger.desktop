@@ -1,6 +1,7 @@
 [Desktop Entry]
 Comment=Triggers an action on a URL
 Comment[et]=Toimingu käivitamine URL-iga
+Comment[fr]=Déclenche une action sur un URL
 Comment[km]=កេះ​សកម្មភាព​នៅ​លើ URL
 Comment[nb]=Utløser en handling på en URL
 Comment[nl]=Start een actie op een URL
@@ -13,6 +14,7 @@ Comment[x-test]=xxTriggers an action on a URLxx
 Icon=flag-yellow
 Name=Toggle Header
 Name[et]=Päise lülitamine
+Name[fr]=(Dés)Activetion d'un en-tête
 Name[km]=បិទ/បើក​បឋមកថា
 Name[nb]=Slå topptekst av/på
 Name[pl]=Przełącz nagłówek

@@ -2,6 +2,7 @@
 Comment=An action in the Toolbar
 Comment[es]=Un acción de la barra de herramientas
 Comment[et]=Toiming tööriistaribal
+Comment[fr]=Une action dans la barre d'outils
 Comment[km]=សកម្មភាព​នៅ​ក្នុង​របារឧបករណ៍​​​​
 Comment[nb]=En handling i verktøylinja
 Comment[pl]=Działanie w pasku narzędzi
@@ -13,6 +14,7 @@ Comment[x-test]=xxAn action in the Toolbarxx
 Icon=flag-green
 Name=Scale Content
 Name[et]=Sisu skaleerimine
+Name[fr]=Ajustement du contenu
 Name[km]=ធ្វើ​មាត្រដ្ឋាន​មាតិកា
 Name[nb]=Skaler innhold
 Name[pl]=Przeskaluj zawartość

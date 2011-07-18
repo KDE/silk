@@ -2,6 +2,7 @@
 Name=Notify
 Name[de]=Benachrichtigung
 Name[et]=Märguanne
+Name[fr]=Notification
 Name[km]=ជូនដំណឹង
 Name[nb]=Varsle
 Name[nds]=Bescheed
@@ -16,6 +17,7 @@ Name[x-test]=xxNotifyxx
 Comment=Trigger a Notification
 Comment[de]=Eine Benachrichtigung auslösen
 Comment[et]=Märguande käivitamine
+Comment[fr]=Déclenche une notification
 Comment[km]=កេះ​ការ​ជូនដំណឹង
 Comment[nb]=Løs ut en varsling
 Comment[nl]=Melding starten

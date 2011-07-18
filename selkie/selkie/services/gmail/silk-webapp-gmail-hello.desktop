@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Hello
 Name[et]=Tere
+Name[fr]=Bonjour
 Name[km]=សួស្ដី
 Name[nb]=Hallo
 Name[nds]=Moin
@@ -14,6 +15,7 @@ Name[uk]=Привіт
 Name[x-test]=xxHelloxx
 Comment=Trigger a Notification saying Hello
 Comment[et]=Märguande käivitamine, mis ütleb tere
+Comment[fr]=Déclenche une notification indiquant « Bonjour »
 Comment[km]=កេះ​ការ​ជូនដំណឹង​ដោយ​ការ​និយាយ​សួស្ដី
 Comment[nb]=Løs ut en varsling som sier Hallo
 Comment[nl]=Een melding starten door Hallo te zeggen

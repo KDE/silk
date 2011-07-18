@@ -2,6 +2,7 @@
 Comment=Show a native system notification
 Comment[es]=Mostrar una notificación nativa del sistema
 Comment[et]=Loomupärase süsteemi märguande näitamine
+Comment[fr]=Affiche une notification native système
 Comment[km]=បង្ហាញ​ការ​ជូនដំណឹង​ប្រព័ន្ធ​ដើម
 Comment[nb]=Vis en systemvarsling
 Comment[pl]=Pokaż natywne powiadomienia systemu
@@ -14,6 +15,7 @@ Icon=media-playlist-shuffle
 Name=Notify
 Name[de]=Benachrichtigung
 Name[et]=Märguanne
+Name[fr]=Notification
 Name[km]=ជូនដំណឹង
 Name[nb]=Varsle
 Name[nds]=Bescheed

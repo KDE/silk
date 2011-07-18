@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Commit Log
 Name[et]=Sissekannete logi
+Name[fr]=Journal des modifications
 Name[km]=កំណត់ហេតុ Commit
 Name[nb]=Innsendingslogg
 Name[nds]=Inspeel-Logbook
@@ -13,6 +14,7 @@ Name[uk]=Журнал внесків
 Name[x-test]=xxCommit Logxx
 Comment=View Project Silk's Commit Log
 Comment[et]=Projekti Silk sissekannete logi näitamine
+Comment[fr]=Affiche le journal de validation du projet Silk
 Comment[km]=មើល​កំណត់ហេតុ Commit របស់ Project Silk
 Comment[nb]=Vis innsendingsloggen for Prosjekt Silk
 Comment[nl]=Log van vastleggen van project Silk bekijken

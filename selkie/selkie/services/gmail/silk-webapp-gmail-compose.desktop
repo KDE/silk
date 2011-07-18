@@ -2,6 +2,7 @@
 Name=Compose
 Name[de]=Erstellen
 Name[et]=Koostamine
+Name[fr]=Composition
 Name[km]=តែង
 Name[nb]=Sett sammen
 Name[nl]=Maken
@@ -15,6 +16,7 @@ Name[x-test]=xxComposexx
 Comment=Compose a New Email
 Comment[de]=Eine neue E-Mail erstellen
 Comment[et]=Uue kirja koostamine
+Comment[fr]=Rédige un nouveau courriel
 Comment[km]=តែង​អ៊ីមែល​ថ្មី
 Comment[nb]=Lag en ny e-post
 Comment[nl]=Een nieuwe e-mail maken
