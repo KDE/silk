@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Planet KDE
+Name[de]=Planet KDE
 Name[et]=Planet KDE
 Name[fr]=Planète KDE
 Name[km]=Planet KDE
@@ -12,6 +13,7 @@ Name[sv]=Planet KDE
 Name[uk]=Планета KDE
 Name[x-test]=xxPlanet KDExx
 Comment=Developer Blogs
+Comment[de]=Entwickler-Blogs
 Comment[et]=Arendajate ajaveebid
 Comment[fr]=Blogues de développeurs
 Comment[km]=អ្នក​អភិវឌ្ឍន៍​កំណត់ហេតុ​បណ្ដាញ
