@@ -1,2 +1,2 @@
-ADD_SUBDIRECTORY(pictureoftheday)
+#ADD_SUBDIRECTORY(pictureoftheday)
 ADD_SUBDIRECTORY(articleoftheday)

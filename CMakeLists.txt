@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
-if(SELKIE)
+#if(SELKIE)
 add_subdirectory(selkie)
-endif(SELKIE)
+#endif(SELKIE)
 
 #add_subdirectory(mediawiki)
