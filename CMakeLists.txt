@@ -3,4 +3,4 @@ if(SELKIE)
 add_subdirectory(selkie)
 endif(SELKIE)
 
-add_subdirectory(mediawiki)
+#add_subdirectory(mediawiki)
