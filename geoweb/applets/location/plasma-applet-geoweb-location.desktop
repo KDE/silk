@@ -2,6 +2,7 @@
 Name=Geoweb - Location
 Name[et]=Geoveeb - Asukoht
 Name[fr]=Géoweb - Emplacement
+Name[hu]=Geoweb - Hely
 Name[km]=Geoweb - ទីតាំង
 Name[nb]=Geoweb – sted
 Name[pl]=Geoweb - Położenie
@@ -13,6 +14,7 @@ Name[x-test]=xxGeoweb - Locationxx
 Comment=Applet for Geoweb source - Location (with dataengine configuration)
 Comment[et]=Geoveebi allika aplett - Asukoht (andmemootori seadistamisega)
 Comment[fr]=Applet pour une source du Géoweb - Emplacement (avec la configuration du moteur de données)
+Comment[hu]=Kisalkalmazás a Geoweb forráshoz - Hely (adatmotor beállítással)
 Comment[km]=អាប់ភ្លេត​សម្រាប់​ប្រភព Geoweb - ទីតាំង (ជាមួយ​ការកំណត់​រចនាសម្ព័ន្ធ​ម៉ាស៊ីន​ទិន្នន័យ)
 Comment[nb]=Miniprogram for Geoweb kilde – sted (med oppsett for datamotor)
 Comment[pl]=Aplet dla źródła Geoweb - Położenie (z konfiguracją silnika danych)
