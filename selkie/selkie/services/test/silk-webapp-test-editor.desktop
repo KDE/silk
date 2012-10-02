@@ -13,6 +13,7 @@ Comment[uk]=Показ типового системного сповіщенн�
 Comment[x-test]=xxShow a native system notificationxx
 Icon=media-playlist-shuffle
 Name=Notify
+Name[cs]=Informovat
 Name[de]=Benachrichtigung
 Name[et]=Märguanne
 Name[fr]=Notification
