@@ -17,6 +17,7 @@ Icon=webappeditor
 Type=Application
 X-DocPath=webappeditor/index.html
 GenericName=An Application to create Selkie Applications
+GenericName[de]=Eine Anwendung, um Selkie-Programme zu erstellen
 GenericName[et]=Rakendus Selkie rakenduste loomiseks
 GenericName[fr]=Une application pour créer des applications Selkie
 GenericName[km]=ជា​កម្មវិធី​សម្រាប់​បង្កើត​កម្មវិធី​ Selkie

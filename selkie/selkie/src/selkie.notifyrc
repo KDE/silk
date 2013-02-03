@@ -1,6 +1,7 @@
 [Global]
 IconName=internet-web-browser
 Comment=Selkie
+Comment[de]=Selkie
 Comment[es]=Selkie
 Comment[et]=Selkie
 Comment[fr]=Selkie
@@ -15,6 +16,7 @@ Comment[sv]=Selkie
 Comment[uk]=Selkie
 Comment[x-test]=xxSelkiexx
 Name=Web Application
+Name[de]=Web-Anwendung
 Name[es]=Aplicación web
 Name[et]=Veebirakendus
 Name[fr]=Application web
@@ -30,6 +32,7 @@ Name[x-test]=xxWeb Applicationxx
 
 [Context/group]
 Name=Selkie Notifications
+Name[de]=Selkie-Benachrichtigungen
 Name[es]=Notificaciones de Selkie
 Name[et]=Selkie märguanded
 Name[fr]=Notifications de Selkie
@@ -43,6 +46,7 @@ Name[sv]=Selkie-underrättelser
 Name[uk]=Сповіщення Selkie
 Name[x-test]=xxSelkie Notificationsxx
 Comment=Notifications from the Selkie Browser
+Comment[de]=Benachrichtigungen vom Selkie-Browser
 Comment[es]=Notificaciones del navegador Selkie
 Comment[et]=Selkie brauseri märguanded
 Comment[fr]=Notifications provenant du navigateur de Selkie
@@ -58,6 +62,7 @@ Comment[x-test]=xxNotifications from the Selkie Browserxx
 
 [Context/folder]
 Name=Selkie Notifications
+Name[de]=Selkie-Benachrichtigungen
 Name[es]=Notificaciones de Selkie
 Name[et]=Selkie märguanded
 Name[fr]=Notifications de Selkie
@@ -86,6 +91,7 @@ Name[sv]=Selkie-meddelande
 Name[uk]=Контекстне сповіщення Selkie
 Name[x-test]=xxSelkie Popupxx
 Comment=Selkie has triggered a notification
+Comment[de]=Selkie hat eine Benachrichtigung ausgelöst
 Comment[et]=Selkie käivitas märguande
 Comment[fr]=Selkie a déclenché une notification
 Comment[km]=Selkie បាន​កេះ​ការ​ជូនដំណឹង
