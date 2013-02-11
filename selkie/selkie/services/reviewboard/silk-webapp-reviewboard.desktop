@@ -2,6 +2,7 @@
 Name=Review Board
 Name[et]=Ülevaatetahvel
 Name[fr]=Tableau de bord de révision
+Name[gl]=Táboa de revisións
 Name[km]=ពិនិត្យ​ក្ដារ​ឡើងវិញ
 Name[nb]=Review Board
 Name[nl]=Review Board
@@ -14,6 +15,7 @@ Name[x-test]=xxReview Boardxx
 Comment=KDE's ReviewBoard Instance
 Comment[et]=KDE ReviewBoardi isend
 Comment[fr]=Instance de ReviewBoard de KDE
+Comment[gl]=Instancia da táboa de revisións de KDE
 Comment[km]=ធាតុ ReviewBoard របស់ KDE
 Comment[nb]=KDEs ReviewBoard-instans
 Comment[nl]=ReviewBoard exemplaar van KDE

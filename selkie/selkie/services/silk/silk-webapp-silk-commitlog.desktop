@@ -2,6 +2,7 @@
 Name=Commit Log
 Name[et]=Sissekannete logi
 Name[fr]=Journal des modifications
+Name[gl]=Rexistro de entregas
 Name[hu]=Véglegesítés napló
 Name[km]=កំណត់ហេតុ Commit
 Name[nb]=Innsendingslogg
@@ -16,6 +17,7 @@ Name[x-test]=xxCommit Logxx
 Comment=View Project Silk's Commit Log
 Comment[et]=Projekti Silk sissekannete logi näitamine
 Comment[fr]=Affiche le journal de validation du projet Silk
+Comment[gl]=Ver o rexistro de envíos do proxecto Silk
 Comment[km]=មើល​កំណត់ហេតុ Commit របស់ Project Silk
 Comment[nb]=Vis innsendingsloggen for Prosjekt Silk
 Comment[nl]=Log van vastleggen van project Silk bekijken
