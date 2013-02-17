@@ -115,6 +115,7 @@ Action=Popup
 
 [Event/fancynotification]
 Name=FancyNotification
+Name[de]=Dekorative Benachrichtigung
 Name[et]=Vahva märguanne
 Name[fr]=FancyNotification
 Name[gl]=Notificación curiosa
