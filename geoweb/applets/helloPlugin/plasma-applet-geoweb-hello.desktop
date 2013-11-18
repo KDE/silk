@@ -2,6 +2,7 @@
 Name=Geoweb - Hello
 Name[de]=Geoweb - Hallo
 Name[et]=Geoveeb - Tere tulemast
+Name[fi]=Geoweb – Hei
 Name[fr]=Geoweb - Bonjour
 Name[gl]=Geoweb - Ola
 Name[hu]=Geoweb - Helló
@@ -17,6 +18,7 @@ Name[uk]=Geoweb — Привіт
 Name[x-test]=xxGeoweb - Helloxx
 Comment=Applet for Geoweb source - Hello
 Comment[et]=Geoveebi allika aplett - Tere tulemast
+Comment[fi]=Geoweb-lähdesovelma – Hei
 Comment[fr]=Composant graphique pour une source Geoweb - Bonjour
 Comment[gl]=Applet para a fonte Geoweb - Ola
 Comment[hu]=Kisalkalmazás a Geoweb forráshoz - Helló

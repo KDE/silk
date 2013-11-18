@@ -2,6 +2,7 @@
 Name=Selkie Test
 Name[de]=Selkie-Test
 Name[et]=Selkie test
+Name[fi]=Selkie-koe
 Name[fr]=Test de Selkie
 Name[gl]=Test de Selkie
 Name[km]=សាកល្បង Selkie
@@ -16,6 +17,7 @@ Name[uk]=Тест Selkie
 Name[x-test]=xxSelkie Testxx
 GenericName=Test Web Application
 GenericName[et]=Veebirakenduse test
+GenericName[fi]=Testaa web-sovellusta
 GenericName[fr]=Application Web de test
 GenericName[gl]=Aplicativo web de proba
 GenericName[km]=កម្មវិធី​សាកល្បង​បណ្ដញ

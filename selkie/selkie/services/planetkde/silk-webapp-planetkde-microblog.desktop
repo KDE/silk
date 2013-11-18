@@ -2,6 +2,7 @@
 Comment=Compose a New Email
 Comment[de]=Eine neue E-Mail erstellen
 Comment[et]=Uue kirja koostamine
+Comment[fi]=Luo uusi sähköposti
 Comment[fr]=Rédige un nouveau courrier électronique
 Comment[gl]=Redactar un novo correo electrónico
 Comment[hu]=Új e-mail írása
@@ -19,6 +20,7 @@ Icon=im-status-message-edit
 Name=Compose
 Name[de]=Erstellen
 Name[et]=Koostamine
+Name[fi]=Compose
 Name[fr]=Composition
 Name[gl]=Redactar
 Name[hu]=Írás

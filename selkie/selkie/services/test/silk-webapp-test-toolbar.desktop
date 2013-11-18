@@ -17,6 +17,7 @@ Comment[uk]=Дія на панелі інструментів
 Comment[x-test]=xxAn action in the Toolbarxx
 Icon=flag-green
 Name=Scale Content
+Name[de]=Inhalt skalieren
 Name[et]=Sisu skaleerimine
 Name[fr]=Ajustement du contenu
 Name[gl]=Escalar o contido

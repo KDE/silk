@@ -4,6 +4,7 @@ X-KDE-ServiceType=Silk/WebApp
 
 Name=Silk WebApp
 Name[et]=Silki veebirakendus
+Name[fi]=Silk-websovellus
 Name[fr]=Application Web de Silk
 Name[gl]=Webapp de Silk
 Name[km]=Silk WebApp
@@ -19,6 +20,7 @@ Name[x-test]=xxSilk WebAppxx
 Comment=Silk Web Application
 Comment[de]=Silk-Web-Anwendung
 Comment[et]=Silki veebirakendus
+Comment[fi]=Silk-web-sovellus
 Comment[fr]=Application Web de Silk
 Comment[gl]=Aplicativo web de Silk
 Comment[km]=កម្មវិធី​បណ្ដញ Silk

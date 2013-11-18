@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Geoweb - Location
 Name[et]=Geoveeb - Asukoht
+Name[fi]=Geoweb – Sijainti
 Name[fr]=Geoweb - Emplacement
 Name[gl]=Geoweb - Lugares
 Name[hu]=Geoweb - Hely
@@ -16,6 +17,7 @@ Name[uk]=Geoweb — Розташування
 Name[x-test]=xxGeoweb - Locationxx
 Comment=Applet for Geoweb source - Location (with dataengine configuration)
 Comment[et]=Geoveebi allika aplett - Asukoht (andmemootori seadistamisega)
+Comment[fi]=Geoweb-lähdesovelma – Sijainti (tietomoottorin asetuksin)
 Comment[fr]=Composant graphique pour une source Geoweb - Emplacement (avec la configuration du moteur de données)
 Comment[gl]=Applet para as fontes de Geoweb - Lugares (con configuración dos motores de datos)
 Comment[hu]=Kisalkalmazás a Geoweb forráshoz - Hely (adatmotor beállítással)

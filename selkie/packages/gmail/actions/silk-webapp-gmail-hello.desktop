@@ -2,6 +2,7 @@
 Name=Hello
 Name[de]=Hallo
 Name[et]=Tere
+Name[fi]=Hei
 Name[fr]=Bonjour
 Name[gl]=Ola
 Name[hu]=Helló
@@ -19,7 +20,9 @@ Name[ug]=ئەسسالامۇئەلەيكۇم
 Name[uk]=Привіт
 Name[x-test]=xxHelloxx
 Comment=Trigger a Notification saying Hello
+Comment[de]=Löst eine Benachrichtigung mit „Hallo“ aus
 Comment[et]=Märguande käivitamine, mis ütleb tere
+Comment[fi]=Luo ilmoitus, joka sanoo Hei
 Comment[fr]=Déclenche une notification indiquant « Bonjour »
 Comment[gl]=Desencadear a unha notificación dicindo Ola
 Comment[hu]=Egy értesítés előidézése, amely azt mondja „Helló”
