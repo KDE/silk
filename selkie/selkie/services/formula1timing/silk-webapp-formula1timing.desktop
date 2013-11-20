@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Formula 1 Live Timing
+Name[de]=Formel 1 Live-Zeitplan
 Name[et]=Vormel 1 reaalajas
 Name[fr]=Chronométrage en direct pour la Formule 1
 Name[gl]=Formula 1 Live Timing
@@ -14,6 +15,7 @@ Name[sv]=Formel 1 tider i realtid
 Name[uk]=Поточні результати Формули 1
 Name[x-test]=xxFormula 1 Live Timingxx
 Comment=Formula 1 Live Timing during training, qualifing and racing
+Comment[de]=Formel 1 Live-Zeitplan für Training, Qualifying und Rennen
 Comment[et]=Vormel 1 reaalajas treeningute, kvalifikatsiooni ja sõitude ajal
 Comment[fr]=Chronométrage en direct pour la Formule 1 pendant les entraînements, les qualifications et la course
 Comment[gl]=Formula 1 Live Timing durante o adestramento, as cualificacións e na carreira

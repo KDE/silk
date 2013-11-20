@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Formula1Timing
+Name[de]=Formel 1 Zeitplan
 Name[et]=Formula1Timing
 Name[fi]=Formula1Timing
 Name[fr]=Formula1Timing
@@ -15,6 +16,7 @@ Name[sv]=Formula1timing
 Name[uk]=Formula1Timing
 Name[x-test]=xxFormula1Timingxx
 Comment=Formula 1 Live Timing
+Comment[de]=Formel 1 Live-Zeitplan
 Comment[et]=Vormel 1 reaalajas
 Comment[fr]=Chronométrage en direct pour la Formule 1
 Comment[gl]=Formula 1 Live Timing

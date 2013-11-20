@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=Silk/WebApp
 
 Name=Silk WebApp
+Name[de]=Silk-Web-Anwendung
 Name[et]=Silki veebirakendus
 Name[fi]=Silk-websovellus
 Name[fr]=Application Web de Silk

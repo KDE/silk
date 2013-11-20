@@ -93,6 +93,7 @@ Name[x-test]=xxSelkie Notificationsxx
 
 [Event/popup]
 Name=Selkie Popup
+Name[de]=Selkie-Fenster
 Name[et]=Selkie hüpikdialoog
 Name[fi]=Selkie-ponnahdusikkuna
 Name[fr]=Notification de Selkie
