@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Commit Log
+Name[de]=Einspiel-Protokoll
 Name[et]=Sissekannete logi
 Name[fr]=Journal des modifications
 Name[gl]=Rexistro de entregas
@@ -16,6 +17,7 @@ Name[sv]=Arkiveringslogg
 Name[uk]=Журнал внесків
 Name[x-test]=xxCommit Logxx
 Comment=View Project Silk's Commit Log
+Comment[de]=Einspiel-Protokoll des Projekts Silk anzeigen
 Comment[et]=Projekti Silk sissekannete logi näitamine
 Comment[fr]=Affiche le journal de validation du projet Silk
 Comment[gl]=Ver o rexistro de envíos do proxecto Silk
