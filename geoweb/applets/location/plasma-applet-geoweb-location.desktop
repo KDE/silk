@@ -17,6 +17,7 @@ Name[sv]=Geoweb - Plats
 Name[uk]=Geoweb — Розташування
 Name[x-test]=xxGeoweb - Locationxx
 Comment=Applet for Geoweb source - Location (with dataengine configuration)
+Comment[de]=Miniprogramm für Geoweb-Quelle - Position (mit Datenquellen-Einrichtung)
 Comment[et]=Geoveebi allika aplett - Asukoht (andmemootori seadistamisega)
 Comment[fi]=Geoweb-lähdesovelma – Sijainti (tietomoottorin asetuksin)
 Comment[fr]=Composant graphique pour une source Geoweb - Emplacement (avec la configuration du moteur de données)
