@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Geoweb - Location
+Name[bs]=Geoweb-Lokalizacija
 Name[de]=Geoweb - Standort
 Name[et]=Geoveeb - Asukoht
 Name[fi]=Geoweb – Sijainti
@@ -17,6 +18,7 @@ Name[sv]=Geoweb - Plats
 Name[uk]=Geoweb — Розташування
 Name[x-test]=xxGeoweb - Locationxx
 Comment=Applet for Geoweb source - Location (with dataengine configuration)
+Comment[bs]=Applet za Geoweb izvor-Lokacija(sa konfiguracijom mašinskih podataka)
 Comment[de]=Miniprogramm für Geoweb-Quelle - Position (mit Datenquellen-Einrichtung)
 Comment[et]=Geoveebi allika aplett - Asukoht (andmemootori seadistamisega)
 Comment[fi]=Geoweb-lähdesovelma – Sijainti (tietomoottorin asetuksin)

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Compose
+Name[bs]=Sastavljanje
 Name[de]=Erstellen
 Name[et]=Koostamine
 Name[fi]=Compose
@@ -19,6 +20,7 @@ Name[ug]=يېڭى ئۇچۇر
 Name[uk]=Створення
 Name[x-test]=xxComposexx
 Comment=Compose a New Email
+Comment[bs]=Sroči novi e-mail
 Comment[de]=Eine neue E-Mail erstellen
 Comment[et]=Uue kirja koostamine
 Comment[fi]=Luo uusi sähköposti

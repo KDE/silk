@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Review Board
+Name[bs]=Pregledna tabla
 Name[de]=Review Board
 Name[et]=Ülevaatetahvel
 Name[fi]=ReviewBoard
@@ -16,6 +17,7 @@ Name[sv]=Reviewboard
 Name[uk]=Review Board
 Name[x-test]=xxReview Boardxx
 Comment=KDE's ReviewBoard Instance
+Comment[bs]=KDE-ov slučaj pregleda table
 Comment[de]=Das ReviewBoard für KDE
 Comment[et]=KDE ReviewBoardi isend
 Comment[fi]=KDE:n ReviewBoard-instanssi

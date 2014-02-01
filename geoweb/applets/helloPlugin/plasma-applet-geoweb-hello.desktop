@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Geoweb - Hello
+Name[bs]=Geoweb-Zdravo
 Name[de]=Geoweb - Hallo
 Name[et]=Geoveeb - Tere tulemast
 Name[fi]=Geoweb – Hei
@@ -17,6 +18,7 @@ Name[sv]=Geoweb - Hello
 Name[uk]=Geoweb — Привіт
 Name[x-test]=xxGeoweb - Helloxx
 Comment=Applet for Geoweb source - Hello
+Comment[bs]=Applet za Geoweb izvor-Zdravo
 Comment[de]=Miniprogramm für Geoweb-Quelle - Hallo
 Comment[et]=Geoveebi allika aplett - Tere tulemast
 Comment[fi]=Geoweb-lähdesovelma – Hei

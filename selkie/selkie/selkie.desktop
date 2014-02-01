@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Selkie
+Name[bs]=Selkie
 Name[de]=Selkie
 Name[es]=Selkie
 Name[et]=Selkie
@@ -17,6 +18,7 @@ Name[sv]=Selkie
 Name[uk]=Selkie
 Name[x-test]=xxSelkiexx
 GenericName=Experimental site-specific Web Browser
+GenericName[bs]=Eksperimentalna stranica-specifični Web pretraživač
 GenericName[de]=Experimenteller seitenspezifischer Webbrowser
 GenericName[es]=Navegador web experimental para un sitio específico
 GenericName[et]=Eksperimentaalne saidipõhine veebibrauser

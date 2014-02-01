@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=An action triggered by a Wildcard
+Comment[bs]=Akcija aktivirana od strane džokera
 Comment[de]=Eine Aktion, die durch einen Platzhalter ausgelöst wird
 Comment[et]=Metamärgi käivitatud toiming
 Comment[fr]=Une action déclenchée par un caractère de remplacement
@@ -16,6 +17,7 @@ Comment[uk]=Дія, увімкнена шаблоном заміни
 Comment[x-test]=xxAn action triggered by a Wildcardxx
 Icon=flag-blue
 Name=Wildcard Match
+Name[bs]=Podudarnost džokera
 Name[de]=Platzhalter-Übereinstimmung
 Name[et]=Metamärgi sobivus
 Name[fr]=Correspondance de caractères de remplacement

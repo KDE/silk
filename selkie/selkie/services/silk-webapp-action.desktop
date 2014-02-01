@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=Silk/WebApp/Action
 
 Name=Silk WebApp Action
+Name[bs]=Akcije Web aplikacija Silk-a
 Name[de]=Aktion für Silk-Web-Anwendung
 Name[et]=Silki veebirakenduse toiming
 Name[fr]=Action d'application Web de Silk
@@ -18,6 +19,7 @@ Name[sv]=Silk-webbåtgärd program
 Name[uk]=Дія вебпрограми Silk
 Name[x-test]=xxSilk WebApp Actionxx
 Comment=Silk Web Action ServiceType
+Comment[bs]=Tipovi usluga web akcija Silk-a
 Comment[de]=Diensttyp für Silk-Web-Anwendung
 Comment[et]=Silki veebitoimingu teenusetüüp
 Comment[fr]=Type de service d'actions Web de Silk

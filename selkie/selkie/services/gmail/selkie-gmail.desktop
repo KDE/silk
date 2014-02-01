@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=GMail
+Name[bs]=GMail
 Name[de]=GMail
 Name[es]=GMail
 Name[et]=GMail
@@ -21,6 +22,7 @@ Name[ug]=GMail
 Name[uk]=GMail
 Name[x-test]=xxGMailxx
 Comment=A GMail Browser
+Comment[bs]=GMail pretraživač
 Comment[de]=Ein G-Mail-Browser
 Comment[et]=GMaili brauser
 Comment[fi]=Gmail-selain

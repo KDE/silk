@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Print
+Name[bs]=Štampaj
 Name[cs]=Tisk
 Name[de]=Drucken
 Name[es]=Imprimir
@@ -22,6 +23,7 @@ Name[ug]=بېسىپ چىقار
 Name[uk]=Друк
 Name[x-test]=xxPrintxx
 Comment=Print the current page
+Comment[bs]=Štampaj trenutnu stranicu
 Comment[de]=Die aktuelle Seite drucken
 Comment[es]=Imprimir la página actual
 Comment[et]=Aktiivse lehekülje trükkimine

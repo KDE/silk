@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Gitorious Silk
+Name[bs]=Gitorious Silk
 Name[de]=Gitorious Silk
 Name[et]=Gitorious Silk
 Name[fi]=Gitorious Silk
@@ -16,6 +17,7 @@ Name[sv]=Gitorious Silk
 Name[uk]=Gitorious Silk
 Name[x-test]=xxGitorious Silkxx
 GenericName=Project Silk's Repository on Gitorious
+GenericName[bs]=Skladište projekta Silk-a na Gitorious-u
 GenericName[de]=Archive des Projekts Silk auf Gitorious
 GenericName[et]=Projekt Silk hoidla Gitoriouses
 GenericName[fi]=Gitoriouksen Silk-projektilähde
@@ -32,6 +34,7 @@ GenericName[sv]=Silk-projektets arkiv på Gitorious
 GenericName[uk]=Сховище коду проекту Silk у Gitorious
 GenericName[x-test]=xxProject Silk's Repository on Gitoriousxx
 Comment=Project Silk on Gitorious
+Comment[bs]=Projekat Silk na Gitorious-u
 Comment[de]=Projekt Silk auf Gitorious
 Comment[et]=Projekt Silk Gitoriouses
 Comment[fi]=Gitoriouksen Silk-projekti

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Buienradar
+Name[bs]=Buienradar
 Name[de]=Buienradar
 Name[es]=Buienradar
 Name[et]=Buienradar
@@ -17,6 +18,7 @@ Name[sv]=Buienradar
 Name[uk]=Buienradar
 Name[x-test]=xxBuienradarxx
 Comment=Rain in The Netherlands?
+Comment[bs]=Kiša u Holadniji?
 Comment[de]=Regnet es in den Niederlanden?
 Comment[et]=Vihm Hollandis?
 Comment[fi]=Sataako Alankomaissa?

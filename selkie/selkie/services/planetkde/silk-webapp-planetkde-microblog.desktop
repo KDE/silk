@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=Compose a New Email
+Comment[bs]=Sroči novi e-mail
 Comment[de]=Eine neue E-Mail erstellen
 Comment[et]=Uue kirja koostamine
 Comment[fi]=Luo uusi sähköposti
@@ -18,6 +19,7 @@ Comment[uk]=Створення повідомлення електронної �
 Comment[x-test]=xxCompose a New Emailxx
 Icon=im-status-message-edit
 Name=Compose
+Name[bs]=Sastavljanje
 Name[de]=Erstellen
 Name[et]=Koostamine
 Name[fi]=Compose

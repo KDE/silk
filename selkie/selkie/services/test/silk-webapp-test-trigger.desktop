@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=Triggers an action on a URL
+Comment[bs]=Pokreni akciju na URL
 Comment[de]=Löst eine Aktion für eine Adresse (URL) aus
 Comment[et]=Toimingu käivitamine URL-iga
 Comment[fi]=Käynnistää toimenpiteen osoitteessa
@@ -17,6 +18,7 @@ Comment[uk]=Вмикає дію у відповідь на вказану адр
 Comment[x-test]=xxTriggers an action on a URLxx
 Icon=flag-yellow
 Name=Toggle Header
+Name[bs]=Toggle Header
 Name[de]=Vorspann ein-/ausschalten
 Name[et]=Päise lülitamine
 Name[fr]=Activation / Désactivation d'une en-tête

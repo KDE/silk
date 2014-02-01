@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Hello
+Name[bs]=Zdravo.
 Name[de]=Hallo
 Name[et]=Tere
 Name[fi]=Hei
@@ -20,6 +21,7 @@ Name[ug]=ئەسسالامۇئەلەيكۇم
 Name[uk]=Привіт
 Name[x-test]=xxHelloxx
 Comment=Trigger a Notification saying Hello
+Comment[bs]=Aktivirano obavještenje govori Zdravo
 Comment[de]=Löst eine Benachrichtigung mit „Hallo“ aus
 Comment[et]=Märguande käivitamine, mis ütleb tere
 Comment[fi]=Luo ilmoitus, joka sanoo Hei

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=An action in the Toolbar
+Comment[bs]=Akcija na traci alata
 Comment[de]=Eine Aktion in der Werkzeugleiste
 Comment[es]=Un acción de la barra de herramientas
 Comment[et]=Toiming tööriistaribal
@@ -17,6 +18,7 @@ Comment[uk]=Дія на панелі інструментів
 Comment[x-test]=xxAn action in the Toolbarxx
 Icon=flag-green
 Name=Scale Content
+Name[bs]=Sadržaj razmjera
 Name[de]=Inhalt skalieren
 Name[et]=Sisu skaleerimine
 Name[fr]=Ajustement du contenu

@@ -1,6 +1,7 @@
 [Global]
 IconName=internet-web-browser
 Comment=Selkie
+Comment[bs]=Selkie
 Comment[de]=Selkie
 Comment[es]=Selkie
 Comment[et]=Selkie
@@ -18,6 +19,7 @@ Comment[sv]=Selkie
 Comment[uk]=Selkie
 Comment[x-test]=xxSelkiexx
 Name=Web Application
+Name[bs]=Web aplikacija
 Name[de]=Web-Anwendung
 Name[es]=Aplicación web
 Name[et]=Veebirakendus
@@ -37,6 +39,7 @@ Name[x-test]=xxWeb Applicationxx
 
 [Context/group]
 Name=Selkie Notifications
+Name[bs]=Selkie obavlještenje
 Name[de]=Selkie-Benachrichtigungen
 Name[es]=Notificaciones de Selkie
 Name[et]=Selkie märguanded
@@ -54,6 +57,7 @@ Name[sv]=Selkie-underrättelser
 Name[uk]=Сповіщення Selkie
 Name[x-test]=xxSelkie Notificationsxx
 Comment=Notifications from the Selkie Browser
+Comment[bs]=Obavlještenje sa Selkie pretraživača
 Comment[de]=Benachrichtigungen vom Selkie-Browser
 Comment[es]=Notificaciones del navegador Selkie
 Comment[et]=Selkie brauseri märguanded
@@ -73,6 +77,7 @@ Comment[x-test]=xxNotifications from the Selkie Browserxx
 
 [Context/folder]
 Name=Selkie Notifications
+Name[bs]=Selkie obavlještenje
 Name[de]=Selkie-Benachrichtigungen
 Name[es]=Notificaciones de Selkie
 Name[et]=Selkie märguanded
@@ -93,6 +98,7 @@ Name[x-test]=xxSelkie Notificationsxx
 
 [Event/popup]
 Name=Selkie Popup
+Name[bs]=Selkie Popup
 Name[de]=Selkie-Fenster
 Name[et]=Selkie hüpikdialoog
 Name[fi]=Selkie-ponnahdusikkuna
@@ -109,6 +115,7 @@ Name[sv]=Selkie-meddelande
 Name[uk]=Контекстне сповіщення Selkie
 Name[x-test]=xxSelkie Popupxx
 Comment=Selkie has triggered a notification
+Comment[bs]=Selkie ima aktivirano obavještenje
 Comment[de]=Selkie hat eine Benachrichtigung ausgelöst
 Comment[et]=Selkie käivitas märguande
 Comment[fi]=Selkie on lähettänyt ilmoituksen
@@ -129,6 +136,7 @@ Action=Popup
 
 [Event/fancynotification]
 Name=FancyNotification
+Name[bs]=Elegantno obavještenje
 Name[de]=Dekorative Benachrichtigung
 Name[et]=Vahva märguanne
 Name[fi]=FancyNotification
@@ -145,6 +153,7 @@ Name[sv]=Snygg underrättelse
 Name[uk]=FancyNotification
 Name[x-test]=xxFancyNotificationxx
 Comment=Notification with highlight sound
+Comment[bs]=Obavještenje sa naglašavajućim zvukom
 Comment[de]=Benachrichtigung mit hervorgehobenem Sound
 Comment[et]=Märguanne heli saatel
 Comment[fi]=Ilmoitus äänitehosteella

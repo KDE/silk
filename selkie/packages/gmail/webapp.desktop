@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=GMail
+Name[bs]=GMail
 Name[de]=GMail
 Name[es]=GMail
 Name[et]=GMail
@@ -21,6 +22,7 @@ Name[ug]=GMail
 Name[uk]=GMail
 Name[x-test]=xxGMailxx
 Comment=Google's Email Service
+Comment[bs]=Google-ove e-mail usluge
 Comment[de]=E-Mail-Dienst von Google
 Comment[es]=Servicio de correo de Google
 Comment[et]=Google'i e-posti teenus
@@ -39,6 +41,7 @@ Comment[sv]=Googles e-posttjänst
 Comment[uk]=Служба сповіщення щодо пошти Google
 Comment[x-test]=xxGoogle's Email Servicexx
 Description=Google's Email Service
+Description[bs]=Google-ove e-mail usluge
 Description[de]=E-Mail-Dienst von Google
 Description[es]=Google's Email Service
 Description[et]=Google'i e-posti teenus

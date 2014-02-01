@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Gitorious Silk
+Name[bs]=Gitorious Silk
 Name[de]=Gitorious Silk
 Name[et]=Gitorious Silk
 Name[fi]=Gitorious Silk
@@ -16,6 +17,7 @@ Name[sv]=Gitorious Silk
 Name[uk]=Gitorious Silk
 Name[x-test]=xxGitorious Silkxx
 Comment=Project Silk on Gitorious
+Comment[bs]=Projekat Silk na Gitorious-u
 Comment[de]=Projekt Silk auf Gitorious
 Comment[et]=Projekt Silk Gitoriouses
 Comment[fi]=Gitoriouksen Silk-projekti
