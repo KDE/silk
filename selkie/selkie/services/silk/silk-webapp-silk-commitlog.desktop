@@ -2,6 +2,7 @@
 Name=Commit Log
 Name[bs]=Dnevnik izvršavanja
 Name[de]=Einspiel-Protokoll
+Name[es]=Registro de envío
 Name[et]=Sissekannete logi
 Name[fr]=Journal des modifications
 Name[gl]=Rexistro de entregas
@@ -20,6 +21,7 @@ Name[x-test]=xxCommit Logxx
 Comment=View Project Silk's Commit Log
 Comment[bs]=Pregledaj dnevnik izvršavanja za projekat Silk
 Comment[de]=Einspiel-Protokoll des Projekts Silk anzeigen
+Comment[es]=Ver registro de envíos del proyecto Silk
 Comment[et]=Projekti Silk sissekannete logi näitamine
 Comment[fr]=Affiche le journal de validation du projet Silk
 Comment[gl]=Ver o rexistro de envíos do proxecto Silk

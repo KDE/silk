@@ -2,6 +2,7 @@
 Name=ReviewBoard
 Name[bs]=ReviewBoard
 Name[de]=ReviewBoard
+Name[es]=ReviewBoard
 Name[et]=ReviewBoard
 Name[fi]=ReviewBoard
 Name[fr]=ReviewBoard
@@ -21,6 +22,7 @@ Name[x-test]=xxReviewBoardxx
 Comment=KDE's ReviewBoard Instance
 Comment[bs]=KDE-ov slučaj pregleda table
 Comment[de]=Das ReviewBoard für KDE
+Comment[es]=Instancia de ReviewBoard de KDE
 Comment[et]=KDE ReviewBoardi isend
 Comment[fi]=KDE:n ReviewBoard-instanssi
 Comment[fr]=Instance de ReviewBoard de KDE

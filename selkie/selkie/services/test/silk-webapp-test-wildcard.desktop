@@ -2,6 +2,7 @@
 Comment=An action triggered by a Wildcard
 Comment[bs]=Akcija aktivirana od strane džokera
 Comment[de]=Eine Aktion, die durch einen Platzhalter ausgelöst wird
+Comment[es]=Acción provocada por un comodín
 Comment[et]=Metamärgi käivitatud toiming
 Comment[fr]=Une action déclenchée par un caractère de remplacement
 Comment[gl]=Unha acción desencadeada por un carácter de substitución
@@ -19,6 +20,7 @@ Icon=flag-blue
 Name=Wildcard Match
 Name[bs]=Podudarnost džokera
 Name[de]=Platzhalter-Übereinstimmung
+Name[es]=Búsqueda de comodines
 Name[et]=Metamärgi sobivus
 Name[fr]=Correspondance de caractères de remplacement
 Name[gl]=Procurar un carácter de substitución

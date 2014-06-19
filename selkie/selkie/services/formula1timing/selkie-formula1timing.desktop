@@ -2,6 +2,7 @@
 Name=Formula1Timing
 Name[bs]=Vrijeme  Formule1
 Name[de]=Formel 1 Zeitplan
+Name[es]=Formula1Timing
 Name[et]=Formula1Timing
 Name[fi]=Formula1Timing
 Name[fr]=Formula1Timing
@@ -19,6 +20,7 @@ Name[x-test]=xxFormula1Timingxx
 Comment=Formula 1 Live Timing
 Comment[bs]=Uživo podešavanje vremena Formule1
 Comment[de]=Formel 1 Live-Zeitplan
+Comment[es]=Resultados en vivo de la Fórmula 1
 Comment[et]=Vormel 1 reaalajas
 Comment[fr]=Chronométrage en direct pour la Formule 1
 Comment[gl]=Formula 1 Live Timing

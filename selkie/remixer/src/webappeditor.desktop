@@ -2,6 +2,7 @@
 Name=webappeditor
 Name[bs]=Webappeditor
 Name[de]=Editor Web-Anwendungen
+Name[es]=webappeditor
 Name[et]=Veebirakenduse redaktor
 Name[fr]=webappeditor
 Name[gl]=webappeditor
@@ -22,6 +23,7 @@ X-DocPath=webappeditor/index.html
 GenericName=An Application to create Selkie Applications
 GenericName[bs]=Aplikacija koja stvara Selkie aplikacije
 GenericName[de]=Eine Anwendung, um Selkie-Programme zu erstellen
+GenericName[es]=Una aplicación para crear aplicaciones Selkie
 GenericName[et]=Rakendus Selkie rakenduste loomiseks
 GenericName[fr]=Une application pour créer des applications Selkie
 GenericName[gl]=Un aplicativo para crear aplicativos Selkie

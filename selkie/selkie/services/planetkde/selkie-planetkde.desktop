@@ -2,6 +2,7 @@
 Name=Planet KDE
 Name[bs]=Planet KDE
 Name[de]=Planet KDE
+Name[es]=Planet KDE
 Name[et]=Planet KDE
 Name[fi]=Planet KDE
 Name[fr]=Planète KDE
@@ -19,6 +20,7 @@ Name[x-test]=xxPlanet KDExx
 Comment=Developer Blogs
 Comment[bs]=Kreator blogova
 Comment[de]=Entwickler-Blogs
+Comment[es]=Blogs de los desarrolladores
 Comment[et]=Arendajate ajaveebid
 Comment[fi]=Kehittäjäblogit
 Comment[fr]=Blogues de développeurs

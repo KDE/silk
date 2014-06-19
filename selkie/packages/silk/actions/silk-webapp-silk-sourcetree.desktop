@@ -2,6 +2,7 @@
 Name=Source Tree
 Name[bs]=Stablo izvora
 Name[de]=Quelltextbaum
+Name[es]=Árbol de versiones
 Name[et]=Lähtekoodipuu
 Name[fi]=Lähdepuu
 Name[fr]=Arborescence des sources
@@ -21,6 +22,7 @@ Name[x-test]=xxSource Treexx
 Comment=View Project Silk's Commit Log
 Comment[bs]=Pregledaj dnevnik izvršavanja za projekat Silk
 Comment[de]=Einspiel-Protokoll des Projekts Silk anzeigen
+Comment[es]=Ver registro de envíos del proyecto Silk
 Comment[et]=Projekti Silk sissekannete logi näitamine
 Comment[fr]=Affiche le journal de validation du projet Silk
 Comment[gl]=Ver o rexistro de envíos do proxecto Silk

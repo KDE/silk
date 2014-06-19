@@ -2,6 +2,7 @@
 Name=Geoweb - Location
 Name[bs]=Geoweb-Lokalizacija
 Name[de]=Geoweb - Standort
+Name[es]=Geoweb - Ubicación
 Name[et]=Geoveeb - Asukoht
 Name[fi]=Geoweb – Sijainti
 Name[fr]=Geoweb - Emplacement
@@ -20,6 +21,7 @@ Name[x-test]=xxGeoweb - Locationxx
 Comment=Applet for Geoweb source - Location (with dataengine configuration)
 Comment[bs]=Applet za Geoweb izvor-Lokacija(sa konfiguracijom mašinskih podataka)
 Comment[de]=Miniprogramm für Geoweb-Quelle - Position (mit Datenquellen-Einrichtung)
+Comment[es]=Miniaplicación para una fuente Geoweb - Ubicación (con configuración del motor de datos)
 Comment[et]=Geoveebi allika aplett - Asukoht (andmemootori seadistamisega)
 Comment[fi]=Geoweb-lähdesovelma – Sijainti (tietomoottorin asetuksin)
 Comment[fr]=Composant graphique pour une source Geoweb - Emplacement (avec la configuration du moteur de données)
