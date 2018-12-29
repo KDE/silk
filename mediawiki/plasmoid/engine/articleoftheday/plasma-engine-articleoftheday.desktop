@@ -1,23 +1,5 @@
 [Desktop Entry]
 Name=Article of the Day Engine
-Name[bs]=Pogon za članak dana
-Name[de]=Datenquelle für den Artikel des Tages
-Name[es]=Motor para el artículo del día
-Name[et]=Päevaartikli mootor
-Name[fi]=Päivän artikkeli -moottori
-Name[fr]=Moteur pour l'article du jour
-Name[gl]=Artigo do Day Engine
-Name[hu]=„A nap cikke” motor
-Name[km]=អត្ថបទ​របស់​ម៉ាស៊ីន​ប្រចាំថ្ងៃ
-Name[nb]=Dagens artikkel-motor
-Name[nl]=Engine voor artikel van de dag
-Name[pl]=Silnik artykułu dnia
-Name[pt]=Motor do Artigo do Dia
-Name[pt_BR]=Mecanismo do Artigo do dia
-Name[sk]=Engine článku dňa
-Name[sv]=Gränssnitt för dagens artikel
-Name[uk]=Рушій статті дня
-Name[x-test]=xxArticle of the Day Enginexx
 Comment=
 Type=Service
 

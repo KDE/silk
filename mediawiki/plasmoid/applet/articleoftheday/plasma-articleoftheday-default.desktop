@@ -1,23 +1,5 @@
 [Desktop Entry]
 Name=WikiMedia article of the day
-Name[bs]=Wikimedia članak dana
-Name[de]=Artikel des Tages von Wikimedia
-Name[es]=Artículo WikiMedia del día
-Name[et]=Wikimedia päevaartikkel
-Name[fi]=Päivän WikiMedia-artikkeli
-Name[fr]=Article du jour de WikiMédia
-Name[gl]=Artigo do día da WikiMedia
-Name[hu]=WikiMedia „A nap cikke”
-Name[km]=អត្ថបទ WikiMedia ប្រចាំថ្ងៃ
-Name[nb]=Dagens Wikimedia-artikkel
-Name[nl]=Wikimedia artikel van de dag
-Name[pl]=Artykuł dnia na WikiMedia
-Name[pt]=Artigo do dia do Wikimedia
-Name[pt_BR]=Imagem do dia da Wikimedia
-Name[sk]=Článok dňa z WikiMedie
-Name[sv]=Dagens artikel på Wikimedia
-Name[uk]=Стаття дня у WikiMedia
-Name[x-test]=xxWikiMedia article of the dayxx
 Comment=
 Type=Service
 ServiceTypes=Plasma/Applet
